@@ -9,7 +9,9 @@ User=agent
 Group=agent
 WorkingDirectory=/opt/personal-stack
 Environment=STACK_DIR=/opt/personal-stack
-Environment=SITE_URL=http://localhost
+Environment=SITE_URL=https://mpeshekhonov.ru
+Environment=PUBLIC_SITE_URL=https://mpeshekhonov.ru
+Environment=SITE_LOCAL_HOST=mpeshekhonov.ru
 Environment=PYTHONPATH=/opt/personal-stack/agent
 ExecStart=/opt/personal-stack/.venv/bin/python -m orchestrator.main
 Restart=always

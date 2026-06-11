@@ -6,6 +6,7 @@ import os
 from datetime import datetime, timezone
 
 from orchestrator.config import load_env_file
+from orchestrator.format_ru import format_date_ru, format_usd
 from orchestrator.state import year_pnl
 
 
@@ -40,9 +41,14 @@ def goal_progress() -> dict:
 
 def format_goal_progress() -> str:
     p = goal_progress()
+    pct = (
+        f"{int(p['progress_pct'])}%"
+        if p["progress_pct"] == round(p["progress_pct"])
+        else f"{p['progress_pct']:.1f}%"
+    )
     return (
-        f"Goal ${p['target_usd']:,.0f} by {p['deadline']}: "
-        f"${p['earned_usd']:,.2f} earned ({p['progress_pct']}%), "
-        f"${p['remaining_usd']:,.2f} left, "
-        f"~${p['daily_needed_usd']:,.2f}/day for {p['days_left']} days"
+        f"Goal {format_usd(p['target_usd'])} by {format_date_ru(p['deadline'])}: "
+        f"{format_usd(p['earned_usd'])} earned ({pct}), "
+        f"{format_usd(p['remaining_usd'])} left, "
+        f"~{format_usd(p['daily_needed_usd'])}/day for {p['days_left']} days"
     )

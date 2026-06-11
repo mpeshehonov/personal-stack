@@ -12,7 +12,9 @@ MEMORY_DIR = AGENT_DIR / "memory"
 TASKS_DIR = AGENT_DIR / "tasks"
 STATE_DB = AGENT_DIR / "state.sqlite"
 SITE_DIR = STACK_DIR / "site"
-SITE_URL = os.environ.get("SITE_URL", "http://localhost")
+SITE_URL = os.environ.get("SITE_URL", "https://mpeshekhonov.ru")
+PUBLIC_SITE_URL = os.environ.get("PUBLIC_SITE_URL", SITE_URL)
+SITE_LOCAL_HOST = os.environ.get("SITE_LOCAL_HOST", "mpeshekhonov.ru")
 
 
 def load_env_file(name: str) -> None:

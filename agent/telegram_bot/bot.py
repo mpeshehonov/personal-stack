@@ -18,13 +18,20 @@ from finance.paper_stats import paper_trade_stats
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from orchestrator.config import load_env_file
 from orchestrator.cursor_runner import run_ask_streaming
+from orchestrator.format_ru import (
+    format_date_ru,
+    format_last_run,
+    format_load,
+    format_percent,
+    format_usd,
+)
 from orchestrator.health import collect_health
 from orchestrator.state import (
     get_bounty_draft,
+    get_last_run,
     init_db,
     kv_get,
     kv_set,
-    last_run_summary,
     enqueue_task,
     list_bounty_drafts,
     today_pnl,
@@ -69,22 +76,34 @@ def _allowed_user(user) -> bool:
 
 def _format_health_ru(h) -> str:
     return (
-        f"CPU: {h.cpu_percent}% | RAM: {h.memory_percent}% "
-        f"({h.memory_available_mb} МБ свободно)\n"
-        f"Диск: {h.disk_percent}% | Load: {h.load_avg}\n"
+        f"CPU: {format_percent(h.cpu_percent)} | RAM: {format_percent(h.memory_percent)} "
+        f"({h.memory_available_mb:.0f} МБ свободно)\n"
+        f"Диск: {format_percent(h.disk_percent)} | Нагрузка: {format_load(h.load_avg)}\n"
         f"Сайт: {'OK' if h.site_ok else 'НЕДОСТУПЕН'} | "
         f"Docker: {'OK' if h.docker_ok else 'ПРОБЛЕМА'}\n"
         f"Режим: {'лёгкий' if h.light_mode else 'полный'}"
     )
 
 
+def _format_last_run_ru() -> str:
+    run = get_last_run()
+    if not run:
+        return "ещё не было"
+    return format_last_run(run["ts"], run["status"], run["summary"])
+
+
 def _format_goal_ru() -> str:
     p = goal_progress()
+    pct = (
+        f"{int(p['progress_pct'])}%"
+        if p["progress_pct"] == round(p["progress_pct"])
+        else f"{p['progress_pct']:.1f}%"
+    )
     return (
-        f"Цель ${p['target_usd']:,.0f} к {p['deadline']}: "
-        f"заработано ${p['earned_usd']:,.2f} ({p['progress_pct']}%), "
-        f"осталось ${p['remaining_usd']:,.2f}, "
-        f"~${p['daily_needed_usd']:,.2f}/день, {p['days_left']} дн."
+        f"Цель {format_usd(p['target_usd'])} к {format_date_ru(p['deadline'])}: "
+        f"заработано {format_usd(p['earned_usd'])} ({pct}), "
+        f"осталось {format_usd(p['remaining_usd'])}, "
+        f"~{format_usd(p['daily_needed_usd'])}/день, {p['days_left']} дн."
     )
 
 
@@ -130,8 +149,8 @@ async def cmd_status(update, context) -> None:
     paused = kv_get("autonomy_paused", "false") == "true"
     msg = (
         f"{_format_health_ru(h)}\n\n"
-        f"Последний запуск: {last_run_summary() or 'ещё не было'}\n"
-        f"PnL сегодня: ${today_pnl():.2f}\n"
+        f"Последний запуск: {_format_last_run_ru()}\n"
+        f"PnL сегодня: {format_usd(today_pnl())}\n"
         f"{_format_goal_ru()}\n"
         f"Автономия: {'пауза' if paused else 'активна'}"
     )
@@ -214,7 +233,7 @@ async def cmd_resume(update, context) -> None:
 async def cmd_memory(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    await update.message.reply_text(last_run_summary() or "Запусков ещё не было.")
+    await update.message.reply_text(_format_last_run_ru())
 
 
 def _parse_bounty_draft_id(args: list[str]) -> int | None:

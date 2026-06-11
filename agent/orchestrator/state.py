@@ -134,14 +134,25 @@ def log_run(run_type: str, status: str, summary: str = "") -> None:
         )
 
 
-def last_run_summary() -> str | None:
+def get_last_run() -> dict[str, str] | None:
     with get_conn() as conn:
         row = conn.execute(
             "SELECT summary, ts, status FROM run_log ORDER BY id DESC LIMIT 1"
         ).fetchone()
         if not row:
             return None
-        return f"[{row['ts']}] {row['status']}: {row['summary'] or '—'}"
+        return {
+            "ts": row["ts"],
+            "status": row["status"],
+            "summary": row["summary"] or "",
+        }
+
+
+def last_run_summary() -> str | None:
+    run = get_last_run()
+    if not run:
+        return None
+    return f"[{run['ts']}] {run['status']}: {run['summary'] or '—'}"
 
 
 def add_bounty_draft(title: str, body: str) -> int:
