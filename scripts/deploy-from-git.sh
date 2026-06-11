@@ -67,9 +67,9 @@ vpn_started_at() {
 echo "==> VPN uptime before deploy"
 vpn_started_at
 
-echo "==> Building and starting site stack (site + caddy only; never full compose up)"
+echo "==> Building and starting site stack (site + caddy + redis only; never full compose up)"
 docker compose build site
-docker compose up -d site caddy
+docker compose up -d site caddy redis
 
 if [[ "$RESTART_SYSTEMD" == "1" ]]; then
   echo "==> Restarting systemd services"
@@ -89,7 +89,7 @@ curl -sf http://localhost/resume >/dev/null \
   || { echo "Site health check failed"; exit 1; }
 
 echo "==> Ensuring VPN containers are up (no recreate)"
-"$STACK_DIR/vpn/ensure-up.sh"
+"$STACK_DIR/vpn/scripts/ensure-vpn-up.sh"
 
 echo "==> VPN uptime after deploy"
 vpn_started_at
