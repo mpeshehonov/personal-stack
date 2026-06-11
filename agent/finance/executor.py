@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from finance.goal_tracker import goal_progress
+from finance.goal_tracker import goal_progress, milestone_progress
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from finance.risk_engine import RiskEngine, TradeProposal
 from finance.venue_base import TradeVenue, get_enabled_venues
@@ -131,6 +131,7 @@ class FinanceExecutor:
             "proposals": proposals,
             "executions": results,
             "goal": goal_progress(),
+            "milestone": milestone_progress(),
             "today_pnl_note": "see finance_log in state.sqlite",
         }
         log_finance("daily_analysis", summary)

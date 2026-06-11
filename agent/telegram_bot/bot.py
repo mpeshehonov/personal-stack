@@ -12,7 +12,7 @@ from pathlib import Path
 AGENT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AGENT_ROOT))
 
-from finance.goal_tracker import goal_progress
+from finance.goal_tracker import goal_progress, milestone_progress
 from finance.paper_stats import paper_trade_stats
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from orchestrator.config import load_env_file
@@ -105,13 +105,21 @@ def _format_last_run_ru() -> str:
 
 def _format_goal_ru() -> str:
     p = goal_progress()
+    m = milestone_progress()
     pct = (
         f"{int(p['progress_pct'])}%"
         if p["progress_pct"] == round(p["progress_pct"])
         else f"{p['progress_pct']:.1f}%"
     )
+    m_pct = (
+        f"{int(m['progress_pct'])}%"
+        if m["progress_pct"] == round(m["progress_pct"])
+        else f"{m['progress_pct']:.1f}%"
+    )
     return (
-        f"Цель {format_usd(p['target_usd'])} к {format_date_ru(p['deadline'])}: "
+        f"M1 ({m['label']}): {format_usd(m['earned_usd'])} / {format_usd(m['target_usd'])} "
+        f"({m_pct}) к {format_date_ru(m['deadline'])}\n"
+        f"Год: {format_usd(p['target_usd'])} к {format_date_ru(p['deadline'])} — "
         f"заработано {format_usd(p['earned_usd'])} ({pct}), "
         f"осталось {format_usd(p['remaining_usd'])}, "
         f"~{format_usd(p['daily_needed_usd'])}/день, {p['days_left']} дн."

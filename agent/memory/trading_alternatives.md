@@ -98,6 +98,8 @@ Context: Polymarket blocks US/NL users at the application layer. This document c
 
 **Defer for now:** Overtime (API key partnership), on-chain DEX (liquidity + PMAT dependency) — revisit if Azuro liquidity is insufficient or Overtime grants API access.
 
+**Income plan:** phased milestones and alternative lanes → `agent/memory/income_plan.md`.
+
 ---
 
 ## Env wiring
