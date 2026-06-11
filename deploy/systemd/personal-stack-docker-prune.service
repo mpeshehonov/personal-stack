@@ -8,7 +8,7 @@ User=agent
 Group=agent
 WorkingDirectory=/opt/personal-stack
 Environment=DOCKER_PRUNE_BUILD_CACHE_H=168
-Environment=DOCKER_PRUNE_KEEP_STORAGE=3GB
+Environment=DOCKER_PRUNE_RESERVED_SPACE=2GB
 ExecStart=/bin/bash /opt/personal-stack/scripts/docker-prune-safe.sh
 
 [Install]
