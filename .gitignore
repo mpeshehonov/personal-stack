@@ -1,0 +1,42 @@
+# Secrets — real env files stay on server only
+secrets/*
+!secrets/.env.example
+!secrets/*.template
+
+# VPN TLS material and live credentials (server-only)
+vpn/**/certs/
+vpn/**/*.pem
+vpn/hysteria2/config-*.yaml
+vpn/hysteria2/client-test.yaml
+vpn/hysteria2/subscription/
+vpn/hysteria2/WORKING.txt
+vpn/xray-reality/config.json
+vpn/xray-reality/test-client.json
+vpn/xray-reality/WORKING.txt
+
+# Runtime / local state
+agent/state.sqlite
+*.sqlite
+*.sqlite-journal
+state.sqlite
+
+# Node / Python build artifacts
+node_modules/
+.next/
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Env files at repo root only (not secrets/*.template)
+/.env
+/.env.*
+!/.env.example
+
+# Generated assets
+site/public/resume.pdf
+
+# OS
+.DS_Store

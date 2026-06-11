@@ -1,0 +1,17 @@
+[Unit]
+Description=Personal Stack Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=agent
+Group=agent
+WorkingDirectory=/opt/personal-stack
+Environment=STACK_DIR=/opt/personal-stack
+Environment=PYTHONPATH=/opt/personal-stack/agent
+ExecStart=/opt/personal-stack/.venv/bin/python /opt/personal-stack/agent/telegram_bot/bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

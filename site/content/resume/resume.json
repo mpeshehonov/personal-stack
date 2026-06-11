@@ -1,0 +1,23 @@
+{
+  "name": "Максим Пешехонов",
+  "title": "Senior Frontend-разработчик",
+  "email": "kassady71@gmail.com",
+  "phone": "+79509196786",
+  "location": "Сочи, Россия",
+  "summary": "Senior Frontend / Fullstack разработчик. Занимаюсь веб-разработкой с 2018 года. Полный список проектов по запросу.",
+  "skills": [
+    "TypeScript",
+    "React",
+    "Next.js",
+    "TanStack Query",
+    "Orval",
+    "Telegram Mini Apps",
+    "Nest.js",
+    "Playwright"
+  ],
+  "links": {
+    "telegram": "https://t.me/makusimu_san",
+    "linkedin": "https://www.linkedin.com/in/makusimu",
+    "github": "https://github.com/mpeshehonov"
+  }
+}

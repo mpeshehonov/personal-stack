@@ -1,0 +1,19 @@
+[Unit]
+Description=Personal Stack Agent Orchestrator
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+User=agent
+Group=agent
+WorkingDirectory=/opt/personal-stack
+Environment=STACK_DIR=/opt/personal-stack
+Environment=SITE_URL=http://localhost
+Environment=PYTHONPATH=/opt/personal-stack/agent
+ExecStart=/opt/personal-stack/.venv/bin/python -m orchestrator.main
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

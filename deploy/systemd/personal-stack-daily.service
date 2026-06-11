@@ -1,0 +1,10 @@
+[Unit]
+Description=Personal Stack Daily Agent Run
+
+[Service]
+Type=oneshot
+User=agent
+WorkingDirectory=/opt/personal-stack
+Environment=STACK_DIR=/opt/personal-stack
+Environment=PYTHONPATH=/opt/personal-stack/agent
+ExecStart=/opt/personal-stack/.venv/bin/python -c "from orchestrator.state import init_db, kv_set; init_db(); kv_set('daily_trigger', 'true')"

@@ -1,0 +1,40 @@
+{
+  "log": { "loglevel": "warning" },
+  "inbounds": [
+    {
+      "listen": "0.0.0.0",
+      "port": 2053,
+      "protocol": "vless",
+      "tag": "vless-reality-yandex",
+      "settings": {
+        "clients": [
+          {
+            "id": "00000000-0000-0000-0000-000000000000",
+            "email": "legacy",
+            "flow": ""
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "yandex.ru:443",
+          "xver": 0,
+          "serverNames": ["yandex.ru", "www.yandex.ru", "ya.ru"],
+          "privateKey": "CHANGE_ME_REALITY_PRIVATE_KEY",
+          "shortIds": ["", "00000000"]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": { "domainStrategy": "UseIPv4" }
+    }
+  ]
+}

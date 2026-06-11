@@ -1,0 +1,22 @@
+{
+	email admin@localhost
+	servers {
+		protocols h1 h2
+	}
+}
+
+mpeshekhonov.ru, www.mpeshekhonov.ru {
+	encode gzip
+	reverse_proxy site:3000
+}
+
+# IP fallback (direct access while DNS propagates or for debugging)
+http://89.124.70.216 {
+	redir https://89.124.70.216{uri} permanent
+}
+
+https://89.124.70.216 {
+	encode gzip
+	tls internal
+	reverse_proxy site:3000
+}
