@@ -8,9 +8,9 @@ cd "$STACK_DIR"
 echo "==> Installing Python dependencies"
 .venv/bin/pip install -q -r agent/requirements.txt
 
-echo "==> Building and starting Docker services"
+echo "==> Building and starting site stack (site + caddy only)"
 docker compose build site
-docker compose up -d
+docker compose up -d site caddy
 
 echo "==> Installing systemd units"
 sudo cp deploy/systemd/*.service /etc/systemd/system/

@@ -21,6 +21,7 @@
 - Subscription: http://89.124.70.216:8888/sub.txt
 - Fallback: VLESS Reality TCP 2053
 - Site: HTTPS on 443/TCP (Caddy)
+- **Site deploy is isolated from VPN** — use `docker compose up -d site caddy` only; VPN runs in separate compose projects (`hysteria2`, `xray-reality`). See docs/VPN.md. VPN changes: `scripts/deploy-vpn.sh` only (manual).
 
 ## Links
 - Resume source: site/content/resume/resume.json

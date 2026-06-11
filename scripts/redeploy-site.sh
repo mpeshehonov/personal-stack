@@ -18,4 +18,8 @@ curl -sf http://localhost/resume >/dev/null || curl -sf http://127.0.0.1:3000/re
   echo "Site health check failed"
   exit 1
 }
+
+echo "==> Ensuring VPN containers are up"
+"$STACK_DIR/vpn/ensure-up.sh"
+
 echo "Site OK"

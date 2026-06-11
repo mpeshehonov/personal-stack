@@ -156,9 +156,11 @@ cd /opt/personal-stack && ./scripts/deploy-from-git.sh
 1. `git pull --ff-only`
 2. Fix ownership (`agent:agent`) and `secrets/` permissions
 3. `pip install` into `.venv`
-4. `docker compose build site && docker compose up -d`
+4. `docker compose build site && docker compose up -d site caddy` (never full `up -d` — avoids touching redis and limits Caddy churn)
 5. Restart `agent-orchestrator` and `telegram-bot`
-6. Reload Caddy and health-check `/resume`
+6. Reload Caddy, run `vpn/ensure-up.sh`, and health-check `/resume`
+
+Site deploy does **not** restart VPN containers. See [VPN.md](VPN.md).
 
 Environment overrides:
 

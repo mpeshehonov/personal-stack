@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# VPN-only deploy — recreates VPN containers. Do NOT run from site deploy.
+# Site deploy uses scripts/deploy-from-git.sh (site + caddy only) + vpn/ensure-up.sh.
 set -euo pipefail
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 cd "$STACK_DIR"
