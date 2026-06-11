@@ -1,5 +1,5 @@
 {
-	email admin@localhost
+	email kassady71@gmail.com
 	servers {
 		protocols h1 h2
 	}
