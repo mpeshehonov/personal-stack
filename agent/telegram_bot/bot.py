@@ -207,6 +207,26 @@ async def _run_streaming(
 
         loop = asyncio.get_running_loop()
         queue: asyncio.Queue = asyncio.Queue()
+        typing_stop = asyncio.Event()
+
+        async def _typing_loop() -> None:
+            from telegram.constants import ChatAction
+
+            while not typing_stop.is_set():
+                try:
+                    await context.bot.send_chat_action(
+                        chat_id=chat_id,
+                        action=ChatAction.TYPING,
+                    )
+                except Exception:
+                    pass
+                try:
+                    await asyncio.wait_for(typing_stop.wait(), timeout=4.0)
+                    break
+                except asyncio.TimeoutError:
+                    pass
+
+        typing_task = asyncio.create_task(_typing_loop())
 
         runner = run_ask_streaming if mode == "ask" else run_task_streaming
 
@@ -242,6 +262,13 @@ async def _run_streaming(
             logger.exception("streaming failed mode=%s", mode)
             await streamer.finalize(f"Ошибка бота: {e}")
             return
+        finally:
+            typing_stop.set()
+            typing_task.cancel()
+            try:
+                await typing_task
+            except asyncio.CancelledError:
+                pass
 
         if mode == "task" and result_text:
             deploy_msg = await asyncio.to_thread(apply_task_deploy, result_text)
