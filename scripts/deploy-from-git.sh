@@ -98,6 +98,11 @@ curl -sf http://localhost/resume >/dev/null \
 echo "==> Ensuring VPN containers are up (no recreate)"
 "$STACK_DIR/vpn/scripts/ensure-vpn-up.sh"
 
+if [[ "${DOCKER_PRUNE_AFTER_DEPLOY:-1}" == "1" ]]; then
+  echo "==> Safe Docker cache prune"
+  bash "$STACK_DIR/scripts/docker-prune-safe.sh"
+fi
+
 echo "==> VPN uptime after deploy"
 vpn_started_at
 

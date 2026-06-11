@@ -34,8 +34,19 @@ def has_uncommitted_changes() -> bool:
     return bool(git_status_porcelain())
 
 
+def clean_junk_untracked() -> list[str]:
+    """Remove accidental shell redirect files like '=22.6' from repo root."""
+    removed: list[str] = []
+    for path in STACK_DIR.glob("=*"):
+        if path.is_file():
+            path.unlink(missing_ok=True)
+            removed.append(path.name)
+    return removed
+
+
 def pull_latest() -> tuple[bool, str]:
     """Fetch and fast-forward to origin/main. Fails if working tree is dirty."""
+    removed = clean_junk_untracked()
     dirty = git_status_porcelain()
     if dirty:
         lines = dirty.splitlines()[:8]
@@ -50,7 +61,8 @@ def pull_latest() -> tuple[bool, str]:
     r = _run(["git", "pull", "--ff-only", "origin", branch_name])
     if r.returncode != 0:
         return False, (r.stderr or r.stdout or "git pull failed").strip()
-    return True, (r.stdout or "Already up to date.").strip()
+    extra = f" (удалён мусор: {', '.join(removed)})" if removed else ""
+    return True, (r.stdout or "Already up to date.").strip() + extra
 
 
 def commit_and_push(message: str) -> tuple[bool, str]:

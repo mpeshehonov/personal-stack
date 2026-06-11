@@ -40,3 +40,6 @@ site/public/resume.pdf
 
 # OS
 .DS_Store
+
+# Accidental shell redirects (e.g. pip install pkg>=1.0 without quotes)
+/=*
