@@ -34,6 +34,25 @@ def has_uncommitted_changes() -> bool:
     return bool(git_status_porcelain())
 
 
+def pull_latest() -> tuple[bool, str]:
+    """Fetch and fast-forward to origin/main. Fails if working tree is dirty."""
+    dirty = git_status_porcelain()
+    if dirty:
+        lines = dirty.splitlines()[:8]
+        return False, "Локальные изменения без commit:\n" + "\n".join(lines)
+
+    r = _run(["git", "fetch", "origin"])
+    if r.returncode != 0:
+        return False, (r.stderr or r.stdout or "git fetch failed").strip()
+
+    branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    branch_name = branch.stdout.strip() or "main"
+    r = _run(["git", "pull", "--ff-only", "origin", branch_name])
+    if r.returncode != 0:
+        return False, (r.stderr or r.stdout or "git pull failed").strip()
+    return True, (r.stdout or "Already up to date.").strip()
+
+
 def commit_and_push(message: str) -> tuple[bool, str]:
     """Stage all changes, commit, push. Returns (success, log)."""
     if not has_uncommitted_changes():

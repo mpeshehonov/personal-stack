@@ -17,7 +17,7 @@ from finance.paper_stats import paper_trade_stats
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from orchestrator.config import load_env_file
 from orchestrator.cursor_runner import run_ask_streaming, run_task_streaming
-from orchestrator.git_deploy import apply_task_deploy
+from orchestrator.git_deploy import apply_task_deploy, pull_latest
 from orchestrator.format_ru import (
     format_date_ru,
     format_last_run,
@@ -36,7 +36,9 @@ from orchestrator.state import (
     today_pnl,
     update_bounty_status,
 )
+from telegram_bot.rich_format import get_rich_example, list_rich_examples, prepare_rich_markdown
 from telegram_bot.streaming import AnswerStreamer
+from telegram_bot.tg_rich_api import RichMessageApiError, send_rich_message
 
 logging.basicConfig(
     level=logging.INFO,
@@ -59,6 +61,7 @@ BOT_COMMANDS = [
     ("status", "Состояние сервера"),
     ("finance", "Финансы и paper-торговля"),
     ("ask", "Вопрос агенту (только ответ, без правок)"),
+    ("richdemo", "Примеры Rich Markdown"),
     ("task", "Задача: правки + commit + deploy"),
     ("bounty", "Черновики bug bounty"),
     ("memory", "Итог последнего daily-цикла"),
@@ -139,7 +142,8 @@ def _help_text() -> str:
         "/status — состояние сервера и сервисов\n"
         "/finance — geoblock, paper-сделки, цель $15k\n"
         "/ask <вопрос> — ответ без изменений на сервере\n"
-        "/task <текст> — правки, commit, push и deploy\n"
+        "/richdemo [имя] — примеры Rich Markdown (basic, code, table…)\n"
+        "/task <текст> — git pull, правки, commit, push, deploy\n"
         "/bounty — черновики bug bounty\n"
         "/approve bounty <id> — одобрить черновик\n"
         "/reject bounty <id> — отклонить черновик\n"
@@ -167,6 +171,7 @@ async def cmd_status(update, context) -> None:
 
 async def _run_streaming(
     update,
+    context,
     text: str,
     *,
     mode: str,
@@ -180,6 +185,15 @@ async def _run_streaming(
         return
 
     async with lock:
+        if mode == "task":
+            ok, sync_msg = await asyncio.to_thread(pull_latest)
+            if not ok:
+                await update.message.reply_text(
+                    f"Не могу начать задачу: репозиторий не синхронизирован.\n\n{sync_msg[:3500]}\n\n"
+                    "Сначала закоммить или откати локальные правки на сервере."
+                )
+                return
+
         streamer = AnswerStreamer(context.bot, chat_id)
         await streamer.start()
 
@@ -236,7 +250,31 @@ async def cmd_task(update, context) -> None:
     if not text:
         await update.message.reply_text("Использование: /task <что сделать>")
         return
-    await _run_streaming(update, text, mode="task")
+    await _run_streaming(update, context, text, mode="task")
+
+
+async def cmd_richdemo(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    name = context.args[0].strip().lower() if context.args else "basic"
+    sample = get_rich_example(name)
+    if sample is None:
+        names = ", ".join(list_rich_examples())
+        await update.message.reply_text(
+            f"Неизвестный пример «{name}».\n\nДоступные: {names}\n\n/richdemo code"
+        )
+        return
+    markdown = prepare_rich_markdown(sample)
+    try:
+        await send_rich_message(
+            context.bot,
+            chat_id=update.effective_chat.id,
+            markdown=markdown,
+        )
+    except RichMessageApiError as e:
+        await update.message.reply_text(
+            f"Rich Message недоступен ({e.description}).\n\n{markdown[:3500]}"
+        )
 
 
 async def cmd_ask(update, context) -> None:
@@ -246,7 +284,7 @@ async def cmd_ask(update, context) -> None:
     if not text:
         await update.message.reply_text("Использование: /ask <вопрос>")
         return
-    await _run_streaming(update, text, mode="ask")
+    await _run_streaming(update, context, text, mode="ask")
 
 
 async def cmd_pause(update, context) -> None:
@@ -428,6 +466,7 @@ def main() -> None:
     app.add_handler(CommandHandler("finance", cmd_finance))
     app.add_handler(CommandHandler("task", cmd_task))
     app.add_handler(CommandHandler("ask", cmd_ask))
+    app.add_handler(CommandHandler("richdemo", cmd_richdemo))
     app.add_handler(CommandHandler("pause", cmd_pause))
     app.add_handler(CommandHandler("resume", cmd_resume))
     app.add_handler(CommandHandler("memory", cmd_memory))

@@ -18,7 +18,7 @@ from finance.executor import FinanceExecutor
 from finance.proposal_parser import extract_trade_proposals
 from orchestrator.config import load_env_file
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
-from orchestrator.git_deploy import apply_task_deploy
+from orchestrator.git_deploy import apply_task_deploy, pull_latest
 from orchestrator.health import collect_health, format_health
 from orchestrator.memory import build_context_pack, ensure_daily_log
 from orchestrator.state import (
@@ -72,6 +72,11 @@ async def process_task(row) -> None:
         result = await asyncio.to_thread(run_ask, text)
         await notify_telegram(f"Ask result:\n{result[:3500]}")
     elif kind == "task":
+        ok, sync_msg = await asyncio.to_thread(pull_latest)
+        if not ok:
+            await notify_telegram(f"Задача отменена: не синхронизирован git.\n{sync_msg[:800]}")
+            mark_task_done(row["id"])
+            return
         result = await asyncio.to_thread(run_task, text)
         deploy_report = await asyncio.to_thread(apply_task_deploy, result)
         finance = FinanceExecutor()
