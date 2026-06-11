@@ -1,17 +1,21 @@
-import Link from "next/link";
-import resume from "@/content/resume/resume.json";
+import { Hero } from "@/components/Hero";
+import { SkillGrid } from "@/components/SkillGrid";
+import { skillGroups } from "@/lib/skills";
 
 export default function HomePage() {
   return (
-    <div className="hero">
-      <h1>{resume.name}</h1>
-      <p>{resume.title}</p>
-      <div className="card">
-        <p>{resume.summary}</p>
-        <Link href="/resume" className="btn">
-          Резюме
-        </Link>
-      </div>
-    </div>
+    <>
+      <Hero />
+      <section className="pb-20">
+        <h2 className="mb-2 font-mono text-xs uppercase tracking-widest text-accent">
+          Навыки
+        </h2>
+        <p className="mb-8 max-w-xl text-ink-muted">
+          Полный стек — от сложных UI и визуализаций до fullstack, DevOps и
+          наблюдаемости в продакшене.
+        </p>
+        <SkillGrid groups={skillGroups} />
+      </section>
+    </>
   );
 }

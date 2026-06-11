@@ -25,9 +25,6 @@ class AnswerStreamer:
         self._use_draft = True
         self._edit_message_id: int | None = None
 
-    async def thinking(self) -> None:
-        await self._push("Думаю…")
-
     async def update(self, text: str) -> None:
         if not text.strip():
             return
@@ -41,6 +38,7 @@ class AnswerStreamer:
         body = (text or "Пустой ответ.").strip()
         if len(body) > TG_MAX:
             body = body[: TG_MAX - 3] + "..."
+        await self._clear_draft()
         try:
             await self.bot.send_message(chat_id=self.chat_id, text=body)
         except TelegramError as e:
@@ -54,6 +52,18 @@ class AnswerStreamer:
                     )
                 except TelegramError:
                     pass
+
+    async def _clear_draft(self) -> None:
+        if not self._use_draft:
+            return
+        try:
+            await self.bot.send_message_draft(
+                chat_id=self.chat_id,
+                draft_id=self.draft_id,
+                text="",
+            )
+        except (BadRequest, TelegramError):
+            pass
 
     async def _push(self, text: str) -> None:
         preview = text if len(text) <= TG_MAX else text[: TG_MAX - 3] + "..."

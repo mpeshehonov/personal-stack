@@ -162,7 +162,6 @@ async def cmd_ask(update, context) -> None:
     chat_id = update.effective_chat.id
     draft_id = int((update.message.message_id * 997 + int(time.time() * 1000)) % 2_000_000_000) or 1
     streamer = AnswerStreamer(context.bot, chat_id, draft_id)
-    await streamer.thinking()
 
     loop = asyncio.get_running_loop()
     queue: asyncio.Queue = asyncio.Queue()

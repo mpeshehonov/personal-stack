@@ -4,7 +4,7 @@
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Сочи, Россия",
-  "summary": "Senior Frontend / Fullstack разработчик. Занимаюсь веб-разработкой с 2018 года. Полный список проектов по запросу.",
+  "summary": "Senior Frontend / Fullstack разработчик с 2018 года. B2B, e-commerce, real-time, Telegram Mini Apps — от сложных UI до typed API contracts и продакшен-интеграций.",
   "skills": [
     "TypeScript",
     "React",
@@ -13,7 +13,9 @@
     "Orval",
     "Telegram Mini Apps",
     "Nest.js",
-    "Playwright"
+    "Playwright",
+    "Docker",
+    "GraphQL"
   ],
   "links": {
     "telegram": "https://t.me/makusimu_san",
