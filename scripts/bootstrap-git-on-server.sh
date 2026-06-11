@@ -39,7 +39,7 @@ if [[ -d "$STACK_DIR/vpn" ]]; then
     xray-reality/config.json \
     xray-reality/test-client.json \
     xray-reality/WORKING.txt; do
-    [[ -e "$STACK_DIR/vpn/$path" ]] && cp -a "$STACK_DIR/vpn/$path" "$BACKUP/vpn/$path"
+    [[ -e "$STACK_DIR/vpn/$path" ]] && mkdir -p "$BACKUP/vpn/$(dirname "$path")" && cp -a "$STACK_DIR/vpn/$path" "$BACKUP/vpn/$path"
   done
 fi
 
