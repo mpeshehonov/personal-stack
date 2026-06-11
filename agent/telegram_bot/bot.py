@@ -7,7 +7,6 @@ import logging
 import os
 import sys
 import threading
-import time
 from pathlib import Path
 
 AGENT_ROOT = Path(__file__).resolve().parents[1]
@@ -17,7 +16,8 @@ from finance.goal_tracker import goal_progress
 from finance.paper_stats import paper_trade_stats
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from orchestrator.config import load_env_file
-from orchestrator.cursor_runner import run_ask_streaming
+from orchestrator.cursor_runner import run_ask_streaming, run_task_streaming
+from orchestrator.git_deploy import apply_task_deploy
 from orchestrator.format_ru import (
     format_date_ru,
     format_last_run,
@@ -32,7 +32,6 @@ from orchestrator.state import (
     init_db,
     kv_get,
     kv_set,
-    enqueue_task,
     list_bounty_drafts,
     today_pnl,
     update_bounty_status,
@@ -45,13 +44,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Один активный запрос на чат (/ask или /task)
+_chat_locks: dict[int, asyncio.Lock] = {}
+
+
+def _chat_lock(chat_id: int) -> asyncio.Lock:
+    if chat_id not in _chat_locks:
+        _chat_locks[chat_id] = asyncio.Lock()
+    return _chat_locks[chat_id]
+
 BOT_COMMANDS = [
     ("start", "Начало и список команд"),
     ("help", "Справка по командам"),
     ("status", "Состояние сервера"),
     ("finance", "Финансы и paper-торговля"),
-    ("ask", "Вопрос агенту (стриминг ответа)"),
-    ("task", "Поставить задачу в очередь"),
+    ("ask", "Вопрос агенту (только ответ, без правок)"),
+    ("task", "Задача: правки + commit + deploy"),
     ("bounty", "Черновики bug bounty"),
     ("memory", "Итог последнего daily-цикла"),
     ("pause", "Приостановить автономию"),
@@ -130,8 +138,8 @@ def _help_text() -> str:
         "Команды бота:\n\n"
         "/status — состояние сервера и сервисов\n"
         "/finance — geoblock, paper-сделки, цель $15k\n"
-        "/ask <вопрос> — ответ агента со стримингом\n"
-        "/task <текст> — задача в очередь orchestrator\n"
+        "/ask <вопрос> — ответ без изменений на сервере\n"
+        "/task <текст> — правки, commit, push и deploy\n"
         "/bounty — черновики bug bounty\n"
         "/approve bounty <id> — одобрить черновик\n"
         "/reject bounty <id> — отклонить черновик\n"
@@ -157,17 +165,78 @@ async def cmd_status(update, context) -> None:
     await update.message.reply_text(msg)
 
 
+async def _run_streaming(
+    update,
+    text: str,
+    *,
+    mode: str,
+) -> None:
+    chat_id = update.effective_chat.id
+    lock = _chat_lock(chat_id)
+    if lock.locked():
+        await update.message.reply_text(
+            "Подождите — ещё обрабатывается предыдущий запрос (/ask или /task)."
+        )
+        return
+
+    async with lock:
+        streamer = AnswerStreamer(context.bot, chat_id)
+        await streamer.start()
+
+        loop = asyncio.get_running_loop()
+        queue: asyncio.Queue = asyncio.Queue()
+
+        runner = run_ask_streaming if mode == "ask" else run_task_streaming
+
+        def on_chunk(accumulated: str) -> None:
+            asyncio.run_coroutine_threadsafe(queue.put(("chunk", accumulated)), loop)
+
+        def worker() -> None:
+            try:
+                result = runner(text, on_chunk)
+                asyncio.run_coroutine_threadsafe(queue.put(("done", result)), loop)
+            except Exception as e:
+                asyncio.run_coroutine_threadsafe(queue.put(("error", str(e))), loop)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+        last_text = ""
+        result_text = ""
+        try:
+            while True:
+                kind, payload = await queue.get()
+                if kind == "chunk":
+                    if payload and payload != last_text:
+                        await streamer.update(payload)
+                        last_text = payload
+                elif kind == "done":
+                    result_text = payload or last_text
+                    await streamer.finalize(result_text)
+                    break
+                elif kind == "error":
+                    await streamer.finalize(f"Ошибка: {payload}")
+                    return
+        except Exception as e:
+            logger.exception("streaming failed mode=%s", mode)
+            await streamer.finalize(f"Ошибка бота: {e}")
+            return
+
+        if mode == "task" and result_text:
+            deploy_msg = await asyncio.to_thread(apply_task_deploy, result_text)
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text=f"Deploy:\n{deploy_msg}",
+            )
+
+
 async def cmd_task(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
     text = " ".join(context.args) if context.args else ""
     if not text:
-        await update.message.reply_text("Использование: /task <описание задачи>")
+        await update.message.reply_text("Использование: /task <что сделать>")
         return
-    tid = enqueue_task("telegram", {"type": "task", "text": text}, priority=10)
-    await update.message.reply_text(
-        f"Задача #{tid} поставлена в очередь. Результат придёт в этот чат."
-    )
+    await _run_streaming(update, text, mode="task")
 
 
 async def cmd_ask(update, context) -> None:
@@ -177,43 +246,7 @@ async def cmd_ask(update, context) -> None:
     if not text:
         await update.message.reply_text("Использование: /ask <вопрос>")
         return
-
-    chat_id = update.effective_chat.id
-    draft_id = int((update.message.message_id * 997 + int(time.time() * 1000)) % 2_000_000_000) or 1
-    streamer = AnswerStreamer(context.bot, chat_id, draft_id)
-
-    loop = asyncio.get_running_loop()
-    queue: asyncio.Queue = asyncio.Queue()
-
-    def on_chunk(accumulated: str) -> None:
-        asyncio.run_coroutine_threadsafe(queue.put(("chunk", accumulated)), loop)
-
-    def worker() -> None:
-        try:
-            result = run_ask_streaming(text, on_chunk)
-            asyncio.run_coroutine_threadsafe(queue.put(("done", result)), loop)
-        except Exception as e:
-            asyncio.run_coroutine_threadsafe(queue.put(("error", str(e))), loop)
-
-    threading.Thread(target=worker, daemon=True).start()
-
-    last_text = ""
-    try:
-        while True:
-            kind, payload = await queue.get()
-            if kind == "chunk":
-                if payload and payload != last_text:
-                    await streamer.update(payload)
-                    last_text = payload
-            elif kind == "done":
-                await streamer.finalize(payload or last_text)
-                break
-            elif kind == "error":
-                await streamer.finalize(f"Ошибка: {payload}")
-                break
-    except Exception as e:
-        logger.exception("cmd_ask streaming failed")
-        await streamer.finalize(f"Ошибка бота: {e}")
+    await _run_streaming(update, text, mode="ask")
 
 
 async def cmd_pause(update, context) -> None:

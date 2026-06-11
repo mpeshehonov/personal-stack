@@ -17,7 +17,8 @@ from bounty.scanner import daily_bounty_scan
 from finance.executor import FinanceExecutor
 from finance.proposal_parser import extract_trade_proposals
 from orchestrator.config import load_env_file
-from orchestrator.cursor_runner import run_ask, run_daily_agent
+from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
+from orchestrator.git_deploy import apply_task_deploy
 from orchestrator.health import collect_health, format_health
 from orchestrator.memory import build_context_pack, ensure_daily_log
 from orchestrator.state import (
@@ -71,11 +72,8 @@ async def process_task(row) -> None:
         result = await asyncio.to_thread(run_ask, text)
         await notify_telegram(f"Ask result:\n{result[:3500]}")
     elif kind == "task":
-        context = payload.get("context", text)
-        health = collect_health()
-        result = await asyncio.to_thread(
-            run_daily_agent, context, health.light_mode
-        )
+        result = await asyncio.to_thread(run_task, text)
+        deploy_report = await asyncio.to_thread(apply_task_deploy, result)
         finance = FinanceExecutor()
         proposals = extract_trade_proposals(result)
         if proposals:
@@ -84,11 +82,13 @@ async def process_task(row) -> None:
             )
             approved = sum(1 for o in outcomes if o.get("approved"))
             await notify_telegram(
-                f"Task done ({approved}/{len(outcomes)} finance proposals):\n"
-                f"{result[:3200]}"
+                f"Задача выполнена ({approved}/{len(outcomes)} finance proposals):\n"
+                f"{result[:2800]}\n\nDeploy:\n{deploy_report[:800]}"
             )
         else:
-            await notify_telegram(f"Task done:\n{result[:3500]}")
+            await notify_telegram(
+                f"Задача выполнена:\n{result[:2800]}\n\nDeploy:\n{deploy_report[:800]}"
+            )
     mark_task_done(row["id"])
 
 

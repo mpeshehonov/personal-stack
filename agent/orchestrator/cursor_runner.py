@@ -115,11 +115,41 @@ Work only inside /opt/personal-stack. Never expose secrets.
 
 
 def run_ask(prompt: str) -> str:
-    return run_cursor_prompt(prompt, one_shot=True)
+    return run_cursor_prompt(_wrap_ask_prompt(prompt), one_shot=True)
 
 
-def run_ask_streaming(prompt: str, on_text) -> str:
-    """Run one-shot agent with incremental text callbacks. on_text(accumulated: str)."""
+def _wrap_ask_prompt(user_text: str) -> str:
+    return f"""Режим: только ответ на вопрос (read-only).
+
+Пользователь спрашивает:
+{user_text}
+
+Правила:
+- НЕ изменяй файлы, НЕ запускай команды с побочными эффектами, НЕ коммить.
+- Отвечай по-русски, кратко и по делу.
+- Если нужен доступ к коду — читай workspace /opt/personal-stack.
+"""
+
+
+def _wrap_task_prompt(user_text: str) -> str:
+    return f"""Режим: выполнение задачи с правками кода.
+
+Задача пользователя:
+{user_text}
+
+Правила:
+- Работай только в /opt/personal-stack.
+- НЕ трогай secrets/ и не выводи секреты.
+- Внеси нужные изменения; коммит, push и deploy выполнит бот после твоего ответа.
+- В конце дай краткое резюме по-русски: что изменил и зачем (1–5 пунктов).
+"""
+
+
+def run_task(prompt: str) -> str:
+    return run_cursor_prompt(_wrap_task_prompt(prompt), one_shot=False)
+
+
+def _stream_agent(prompt: str, on_text, *, one_shot: bool) -> str:
     load_env_file(".env.cursor")
     api_key = os.environ.get("CURSOR_API_KEY")
     if not api_key:
@@ -132,21 +162,56 @@ def run_ask_streaming(prompt: str, on_text) -> str:
     accumulated = ""
 
     try:
-        with Agent.create(
-            AgentOptions(
-                api_key=api_key,
-                model="auto",
-                local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-            ),
-        ) as agent:
+        if one_shot:
+            agent_ctx = Agent.create(
+                AgentOptions(
+                    api_key=api_key,
+                    model="auto",
+                    local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                ),
+            )
+        else:
+            agent_id = kv_get("cursor_task_agent_id")
+            try:
+                if agent_id:
+                    agent_ctx = Agent.resume(
+                        agent_id,
+                        AgentOptions(
+                            api_key=api_key,
+                            model="auto",
+                            local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                        ),
+                    )
+                else:
+                    agent_ctx = Agent.create(
+                        AgentOptions(
+                            api_key=api_key,
+                            model="auto",
+                            local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                        ),
+                    )
+            except Exception:
+                agent_ctx = Agent.create(
+                    AgentOptions(
+                        api_key=api_key,
+                        model="auto",
+                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                    ),
+                )
+
+        with agent_ctx as agent:
+            if not one_shot:
+                kv_set("cursor_task_agent_id", agent.agent_id)
             run = agent.send(prompt)
             for chunk in run.iter_text():
-                accumulated += chunk
-                on_text(accumulated)
+                if chunk:
+                    accumulated += chunk
+                    on_text(accumulated)
             result = run.wait()
             final = (result.result or accumulated or "").strip()
             if final and final != accumulated:
-                on_text(final)
+                accumulated = final
+                on_text(accumulated)
             if result.status == "error":
                 err = f"Ошибка агента: {final[:500]}"
                 on_text(err)
@@ -161,8 +226,18 @@ def run_ask_streaming(prompt: str, on_text) -> str:
     except Exception as e:
         err = f"Сбой при выполнении: {e}"
         on_text(err)
-        logger.exception("run_ask_streaming failed")
+        logger.exception("_stream_agent failed")
         return err
+
+
+def run_ask_streaming(prompt: str, on_text) -> str:
+    """Read-only Q&A with streaming."""
+    return _stream_agent(_wrap_ask_prompt(prompt), on_text, one_shot=True)
+
+
+def run_task_streaming(prompt: str, on_text) -> str:
+    """Task with code changes; commit/deploy handled by caller."""
+    return _stream_agent(_wrap_task_prompt(prompt), on_text, one_shot=False)
 
 
 if __name__ == "__main__":

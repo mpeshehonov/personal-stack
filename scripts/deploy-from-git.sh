@@ -10,6 +10,8 @@ GIT_REMOTE="${GIT_REMOTE:-origin}"
 GIT_BRANCH="${GIT_BRANCH:-main}"
 RELOAD_CADDY="${RELOAD_CADDY:-1}"
 RESTART_SYSTEMD="${RESTART_SYSTEMD:-1}"
+RESTART_ORCHESTRATOR="${RESTART_ORCHESTRATOR:-1}"
+RESTART_TELEGRAM="${RESTART_TELEGRAM:-1}"
 
 cd "$STACK_DIR"
 
@@ -73,7 +75,12 @@ docker compose up -d site caddy redis
 
 if [[ "$RESTART_SYSTEMD" == "1" ]]; then
   echo "==> Restarting systemd services"
-  sudo systemctl restart agent-orchestrator telegram-bot
+  if [[ "$RESTART_ORCHESTRATOR" == "1" ]]; then
+    sudo systemctl restart agent-orchestrator
+  fi
+  if [[ "$RESTART_TELEGRAM" == "1" ]]; then
+    sudo systemctl restart telegram-bot
+  fi
 fi
 
 if [[ "$RELOAD_CADDY" == "1" ]]; then
