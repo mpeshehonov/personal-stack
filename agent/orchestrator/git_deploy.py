@@ -12,6 +12,8 @@ from orchestrator.config import STACK_DIR
 logger = logging.getLogger(__name__)
 
 DEPLOY_SCRIPT = STACK_DIR / "scripts" / "deploy-from-git.sh"
+GIT_USER_NAME = os.environ.get("GIT_AUTHOR_NAME", "Maksim Peshekhonov")
+GIT_USER_EMAIL = os.environ.get("GIT_AUTHOR_EMAIL", "kassady71@gmail.com")
 
 
 def _run(cmd: list[str], *, cwd: Path | None = None, env: dict | None = None) -> subprocess.CompletedProcess:
@@ -23,6 +25,14 @@ def _run(cmd: list[str], *, cwd: Path | None = None, env: dict | None = None) ->
         text=True,
         timeout=600,
     )
+
+
+def ensure_git_identity() -> None:
+    """Set repo-local git author if missing (server agent commits)."""
+    for key, value in (("user.name", GIT_USER_NAME), ("user.email", GIT_USER_EMAIL)):
+        r = _run(["git", "config", "--get", key])
+        if r.returncode != 0 or not r.stdout.strip():
+            _run(["git", "config", key, value])
 
 
 def git_status_porcelain() -> str:
@@ -67,6 +77,7 @@ def pull_latest() -> tuple[bool, str]:
 
 def commit_and_push(message: str) -> tuple[bool, str]:
     """Stage all changes, commit, push. Returns (success, log)."""
+    ensure_git_identity()
     if not has_uncommitted_changes():
         return True, "Нет незакоммиченных изменений."
 

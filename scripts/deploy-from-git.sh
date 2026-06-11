@@ -40,6 +40,11 @@ fix_permissions() {
   fi
 
   chmod +x "$STACK_DIR"/scripts/*.sh 2>/dev/null || true
+
+  if ! git config user.email >/dev/null 2>&1; then
+    git config user.name "Maksim Peshekhonov"
+    git config user.email "kassady71@gmail.com"
+  fi
 }
 
 echo "==> Pulling $GIT_REMOTE/$GIT_BRANCH"
