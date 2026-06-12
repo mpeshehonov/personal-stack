@@ -8,19 +8,37 @@
   }
 
   body {
-    @apply min-h-screen bg-surface text-ink antialiased;
-    background-image: theme("backgroundImage.mesh");
-    background-attachment: fixed;
+    @apply min-h-screen bg-surface-muted text-ink antialiased;
   }
 
   ::selection {
-    @apply bg-accent/30 text-ink;
+    @apply bg-accent-soft text-ink;
   }
 }
 
 @layer components {
+  .section-label {
+    @apply mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent;
+  }
+
+  .section-title {
+    @apply text-2xl font-semibold tracking-tight text-ink sm:text-3xl;
+  }
+
+  .card {
+    @apply rounded-2xl border border-border bg-surface-card p-6 shadow-card;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-ring;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-ink transition hover:border-border-strong hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-ring;
+  }
+
   .prose-blog {
-    @apply text-ink-muted leading-relaxed;
+    @apply leading-relaxed text-ink-muted;
   }
 
   .prose-blog h1 {
@@ -52,52 +70,20 @@
     @apply list-decimal;
   }
 
-  .prose-blog li {
-    @apply text-ink-muted;
-  }
-
   .prose-blog a {
     @apply text-accent hover:underline;
   }
 
-  .prose-blog blockquote {
-    @apply mb-4 border-l-2 pl-4 italic text-ink-faint;
-    border-color: rgba(34, 211, 238, 0.4);
-  }
-
   .prose-blog code {
-    @apply rounded px-1.5 py-0.5 font-mono text-sm text-accent;
-    background-color: rgba(255, 255, 255, 0.08);
+    @apply rounded bg-surface-subtle px-1.5 py-0.5 font-mono text-sm text-ink;
   }
 
   .prose-blog pre {
-    @apply mb-4 overflow-x-auto rounded-xl border bg-surface-raised p-4;
-    border-color: rgba(255, 255, 255, 0.08);
+    @apply mb-4 overflow-x-auto rounded-xl border border-border bg-surface-subtle p-4;
   }
 
   .prose-blog pre code {
-    @apply p-0 text-ink-muted;
-    background-color: transparent;
-  }
-
-  .prose-blog table {
-    @apply mb-4 w-full border-collapse text-sm;
-  }
-
-  .prose-blog th,
-  .prose-blog td {
-    @apply border px-3 py-2 text-left;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .prose-blog th {
-    @apply font-medium text-ink;
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-
-  .prose-blog hr {
-    @apply my-8 border-t;
-    border-color: rgba(255, 255, 255, 0.1);
+    @apply bg-transparent p-0;
   }
 
   .prose-blog strong {

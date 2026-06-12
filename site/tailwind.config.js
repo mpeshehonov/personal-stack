@@ -9,44 +9,43 @@ module.exports = {
     extend: {
       colors: {
         surface: {
-          DEFAULT: "#0c0c12",
-          raised: "#12121a",
-          glass: "rgba(18, 18, 26, 0.72)",
+          DEFAULT: "#ffffff",
+          muted: "#f8fafc",
+          subtle: "#f1f5f9",
+          card: "#ffffff",
+        },
+        border: {
+          DEFAULT: "#e2e8f0",
+          strong: "#cbd5e1",
         },
         accent: {
-          DEFAULT: "#22d3ee",
-          dim: "#0891b2",
-          glow: "rgba(34, 211, 238, 0.15)",
+          DEFAULT: "#2563eb",
+          hover: "#1d4ed8",
+          soft: "#eff6ff",
+          ring: "rgba(37, 99, 235, 0.25)",
         },
         ink: {
-          DEFAULT: "#f0f4f8",
-          muted: "#94a3b8",
+          DEFAULT: "#0f172a",
+          muted: "#475569",
           faint: "#64748b",
+          inverse: "#f8fafc",
         },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
-      backgroundImage: {
-        mesh: `
-          radial-gradient(ellipse 80% 60% at 10% 20%, rgba(34, 211, 238, 0.12), transparent 50%),
-          radial-gradient(ellipse 60% 50% at 90% 80%, rgba(99, 102, 241, 0.1), transparent 50%),
-          radial-gradient(ellipse 50% 40% at 50% 50%, rgba(34, 211, 238, 0.05), transparent 60%)
-        `,
+      boxShadow: {
+        card: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06)",
+        lift: "0 4px 20px rgba(15, 23, 42, 0.08)",
       },
       animation: {
-        "fade-up": "fadeUp 0.6s ease-out forwards",
-        "pulse-glow": "pulseGlow 3s ease-in-out infinite",
+        "fade-up": "fadeUp 0.5s ease-out forwards",
       },
       keyframes: {
         fadeUp: {
-          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        pulseGlow: {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "0.8" },
         },
       },
     },

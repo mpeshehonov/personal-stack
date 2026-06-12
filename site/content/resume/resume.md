@@ -37,6 +37,7 @@ POTALONU / PREEGLOS — билетный сервис и схема зала (Ne
 04.2024 – 07.2025 | Удаленно
 
 - Спроектировал и реализовал end‑to‑end модуль согласования закупочных процедур (НКЗ 3.0): role-based access, статусы, переходы состояний, черновики и восстановление пользовательских сценариев.
+- Интегрировал авторизацию через Keycloak: SSO, роли и доступ к модулям согласования по матрице RBAC.
 - Внедрил Orval для генерации типов и API‑клиента по OpenAPI, убрал ручное обновление контрактов и снизил количество ошибок на стыке фронтенда и backend.
 - Реализовал формы и сценарии редактирования на react-hook-form, развивал внутренний UI Kit и единые паттерны для интерфейсов сервиса.
 - Оптимизировал сборку на Vite (code splitting, dynamic imports), улучшив скорость начальной загрузки и отзывчивость приложения на длинных сценариях согласования.
@@ -55,6 +56,7 @@ POTALONU / PREEGLOS — билетный сервис и схема зала (Ne
 05.2022 – 06.2023 | Удаленно
 
 - Спроектировал и реализовал веб‑приложение “Регистрация выпусков чугуна” для доменного производства, переведя ключевые операции из разрозненных ручных процессов в единый интерфейс.
+- Настроил вход и разграничение доступа через Keycloak (SSO, роли, защита API-маршрутов).
 - Реализовал role-based сценарии работы с производственными данными и сложные интерактивные таблицы на TanStack Table: сортировка, фильтрация, пагинация, работа с большими объёмами данных.
 - Настроил клиентское кэширование и фоновые обновления через React Query, снизив нагрузку на API и сделав работу с данными более предсказуемой.
 - Интегрировал Sentry для мониторинга ошибок и диагностики проблем в продакшене.
@@ -75,7 +77,7 @@ POTALONU / PREEGLOS — билетный сервис и схема зала (Ne
 - Frontend‑стек: React, Next.js (SSR/SSG), Redux Toolkit, Redux‑Saga, MobX, React Query (TanStack Query), TanStack Table, React Hook Form, Zod, Formik, react-router, Framer Motion, Radix UI, Tailwind CSS
 - Сложные интерфейсы и визуализация: Cytoscape.js, Highcharts, Recharts, react-grid-layout, react-virtualized, @tanstack/react-virtual, Canvas
 - Сборка и инфраструктура фронтенда: Vite, Webpack, Git, монорепозитории, code splitting, dynamic imports, tree shaking, CI/CD, GitHub Actions, GitLab CI/CD, Jenkins, Docker, Docker Compose, Coolify
-- Интеграции и бэкенд: REST API, GraphQL (Apollo Client), OpenAPI/Orval, WebSocket, Socket.io, WebRTC, Nest.js (REST, модули, DTO, TypeORM), Drizzle ORM, PostgreSQL, Firebase (Auth, Functions), Auth.js, JWT/Passport, Node.js, Symfony, Bitrix, jQuery
+- Интеграции и бэкенд: REST API, GraphQL (Apollo Client), OpenAPI/Orval, WebSocket, Socket.io, WebRTC, Keycloak, Nest.js (REST, модули, DTO, TypeORM), Drizzle ORM, PostgreSQL, Firebase (Auth, Functions), Auth.js, JWT/Passport, Node.js, Symfony, Bitrix, jQuery
 - Наблюдаемость и качество: Sentry, Kibana, Grafana, Jest, Vitest, Playwright
 - UI и продукт: дизайн‑системы и UI Kit, Material UI, styled-components, BEM, i18next, Telegram Mini Apps, Figma
 

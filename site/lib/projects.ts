@@ -1,8 +1,4 @@
-import x5 from "@/content/projects/x5-procurement.json";
-import nlmk from "@/content/projects/nlmk-iron-registration.json";
-import seatMap from "@/content/projects/potalonu-seat-map.json";
-import sendonate from "@/content/projects/sendonate-donations.json";
-import citilink from "@/content/projects/citilink-migration.json";
+import index from "@/content/projects/index.json";
 
 export type Project = {
   slug: string;
@@ -19,7 +15,7 @@ export type Project = {
   order: number;
 };
 
-const allProjects: Project[] = [x5, nlmk, seatMap, sendonate, citilink];
+const allProjects = index as Project[];
 
 export function getProjects(): Project[] {
   return [...allProjects].sort((a, b) => a.order - b.order);

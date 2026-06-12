@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -8,68 +7,61 @@ import {
   getAllBlogSlugs,
   getBlogPostBySlug,
 } from "@/lib/blog";
+import { getDictionary, localizedPath } from "@/lib/i18n";
+import type { Locale } from "@/middleware";
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 };
 
 export async function generateStaticParams() {
-  return getAllBlogSlugs().map((slug) => ({ slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
-  if (!post) return {};
-
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      url: `https://mpeshekhonov.ru/blog/${slug}`,
-      type: "article",
-      publishedTime: post.date,
-    },
-  };
+  const slugs = getAllBlogSlugs();
+  return ["ru", "en"].flatMap((locale) =>
+    slugs.map((slug) => ({ locale, slug })),
+  );
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug, locale: raw } = await params;
+  const locale = (raw === "en" ? "en" : "ru") as Locale;
+  const dict = getDictionary(locale);
   const post = getBlogPostBySlug(slug);
   if (!post) notFound();
+
+  const backLabel = locale === "en" ? "All posts" : "Все записи";
 
   return (
     <article className="pb-20 pt-8">
       <header className="mb-10">
         <Link
-          href="/blog"
+          href={localizedPath(locale, "/blog")}
           className="mb-4 inline-block text-sm text-ink-faint hover:text-accent"
         >
-          ← Все записи
+          ← {backLabel}
         </Link>
         <time className="font-mono text-xs text-ink-faint">
           {formatBlogDate(post.date)}
         </time>
-        <h1 className="mb-4 mt-2 text-3xl font-bold text-ink sm:text-4xl">
-          {post.title}
-        </h1>
+        <h1 className="mb-4 mt-2 text-3xl font-bold text-ink sm:text-4xl">{post.title}</h1>
         <div className="flex flex-wrap gap-2">
           {post.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-lg border border-accent/20 bg-accent/8 px-2.5 py-1 text-xs text-accent"
+              className="rounded-md bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent"
             >
               {tag}
             </span>
           ))}
         </div>
       </header>
-
-      <div className="prose-blog rounded-2xl border border-white/8 bg-surface-glass p-6 backdrop-blur-md sm:p-8">
+      <div className="prose-blog card p-6 sm:p-8">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
       </div>
+      <p className="mt-8">
+        <Link href={localizedPath(locale, "/")} className="text-sm text-ink-faint hover:text-accent">
+          ← {dict.nav.home}
+        </Link>
+      </p>
     </article>
   );
 }

@@ -42,6 +42,7 @@ export const experiences: Experience[] = [
     location: "Удалённо",
     bullets: [
       "Модуль согласования закупочных процедур (НКЗ 3.0): RBAC, статусы, переходы состояний",
+      "Авторизация через Keycloak (SSO, роли, матрица доступа к модулям)",
       "Orval для генерации типов и API-клиента по OpenAPI",
       "Оптимизация сборки на Vite: code splitting, dynamic imports",
     ],
@@ -64,6 +65,7 @@ export const experiences: Experience[] = [
     location: "Удалённо",
     bullets: [
       "Веб-приложение «Регистрация выпусков чугуна» для доменного производства",
+      "Keycloak: SSO, роли и защита API-маршрутов",
       "Сложные таблицы на TanStack Table с большими объёмами данных",
       "React Query для кэширования, Sentry для мониторинга",
     ],
@@ -98,3 +100,13 @@ export const education = [
 
 export const achievements =
   "Победитель хакатона «Цифровой прорыв» (2021, 2020), победитель Hack.Genesis _ONLINE_, финалист Virus Hack, эксперт чемпионата WorldSkills.";
+
+export function getExperiences(_locale: "ru" | "en"): Experience[] {
+  return experiences;
+}
+
+export function getAboutText(locale: "ru" | "en"): string {
+  return locale === "en"
+    ? "Senior Frontend / Fullstack engineer since 2018. B2B, e-commerce, marketplaces, real-time, and Telegram Mini Apps — from complex UI to typed API contracts and production integrations."
+    : aboutText;
+}

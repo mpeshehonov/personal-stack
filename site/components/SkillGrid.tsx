@@ -18,7 +18,7 @@ export function SkillGrid({ groups, compact = false }: Props) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ delay: gi * 0.05, duration: 0.4 }}
-          className="rounded-2xl border border-white/8 bg-surface-glass p-5 backdrop-blur-md"
+          className="rounded-2xl border border-border bg-surface p-5 shadow-card"
         >
           <h3 className="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent">
             {group.title}
@@ -27,7 +27,7 @@ export function SkillGrid({ groups, compact = false }: Props) {
             {group.skills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-lg border border-white/6 bg-white/4 px-2.5 py-1 text-xs text-ink-muted"
+                className="rounded-md bg-surface-subtle px-2.5 py-1 text-xs text-ink-muted"
               >
                 {skill}
               </span>

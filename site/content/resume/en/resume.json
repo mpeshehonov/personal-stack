@@ -1,10 +1,10 @@
 {
-  "name": "Максим Пешехонов",
-  "title": "Senior Frontend-разработчик",
+  "name": "Maksim Peshekhonov",
+  "title": "Senior Frontend Engineer",
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
-  "location": "Сочи, Россия",
-  "summary": "Senior Frontend / Fullstack разработчик с 2018 года. B2B, e-commerce, real-time, Telegram Mini Apps — от сложных UI до typed API contracts и продакшен-интеграций.",
+  "location": "Sochi, Russia",
+  "summary": "Senior Frontend / Fullstack engineer since 2018. B2B, e-commerce, real-time, Telegram Mini Apps — from complex UI to typed API contracts and production integrations.",
   "skills": [
     "TypeScript",
     "React",
@@ -15,8 +15,7 @@
     "Nest.js",
     "Keycloak",
     "Playwright",
-    "Docker",
-    "GraphQL"
+    "Docker"
   ],
   "links": {
     "telegram": "https://t.me/makusimu_san",

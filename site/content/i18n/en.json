@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "siteName": "Maksim Peshekhonov",
+    "description": "Senior Frontend / Fullstack engineer. Next.js, React, TypeScript, complex UIs in production."
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "blog": "Blog",
+    "resume": "Resume",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "hero": {
+    "eyebrow": "Senior Frontend · Fullstack",
+    "ctaResume": "View resume",
+    "ctaPdf": "Download PDF",
+    "skillsLabel": "Core technologies"
+  },
+  "sections": {
+    "selectedWork": "Selected work",
+    "selectedWorkDesc": "Case studies with measurable impact — enterprise, e-commerce, real-time, and Mini Apps.",
+    "allProjects": "All projects",
+    "experience": "Experience",
+    "experienceDesc": "Recent roles — full timeline on the resume page.",
+    "skills": "Skills",
+    "skillsDesc": "From complex UI and data viz to fullstack, DevOps, and production observability.",
+    "contact": "Get in touch",
+    "contactDesc": "Open to job opportunities and interesting product work.",
+    "blog": "Blog",
+    "blogDesc": "Notes on engineering, infrastructure, and tooling."
+  },
+  "cta": {
+    "telegram": "Message on Telegram",
+    "email": "Email",
+    "openToOffers": "Open to offers"
+  },
+  "resume": {
+    "title": "Resume",
+    "download": "Download PDF",
+    "about": "About",
+    "experience": "Work experience",
+    "achievements": "Achievements",
+    "education": "Education"
+  },
+  "footer": {
+    "built": "Next.js · TypeScript · Tailwind"
+  },
+  "lang": {
+    "ru": "RU",
+    "en": "EN"
+  }
+}
