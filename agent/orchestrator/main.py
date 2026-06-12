@@ -18,7 +18,7 @@ from finance.executor import FinanceExecutor
 from finance.proposal_parser import extract_trade_proposals
 from orchestrator.config import load_env_file
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
-from orchestrator.git_deploy import apply_task_deploy, pull_latest
+from orchestrator.git_deploy import apply_daily_commit, apply_task_deploy, pull_latest
 from orchestrator.health import collect_health, format_health
 from orchestrator.memory import build_context_pack, ensure_daily_log
 from orchestrator.state import (
@@ -103,43 +103,49 @@ async def run_daily_cycle() -> None:
         await notify_telegram("Daily cycle skipped: autonomy paused")
         return
 
-    health = collect_health()
-    log_health(health.to_dict())
-    ensure_daily_log()
-
-    if not health.site_ok:
-        logger.warning("Site down — attempting redeploy")
-        import subprocess
-
-        subprocess.run(
-            [str(AGENT_ROOT.parent / "scripts" / "redeploy-site.sh")],
-            check=False,
-        )
+    summary = ""
+    report = ""
+    try:
         health = collect_health()
+        log_health(health.to_dict())
+        ensure_daily_log()
 
-    context = build_context_pack(health)
-    summary = await asyncio.to_thread(run_daily_agent, context, health.light_mode)
+        if not health.site_ok:
+            logger.warning("Site down — attempting redeploy")
+            import subprocess
 
-    finance = FinanceExecutor()
-    agent_proposals = extract_trade_proposals(summary)
-    proposal_outcomes: list[dict] = []
-    if agent_proposals:
-        proposal_outcomes = await asyncio.to_thread(
-            finance.process_agent_proposals, agent_proposals
+            subprocess.run(
+                [str(AGENT_ROOT.parent / "scripts" / "redeploy-site.sh")],
+                check=False,
+            )
+            health = collect_health()
+
+        context = build_context_pack(health)
+        summary = await asyncio.to_thread(run_daily_agent, context, health.light_mode)
+
+        finance = FinanceExecutor()
+        agent_proposals = extract_trade_proposals(summary)
+        proposal_outcomes: list[dict] = []
+        if agent_proposals:
+            proposal_outcomes = await asyncio.to_thread(
+                finance.process_agent_proposals, agent_proposals
+            )
+        fin_summary = await asyncio.to_thread(finance.daily_analysis)
+        if proposal_outcomes:
+            fin_summary["agent_proposals"] = proposal_outcomes
+        draft_ids = await asyncio.to_thread(daily_bounty_scan)
+
+        report = (
+            f"Daily report\n\n{format_health(health)}\n\n"
+            f"Agent: {summary[:800]}\n\n"
+            f"Finance: {json.dumps(fin_summary, indent=0)[:500]}\n\n"
+            f"Bounty drafts: {draft_ids}"
         )
-    fin_summary = await asyncio.to_thread(finance.daily_analysis)
-    if proposal_outcomes:
-        fin_summary["agent_proposals"] = proposal_outcomes
-    draft_ids = await asyncio.to_thread(daily_bounty_scan)
-
-    report = (
-        f"Daily report\n\n{format_health(health)}\n\n"
-        f"Agent: {summary[:800]}\n\n"
-        f"Finance: {json.dumps(fin_summary, indent=0)[:500]}\n\n"
-        f"Bounty drafts: {draft_ids}"
-    )
-    log_run("daily", "finished", summary[:500])
-    await notify_telegram(report)
+        log_run("daily", "finished", summary[:500])
+    finally:
+        commit_report = await asyncio.to_thread(apply_daily_commit, summary)
+        if report:
+            await notify_telegram(f"{report}\n\n{commit_report}")
 
 
 async def worker_loop() -> None:

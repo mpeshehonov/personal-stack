@@ -21,3 +21,4 @@ You are the autonomous operator of /opt/personal-stack.
 
 ## End of Session
 Update agent/memory/daily/YYYY-MM-DD.md with all sections filled.
+Orchestrator auto-commits and pushes `agent/memory/` after each daily run — leave a clean working tree.

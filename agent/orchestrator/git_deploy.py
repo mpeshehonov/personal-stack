@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import os
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 from orchestrator.config import STACK_DIR
@@ -44,6 +45,31 @@ def has_uncommitted_changes() -> bool:
     return bool(git_status_porcelain())
 
 
+MEMORY_PATH_PREFIXES = ("agent/memory/",)
+
+
+def _dirty_paths() -> list[str]:
+    status = git_status_porcelain()
+    if not status:
+        return []
+    paths: list[str] = []
+    for line in status.splitlines():
+        parts = line.strip().split()
+        if parts:
+            paths.append(parts[-1].rstrip("/"))
+    return paths
+
+
+def _is_memory_only_dirty() -> bool:
+    paths = _dirty_paths()
+    if not paths:
+        return False
+    return all(
+        any(p == prefix.rstrip("/") or p.startswith(prefix) for prefix in MEMORY_PATH_PREFIXES)
+        for p in paths
+    )
+
+
 def clean_junk_untracked() -> list[str]:
     """Remove accidental shell redirect files like '=22.6' from repo root."""
     removed: list[str] = []
@@ -57,6 +83,12 @@ def clean_junk_untracked() -> list[str]:
 def pull_latest() -> tuple[bool, str]:
     """Fetch and fast-forward to origin/main. Fails if working tree is dirty."""
     removed = clean_junk_untracked()
+    if has_uncommitted_changes() and _is_memory_only_dirty():
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        ok, log = commit_and_push(f"chore(memory): daily artifacts {today}")
+        if not ok:
+            return False, f"Не удалось закоммитить memory перед pull:\n{log[:400]}"
+
     dirty = git_status_porcelain()
     if dirty:
         lines = dirty.splitlines()[:8]
@@ -136,6 +168,24 @@ def deploy(*, restart_telegram: bool = True, restart_orchestrator: bool = True) 
         logger.warning("deploy failed: %s", out[-2000:])
         return False, out[-1500:] or "deploy-from-git.sh завершился с ошибкой"
     return True, out[-800:] or "Deploy OK"
+
+
+def apply_daily_commit(summary: str = "") -> str:
+    """Commit and push daily agent memory writes. No deploy."""
+    if not has_uncommitted_changes():
+        return "Daily commit: изменений нет"
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    msg = f"chore(memory): daily log {today}"
+    if summary.strip():
+        hint = summary.strip().split("\n", 1)[0][:60]
+        if hint and not hint.startswith("#"):
+            msg = f"chore(memory): daily log {today} — {hint}"
+
+    ok, log = commit_and_push(msg)
+    if ok:
+        return "Daily commit: OK"
+    return f"Daily commit: ошибка\n{log[:500]}"
 
 
 def apply_task_deploy(task_summary: str) -> str:
