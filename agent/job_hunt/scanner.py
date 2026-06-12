@@ -11,13 +11,16 @@ import httpx
 
 from job_hunt.config import (
     JOBHUNT_ENABLED,
+    JOBHUNT_HABR_ENABLED,
     JOBHUNT_HH_AREA,
+    JOBHUNT_HH_ENABLED,
     JOBHUNT_HH_MAX_PAGES,
     JOBHUNT_HH_PER_PAGE,
     JOBHUNT_HH_TEXT,
     JOBHUNT_MIN_MATCH,
     JOBHUNT_USER_AGENT,
 )
+from job_hunt.habr import fetch_habr_vacancies
 from job_hunt.matcher import load_resume_skills, score_vacancy
 from orchestrator.state import add_job_lead, job_lead_exists
 
@@ -84,6 +87,24 @@ def fetch_hh_vacancies(
     return results
 
 
+def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
+    """Fetch from enabled sources. HH often 403 from NL — Habr fills the gap."""
+    vacancies: list[dict[str, Any]] = []
+    counts: dict[str, int] = {"hh": 0, "habr": 0}
+
+    if JOBHUNT_HH_ENABLED:
+        hh = fetch_hh_vacancies()
+        counts["hh"] = len(hh)
+        vacancies.extend(hh)
+
+    if JOBHUNT_HABR_ENABLED:
+        habr = fetch_habr_vacancies()
+        counts["habr"] = len(habr)
+        vacancies.extend(habr)
+
+    return vacancies, counts
+
+
 def _vacancy_to_lead_fields(
     vacancy: dict[str, Any],
     *,
@@ -104,8 +125,10 @@ def _vacancy_to_lead_fields(
     if salary:
         salary_raw = json.dumps(salary, ensure_ascii=False)
 
+    source = vacancy.get("_source") or "hh"
+
     return {
-        "source": "hh",
+        "source": source,
         "external_id": str(vacancy.get("id", "")),
         "url": vacancy.get("alternate_url") or "",
         "title": vacancy.get("name") or "",
@@ -127,8 +150,9 @@ def scan_and_store_leads(
 ) -> dict[str, Any]:
     """Score vacancies, insert new high-match leads. Returns scan summary."""
     min_match = min_match if min_match is not None else JOBHUNT_MIN_MATCH
+    source_counts: dict[str, int] = {"hh": 0, "habr": 0}
     if vacancies is None:
-        vacancies = fetch_hh_vacancies()
+        vacancies, source_counts = fetch_all_vacancies()
 
     resume_skills = load_resume_skills()
     new_lead_ids: list[int] = []
@@ -136,10 +160,11 @@ def scan_and_store_leads(
     below_threshold = 0
 
     for vacancy in vacancies:
+        source = vacancy.get("_source") or "hh"
         external_id = str(vacancy.get("id", ""))
         if not external_id:
             continue
-        if job_lead_exists("hh", external_id):
+        if job_lead_exists(source, external_id):
             skipped_existing += 1
             continue
 
@@ -156,6 +181,7 @@ def scan_and_store_leads(
     return {
         "enabled": True,
         "fetched": len(vacancies),
+        "by_source": source_counts,
         "new_count": len(new_lead_ids),
         "skipped_existing": skipped_existing,
         "below_threshold": below_threshold,

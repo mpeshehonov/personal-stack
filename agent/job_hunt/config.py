@@ -19,3 +19,6 @@ JOBHUNT_USER_AGENT = os.environ.get(
 JOBHUNT_HH_AREA = os.environ.get("JOBHUNT_HH_AREA", "113")
 JOBHUNT_HH_PER_PAGE = int(os.environ.get("JOBHUNT_HH_PER_PAGE", "20"))
 JOBHUNT_HH_MAX_PAGES = int(os.environ.get("JOBHUNT_HH_MAX_PAGES", "2"))
+JOBHUNT_HH_ENABLED = os.environ.get("JOBHUNT_HH_ENABLED", "true").lower() in ("true", "1", "yes")
+JOBHUNT_HABR_ENABLED = os.environ.get("JOBHUNT_HABR_ENABLED", "true").lower() in ("true", "1", "yes")
+JOBHUNT_HABR_QUERY = os.environ.get("JOBHUNT_HABR_QUERY", "frontend react typescript")
