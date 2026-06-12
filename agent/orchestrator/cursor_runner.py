@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from orchestrator.config import STACK_DIR, load_env_file
+from orchestrator.cursor_bridge import cleanup_cursor_bridge
 from orchestrator.memory import append_daily_section, build_context_pack
 from orchestrator.state import kv_get, kv_set, log_run
 
@@ -29,35 +30,45 @@ def run_cursor_prompt(prompt: str, one_shot: bool = False) -> str:
     if not api_key:
         return "CURSOR_API_KEY not configured in secrets/.env.cursor"
 
+    cleanup_cursor_bridge()
     Agent, AgentOptions, CursorAgentError, LocalAgentOptions = _ensure_sdk()
     cwd = str(STACK_DIR)
 
-    if one_shot:
-        try:
-            result = Agent.prompt(
-                prompt,
-                AgentOptions(
-                    api_key=api_key,
-                    model="auto",
-                    local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                ),
-            )
-            return result.result or f"Status: {result.status}"
-        except CursorAgentError as e:
-            return f"Cursor startup failed: {e.message}"
-
-    agent_id = kv_get("cursor_agent_id")
     try:
-        if agent_id:
-            agent_ctx = Agent.resume(
-                agent_id,
-                AgentOptions(
-                    api_key=api_key,
-                    model="auto",
-                    local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                ),
-            )
-        else:
+        if one_shot:
+            try:
+                result = Agent.prompt(
+                    prompt,
+                    AgentOptions(
+                        api_key=api_key,
+                        model="auto",
+                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                    ),
+                )
+                return result.result or f"Status: {result.status}"
+            except CursorAgentError as e:
+                return f"Cursor startup failed: {e.message}"
+
+        agent_id = kv_get("cursor_agent_id")
+        try:
+            if agent_id:
+                agent_ctx = Agent.resume(
+                    agent_id,
+                    AgentOptions(
+                        api_key=api_key,
+                        model="auto",
+                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                    ),
+                )
+            else:
+                agent_ctx = Agent.create(
+                    AgentOptions(
+                        api_key=api_key,
+                        model="auto",
+                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                    ),
+                )
+        except Exception:
             agent_ctx = Agent.create(
                 AgentOptions(
                     api_key=api_key,
@@ -65,26 +76,20 @@ def run_cursor_prompt(prompt: str, one_shot: bool = False) -> str:
                     local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
                 ),
             )
-    except Exception:
-        agent_ctx = Agent.create(
-            AgentOptions(
-                api_key=api_key,
-                model="auto",
-                local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-            ),
-        )
 
-    with agent_ctx as agent:
-        if not agent_id:
-            kv_set("cursor_agent_id", agent.agent_id)
-        run = agent.send(prompt)
-        result = run.wait()
-        summary = (result.result or "")[:2000]
-        if result.status == "error":
-            log_run("cursor", "error", summary)
-            return f"Run failed: {summary}"
-        log_run("cursor", "finished", summary)
-        return summary
+        with agent_ctx as agent:
+            if not agent_id:
+                kv_set("cursor_agent_id", agent.agent_id)
+            run = agent.send(prompt)
+            result = run.wait()
+            summary = (result.result or "")[:2000]
+            if result.status == "error":
+                log_run("cursor", "error", summary)
+                return f"Run failed: {summary}"
+            log_run("cursor", "finished", summary)
+            return summary
+    finally:
+        cleanup_cursor_bridge()
 
 
 def run_daily_agent(context: str, light_mode: bool) -> str:
@@ -109,7 +114,8 @@ Instructions:
 
 Work only inside /opt/personal-stack. Never expose secrets.
 """
-    summary = run_cursor_prompt(prompt)
+    # one_shot: no persistent bridge between daily runs (saves ~100+ MB RAM)
+    summary = run_cursor_prompt(prompt, one_shot=True)
     append_daily_section("Summary", summary[:1500])
     return summary
 
@@ -160,6 +166,7 @@ def _stream_agent(prompt: str, on_text, *, one_shot: bool) -> str:
         on_text(msg)
         return msg
 
+    cleanup_cursor_bridge()
     Agent, AgentOptions, CursorAgentError, LocalAgentOptions = _ensure_sdk()
     cwd = str(STACK_DIR)
     accumulated = ""
@@ -231,6 +238,8 @@ def _stream_agent(prompt: str, on_text, *, one_shot: bool) -> str:
         on_text(err)
         logger.exception("_stream_agent failed")
         return err
+    finally:
+        cleanup_cursor_bridge()
 
 
 def run_ask_streaming(prompt: str, on_text) -> str:
