@@ -59,6 +59,33 @@ def init_db() -> None:
                 status TEXT NOT NULL,
                 summary TEXT
             );
+            CREATE TABLE IF NOT EXISTS job_leads (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                source TEXT NOT NULL,
+                external_id TEXT NOT NULL,
+                url TEXT NOT NULL,
+                title TEXT NOT NULL,
+                company TEXT NOT NULL DEFAULT '',
+                salary_raw TEXT,
+                location TEXT NOT NULL DEFAULT '',
+                skills_json TEXT NOT NULL DEFAULT '[]',
+                description_snippet TEXT NOT NULL DEFAULT '',
+                match_score INTEGER NOT NULL DEFAULT 0,
+                match_reasons_json TEXT NOT NULL DEFAULT '[]',
+                status TEXT NOT NULL DEFAULT 'new',
+                UNIQUE(source, external_id)
+            );
+            CREATE TABLE IF NOT EXISTS job_applications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                lead_id INTEGER NOT NULL,
+                ts TEXT NOT NULL,
+                cover_letter TEXT NOT NULL DEFAULT '',
+                resume_variant_path TEXT,
+                status TEXT NOT NULL DEFAULT 'draft',
+                notes TEXT NOT NULL DEFAULT '',
+                FOREIGN KEY (lead_id) REFERENCES job_leads(id)
+            );
             """
         )
 
@@ -281,3 +308,122 @@ def year_pnl(year: int | None = None) -> float:
             (f"{year}-%",),
         ).fetchone()
         return float(row["total"]) if row else 0.0
+
+
+def add_job_lead(
+    *,
+    source: str,
+    external_id: str,
+    url: str,
+    title: str,
+    company: str = "",
+    salary_raw: str | None = None,
+    location: str = "",
+    skills_json: str = "[]",
+    description_snippet: str = "",
+    match_score: int = 0,
+    match_reasons_json: str = "[]",
+    status: str = "new",
+) -> int:
+    with get_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO job_leads(
+                ts, source, external_id, url, title, company,
+                salary_raw, location, skills_json, description_snippet,
+                match_score, match_reasons_json, status
+            ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                _utcnow(),
+                source,
+                external_id,
+                url,
+                title,
+                company,
+                salary_raw,
+                location,
+                skills_json,
+                description_snippet,
+                match_score,
+                match_reasons_json,
+                status,
+            ),
+        )
+        return int(cur.lastrowid)
+
+
+def job_lead_exists(source: str, external_id: str) -> bool:
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT 1 FROM job_leads WHERE source = ? AND external_id = ? LIMIT 1",
+            (source, external_id),
+        ).fetchone()
+        return row is not None
+
+
+def get_job_lead(lead_id: int) -> sqlite3.Row | None:
+    with get_conn() as conn:
+        return conn.execute("SELECT * FROM job_leads WHERE id = ?", (lead_id,)).fetchone()
+
+
+def list_job_leads(
+    status: str | None = "new",
+    limit: int = 10,
+    min_score: int = 0,
+) -> list[sqlite3.Row]:
+    with get_conn() as conn:
+        if status is None:
+            return conn.execute(
+                """
+                SELECT * FROM job_leads
+                WHERE match_score >= ?
+                ORDER BY match_score DESC, id DESC
+                LIMIT ?
+                """,
+                (min_score, limit),
+            ).fetchall()
+        return conn.execute(
+            """
+            SELECT * FROM job_leads
+            WHERE status = ? AND match_score >= ?
+            ORDER BY match_score DESC, id DESC
+            LIMIT ?
+            """,
+            (status, min_score, limit),
+        ).fetchall()
+
+
+def update_job_lead_status(lead_id: int, status: str) -> None:
+    with get_conn() as conn:
+        conn.execute(
+            "UPDATE job_leads SET status = ? WHERE id = ?",
+            (status, lead_id),
+        )
+
+
+def add_job_application(
+    lead_id: int,
+    *,
+    cover_letter: str = "",
+    resume_variant_path: str | None = None,
+    status: str = "draft",
+    notes: str = "",
+) -> int:
+    with get_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO job_applications(
+                lead_id, ts, cover_letter, resume_variant_path, status, notes
+            ) VALUES(?, ?, ?, ?, ?, ?)
+            """,
+            (
+                lead_id,
+                _utcnow(),
+                cover_letter,
+                resume_variant_path,
+                status,
+                notes,
+            ),
+        )
+        return int(cur.lastrowid)

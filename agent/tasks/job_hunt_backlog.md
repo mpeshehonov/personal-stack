@@ -5,12 +5,12 @@ Pick **at most 1 job-hunt task per day** (after site health).
 
 ## Phase 0 — Discovery + digest (no auto-apply)
 
-- [ ] **JH-01** SQLite tables `job_leads`, `job_applications` in `orchestrator/state.py`
-- [ ] **JH-02** `job_hunt/scanner.py` — HH.ru fetch + dedup by external_id
-- [ ] **JH-03** `job_hunt/matcher.py` — score vs `site/content/resume/resume.json`
-- [ ] **JH-04** Wire `daily_job_scan()` into `orchestrator/main.py` + daily report section
-- [ ] **JH-05** Telegram `/jobs` command (Rich list of new leads)
-- [ ] **JH-06** `secrets/.env.jobhunt.template` + config loader
+- [x] **JH-01** SQLite tables `job_leads`, `job_applications` in `orchestrator/state.py`
+- [x] **JH-02** `job_hunt/scanner.py` — HH.ru fetch + dedup by external_id
+- [x] **JH-03** `job_hunt/matcher.py` — score vs `site/content/resume/resume.json`
+- [x] **JH-04** Wire `daily_job_scan()` into `orchestrator/main.py` + daily report section
+- [x] **JH-05** Telegram `/jobs` command (Rich list of new leads)
+- [x] **JH-06** `secrets/.env.jobhunt.template` + config loader
 
 ## Phase 1 — Draft + approve
 

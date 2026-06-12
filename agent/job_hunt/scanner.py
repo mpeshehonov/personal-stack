@@ -1,0 +1,233 @@
+"""Fetch HH.ru vacancies, score matches, store new leads (read-only — no apply)."""
+
+from __future__ import annotations
+
+import json
+import logging
+import time
+from typing import Any
+
+import httpx
+
+from job_hunt.config import (
+    JOBHUNT_ENABLED,
+    JOBHUNT_HH_AREA,
+    JOBHUNT_HH_MAX_PAGES,
+    JOBHUNT_HH_PER_PAGE,
+    JOBHUNT_HH_TEXT,
+    JOBHUNT_MIN_MATCH,
+    JOBHUNT_USER_AGENT,
+)
+from job_hunt.matcher import load_resume_skills, score_vacancy
+from orchestrator.state import add_job_lead, job_lead_exists
+
+logger = logging.getLogger(__name__)
+
+HH_VACANCIES_URL = "https://api.hh.ru/vacancies"
+RATE_LIMIT_SEC = 2.0
+
+
+def _hh_headers() -> dict[str, str]:
+    return {"User-Agent": JOBHUNT_USER_AGENT}
+
+
+def fetch_hh_vacancies(
+    *,
+    text: str | None = None,
+    area: str | None = None,
+    per_page: int | None = None,
+    max_pages: int | None = None,
+) -> list[dict[str, Any]]:
+    """Fetch vacancy list from HH.ru public API with rate limiting."""
+    text = text if text is not None else JOBHUNT_HH_TEXT
+    area = area if area is not None else JOBHUNT_HH_AREA
+    per_page = per_page if per_page is not None else JOBHUNT_HH_PER_PAGE
+    max_pages = max_pages if max_pages is not None else JOBHUNT_HH_MAX_PAGES
+
+    results: list[dict[str, Any]] = []
+    page = 0
+
+    while page < max_pages:
+        if page > 0:
+            time.sleep(RATE_LIMIT_SEC)
+        try:
+            resp = httpx.get(
+                HH_VACANCIES_URL,
+                params={
+                    "text": text,
+                    "area": area,
+                    "schedule": "remote",
+                    "per_page": per_page,
+                    "page": page,
+                },
+                headers=_hh_headers(),
+                timeout=30,
+            )
+            if resp.status_code != 200:
+                logger.warning("HH.ru API returned %s on page %s", resp.status_code, page)
+                break
+            data = resp.json()
+        except httpx.HTTPError as e:
+            logger.warning("HH.ru fetch failed page %s: %s", page, e)
+            break
+
+        items = data.get("items") or []
+        if not items:
+            break
+        results.extend(items)
+
+        pages_total = data.get("pages", 0)
+        page += 1
+        if page >= pages_total:
+            break
+
+    return results
+
+
+def _vacancy_to_lead_fields(
+    vacancy: dict[str, Any],
+    *,
+    match_score: int,
+    match_reasons: list[str],
+) -> dict[str, Any]:
+    employer = vacancy.get("employer") or {}
+    area = vacancy.get("area") or {}
+    skills = [s.get("name") for s in (vacancy.get("key_skills") or []) if s.get("name")]
+    snippet_parts = [
+        (vacancy.get("snippet") or {}).get("requirement"),
+        (vacancy.get("snippet") or {}).get("responsibility"),
+    ]
+    description_snippet = " ".join(p for p in snippet_parts if p)[:500]
+
+    salary = vacancy.get("salary")
+    salary_raw = None
+    if salary:
+        salary_raw = json.dumps(salary, ensure_ascii=False)
+
+    return {
+        "source": "hh",
+        "external_id": str(vacancy.get("id", "")),
+        "url": vacancy.get("alternate_url") or "",
+        "title": vacancy.get("name") or "",
+        "company": employer.get("name") or "",
+        "salary_raw": salary_raw,
+        "location": area.get("name") or "",
+        "skills_json": json.dumps(skills, ensure_ascii=False),
+        "description_snippet": description_snippet,
+        "match_score": match_score,
+        "match_reasons_json": json.dumps(match_reasons, ensure_ascii=False),
+        "status": "new",
+    }
+
+
+def scan_and_store_leads(
+    vacancies: list[dict[str, Any]] | None = None,
+    *,
+    min_match: int | None = None,
+) -> dict[str, Any]:
+    """Score vacancies, insert new high-match leads. Returns scan summary."""
+    min_match = min_match if min_match is not None else JOBHUNT_MIN_MATCH
+    if vacancies is None:
+        vacancies = fetch_hh_vacancies()
+
+    resume_skills = load_resume_skills()
+    new_lead_ids: list[int] = []
+    skipped_existing = 0
+    below_threshold = 0
+
+    for vacancy in vacancies:
+        external_id = str(vacancy.get("id", ""))
+        if not external_id:
+            continue
+        if job_lead_exists("hh", external_id):
+            skipped_existing += 1
+            continue
+
+        score, reasons = score_vacancy(vacancy, resume_skills=resume_skills)
+        if score < min_match:
+            below_threshold += 1
+            continue
+
+        fields = _vacancy_to_lead_fields(vacancy, match_score=score, match_reasons=reasons)
+        lead_id = add_job_lead(**fields)
+        new_lead_ids.append(lead_id)
+
+    top_leads = list_job_leads_for_summary(new_lead_ids)
+    return {
+        "enabled": True,
+        "fetched": len(vacancies),
+        "new_count": len(new_lead_ids),
+        "skipped_existing": skipped_existing,
+        "below_threshold": below_threshold,
+        "top_leads": top_leads,
+    }
+
+
+def list_job_leads_for_summary(new_ids: list[int]) -> list[dict[str, Any]]:
+    """Build top-3 summary from freshly inserted IDs (fallback: query DB)."""
+    from orchestrator.state import get_job_lead, list_job_leads
+
+    leads: list[dict[str, Any]] = []
+    for lead_id in new_ids:
+        row = get_job_lead(lead_id)
+        if row:
+            leads.append(
+                {
+                    "id": row["id"],
+                    "title": row["title"],
+                    "company": row["company"],
+                    "score": row["match_score"],
+                    "url": row["url"],
+                }
+            )
+    leads.sort(key=lambda x: x["score"], reverse=True)
+    if len(leads) >= 3:
+        return leads[:3]
+
+    for row in list_job_leads(status="new", limit=3, min_score=JOBHUNT_MIN_MATCH):
+        if any(x["id"] == row["id"] for x in leads):
+            continue
+        leads.append(
+            {
+                "id": row["id"],
+                "title": row["title"],
+                "company": row["company"],
+                "score": row["match_score"],
+                "url": row["url"],
+            }
+        )
+        if len(leads) >= 3:
+            break
+    return leads[:3]
+
+
+def daily_job_scan() -> dict[str, Any]:
+    """Daily scan hook for orchestrator. Read-only — no applications submitted."""
+    if not JOBHUNT_ENABLED:
+        logger.info("Job hunt disabled (JOBHUNT_ENABLED=false)")
+        return {
+            "enabled": False,
+            "new_count": 0,
+            "top_leads": [],
+            "fetched": 0,
+        }
+
+    try:
+        summary = scan_and_store_leads()
+        logger.info(
+            "Job hunt scan: fetched=%s new=%s skipped=%s below=%s",
+            summary["fetched"],
+            summary["new_count"],
+            summary["skipped_existing"],
+            summary["below_threshold"],
+        )
+        return summary
+    except Exception as e:
+        logger.exception("Job hunt scan failed")
+        return {
+            "enabled": True,
+            "error": str(e),
+            "new_count": 0,
+            "top_leads": [],
+            "fetched": 0,
+        }

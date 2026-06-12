@@ -69,18 +69,52 @@ def format_finance_section(fin_summary: dict[str, Any]) -> str:
     return "\n".join(lines) if lines else "—"
 
 
+def _format_job_hunt_section(job_summary: dict[str, Any] | None) -> str:
+    if not job_summary:
+        return "Отключено или не запускалось."
+    if not job_summary.get("enabled", True):
+        return "Отключено (`JOBHUNT_ENABLED=false`)."
+    if job_summary.get("error"):
+        return f"Ошибка скана: {job_summary['error']}"
+
+    lines = [
+        f"Новых лидов: **{job_summary.get('new_count', 0)}** "
+        f"(просмотрено {job_summary.get('fetched', 0)})",
+    ]
+    top = job_summary.get("top_leads") or []
+    if top:
+        lines.append("")
+        lines.append("**Топ совпадения:**")
+        for lead in top[:3]:
+            title = lead.get("title", "—")
+            if len(title) > 50:
+                title = title[:47] + "..."
+            company = lead.get("company") or "—"
+            lines.append(
+                f"- #{lead.get('id')} **{title}** ({company}) — score {lead.get('score', 0)}"
+            )
+    else:
+        lines.append("")
+        lines.append("_Новых совпадений выше порога нет._")
+    lines.append("")
+    lines.append("Подробнее: `/jobs`")
+    return "\n".join(lines)
+
+
 def format_daily_report_rich(
     *,
     health: HealthSnapshot,
     summary: str,
     fin_summary: dict[str, Any],
     draft_ids: list[int],
+    job_summary: dict[str, Any] | None = None,
     commit_report: str,
     status: str = "finished",
 ) -> str:
     finance_block = format_finance_section(fin_summary)
     finance_json = json.dumps(fin_summary, indent=2, ensure_ascii=False)
     drafts = ", ".join(f"#{i}" for i in draft_ids) if draft_ids else "—"
+    job_block = _format_job_hunt_section(job_summary)
     return f"""# Daily report
 
 **Статус:** {run_status_ru(status)}
@@ -109,6 +143,10 @@ def format_daily_report_rich(
 ## Bug bounty
 
 Черновики: {drafts}
+
+## Job hunt
+
+{job_block}
 
 ## Git
 

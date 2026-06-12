@@ -14,6 +14,7 @@ AGENT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AGENT_ROOT))
 
 from bounty.scanner import daily_bounty_scan
+from job_hunt.scanner import daily_job_scan
 from finance.executor import FinanceExecutor
 from finance.proposal_parser import extract_trade_proposals
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
@@ -88,6 +89,7 @@ async def run_daily_cycle() -> None:
     health = collect_health()
     fin_summary: dict = {}
     draft_ids: list[int] = []
+    job_summary: dict | None = None
     status = "finished"
     try:
         log_health(health.to_dict())
@@ -117,6 +119,7 @@ async def run_daily_cycle() -> None:
         if proposal_outcomes:
             fin_summary["agent_proposals"] = proposal_outcomes
         draft_ids = await asyncio.to_thread(daily_bounty_scan)
+        job_summary = await asyncio.to_thread(daily_job_scan)
 
         log_run("daily", "finished", summary[:12000])
     except Exception as e:
@@ -131,6 +134,7 @@ async def run_daily_cycle() -> None:
             summary=summary,
             fin_summary=fin_summary,
             draft_ids=draft_ids,
+            job_summary=job_summary,
             commit_report=commit_report,
             status=status,
         )

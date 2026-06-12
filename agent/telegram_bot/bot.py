@@ -37,9 +37,11 @@ from orchestrator.state import (
     kv_get,
     kv_set,
     list_bounty_drafts,
+    list_job_leads,
     today_pnl,
     update_bounty_status,
 )
+from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
 from telegram_bot.rich_send import reply_rich, send_rich_markdown
 from telegram_bot.streaming import AnswerStreamer
 
@@ -69,6 +71,7 @@ BOT_COMMANDS = [
     ("ask", "Вопрос агенту (только ответ, без правок)"),
     ("task", "Задача: правки + commit + deploy"),
     ("bounty", "Черновики bug bounty"),
+    ("jobs", "Вакансии job hunt"),
     ("memory", "Итог последнего daily-цикла"),
     ("pause", "Приостановить автономию"),
     ("resume", "Возобновить автономию"),
@@ -210,6 +213,7 @@ def _help_text() -> str:
         "/ask <вопрос> — ответ без изменений на сервере\n"
         "/task <текст> — git pull, правки, commit, push, deploy\n"
         "/bounty — черновики bug bounty\n"
+        "/jobs — топ вакансий (job hunt, read-only)\n"
         "/approve bounty <id> — одобрить черновик\n"
         "/reject bounty <id> — отклонить черновик\n"
         "/memory — итог последнего daily-цикла\n"
@@ -422,6 +426,54 @@ async def cmd_bounty(update, context) -> None:
     await reply_rich(update, "\n".join(lines))
 
 
+def _format_jobs_rich() -> str:
+    if not JOBHUNT_ENABLED:
+        return (
+            "## Job hunt\n\n"
+            "Модуль отключён (`JOBHUNT_ENABLED=false`).\n\n"
+            "Скопируй `secrets/.env.jobhunt.template` → `secrets/.env.jobhunt`."
+        )
+
+    leads = list_job_leads(status="new", limit=10, min_score=JOBHUNT_MIN_MATCH)
+    if not leads:
+        return (
+            "## Job hunt\n\n"
+            f"Нет новых лидов с score ≥ {JOBHUNT_MIN_MATCH}.\n\n"
+            "Ежедневный скан запускается в daily-цикле. Только просмотр — без авто-откликов."
+        )
+
+    lines = [
+        "# Job hunt",
+        "",
+        f"**Новые лиды** (score ≥ {JOBHUNT_MIN_MATCH}):",
+        "",
+        "| # | Score | Компания | Вакансия |",
+        "|:--|------:|:---------|:---------|",
+    ]
+    for row in leads:
+        title = row["title"]
+        if len(title) > 42:
+            title = title[:39] + "..."
+        company = row["company"] or "—"
+        if len(company) > 24:
+            company = company[:21] + "..."
+        lines.append(f"| {row['id']} | {row['match_score']} | {company} | [{title}]({row['url']}) |")
+
+    lines.extend(
+        [
+            "",
+            "_Read-only: отклики только после `/approve apply <id>` (Phase 1)._",
+        ]
+    )
+    return "\n".join(lines)
+
+
+async def cmd_jobs(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    await reply_rich(update, _format_jobs_rich())
+
+
 async def cmd_approve_bounty(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
@@ -536,6 +588,7 @@ def main() -> None:
     app.add_handler(CommandHandler("resume", cmd_resume))
     app.add_handler(CommandHandler("memory", cmd_memory))
     app.add_handler(CommandHandler("bounty", cmd_bounty))
+    app.add_handler(CommandHandler("jobs", cmd_jobs))
     app.add_handler(CommandHandler("approve", cmd_approve_bounty))
     app.add_handler(CommandHandler("reject", cmd_reject_bounty))
     app.add_handler(CommandHandler("help", cmd_help))
