@@ -8,6 +8,7 @@ from typing import Any
 from finance.goal_tracker import goal_progress, milestone_progress
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from finance.risk_engine import RiskEngine, TradeProposal
+from finance.signal_rules import filter_scan_markets
 from finance.venue_base import TradeVenue, get_enabled_venues
 from finance.wallet_manager import WalletManager
 from orchestrator.state import log_finance
@@ -82,15 +83,20 @@ class FinanceExecutor:
 
     def daily_analysis(self) -> dict[str, Any]:
         all_markets: list[dict[str, Any]] = []
+        scan_by_venue: dict[str, int] = {}
         venue_health: list[dict[str, Any]] = []
         for venue in self.venues:
             venue_health.append(venue.check_health())
-            all_markets.extend(venue.get_markets(limit=10))
+            batch = venue.get_markets(limit=10)
+            scan_by_venue[venue.name] = len(batch)
+            all_markets.extend(batch)
+
+        tradeable, rejected = filter_scan_markets(all_markets)
 
         proposals: list[dict[str, Any]] = []
         results: list[dict[str, Any]] = []
 
-        for m in all_markets[:3]:
+        for m in tradeable[:3]:
             market_id = str(m.get("condition_id") or m.get("id") or "")
             venue_name = str(
                 m.get("venue") or (self.venues[0].name if self.venues else "polymarket")
@@ -127,7 +133,11 @@ class FinanceExecutor:
         summary = {
             "venues": [v.name for v in self.venues],
             "venue_health": venue_health,
+            "scan_by_venue": scan_by_venue,
             "markets_scanned": len(all_markets),
+            "markets_after_filters": len(tradeable),
+            "markets_rejected": len(rejected),
+            "rejection_samples": rejected[:5],
             "proposals": proposals,
             "executions": results,
             "goal": goal_progress(),

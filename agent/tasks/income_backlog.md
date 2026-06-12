@@ -4,14 +4,14 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 
 ## Phase 0 — Validation
 
-- [ ] **IB-01** Enable multi-venue scan: verify `azuro_client.py` + `cex_client.py` return markets from NL VPS; log in daily Finance section
-- [ ] **IB-02** Document paper-trade rules in `agent/memory/lessons/azuro_paper_rules.md` (min edge %, max drift, league whitelist)
+- [x] **IB-01** Enable multi-venue scan: verify `azuro_client.py` + `cex_client.py` return markets from NL VPS; log in daily Finance section
+- [x] **IB-02** Document paper-trade rules in `agent/memory/lessons/azuro_paper_rules.md` (min edge %, max drift, league whitelist)
 - [ ] **IB-03** Run 7 consecutive days paper; append stats to daily log (count, total USD, by venue)
 - [ ] **IB-04** After day 7: write go/no-go note for Azuro live in `agent/memory/lessons/`
 
 ## Phase 1 — M1 lanes
 
-- [ ] **IB-05** Azuro: add simple rule filter in finance scan (skip markets below liquidity / above odds drift) — code change in executor or new `finance/signal_rules.py`
+- [x] **IB-05** Azuro: add simple rule filter in finance scan (skip markets below liquidity / above odds drift) — code change in executor or new `finance/signal_rules.py`
 - [ ] **IB-06** CEX: implement read-only grid parameter calculator (grid levels, not live orders yet)
 - [ ] **IB-07** A3 signals: add Telegram channel post helper for top-3 scan results (structured markdown)
 - [ ] **IB-08** A4 product: draft Gumroad listing copy in `agent/memory/products/agent-starter.md`
