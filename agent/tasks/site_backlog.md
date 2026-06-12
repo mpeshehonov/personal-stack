@@ -9,11 +9,11 @@
 
 ## Milestone A1 — Structure (priority)
 
-- [ ] **SB-01** Homepage sections: Hero → Selected Work → Experience preview → Skills → CTA contact
-- [ ] **SB-02** `/projects` page — 3–5 case studies (X5, NLMK, Telegram Mini Apps, etc.) from resume data
-- [ ] **SB-03** `content/projects/*.json` single source for case cards
-- [ ] **SB-04** `/blog` route — MDX or contentlayer, list + post template
-- [ ] **SB-05** First blog post skeleton: «Self-hosted agent stack» (affiliate-ready)
+- [x] **SB-01** Homepage sections: Hero → Selected Work → Experience preview → Skills → CTA contact
+- [x] **SB-02** `/projects` page — 3–5 case studies (X5, NLMK, Telegram Mini Apps, etc.) from resume data
+- [x] **SB-03** `content/projects/*.json` single source for case cards
+- [x] **SB-04** `/blog` route — MDX or contentlayer, list + post template
+- [x] **SB-05** First blog post skeleton: «Self-hosted agent stack» (affiliate-ready)
 
 ## Milestone A2 — Visual polish
 
