@@ -6,12 +6,12 @@ import { SkillGrid } from "@/components/SkillGrid";
 import { SocialLinks } from "@/components/SocialLinks";
 import { getDictionary, localizedPath } from "@/lib/i18n";
 import {
-  achievements,
-  education,
-  getAboutText,
+  getAboutParagraphs,
+  getAchievements,
+  getEducation,
   getExperiences,
 } from "@/lib/resume-data";
-import { skillGroups } from "@/lib/skills";
+import { getSkillGroups } from "@/lib/skills";
 import type { Locale } from "@/middleware";
 
 export default async function ResumePage({
@@ -23,8 +23,11 @@ export default async function ResumePage({
   const locale = (raw === "en" ? "en" : "ru") as Locale;
   const dict = getDictionary(locale);
   const resume = locale === "en" ? resumeEn : resumeRu;
-  const about = getAboutText(locale);
+  const aboutParagraphs = getAboutParagraphs(locale);
   const experiences = getExperiences(locale);
+  const educationList = getEducation(locale);
+  const achievements = getAchievements(locale);
+  const skillGroups = getSkillGroups(locale);
   const langLabel = locale === "en" ? "English — B1" : "Английский — B1";
   const communityLabel = locale === "en" ? "Community" : "Сообщество";
   const languagesLabel = locale === "en" ? "Languages" : "Языки";
@@ -54,7 +57,11 @@ export default async function ResumePage({
       <section className="mb-12">
         <p className="section-label">{dict.resume.about}</p>
         <h2 className="section-title mb-4">{dict.resume.about}</h2>
-        <p className="leading-relaxed text-ink-muted">{about}</p>
+        <div className="space-y-4 leading-relaxed text-ink-muted">
+          {aboutParagraphs.map((p) => (
+            <p key={p.slice(0, 40)}>{p}</p>
+          ))}
+        </div>
       </section>
 
       <section className="mb-12">
@@ -81,7 +88,7 @@ export default async function ResumePage({
         <div className="card">
           <p className="section-label">{dict.resume.education}</p>
           <ul className="mt-4 space-y-4">
-            {education.map((edu) => (
+            {educationList.map((edu) => (
               <li key={edu.school}>
                 <p className="font-medium text-ink">{edu.school}</p>
                 <p className="text-sm text-ink-muted">
@@ -100,6 +107,15 @@ export default async function ResumePage({
       </section>
 
       <p className="mt-8 text-center">
+        <Link
+          href={localizedPath(locale, "/projects")}
+          className="text-sm font-medium text-accent hover:underline"
+        >
+          {locale === "en" ? "All projects" : "Все проекты"} →
+        </Link>
+      </p>
+
+      <p className="mt-4 text-center">
         <Link
           href={localizedPath(locale, "/")}
           className="text-sm text-ink-faint hover:text-accent"

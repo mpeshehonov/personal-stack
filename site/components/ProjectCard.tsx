@@ -17,12 +17,9 @@ export function ProjectCard({ project, compact = false, locale = "ru" }: Props) 
 
   return (
     <article className="card transition hover:shadow-lift">
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <div>
-          <p className="font-mono text-xs font-medium text-accent">{project.company}</p>
-          <h3 className="text-lg font-semibold text-ink">{project.title}</h3>
-        </div>
-        <p className="text-sm text-ink-faint">{project.period}</p>
+      <div className="mb-3">
+        <p className="font-mono text-xs font-medium text-accent">{project.company}</p>
+        <h3 className="text-lg font-semibold text-ink">{project.title}</h3>
       </div>
       <p className="mb-4 text-sm text-ink-muted">{project.tagline}</p>
       <div className="mb-4 flex flex-wrap gap-2">

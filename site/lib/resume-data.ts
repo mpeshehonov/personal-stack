@@ -7,9 +7,17 @@ export type Experience = {
   bullets?: string[];
 };
 
-export const aboutText = `Senior Frontend / Fullstack разработчик. Занимаюсь веб-разработкой с 2018 года: B2B, e-commerce, маркетплейсы, real-time и Telegram Mini Apps. Проектирую и довожу до продакшена сценарии с большим числом состояний, role-based access, typed API contracts и интеграциями с REST, GraphQL и WebSocket.`;
+const aboutParagraphsRu = [
+  "Senior Frontend / Fullstack разработчик. Веб с 2018 года: B2B, e-commerce, маркетплейсы, real-time, Telegram Mini Apps. Делаю интерфейсы со сложными сценариями, RBAC, Orval/OpenAPI и интеграциями REST, GraphQL, WebSocket.",
+  "Работал в X5 Tech, НЛМК, BI.ZONE, Citilink и продуктовых командах. Полный список кейсов — на сайте в разделе «Проекты» и по запросу.",
+];
 
-export const experiences: Experience[] = [
+const aboutParagraphsEn = [
+  "Senior Frontend / Fullstack engineer since 2018: B2B, e-commerce, marketplaces, real-time, Telegram Mini Apps. Complex flows, RBAC, Orval/OpenAPI, REST, GraphQL, and WebSocket integrations.",
+  "Experience at X5 Tech, NLMK, BI.ZONE, Citilink, and product teams. Full case list on the Projects page and on request.",
+];
+
+const experiencesRu: Experience[] = [
   {
     company: "POTALONU LLC",
     role: "Fullstack / Frontend-разработчик",
@@ -18,19 +26,20 @@ export const experiences: Experience[] = [
     projects: [
       {
         name: "sendonate.com",
-        stack: "React 19, Vite, TypeScript, Telegram Mini App, REST, OpenAPI/Orval",
+        stack: "React, Vite, Telegram Mini App, WebSocket, Orval, Django REST",
         bullets: [
-          "Три клиентских контура: веб-кабинет, Telegram Mini App и Vite-бандл для OBS/оверлея",
-          "End-to-end сценарий доната с многошаговым флоу оплаты и real-time overlay на WebSocket",
+          "monolith: веб-кабинет, Mini App и websocket-pages для OBS — три клиента, один backend",
+          "Orval по OpenAPI, очередь алертов на WebSocket с reconnect и preload медиа",
+          "Кабинет: CRUD коллекций, настройки алертов, debounce-поиск",
         ],
       },
       {
         name: "POTALONU / PREEGLOS",
-        stack: "Next.js 16, React 19, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD",
+        stack: "Next.js 16, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD",
         bullets: [
-          "Билетный сервис: витрина, покупка билетов, Telegram Mini App",
-          "Аналог seats.io: редактор схем залов и embed-виджет выбора мест",
-          "Self-hosted поставка: Docker Compose, GitLab CI/CD pipeline",
+          "potalonu-frontend: витрина, покупка билетов, Telegram Mini App, Chart.js",
+          "seatmap-studio: редактор залов, embed `/embed/[hallId]`, события и бронирования",
+          "Self-hosted: Docker Compose, GitLab CI/CD, stage на nginx",
         ],
       },
     ],
@@ -41,10 +50,10 @@ export const experiences: Experience[] = [
     period: "04.2024 – 07.2025",
     location: "Удалённо",
     bullets: [
-      "Модуль согласования закупочных процедур (НКЗ 3.0): RBAC, статусы, переходы состояний",
-      "Авторизация через Keycloak (SSO, роли, матрица доступа к модулям)",
-      "Orval для генерации типов и API-клиента по OpenAPI",
-      "Оптимизация сборки на Vite: code splitting, dynamic imports",
+      "Модуль согласования закупок (НКЗ 3.0): RBAC, статусы, переходы, черновики",
+      "Keycloak: SSO и матрица доступа к модулям",
+      "Orval по OpenAPI — без ручного обновления контрактов",
+      "Vite: code splitting на длинных сценариях согласования",
     ],
   },
   {
@@ -53,9 +62,9 @@ export const experiences: Experience[] = [
     period: "06.2023 – 03.2024",
     location: "Удалённо",
     bullets: [
-      "Thread Intelligence: GraphQL, MobX, React Query, графы на Cytoscape.js",
-      "Динамические отчёты и дашборды: Highcharts, Recharts, react-grid-layout",
-      "Модуль отчётов на GraphQL (Apollo Client)",
+      "Thread Intelligence: GraphQL (Apollo), MobX, React Query, Orval",
+      "Граф связей на Cytoscape.js, фильтры для аналитиков",
+      "Дашборды: Highcharts, Recharts, react-grid-layout, виртуализация списков",
     ],
   },
   {
@@ -64,10 +73,10 @@ export const experiences: Experience[] = [
     period: "05.2022 – 06.2023",
     location: "Удалённо",
     bullets: [
-      "Веб-приложение «Регистрация выпусков чугуна» для доменного производства",
-      "Keycloak: SSO, роли и защита API-маршрутов",
-      "Сложные таблицы на TanStack Table с большими объёмами данных",
-      "React Query для кэширования, Sentry для мониторинга",
+      "«Регистрация выпусков чугуна» — единый интерфейс вместо ручных форм",
+      "Keycloak: SSO, роли, защита API",
+      "TanStack Table + React Query на больших объёмах данных",
+      "Sentry в продакшене",
     ],
   },
   {
@@ -76,9 +85,86 @@ export const experiences: Experience[] = [
     period: "04.2021 – 04.2022",
     location: "Удалённо",
     bullets: [
-      "Миграция e-commerce с PHP/Symfony на Next.js: каталог и главная",
-      "Фильтрация, сортировка, пагинация, состояние URL через REST API",
-      "Согласование API-контрактов между фронтендом и микросервисами",
+      "Миграция каталога и главной с PHP/Symfony на Next.js",
+      "Фильтры, сортировка, пагинация, состояние в URL",
+      "Согласование REST API с backend и микросервисами",
+      "Конверсия каталога выросла примерно на 15% после миграции",
+    ],
+  },
+];
+
+const experiencesEn: Experience[] = [
+  {
+    company: "POTALONU LLC",
+    role: "Fullstack / Frontend engineer",
+    period: "Sep 2025 – present",
+    location: "Remote",
+    projects: [
+      {
+        name: "sendonate.com",
+        stack: "React, Vite, Telegram Mini App, WebSocket, Orval, Django REST",
+        bullets: [
+          "monolith: web dashboard, Mini App, and websocket-pages for OBS — three clients, one backend",
+          "Orval from OpenAPI, WebSocket alert queue with reconnect and media preload",
+          "Dashboard: CRUD collections, alert settings, debounced search",
+        ],
+      },
+      {
+        name: "POTALONU / PREEGLOS",
+        stack: "Next.js 16, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD",
+        bullets: [
+          "potalonu-frontend: storefront, checkout, Telegram Mini App, Chart.js",
+          "seatmap-studio: hall editor, embed `/embed/[hallId]`, events and bookings",
+          "Self-hosted: Docker Compose, GitLab CI/CD, nginx stage",
+        ],
+      },
+    ],
+  },
+  {
+    company: "X5 Tech",
+    role: "Frontend engineer",
+    period: "Apr 2024 – Jul 2025",
+    location: "Remote",
+    bullets: [
+      "Procurement approval module (NKZ 3.0): RBAC, statuses, transitions, drafts",
+      "Keycloak SSO and module access matrix",
+      "Orval from OpenAPI — no manual contract updates",
+      "Vite code splitting on long approval flows",
+    ],
+  },
+  {
+    company: "BI.ZONE",
+    role: "Frontend engineer",
+    period: "Jun 2023 – Mar 2024",
+    location: "Remote",
+    bullets: [
+      "Thread Intelligence: GraphQL (Apollo), MobX, React Query, Orval",
+      "Relationship graphs on Cytoscape.js, analyst filters",
+      "Dashboards: Highcharts, Recharts, react-grid-layout, virtualized lists",
+    ],
+  },
+  {
+    company: "NLMK",
+    role: "Frontend engineer",
+    period: "May 2022 – Jun 2023",
+    location: "Remote",
+    bullets: [
+      "Cast iron release registration — one UI instead of manual forms",
+      "Keycloak SSO, roles, protected API routes",
+      "TanStack Table + React Query on large datasets",
+      "Sentry in production",
+    ],
+  },
+  {
+    company: "Citilink",
+    role: "Frontend engineer",
+    period: "Apr 2021 – Apr 2022",
+    location: "Remote",
+    bullets: [
+      "Migrated catalog and homepage from PHP/Symfony to Next.js",
+      "Filters, sort, pagination, URL state",
+      "REST API alignment with backend and microservices",
+      "Catalog conversion improved by roughly 15% after migration",
     ],
   },
 ];
@@ -86,27 +172,52 @@ export const experiences: Experience[] = [
 export const education = [
   {
     school: "Тульский государственный коммунально-строительный техникум",
+    schoolEn: "Tula State Communal Construction College",
     field: "Земельно-имущественные отношения",
+    fieldEn: "Land and property relations",
     period: "2015 – 2018",
     location: "Тула, Россия",
+    locationEn: "Tula, Russia",
   },
   {
     school: "Компьютерная академия «ШАГ»",
+    schoolEn: "Computer Academy STEP",
     field: "Веб-разработка",
+    fieldEn: "Web development",
     period: "2016",
     location: "Тула, Россия",
+    locationEn: "Tula, Russia",
   },
 ];
 
-export const achievements =
+const achievementsRu =
   "Победитель хакатона «Цифровой прорыв» (2021, 2020), победитель Hack.Genesis _ONLINE_, финалист Virus Hack, эксперт чемпионата WorldSkills.";
 
-export function getExperiences(_locale: "ru" | "en"): Experience[] {
-  return experiences;
+const achievementsEn =
+  "Winner of Digital Breakthrough hackathon (2021, 2020), Hack.Genesis _ONLINE_, Virus Hack finalist, WorldSkills championship expert.";
+
+export function getExperiences(locale: "ru" | "en"): Experience[] {
+  return locale === "en" ? experiencesEn : experiencesRu;
 }
 
+export function getAboutParagraphs(locale: "ru" | "en"): string[] {
+  return locale === "en" ? aboutParagraphsEn : aboutParagraphsRu;
+}
+
+/** @deprecated use getAboutParagraphs */
 export function getAboutText(locale: "ru" | "en"): string {
-  return locale === "en"
-    ? "Senior Frontend / Fullstack engineer since 2018. B2B, e-commerce, marketplaces, real-time, and Telegram Mini Apps — from complex UI to typed API contracts and production integrations."
-    : aboutText;
+  return getAboutParagraphs(locale).join("\n\n");
+}
+
+export function getAchievements(locale: "ru" | "en"): string {
+  return locale === "en" ? achievementsEn : achievementsRu;
+}
+
+export function getEducation(locale: "ru" | "en") {
+  return education.map((edu) => ({
+    school: locale === "en" ? edu.schoolEn : edu.school,
+    field: locale === "en" ? edu.fieldEn : edu.field,
+    period: edu.period,
+    location: locale === "en" ? edu.locationEn : edu.location,
+  }));
 }

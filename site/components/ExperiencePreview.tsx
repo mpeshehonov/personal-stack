@@ -14,8 +14,8 @@ type Props = {
 export function ExperiencePreview({ locale, dict, experiences }: Props) {
   const desc =
     locale === "en"
-      ? "7+ years in production — from e-commerce migrations to enterprise RBAC and self-hosted fullstack."
-      : "7+ лет в продакшене: от e-commerce миграций до enterprise RBAC и self-hosted fullstack.";
+      ? "7+ years in production — e-commerce, enterprise RBAC, ticketing, and streaming products."
+      : "7+ лет в продакшене: e-commerce, enterprise RBAC, билетные сервисы, стриминговые продукты.";
 
   return (
     <section className="pb-16">

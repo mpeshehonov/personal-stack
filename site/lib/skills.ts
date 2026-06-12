@@ -1,9 +1,10 @@
 export type SkillGroup = {
   title: string;
+  titleEn?: string;
   skills: string[];
 };
 
-export const skillGroups: SkillGroup[] = [
+export const skillGroupsRu: SkillGroup[] = [
   {
     title: "Языки",
     skills: ["TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3/SCSS"],
@@ -16,6 +17,7 @@ export const skillGroups: SkillGroup[] = [
       "Redux Toolkit",
       "Redux-Saga",
       "MobX",
+      "Effector",
       "TanStack Query",
       "TanStack Table",
       "React Hook Form",
@@ -25,6 +27,7 @@ export const skillGroups: SkillGroup[] = [
       "Framer Motion",
       "Radix UI",
       "Tailwind CSS",
+      "FSD",
     ],
   },
   {
@@ -37,6 +40,8 @@ export const skillGroups: SkillGroup[] = [
       "react-virtualized",
       "@tanstack/react-virtual",
       "Canvas",
+      "Leaflet",
+      "Yandex Maps",
     ],
   },
   {
@@ -64,19 +69,23 @@ export const skillGroups: SkillGroup[] = [
       "REST API",
       "GraphQL (Apollo Client)",
       "OpenAPI/Orval",
+      "Kubb",
       "WebSocket",
       "Socket.io",
       "WebRTC",
       "Keycloak",
       "Nest.js",
+      "TypeORM",
       "Drizzle ORM",
       "PostgreSQL",
       "Firebase",
       "Auth.js",
       "JWT/Passport",
       "Node.js",
+      "Django REST",
       "Symfony",
       "Bitrix",
+      "jQuery",
     ],
   },
   {
@@ -92,11 +101,123 @@ export const skillGroups: SkillGroup[] = [
       "styled-components",
       "BEM",
       "i18next",
+      "next-intl",
       "Telegram Mini Apps",
       "Figma",
     ],
   },
 ];
+
+export const skillGroupsEn: SkillGroup[] = [
+  {
+    title: "Languages",
+    skills: ["TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3/SCSS"],
+  },
+  {
+    title: "Frontend",
+    skills: [
+      "React",
+      "Next.js (SSR/SSG)",
+      "Redux Toolkit",
+      "Redux-Saga",
+      "MobX",
+      "Effector",
+      "TanStack Query",
+      "TanStack Table",
+      "React Hook Form",
+      "Zod",
+      "Formik",
+      "react-router",
+      "Framer Motion",
+      "Radix UI",
+      "Tailwind CSS",
+      "FSD",
+    ],
+  },
+  {
+    title: "Data visualization",
+    skills: [
+      "Cytoscape.js",
+      "Highcharts",
+      "Recharts",
+      "react-grid-layout",
+      "react-virtualized",
+      "@tanstack/react-virtual",
+      "Canvas",
+      "Leaflet",
+      "Yandex Maps",
+    ],
+  },
+  {
+    title: "DevOps",
+    skills: [
+      "Vite",
+      "Webpack",
+      "Git",
+      "monorepos",
+      "code splitting",
+      "dynamic imports",
+      "tree shaking",
+      "CI/CD",
+      "GitHub Actions",
+      "GitLab CI/CD",
+      "Jenkins",
+      "Docker",
+      "Docker Compose",
+      "Coolify",
+    ],
+  },
+  {
+    title: "Backend",
+    skills: [
+      "REST API",
+      "GraphQL (Apollo Client)",
+      "OpenAPI/Orval",
+      "Kubb",
+      "WebSocket",
+      "Socket.io",
+      "WebRTC",
+      "Keycloak",
+      "Nest.js",
+      "TypeORM",
+      "Drizzle ORM",
+      "PostgreSQL",
+      "Firebase",
+      "Auth.js",
+      "JWT/Passport",
+      "Node.js",
+      "Django REST",
+      "Symfony",
+      "Bitrix",
+      "jQuery",
+    ],
+  },
+  {
+    title: "Quality",
+    skills: ["Sentry", "Kibana", "Grafana", "Jest", "Vitest", "Playwright"],
+  },
+  {
+    title: "UI & Product",
+    skills: [
+      "design systems",
+      "UI Kit",
+      "Material UI",
+      "styled-components",
+      "BEM",
+      "i18next",
+      "next-intl",
+      "Telegram Mini Apps",
+      "Figma",
+    ],
+  },
+];
+
+export function getSkillGroups(locale: "ru" | "en"): SkillGroup[] {
+  return locale === "en" ? skillGroupsEn : skillGroupsRu;
+}
+
+/** @deprecated use getSkillGroups */
+export const skillGroups = skillGroupsRu;
 
 export const highlightSkills = [
   "Next.js",

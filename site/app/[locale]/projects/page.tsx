@@ -11,11 +11,11 @@ export default async function ProjectsPage({
   const { locale: raw } = await params;
   const locale = (raw === "en" ? "en" : "ru") as Locale;
   const dict = getDictionary(locale);
-  const projects = getProjects();
+  const projects = getProjects(locale);
   const desc =
     locale === "en"
-      ? "Real case studies: problem → role → stack → outcome. Each project includes measurable impact where possible."
-      : "Кейсы из реального опыта: задача → роль → стек → результат. Каждый проект — с метриками или измеримым impact.";
+      ? "Real case studies: problem → role → stack → outcome."
+      : "Кейсы из реального опыта: задача → роль → стек → результат.";
 
   return (
     <article className="pb-20 pt-8">

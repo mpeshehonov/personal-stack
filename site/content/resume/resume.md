@@ -6,9 +6,9 @@ Senior Frontend-разработчик
 
 ## О себе
 
-Senior Frontend / Fullstack разработчик. Занимаюсь веб-разработкой с 2018 года: B2B, e-commerce, маркетплейсы, real-time и Telegram Mini Apps. Проектирую и довожу до продакшена сценарии с большим числом состояний, role-based access, typed API contracts и интеграциями с REST, GraphQL и WebSocket.
+Senior Frontend / Fullstack разработчик. Занимаюсь веб-разработкой с 2018 года: B2B, e-commerce, маркетплейсы, real-time и Telegram Mini Apps. Делаю интерфейсы со сложными сценариями, RBAC, Orval/OpenAPI и интеграциями REST, GraphQL, WebSocket.
 
-За это время поработал в разных доменах и командах. Полный список проектов могу выслать по запросу.
+За это время поработал в разных доменах и командах. Кейсы — в разделе «Проекты» на сайте, полный список по запросу.
 
 Основной стек: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Radix UI, Tailwind CSS, Sentry, Playwright. Для fullstack-задач работаю с Nest.js (REST, DTO, Socket.io gateways, TypeORM, PostgreSQL, class-validator) и интеграциями с REST API.
 
@@ -23,20 +23,20 @@ Senior Frontend / Fullstack разработчик. Занимаюсь веб-р
 sendonate.com — донаты для стримеров (React 19, Vite, TypeScript, Telegram Mini App, REST, OpenAPI/Orval, TanStack Query, React Hook Form, Zod, Sentry)
 
 - Спроектировал и собрал три клиентских контура: веб-кабинет стримера, Telegram Mini App и отдельный Vite-бандл для OBS/оверлея эфира.
-- Реализовал end-to-end сценарий доната: многошаговый флоу оплаты в Mini App, интеграция с REST через Orval-клиент по OpenAPI, кабинет с CRUD коллекций, пагинацией, debounce-поиском и настройками алертов.
+- Реализовал полный сценарий доната: многошаговый флоу оплаты в Mini App, REST через Orval-клиент по OpenAPI, кабинет с CRUD коллекций, пагинацией, debounce-поиском и настройками алертов.
 - Собрал real-time overlay на WebSocket с reconnect, очередью алертов, preload медиа (pako, Lottie) и TTS для стабильного отображения донатов в эфире.
 
 POTALONU / PREEGLOS — билетный сервис и схема зала (Next.js 16, React 19, TypeScript, PostgreSQL, Drizzle ORM, Auth.js, Docker, Docker Compose, GitLab CI/CD)
 
 - Реализовал web-часть билетного продукта: витрина событий, сценарии покупки билетов, Telegram Mini App (`@twa-dev/sdk`) и клиентские формы на React Hook Form + Zod.
-- Спроектировал и собрал аналог seats.io (seatmap studio): редактор схем залов и embed-виджет выбора мест на Next.js App Router + React 19 + TypeScript, PostgreSQL + Drizzle ORM, авторизация на Auth.js.
+- Спроектировал и собрал seatmap-studio (PREEGLOS): редактор залов `/halls/.../editor`, embed-виджет `/embed/[hallId]`, события и бронирования; Next.js 16, PostgreSQL, Drizzle ORM, Auth.js.
 - Настроил self-hosted поставку seatmap-сервиса: Docker/Docker Compose, pipeline в GitLab CI/CD (test, build image, deploy), выкатка на stage с nginx.
 
 ### X5 Tech — Frontend-разработчик
 
 04.2024 – 07.2025 | Удаленно
 
-- Спроектировал и реализовал end‑to‑end модуль согласования закупочных процедур (НКЗ 3.0): role-based access, статусы, переходы состояний, черновики и восстановление пользовательских сценариев.
+- Спроектировал и реализовал модуль согласования закупочных процедур (НКЗ 3.0): role-based access, статусы, переходы состояний, черновики и восстановление пользовательских сценариев.
 - Интегрировал авторизацию через Keycloak: SSO, роли и доступ к модулям согласования по матрице RBAC.
 - Внедрил Orval для генерации типов и API‑клиента по OpenAPI, убрал ручное обновление контрактов и снизил количество ошибок на стыке фронтенда и backend.
 - Реализовал формы и сценарии редактирования на react-hook-form, развивал внутренний UI Kit и единые паттерны для интерфейсов сервиса.

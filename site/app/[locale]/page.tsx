@@ -12,7 +12,7 @@ import { ContactCTA } from "@/components/ContactCTA";
 import { getDictionary } from "@/lib/i18n";
 import { getExperiences } from "@/lib/resume-data";
 import { getFeaturedProjects } from "@/lib/projects";
-import { skillGroups } from "@/lib/skills";
+import { getSkillGroups } from "@/lib/skills";
 
 export default async function HomePage({
   params,
@@ -23,7 +23,7 @@ export default async function HomePage({
   const locale = (raw === "en" ? "en" : "ru") as Locale;
   const dict = getDictionary(locale);
   const resume = locale === "en" ? resumeEn : resumeRu;
-  const featuredProjects = getFeaturedProjects();
+  const featuredProjects = getFeaturedProjects(locale);
   const previewExperiences = getExperiences(locale).slice(0, 3);
 
   return (
@@ -43,7 +43,7 @@ export default async function HomePage({
         <p className="section-label">{dict.sections.skills}</p>
         <h2 className="section-title mb-3">{dict.sections.skills}</h2>
         <p className="mb-8 max-w-2xl text-ink-muted">{dict.sections.skillsDesc}</p>
-        <SkillGrid groups={skillGroups} />
+        <SkillGrid groups={getSkillGroups(locale)} />
       </section>
       <ContactCTA locale={locale} dict={dict} />
       <div className="pb-8 text-center">

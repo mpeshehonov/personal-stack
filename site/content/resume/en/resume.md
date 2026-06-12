@@ -6,11 +6,13 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · [Telegram:
 
 ## About
 
-Senior Frontend / Fullstack engineer focused on complex UIs for B2B, e‑commerce, marketplaces, real-time systems, and Telegram Mini Apps. I design and ship production-ready flows with many states, role-based access, typed API contracts, and integrations with REST / GraphQL / WebSocket.
+Senior Frontend / Fullstack engineer since 2018: B2B, e-commerce, marketplaces, real-time, and Telegram Mini Apps. I build UIs with complex flows, RBAC, Orval/OpenAPI, and REST, GraphQL, and WebSocket integrations.
 
-Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Radix UI, Tailwind CSS, Sentry, Playwright. For fullstack work I use Nest.js (REST, DTOs, Socket.io gateways, TypeORM, PostgreSQL, class-validator) and REST API integrations.
+Full case list on the Projects page; detailed PDF on request.
 
-Highlights: X5 Tech — procurement approval module with RBAC and state transitions; NLMK — internal app for production data with tables and filters; BI.ZONE — Thread Intelligence (GraphQL, MobX, React Query, graph analytics and dashboards); Citilink — migrating e‑commerce sections from Symfony to Next.js; commercial work — sendonate.com (Mini App + dashboard + real-time overlay) and zodiaclab.ru (Next.js + Nest.js + WebRTC).
+Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Radix UI, Tailwind CSS, Sentry, Playwright. For fullstack work I use Nest.js (REST, DTOs, Socket.io gateways, TypeORM, PostgreSQL) and REST integrations.
+
+Highlights: X5 Tech — procurement approval with RBAC; NLMK — production data app; BI.ZONE — Thread Intelligence; Citilink — Symfony to Next.js migration; POTALONU — sendonate.com and PREEGLOS seat maps.
 
 ## Work experience
 
@@ -21,26 +23,21 @@ Sep 2025 – present | Remote
 sendonate.com — tipping for streamers (React 19, Vite, TypeScript, Telegram Mini App, REST, OpenAPI/Orval, TanStack Query, React Hook Form, Zod, Sentry)
 
 - Designed and built three client surfaces: streamer web dashboard on React 19 + Vite + TanStack Query + Orval + React Hook Form + Zod + Sentry, Telegram Mini App on @telegram-apps/sdk + Vite, and a separate Vite bundle for OBS / live overlay.
-- Implemented end-to-end tipping: Mini App payment flow (react-router, Context, useReducer), REST via generated Orval client from OpenAPI, dashboard with CRUD collections, pagination, debounced search, and alert settings.
+- Implemented the full tipping flow: Mini App checkout, REST via Orval from OpenAPI, dashboard with CRUD collections, pagination, debounced search, and alert settings.
 - Built a real-time overlay on WebSocket with reconnect, alert queue, media preload (pako, Lottie), and TTS so tips render reliably on stream under bursty events.
-
-zodiaclab.ru — marketplace and consultations (Next.js 15, React 19, TanStack Query, Orval, Radix UI, Tailwind CSS 4, axios, Nest.js, WebRTC, Socket.io, Coolify CI/CD, Playwright)
-
-- Built the marketplace front end on Next.js 15 (App Router, Turbopack): catalog, cards, account, chats, content pages; TanStack Query, Orval from OpenAPI, React Hook Form + Zod, Radix UI, Tailwind CSS 4, Playwright e2e.
-- Implemented audio/video on WebRTC: RTCPeerConnection, webrtc-adapter, simple-peer, Socket.io-client ↔ NestJS `CallsGateway` (`webrtc_offer`, `webrtc_answer`, `webrtc_ice_candidate`), ICE candidate queueing before connection init, STUN/TURN via REST API.
-- Fullstack work on Nest.js (REST, DTOs, class-validator, TypeORM, PostgreSQL, JWT/Passport), keeping client–server contracts and real-time via `CallsGateway` and `ChatsGateway`.
 
 POTALONU / PREEGLOS — ticketing platform and seat map (Next.js 16, React 19, TypeScript, PostgreSQL, Drizzle ORM, Auth.js, Docker, Docker Compose, GitLab CI/CD)
 
-- Implemented the ticketing product web flows for POTALONU/PREEGLOS: events storefront, checkout journey, Telegram Mini App (`@twa-dev/sdk`), and client forms with React Hook Form + Zod.
-- Designed and built a seats.io-like solution (seatmap studio): hall layout editor and public embed seat-picker on Next.js App Router + React 19 + TypeScript, data layer on PostgreSQL + Drizzle ORM, authentication with Auth.js.
-- Set up self-hosted delivery for the seatmap service: Docker/Docker Compose, GitLab CI/CD pipeline (test, build image, deploy), and stage rollout behind nginx.
+- Implemented ticketing web flows: events storefront, checkout, Telegram Mini App (`@twa-dev/sdk`), forms with React Hook Form + Zod.
+- Built seatmap-studio: hall editor, embed seat picker, events and bookings; Next.js 16, PostgreSQL, Drizzle ORM, Auth.js.
+- Self-hosted delivery: Docker Compose, GitLab CI/CD (test, build, deploy), stage on nginx.
 
 ### X5 Tech — Frontend engineer
 
 Apr 2024 – Jul 2025 | Remote
 
-- Designed and delivered an end-to-end procurement approval module (NKZ 3.0): RBAC, statuses, state transitions, drafts, and restoring user flows.
+- Designed and delivered the procurement approval module (NKZ 3.0): RBAC, statuses, state transitions, drafts, and restoring user flows.
+- Integrated Keycloak authorization: SSO, roles, and RBAC matrix for module access.
 - Introduced Orval for types and API client from OpenAPI, removing manual contract updates and reducing front/back integration bugs.
 - Built forms and editing flows with react-hook-form, extended the internal UI kit and shared UI patterns.
 - Optimized the Vite build (code splitting, dynamic imports), improving initial load and responsiveness on long approval paths.
@@ -59,6 +56,7 @@ Jun 2023 – Mar 2024 | Remote
 May 2022 – Jun 2023 | Remote
 
 - Delivered the “Pig iron batch registration” web app for blast-furnace production, consolidating fragmented manual steps into one interface.
+- Configured sign-in and access control with Keycloak (SSO, roles, protected API routes).
 - Implemented RBAC over production data and complex tables on TanStack Table: sort, filter, pagination, large datasets.
 - Used React Query for caching and background refresh, reducing API load and stabilizing UX.
 - Integrated Sentry for error monitoring in production.
@@ -87,7 +85,7 @@ Feb 2018 – Mar 2021 | Remote
 - Frontend: React, Next.js (SSR/SSG), Redux Toolkit, Redux-Saga, MobX, React Query (TanStack Query), TanStack Table, React Hook Form, Zod, Formik, react-router, Framer Motion, Radix UI, Tailwind CSS
 - Complex UI & data visualization: Cytoscape.js, Highcharts, Recharts, react-grid-layout, react-virtualized, @tanstack/react-virtual, Canvas
 - Build & frontend infra: Vite, Webpack, Git, monorepos, code splitting, dynamic imports, tree shaking, CI/CD, GitHub Actions, GitLab CI/CD, Jenkins, Docker, Docker Compose, Coolify
-- Integrations & backend: REST API, GraphQL (Apollo Client), OpenAPI/Orval, WebSocket, Socket.io, WebRTC, Nest.js (REST, modules, DTOs, TypeORM), Drizzle ORM, PostgreSQL, Firebase (Auth, Functions), Auth.js, JWT/Passport, Node.js, Symfony, Bitrix, jQuery
+- Integrations & backend: REST API, GraphQL (Apollo Client), OpenAPI/Orval, WebSocket, Socket.io, WebRTC, Keycloak, Nest.js (REST, modules, DTOs, TypeORM), Drizzle ORM, PostgreSQL, Firebase (Auth, Functions), Auth.js, JWT/Passport, Node.js, Symfony, Bitrix, jQuery
 - Observability & quality: Sentry, Kibana, Grafana, Jest, Vitest, Playwright
 - UI & product: design systems and UI kits, Material UI, styled-components, BEM, i18next, Telegram Mini Apps, Figma
 
