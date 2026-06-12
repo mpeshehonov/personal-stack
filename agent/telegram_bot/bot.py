@@ -20,14 +20,18 @@ from orchestrator.cursor_runner import run_ask_streaming, run_task_streaming
 from orchestrator.git_deploy import apply_task_deploy, pull_latest
 from orchestrator.format_ru import (
     format_date_ru,
+    format_datetime_ru,
     format_last_run,
     format_load,
     format_percent,
     format_usd,
+    run_status_ru,
 )
 from orchestrator.health import collect_health
+from orchestrator.memory import get_latest_daily_log
 from orchestrator.state import (
     get_bounty_draft,
+    get_last_daily_run,
     get_last_run,
     init_db,
     kv_get,
@@ -36,9 +40,8 @@ from orchestrator.state import (
     today_pnl,
     update_bounty_status,
 )
-from telegram_bot.rich_format import get_rich_example, list_rich_examples, prepare_rich_markdown
+from telegram_bot.rich_send import reply_rich, send_rich_markdown
 from telegram_bot.streaming import AnswerStreamer
-from telegram_bot.tg_rich_api import RichMessageApiError, send_rich_message
 
 logging.basicConfig(
     level=logging.INFO,
@@ -61,7 +64,6 @@ BOT_COMMANDS = [
     ("status", "Состояние сервера"),
     ("finance", "Финансы и paper-торговля"),
     ("ask", "Вопрос агенту (только ответ, без правок)"),
-    ("richdemo", "Примеры Rich Markdown"),
     ("task", "Задача: правки + commit + deploy"),
     ("bounty", "Черновики bug bounty"),
     ("memory", "Итог последнего daily-цикла"),
@@ -85,22 +87,35 @@ def _allowed_user(user) -> bool:
     return not (allowed_ids or allowed_names)
 
 
-def _format_health_ru(h) -> str:
-    return (
-        f"CPU: {format_percent(h.cpu_percent)} | RAM: {format_percent(h.memory_percent)} "
-        f"({h.memory_available_mb:.0f} МБ свободно)\n"
-        f"Диск: {format_percent(h.disk_percent)} | Нагрузка: {format_load(h.load_avg)}\n"
-        f"Сайт: {'OK' if h.site_ok else 'НЕДОСТУПЕН'} | "
-        f"Docker: {'OK' if h.docker_ok else 'ПРОБЛЕМА'}\n"
-        f"Режим: {'лёгкий' if h.light_mode else 'полный'}"
-    )
-
-
-def _format_last_run_ru() -> str:
+def _format_status_rich(h) -> str:
+    paused = kv_get("autonomy_paused", "false") == "true"
     run = get_last_run()
-    if not run:
-        return "ещё не было"
-    return format_last_run(run["ts"], run["status"], run["summary"])
+    last_run = (
+        format_last_run(run["ts"], run["status"], run["summary"], preview_len=120)
+        if run
+        else "ещё не было"
+    )
+    return f"""# Статус сервера
+
+| Метрика | Значение |
+|:--------|:---------|
+| CPU | {format_percent(h.cpu_percent)} |
+| RAM | {format_percent(h.memory_percent)} ({h.memory_available_mb:.0f} МБ свободно) |
+| Диск | {format_percent(h.disk_percent)} |
+| Нагрузка | {format_load(h.load_avg)} |
+| Сайт | {'**OK**' if h.site_ok else '**НЕДОСТУПЕН**'} |
+| Docker | {'**OK**' if h.docker_ok else '**ПРОБЛЕМА**'} |
+| Режим | {'лёгкий' if h.light_mode else 'полный'} |
+| Автономия | {'пауза' if paused else 'активна'} |
+
+**Последний запуск:** {last_run}
+
+**PnL сегодня:** {format_usd(today_pnl())}
+
+## Цели
+
+{_format_goal_ru()}
+"""
 
 
 def _format_goal_ru() -> str:
@@ -117,9 +132,9 @@ def _format_goal_ru() -> str:
         else f"{m['progress_pct']:.1f}%"
     )
     return (
-        f"M1 ({m['label']}): {format_usd(m['earned_usd'])} / {format_usd(m['target_usd'])} "
+        f"- **M1 ({m['label']}):** {format_usd(m['earned_usd'])} / {format_usd(m['target_usd'])} "
         f"({m_pct}) к {format_date_ru(m['deadline'])}\n"
-        f"Год: {format_usd(p['target_usd'])} к {format_date_ru(p['deadline'])} — "
+        f"- **Год:** {format_usd(p['target_usd'])} к {format_date_ru(p['deadline'])} — "
         f"заработано {format_usd(p['earned_usd'])} ({pct}), "
         f"осталось {format_usd(p['remaining_usd'])}, "
         f"~{format_usd(p['daily_needed_usd'])}/день, {p['days_left']} дн."
@@ -129,19 +144,59 @@ def _format_goal_ru() -> str:
 def _format_paper_ru() -> str:
     stats = paper_trade_stats()
     if stats["count"] == 0:
-        return "Paper-сделок пока нет."
+        return "_Paper-сделок пока нет._"
     lines = [
-        f"Paper-сделки: {stats['count']} (${stats['total_usd']:,.2f} всего)",
+        f"**Paper-сделки:** {stats['count']} (${stats['total_usd']:,.2f} всего)",
     ]
     if stats["by_side"]:
         side_parts = [f"{k}={v}" for k, v in sorted(stats["by_side"].items())]
-        lines.append(f"Стороны: {', '.join(side_parts)}")
+        lines.append(f"**Стороны:** {', '.join(side_parts)}")
     for t in stats["recent"]:
         title = t.get("market_title") or t["market_id"][:12]
         if len(title) > 48:
             title = title[:45] + "..."
-        lines.append(f"• {t['side']} ${t['size_usd']:.0f} — {title}")
+        lines.append(f"- {t['side']} ${t['size_usd']:.0f} — {title}")
     return "\n".join(lines)
+
+
+def _format_finance_rich() -> str:
+    poly = PolymarketClient()
+    geoblock = poly.check_geoblock()
+    if is_geoblocked(geoblock):
+        geo_line = "**Geoblock:** ЗАБЛОКИРОВАН (live-ордера отключены)"
+    elif geoblock.get("error"):
+        geo_line = f"**Geoblock:** неизвестно ({geoblock['error']})"
+    else:
+        geo_line = "**Geoblock:** OK"
+    return f"""# Финансы
+
+{geo_line}
+
+## Paper
+
+{_format_paper_ru()}
+
+## Цели
+
+{_format_goal_ru()}
+"""
+
+
+def _format_memory_rich() -> str:
+    run = get_last_daily_run()
+    log_body = get_latest_daily_log()
+    parts = ["# Итог последнего daily-цикла", ""]
+    if run:
+        parts.append(f"**Время:** {format_datetime_ru(run['ts'])}")
+        parts.append(f"**Статус:** {run_status_ru(run['status'])}")
+        parts.append("")
+    if log_body:
+        parts.append(log_body)
+    elif run and run.get("summary"):
+        parts.append(run["summary"])
+    else:
+        parts.append("_Daily-цикл ещё не выполнялся._")
+    return "\n".join(parts)
 
 
 def _help_text() -> str:
@@ -150,7 +205,6 @@ def _help_text() -> str:
         "/status — состояние сервера и сервисов\n"
         "/finance — geoblock, paper-сделки, цель $15k\n"
         "/ask <вопрос> — ответ без изменений на сервере\n"
-        "/richdemo [имя] — примеры Rich Markdown (basic, code, table…)\n"
         "/task <текст> — git pull, правки, commit, push, deploy\n"
         "/bounty — черновики bug bounty\n"
         "/approve bounty <id> — одобрить черновик\n"
@@ -165,16 +219,7 @@ def _help_text() -> str:
 async def cmd_status(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    h = collect_health()
-    paused = kv_get("autonomy_paused", "false") == "true"
-    msg = (
-        f"{_format_health_ru(h)}\n\n"
-        f"Последний запуск: {_format_last_run_ru()}\n"
-        f"PnL сегодня: {format_usd(today_pnl())}\n"
-        f"{_format_goal_ru()}\n"
-        f"Автономия: {'пауза' if paused else 'активна'}"
-    )
-    await update.message.reply_text(msg)
+    await reply_rich(update, _format_status_rich(collect_health()))
 
 
 async def _run_streaming(
@@ -272,9 +317,10 @@ async def _run_streaming(
 
         if mode == "task" and result_text:
             deploy_msg = await asyncio.to_thread(apply_task_deploy, result_text)
-            await context.bot.send_message(
+            await send_rich_markdown(
+                context.bot,
                 chat_id=chat_id,
-                text=f"Deploy:\n{deploy_msg}",
+                markdown=f"## Deploy\n\n{deploy_msg}",
             )
 
 
@@ -286,30 +332,6 @@ async def cmd_task(update, context) -> None:
         await update.message.reply_text("Использование: /task <что сделать>")
         return
     await _run_streaming(update, context, text, mode="task")
-
-
-async def cmd_richdemo(update, context) -> None:
-    if not _allowed_user(update.effective_user):
-        return
-    name = context.args[0].strip().lower() if context.args else "basic"
-    sample = get_rich_example(name)
-    if sample is None:
-        names = ", ".join(list_rich_examples())
-        await update.message.reply_text(
-            f"Неизвестный пример «{name}».\n\nДоступные: {names}\n\n/richdemo code"
-        )
-        return
-    markdown = prepare_rich_markdown(sample)
-    try:
-        await send_rich_message(
-            context.bot,
-            chat_id=update.effective_chat.id,
-            markdown=markdown,
-        )
-    except RichMessageApiError as e:
-        await update.message.reply_text(
-            f"Rich Message недоступен ({e.description}).\n\n{markdown[:3500]}"
-        )
 
 
 async def cmd_ask(update, context) -> None:
@@ -326,20 +348,20 @@ async def cmd_pause(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
     kv_set("autonomy_paused", "true")
-    await update.message.reply_text("Автономия приостановлена. Daily-циклы пропускаются.")
+    await reply_rich(update, "## Автономия\n\nПриостановлена. Daily-циклы пропускаются.")
 
 
 async def cmd_resume(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
     kv_set("autonomy_paused", "false")
-    await update.message.reply_text("Автономия возобновлена.")
+    await reply_rich(update, "## Автономия\n\nВозобновлена.")
 
 
 async def cmd_memory(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    await update.message.reply_text(_format_last_run_ru())
+    await reply_rich(update, _format_memory_rich())
 
 
 def _parse_bounty_draft_id(args: list[str]) -> int | None:
@@ -355,27 +377,27 @@ async def cmd_bounty(update, context) -> None:
         return
     pending = list_bounty_drafts(status="pending", limit=15)
     if not pending:
-        await update.message.reply_text(
-            "Нет ожидающих черновиков.\n\n"
-            "Ежедневный скан создаёт advisory-черновики и подсказки программ. "
-            "Одобряй вручную: /approve bounty <id>"
+        await reply_rich(
+            update,
+            "## Bug bounty\n\nНет ожидающих черновиков.\n\n"
+            "Ежедневный скан создаёт advisory-черновики. Одобряй: `/approve bounty <id>`",
         )
         return
-    lines = ["Ожидающие черновики bug bounty:", ""]
+    lines = ["# Bug bounty", "", "**Ожидающие черновики:**", ""]
     for row in pending:
         title = row["title"]
         if len(title) > 70:
             title = title[:67] + "..."
-        lines.append(f"#{row['id']} — {title}")
-        lines.append(f"  создан: {row['ts'][:19]}")
+        lines.append(f"- **#{row['id']}** — {title}")
+        lines.append(f"  _создан: {row['ts'][:19]}_")
     lines.extend(
         [
             "",
-            "/approve bounty <id> — готов к ручной отправке",
-            "/reject bounty <id> — отклонить",
+            "`/approve bounty <id>` — готов к ручной отправке",
+            "`/reject bounty <id>` — отклонить",
         ]
     )
-    await update.message.reply_text("\n".join(lines))
+    await reply_rich(update, "\n".join(lines))
 
 
 async def cmd_approve_bounty(update, context) -> None:
@@ -402,12 +424,12 @@ async def cmd_approve_bounty(update, context) -> None:
         await update.message.reply_text(f"Черновик #{draft_id} уже в статусе «{draft['status']}».")
         return
     update_bounty_status(draft_id, "approved")
-    await update.message.reply_text(
-        f"Черновик #{draft_id} одобрен для ручной отправки.\n\n"
-        f"Заголовок: {draft['title']}\n\n"
-        f"{draft['body'][:1800]}\n\n"
-        "Отправляй только после проверки scope, impact и шагов воспроизведения. "
-        "Авто-submit из агента отключён."
+    await reply_rich(
+        update,
+        f"## Черновик #{draft_id} одобрен\n\n"
+        f"**Заголовок:** {draft['title']}\n\n"
+        f"{draft['body']}\n\n"
+        "_Отправляй только после проверки scope, impact и шагов воспроизведения._",
     )
 
 
@@ -430,32 +452,19 @@ async def cmd_reject_bounty(update, context) -> None:
         await update.message.reply_text(f"Черновик #{draft_id} не найден.")
         return
     update_bounty_status(draft_id, "rejected")
-    await update.message.reply_text(f"Черновик #{draft_id} отклонён.")
+    await reply_rich(update, f"## Черновик #{draft_id}\n\nОтклонён.")
 
 
 async def cmd_finance(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    poly = PolymarketClient()
-    geoblock = poly.check_geoblock()
-    if is_geoblocked(geoblock):
-        geo_line = "Geoblock: ЗАБЛОКИРОВАН (live-ордера отключены)"
-    elif geoblock.get("error"):
-        geo_line = f"Geoblock: неизвестно ({geoblock['error']})"
-    else:
-        geo_line = "Geoblock: OK"
-    msg = (
-        f"{geo_line}\n\n"
-        f"{_format_paper_ru()}\n\n"
-        f"{_format_goal_ru()}"
-    )
-    await update.message.reply_text(msg)
+    await reply_rich(update, _format_finance_rich())
 
 
 async def cmd_help(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    await update.message.reply_text(_help_text())
+    await reply_rich(update, _help_text().replace("Команды бота:\n\n", "# Справка\n\n"))
 
 
 async def post_init(app) -> None:
@@ -501,7 +510,6 @@ def main() -> None:
     app.add_handler(CommandHandler("finance", cmd_finance))
     app.add_handler(CommandHandler("task", cmd_task))
     app.add_handler(CommandHandler("ask", cmd_ask))
-    app.add_handler(CommandHandler("richdemo", cmd_richdemo))
     app.add_handler(CommandHandler("pause", cmd_pause))
     app.add_handler(CommandHandler("resume", cmd_resume))
     app.add_handler(CommandHandler("memory", cmd_memory))

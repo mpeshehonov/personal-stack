@@ -72,6 +72,16 @@ def ensure_daily_log() -> Path:
     return path
 
 
+def get_latest_daily_log() -> str:
+    daily_dir = MEMORY_DIR / "daily"
+    if not daily_dir.exists():
+        return ""
+    files = sorted(daily_dir.glob("*.md"), reverse=True)
+    if not files:
+        return ""
+    return files[0].read_text(encoding="utf-8").strip()
+
+
 def append_daily_section(section: str, content: str) -> None:
     path = ensure_daily_log()
     text = path.read_text(encoding="utf-8")

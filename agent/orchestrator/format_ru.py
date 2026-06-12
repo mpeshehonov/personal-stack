@@ -30,6 +30,10 @@ RUN_STATUS_RU = {
 }
 
 
+def run_status_ru(status: str) -> str:
+    return RUN_STATUS_RU.get(status, status)
+
+
 def format_load(load_avg: tuple[float, float, float]) -> str:
     one, five, fifteen = load_avg
     return f"{one:.2f} / {five:.2f} / {fifteen:.2f} (1/5/15 мин)"
@@ -68,8 +72,8 @@ def format_date_ru(date_str: str) -> str:
 
 def format_last_run(ts: str, status: str, summary: str | None, *, preview_len: int = 80) -> str:
     when = format_datetime_ru(ts)
-    status_ru = RUN_STATUS_RU.get(status, status)
+    status_ru = run_status_ru(status)
     text = (summary or "—").strip()
-    if len(text) > preview_len:
+    if preview_len > 0 and len(text) > preview_len:
         text = text[: preview_len - 1] + "…"
     return f"{when} — {status_ru}: {text}"

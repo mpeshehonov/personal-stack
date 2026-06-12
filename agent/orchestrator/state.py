@@ -137,7 +137,7 @@ def log_run(run_type: str, status: str, summary: str = "") -> None:
 def get_last_run() -> dict[str, str] | None:
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT summary, ts, status FROM run_log ORDER BY id DESC LIMIT 1"
+            "SELECT summary, ts, status, run_type FROM run_log ORDER BY id DESC LIMIT 1"
         ).fetchone()
         if not row:
             return None
@@ -145,6 +145,28 @@ def get_last_run() -> dict[str, str] | None:
             "ts": row["ts"],
             "status": row["status"],
             "summary": row["summary"] or "",
+            "run_type": row["run_type"] or "",
+        }
+
+
+def get_last_daily_run() -> dict[str, str] | None:
+    with get_conn() as conn:
+        row = conn.execute(
+            """
+            SELECT summary, ts, status, run_type
+            FROM run_log
+            WHERE run_type = 'daily'
+            ORDER BY id DESC
+            LIMIT 1
+            """
+        ).fetchone()
+        if not row:
+            return None
+        return {
+            "ts": row["ts"],
+            "status": row["status"],
+            "summary": row["summary"] or "",
+            "run_type": row["run_type"] or "daily",
         }
 
 

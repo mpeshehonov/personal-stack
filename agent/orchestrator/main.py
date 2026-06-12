@@ -16,11 +16,12 @@ sys.path.insert(0, str(AGENT_ROOT))
 from bounty.scanner import daily_bounty_scan
 from finance.executor import FinanceExecutor
 from finance.proposal_parser import extract_trade_proposals
-from orchestrator.config import load_env_file
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
 from orchestrator.git_deploy import apply_daily_commit, apply_task_deploy, pull_latest
-from orchestrator.health import collect_health, format_health
+from orchestrator.daily_report import format_daily_report_rich
+from orchestrator.health import collect_health
 from orchestrator.memory import build_context_pack, ensure_daily_log
+from telegram_bot.rich_send import notify_allowed_users
 from orchestrator.state import (
     fetch_pending_tasks,
     init_db,
@@ -40,29 +41,6 @@ logger = logging.getLogger(__name__)
 POLL_INTERVAL = int(os.environ.get("ORCHESTRATOR_POLL_SEC", "30"))
 
 
-async def notify_telegram(text: str) -> None:
-    load_env_file(".env.telegram")
-    token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    chat_ids = os.environ.get("TELEGRAM_ALLOWED_USER_IDS", "")
-    if not token or not chat_ids:
-        logger.info("Telegram notify (no config): %s", text[:200])
-        return
-    import httpx
-
-    for uid in chat_ids.split(","):
-        uid = uid.strip()
-        if not uid:
-            continue
-        try:
-            await httpx.AsyncClient().post(
-                f"https://api.telegram.org/bot{token}/sendMessage",
-                json={"chat_id": uid, "text": text[:4000]},
-                timeout=15,
-            )
-        except Exception as e:
-            logger.warning("Telegram notify failed: %s", e)
-
-
 async def process_task(row) -> None:
     payload = json.loads(row["payload"])
     kind = payload.get("type", "task")
@@ -70,11 +48,13 @@ async def process_task(row) -> None:
 
     if kind == "ask":
         result = await asyncio.to_thread(run_ask, text)
-        await notify_telegram(f"Ask result:\n{result[:3500]}")
+        await notify_allowed_users(f"# Ask result\n\n{result}")
     elif kind == "task":
         ok, sync_msg = await asyncio.to_thread(pull_latest)
         if not ok:
-            await notify_telegram(f"Задача отменена: не синхронизирован git.\n{sync_msg[:800]}")
+            await notify_allowed_users(
+                f"# Задача отменена\n\nРепозиторий не синхронизирован.\n\n{sync_msg}"
+            )
             mark_task_done(row["id"])
             return
         result = await asyncio.to_thread(run_task, text)
@@ -86,13 +66,14 @@ async def process_task(row) -> None:
                 finance.process_agent_proposals, proposals
             )
             approved = sum(1 for o in outcomes if o.get("approved"))
-            await notify_telegram(
-                f"Задача выполнена ({approved}/{len(outcomes)} finance proposals):\n"
-                f"{result[:2800]}\n\nDeploy:\n{deploy_report[:800]}"
+            await notify_allowed_users(
+                f"# Задача выполнена\n\n"
+                f"Finance proposals: {approved}/{len(outcomes)}\n\n"
+                f"{result}\n\n## Deploy\n\n{deploy_report}"
             )
         else:
-            await notify_telegram(
-                f"Задача выполнена:\n{result[:2800]}\n\nDeploy:\n{deploy_report[:800]}"
+            await notify_allowed_users(
+                f"# Задача выполнена\n\n{result}\n\n## Deploy\n\n{deploy_report}"
             )
     mark_task_done(row["id"])
 
@@ -100,13 +81,15 @@ async def process_task(row) -> None:
 async def run_daily_cycle() -> None:
     if kv_get("autonomy_paused") == "true":
         logger.info("Autonomy paused, skipping daily cycle")
-        await notify_telegram("Daily cycle skipped: autonomy paused")
+        await notify_allowed_users("## Daily cycle\n\nПропущен: автономия на паузе.")
         return
 
     summary = ""
-    report = ""
+    health = collect_health()
+    fin_summary: dict = {}
+    draft_ids: list[int] = []
+    status = "finished"
     try:
-        health = collect_health()
         log_health(health.to_dict())
         ensure_daily_log()
 
@@ -135,17 +118,23 @@ async def run_daily_cycle() -> None:
             fin_summary["agent_proposals"] = proposal_outcomes
         draft_ids = await asyncio.to_thread(daily_bounty_scan)
 
-        report = (
-            f"Daily report\n\n{format_health(health)}\n\n"
-            f"Agent: {summary[:800]}\n\n"
-            f"Finance: {json.dumps(fin_summary, indent=0)[:500]}\n\n"
-            f"Bounty drafts: {draft_ids}"
-        )
-        log_run("daily", "finished", summary[:500])
+        log_run("daily", "finished", summary[:12000])
+    except Exception as e:
+        logger.exception("Daily cycle failed")
+        status = "error"
+        summary = summary or f"Ошибка daily-цикла: {e}"
+        log_run("daily", "error", summary[:12000])
     finally:
         commit_report = await asyncio.to_thread(apply_daily_commit, summary)
-        if report:
-            await notify_telegram(f"{report}\n\n{commit_report}")
+        report_md = format_daily_report_rich(
+            health=health,
+            summary=summary,
+            fin_summary=fin_summary,
+            draft_ids=draft_ids,
+            commit_report=commit_report,
+            status=status,
+        )
+        await notify_allowed_users(report_md)
 
 
 async def worker_loop() -> None:
@@ -154,12 +143,7 @@ async def worker_loop() -> None:
     while True:
         if kv_get("daily_trigger") == "true":
             kv_set("daily_trigger", "false")
-            try:
-                await run_daily_cycle()
-            except Exception as e:
-                logger.exception("Daily cycle failed")
-                log_run("daily", "error", str(e))
-                await notify_telegram(f"Daily cycle error: {e}")
+            await run_daily_cycle()
 
         tasks = fetch_pending_tasks(5)
         for row in tasks:
@@ -168,7 +152,7 @@ async def worker_loop() -> None:
             except Exception as e:
                 logger.exception("Task %s failed", row["id"])
                 mark_task_done(row["id"], "error")
-                await notify_telegram(f"Task error: {e}")
+                await notify_allowed_users(f"# Task error\n\n`{e}`")
 
         await asyncio.sleep(POLL_INTERVAL)
 
