@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/", label: "Главная" },
+  { href: "/projects", label: "Проекты" },
+  { href: "/blog", label: "Блог" },
   { href: "/resume", label: "Резюме" },
 ];
 
@@ -22,7 +24,10 @@ export function Header() {
         </Link>
         <div className="flex gap-1 sm:gap-2">
           {links.map(({ href, label }) => {
-            const active = pathname === href;
+            const active =
+              href === "/"
+                ? pathname === "/"
+                : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}

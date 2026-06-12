@@ -17,3 +17,90 @@
     @apply bg-accent/30 text-ink;
   }
 }
+
+@layer components {
+  .prose-blog {
+    @apply text-ink-muted leading-relaxed;
+  }
+
+  .prose-blog h1 {
+    @apply mb-4 text-2xl font-bold text-ink;
+  }
+
+  .prose-blog h2 {
+    @apply mb-3 mt-8 text-xl font-semibold text-ink;
+  }
+
+  .prose-blog h3 {
+    @apply mb-2 mt-6 text-lg font-medium text-ink;
+  }
+
+  .prose-blog p {
+    @apply mb-4;
+  }
+
+  .prose-blog ul,
+  .prose-blog ol {
+    @apply mb-4 ml-5 space-y-1;
+  }
+
+  .prose-blog ul {
+    @apply list-disc;
+  }
+
+  .prose-blog ol {
+    @apply list-decimal;
+  }
+
+  .prose-blog li {
+    @apply text-ink-muted;
+  }
+
+  .prose-blog a {
+    @apply text-accent hover:underline;
+  }
+
+  .prose-blog blockquote {
+    @apply mb-4 border-l-2 pl-4 italic text-ink-faint;
+    border-color: rgba(34, 211, 238, 0.4);
+  }
+
+  .prose-blog code {
+    @apply rounded px-1.5 py-0.5 font-mono text-sm text-accent;
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .prose-blog pre {
+    @apply mb-4 overflow-x-auto rounded-xl border bg-surface-raised p-4;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .prose-blog pre code {
+    @apply p-0 text-ink-muted;
+    background-color: transparent;
+  }
+
+  .prose-blog table {
+    @apply mb-4 w-full border-collapse text-sm;
+  }
+
+  .prose-blog th,
+  .prose-blog td {
+    @apply border px-3 py-2 text-left;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .prose-blog th {
+    @apply font-medium text-ink;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .prose-blog hr {
+    @apply my-8 border-t;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .prose-blog strong {
+    @apply font-semibold text-ink;
+  }
+}

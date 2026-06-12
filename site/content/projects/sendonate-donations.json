@@ -1,0 +1,18 @@
+{
+  "slug": "sendonate-donations",
+  "title": "sendonate.com — донаты и OBS-оверлей",
+  "company": "POTALONU LLC",
+  "role": "Fullstack / Frontend-разработчик",
+  "period": "09.2025 – н.в.",
+  "tagline": "Три клиентских контура: веб, Telegram Mini App и real-time overlay",
+  "problem": "Стримерам нужен сервис донатов с мгновенным отображением на эфире: веб-кабинет, оплата через Telegram и OBS-оверлей с WebSocket — всё в одном продукте.",
+  "contribution": "Реализовал три клиентских контура на React 19 + Vite: веб-кабинет стримера, Telegram Mini App и бандл для OBS-оверлея. Построил end-to-end флоу оплаты с многошаговым UX и real-time уведомлениями через WebSocket.",
+  "stack": ["React 19", "Vite", "TypeScript", "Telegram Mini App", "WebSocket", "REST", "OpenAPI/Orval"],
+  "outcomes": [
+    "Донат открытия Mini App до появления на стриме — менее 30 секунд",
+    "Единая кодовая база UI-компонентов для веба и Telegram",
+    "OBS-оверлей работает как отдельный лёгкий Vite-бандл без лишних зависимостей"
+  ],
+  "featured": true,
+  "order": 4
+}
