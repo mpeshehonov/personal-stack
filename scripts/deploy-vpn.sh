@@ -24,6 +24,9 @@ docker compose up -d --force-recreate
 sleep 3
 bash verify-hy2.sh
 
+echo "==> Build Happ RU-direct routing profile"
+bash "$STACK_DIR/vpn/scripts/build-happ-routing.sh"
+
 echo "==> Caddy HTTPS on 443/TCP (site)"
 cd "$STACK_DIR"
 docker compose up -d --force-recreate caddy

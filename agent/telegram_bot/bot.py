@@ -52,6 +52,9 @@ logger = logging.getLogger(__name__)
 # Один активный запрос на чат (/ask или /task)
 _chat_locks: dict[int, asyncio.Lock] = {}
 
+FINALIZE_TIMEOUT_SEC = 120
+DEPLOY_TIMEOUT_SEC = 900
+
 
 def _chat_lock(chat_id: int) -> asyncio.Lock:
     if chat_id not in _chat_locks:
@@ -298,7 +301,17 @@ async def _run_streaming(
                         last_text = payload
                 elif kind == "done":
                     result_text = payload or last_text
-                    await streamer.finalize(result_text)
+                    try:
+                        await asyncio.wait_for(
+                            streamer.finalize(result_text),
+                            timeout=FINALIZE_TIMEOUT_SEC,
+                        )
+                    except asyncio.TimeoutError:
+                        logger.error("finalize timeout chat=%s mode=%s", chat_id, mode)
+                        await streamer.finalize(
+                            (result_text or "Ответ получен, но финализация сообщения "
+                             "превысила лимит времени. Проверь /status.")
+                        )
                     break
                 elif kind == "error":
                     await streamer.finalize(f"Ошибка: {payload}")
@@ -315,13 +328,22 @@ async def _run_streaming(
             except asyncio.CancelledError:
                 pass
 
-        if mode == "task" and result_text:
-            deploy_msg = await asyncio.to_thread(apply_task_deploy, result_text)
-            await send_rich_markdown(
-                context.bot,
-                chat_id=chat_id,
-                markdown=f"## Deploy\n\n{deploy_msg}",
+    if mode == "task" and result_text:
+        try:
+            deploy_msg = await asyncio.wait_for(
+                asyncio.to_thread(apply_task_deploy, result_text),
+                timeout=DEPLOY_TIMEOUT_SEC,
             )
+        except asyncio.TimeoutError:
+            deploy_msg = (
+                f"Deploy превысил {DEPLOY_TIMEOUT_SEC // 60} мин. "
+                "Проверь логи на сервере: `journalctl -u telegram-bot -n 50`"
+            )
+        await send_rich_markdown(
+            context.bot,
+            chat_id=chat_id,
+            markdown=f"## Deploy\n\n{deploy_msg}",
+        )
 
 
 async def cmd_task(update, context) -> None:

@@ -61,13 +61,16 @@ class AnswerStreamer:
             self._typewriter = asyncio.create_task(self._typewriter_loop())
 
     async def _drain_typewriter(self) -> None:
-        self._ensure_typewriter()
-        if self._typewriter:
-            await self._typewriter
-        while self._shown_len < len(self._target):
-            self._shown_len = len(self._target)
+        """Stop typewriter and jump to full text — must not await the idle loop."""
+        if self._typewriter and not self._typewriter.done():
+            self._typewriter.cancel()
+            try:
+                await self._typewriter
+            except asyncio.CancelledError:
+                pass
+        self._shown_len = len(self._target)
+        if self._target:
             await self._render_partial(self._target)
-            await asyncio.sleep(TYPEWRITER_TICK)
 
     async def _typewriter_loop(self) -> None:
         try:

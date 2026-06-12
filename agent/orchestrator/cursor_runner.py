@@ -149,7 +149,10 @@ def _wrap_task_prompt(user_text: str) -> str:
 - Перед правками репозиторий уже синхронизирован с origin/main (git pull выполнен).
 - НЕ трогай secrets/ и не выводи секреты.
 - НЕ коммить и НЕ push сам — commit, push и deploy выполнит бот после ответа.
-- Отвечай с Markdown (заголовки, списки, `code`, таблицы) — бот отрендерит Rich Message.
+- Отвечай с Markdown (заголовки ##, списки, `code`, таблицы) — бот отрендерит Rich Message.
+- Любой URL в ответе проверь curl -fsSI или curl -fsS (ожидается HTTP 200). Не давай ссылки с 404/5xx.
+- Если добавляешь файлы за nginx/docker — перезапусти нужный контейнер и снова проверь URL.
+- Для Happ routing после build-happ-routing.sh: cd vpn/hysteria2 && docker compose up -d hy2-subscription.
 - В конце дай краткое резюме по-русски: что изменил и зачем (1–5 пунктов).
 """
 

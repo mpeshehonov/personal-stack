@@ -44,3 +44,23 @@ docker inspect -f '{{.Name}} {{.State.StartedAt}}' \
 ```
 
 Or run `./vpn/ensure-up.sh` — it prints running status and exits 0 when healthy.
+
+## Split routing — RU sites without VPN
+
+When VPN is on, Russian sites (`.ru`, `.su`, `.рф`, Yandex/VK/banks/gov) go **direct**. Everything else uses the tunnel.
+
+| Resource | URL |
+|----------|-----|
+| Docs | `vpn/routing/README.md` |
+| Happ link | `http://89.124.70.216:8888/routing/happ-ru-direct.link` |
+| JSON profile | `http://89.124.70.216:8888/routing/happ-ru-direct.json` |
+
+**Setup (Happ):** import subscription → open routing link from table above → verify with `2ip.ru` (real IP) vs `ifconfig.me` (NL server IP).
+
+**Edit whitelist:** add domains to `vpn/routing/ru-direct-sites.txt`, then:
+
+```bash
+bash /opt/personal-stack/vpn/scripts/build-happ-routing.sh
+```
+
+Redeploy subscription nginx only if needed: `cd vpn/hysteria2 && docker compose up -d hy2-subscription`.
