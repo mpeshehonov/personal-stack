@@ -28,6 +28,7 @@ Scoring: **Autonomy** = % of earning loop runnable without you after one-time se
 | **A6** | **VPN subscription resale** | 70% | $0 | Low–Med | Existing Hysteria2 stack | Automate sub generation + payment webhook. Legal/ToS risk; not in core goals — **defer** unless explicit decision. |
 | **A7** | **Bug bounty (agent-assisted)** | 35% | $0 | Med for M2, **not M1** | `bounty/scanner.py`, curated programs | Scanner + drafts save time; **you** find/submit vulns. One $1k+ report skips M1 definition but hits M2 fast. |
 | **A8** | **Freelance / resume funnel** | 10% | $0 | **Not autonomous** | Site, PDF resume | Best $/hour but requires you. Counts toward M3 only. |
+| **A9** | **Job Hunt Autopilot** | 45% | $0 | M2/M3 (not M1) | `job_hunt/`, HH API, Telegram approve | Agent finds + scores vacancies, drafts cover letter; **you** `/approve apply`. See `docs/superpowers/specs/2026-06-13-job-hunt-autopilot-design.md`. |
 
 ---
 
