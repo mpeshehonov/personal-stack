@@ -220,6 +220,7 @@ def _help_text() -> str:
         "/task <текст> — git pull, правки, commit, push, deploy\n"
         "/bounty — готовые отчёты bug bounty (semi-auto)\n"
         "/bounty hunt — принудительный ресёрч сейчас\n"
+        "/bounty test — проверить HackerOne API\n"
         "/jobs — топ вакансий (job hunt, read-only)\n"
         "/approve bounty <id> — одобрить и отправить отчёт (HackerOne)\n"
         "/reject bounty <id> — отклонить черновик\n"
@@ -407,6 +408,19 @@ def _parse_bounty_draft_id(args: list[str]) -> int | None:
 
 async def cmd_bounty(update, context) -> None:
     if not _allowed_user(update.effective_user):
+        return
+
+    if context.args and context.args[0].lower() == "test":
+        from bounty.submit import verify_hackerone_auth
+
+        ok, msg = await asyncio.to_thread(verify_hackerone_auth)
+        status = "OK" if ok else "FAIL"
+        await reply_rich(
+            update,
+            f"## HackerOne API test\n\n**{status}:** {msg}\n\n"
+            "Personal token: username = handle `mpeshekhonov`, password = token.\n"
+            "Страница: https://hackerone.com/settings/api_token/edit",
+        )
         return
 
     if context.args and context.args[0].lower() == "hunt":
