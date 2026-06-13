@@ -20,6 +20,8 @@ class BountyFinding:
     team_handle: str
     program_url: str
     confidence: str = "high"
+    quality_score: int | None = None
+    evidence_commands: list[str] | None = None
 
     def to_meta(self) -> dict[str, Any]:
         return asdict(self)
@@ -61,9 +63,12 @@ class BountyFinding:
 class BountyScanResult:
     draft_ids: list[int] = field(default_factory=list)
     researched_program: str = ""
+    programs_tried: list[str] = field(default_factory=list)
     finding_found: bool = False
     skipped_reason: str = ""
     message: str = ""
+    purged_ids: list[int] = field(default_factory=list)
+    research_log: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

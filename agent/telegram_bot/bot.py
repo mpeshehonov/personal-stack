@@ -45,7 +45,7 @@ from orchestrator.state import (
 )
 from bounty.config import BOUNTY_AUTO_SUBMIT, BOUNTY_ENABLED
 from bounty.models import BountyFinding
-from bounty.scanner import manual_bounty_research
+from bounty.scanner import manual_bounty_research, purge_bounty_queue
 from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
 from telegram_bot.rich_send import reply_rich, send_rich_markdown
@@ -219,7 +219,8 @@ def _help_text() -> str:
         "/ask <вопрос> — ответ без изменений на сервере\n"
         "/task <текст> — git pull, правки, commit, push, deploy\n"
         "/bounty — готовые отчёты bug bounty (semi-auto)\n"
-        "/bounty hunt — принудительный ресёрч сейчас\n"
+        "/bounty hunt — deep research (до 3 программ)\n"
+        "/bounty purge — отсеять не-submit pending\n"
         "/bounty test — проверить HackerOne API\n"
         "/jobs — топ вакансий (job hunt, read-only)\n"
         "/approve bounty <id> — одобрить и отправить отчёт (HackerOne)\n"
@@ -423,18 +424,26 @@ async def cmd_bounty(update, context) -> None:
         )
         return
 
+    if context.args and context.args[0].lower() == "purge":
+        result = await asyncio.to_thread(purge_bounty_queue)
+        await reply_rich(update, f"## Bounty purge\n\n{result.message}")
+        return
+
     if context.args and context.args[0].lower() == "hunt":
         if not BOUNTY_ENABLED:
             await update.message.reply_text("Bounty отключён (BOUNTY_ENABLED=false).")
             return
         await update.message.reply_text(
-            "Запускаю bounty research (Cursor agent). Это может занять несколько минут…"
+            "Deep bounty research: purge → до 3 программ → auto-QA → reviewer. "
+            "Может занять 15–40 мин…"
         )
         result = await asyncio.to_thread(manual_bounty_research)
-        msg = result.message or "Готово."
+        parts = [result.message or "Готово."]
+        if result.purged_ids:
+            parts.insert(0, f"Отсеяно: {', '.join(f'#{i}' for i in result.purged_ids)}")
         if result.draft_ids:
-            msg += f"\n\nНовые отчёты: {', '.join(f'#{i}' for i in result.draft_ids)}"
-        await reply_rich(update, f"## Bounty hunt\n\n{msg}")
+            parts.append(f"Submit-ready: {', '.join(f'#{i}' for i in result.draft_ids)}")
+        await reply_rich(update, "## Bounty hunt\n\n" + "\n\n".join(parts))
         return
 
     pending = list_bounty_drafts(status="pending", limit=15)
@@ -448,8 +457,8 @@ async def cmd_bounty(update, context) -> None:
             update,
             "## Bug bounty (semi-auto)\n\n"
             "Нет ожидающих отчётов.\n\n"
-            "Daily-цикл ищет **готовые submit-ready findings** (не GHSA-наводки).\n"
-            "Принудительно: `/bounty hunt`\n\n"
+            "Deep research + auto-QA + reviewer. Только submit-ready.\n"
+            "Принудительно: `/bounty hunt` · отсев: `/bounty purge`\n\n"
             f"{auto_note}",
         )
         return
@@ -459,10 +468,12 @@ async def cmd_bounty(update, context) -> None:
         if len(title) > 70:
             title = title[:67] + "..."
         meta = get_bounty_draft_meta(int(row["id"]))
-        sev = meta.get("severity", "?")
+        score = meta.get("quality_score", "—")
         program = meta.get("program_name", "?")
         lines.append(f"- **#{row['id']}** — {title}")
-        lines.append(f"  _{program}, severity: {sev}, создан: {row['ts'][:19]}_")
+        lines.append(
+            f"  _{program}, {sev}, QA {score}, создан: {row['ts'][:19]}_"
+        )
     lines.extend(
         [
             "",

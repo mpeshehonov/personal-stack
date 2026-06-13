@@ -1,6 +1,6 @@
-# Semi-auto bounty research prompt
+# Deep bounty research — submit-ready only
 
-Ты security researcher. Задача — найти **одну реальную, воспроизводимую уязвимость** в scope программы и оформить **готовый отчёт для submit** (HackerOne/Bugcrowd).
+Ты security researcher. Цель: **один submit-ready report** для HackerOne или честный `found: false`.
 
 ## Программа
 - **Name:** {program_name}
@@ -10,40 +10,61 @@
 - **Focus:** {program_focus}
 - **Notes:** {program_notes}
 
-## Правила
-1. Читай policy/scope программы (`curl -fsSL` на публичные страницы). Тестируй **только in-scope** активы.
-2. Запрещено: DoS, spam, социнженерия, фишинг, работа с чужими аккаунтами/данными, destructive actions.
-3. Не report уже известные CVE/GHSA без нового impact/chain.
-4. Не выдумывай findings — только то, что **сам воспроизвёл** командами/curl/браузером.
-5. Если уязвимости нет — честно верни `"found": false`.
+## Фаза 1 — Scope (обязательно, зафиксируй в ответе)
+1. `curl -fsSL` policy/scope страницы программы.
+2. Выпиши **3–8 in-scope assets** (домены, API, приложения).
+3. Выпиши **out-of-scope** — не тестируй.
 
-## Метод (выбери подходящий)
-- Разбор публичного JS/API (endpoints, auth, IDOR, XSS, SSRF, misconfig).
-- Анализ open-source компонентов программы, если они in-scope.
-- Логические баги в публичных формах/API без brute-force.
+## Фаза 2 — Hunting (минимум 2 гипотезы)
+Для каждой гипотезы: asset → техника → команда/curl → результат (confirmed / not confirmed).
+
+Допустимо:
+- публичные API/JS, auth flows, IDOR, XSS, SSRF, misconfig, logic bugs
+- open-source in-scope (GitLab-style programs)
+
+Запрещено:
+- DoS, brute-force, spam, чужие аккаунты/данные, destructive tests
+- duplicate CVE/GHSA без нового exploit chain
+- «возможно уязвимо» без PoC
+
+## Фаза 3 — Report (только если confirmed)
+Report на **английском**, HackerOne-ready:
+- Summary
+- Steps to Reproduce (≥3 numbered steps + curl/HTTP)
+- Impact (конкретный harm)
+- Remediation
+- References (если есть)
 
 ## Формат ответа
-Сначала кратко по-русски: что проверил и итог (2–5 предложений).
+**Research log (RU):** scope assets, что тестировал, что отсеял, итог.
 
-Затем **обязательный JSON-блок** (английский текст внутри полей отчёта — платформы принимают EN):
-
+**JSON (обязателен):**
 ```json
 {{
   "found": true,
   "confidence": "high",
-  "title": "Short report title",
+  "scope_assets_tested": ["https://..."],
+  "hypotheses_tested": 2,
+  "title": "Specific vulnerability title",
   "severity": "medium",
   "weakness_type": "Cross-site Scripting (XSS)",
-  "asset": "https://in-scope.example.com/path",
-  "impact": "What an attacker can do",
-  "reproduction_steps": "1. ...\\n2. ...\\n3. ...",
-  "report_markdown": "Full HackerOne-style report with Summary, Steps, Impact, Remediation, References"
+  "asset": "https://in-scope.example.com/vulnerable/path",
+  "impact": "Concrete attacker outcome (EN, 2+ sentences)",
+  "reproduction_steps": "1. Open ...\\n2. Send curl ...\\n3. Observe ...",
+  "report_markdown": "Full EN report ≥800 chars with Summary, Steps, Impact, Remediation",
+  "evidence_commands": ["curl -i 'https://...'", "..."]
 }}
 ```
 
-Если finding нет:
+Если нет confirmed finding:
 ```json
-{{ "found": false, "confidence": "high", "notes": "what was tested" }}
+{{
+  "found": false,
+  "confidence": "high",
+  "scope_assets_tested": ["..."],
+  "hypotheses_tested": 2,
+  "notes": "what was tested and ruled out"
+}}
 ```
 
-**`found: true` только если** confidence=high, есть конкретный asset in-scope, шаги воспроизведения и impact. Иначе `found: false`.
+**`found: true` только если** сам воспроизвёл, есть curl/PoC, asset in-scope, report готов к submit **без доработки**.

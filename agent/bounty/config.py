@@ -12,6 +12,13 @@ BOUNTY_ENABLED = os.environ.get("BOUNTY_ENABLED", "true").lower() in ("1", "true
 BOUNTY_AUTO_SUBMIT = os.environ.get("BOUNTY_AUTO_SUBMIT", "true").lower() in ("1", "true", "yes")
 BOUNTY_MAX_PENDING = int(os.environ.get("BOUNTY_MAX_PENDING", "2"))
 BOUNTY_RESEARCH_COOLDOWN_HOURS = int(os.environ.get("BOUNTY_RESEARCH_COOLDOWN_HOURS", "20"))
+BOUNTY_PROGRAMS_PER_CYCLE = int(os.environ.get("BOUNTY_PROGRAMS_PER_CYCLE", "3"))
+BOUNTY_REVIEW_ENABLED = os.environ.get("BOUNTY_REVIEW_ENABLED", "true").lower() in (
+    "1",
+    "true",
+    "yes",
+)
+BOUNTY_MIN_QUALITY_SCORE = int(os.environ.get("BOUNTY_MIN_QUALITY_SCORE", "85"))
 
 HACKERONE_API_USERNAME = os.environ.get("HACKERONE_API_USERNAME", "").strip()
 # Some accounts use a separate token identifier from HackerOne settings (Basic auth username).

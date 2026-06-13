@@ -57,8 +57,14 @@ def parse_agent_finding(text: str, program: BountyProgram) -> BountyFinding | No
 
     if not all((title, report_md, repro, impact, asset, weakness)):
         return None
-    if len(report_md) < 200 or len(repro) < 80:
+    if len(report_md) < 800 or len(repro) < 120:
         return None
+
+    evidence = payload.get("evidence_commands")
+    if isinstance(evidence, list):
+        evidence_cmds = [str(x).strip() for x in evidence if str(x).strip()]
+    else:
+        evidence_cmds = None
 
     return BountyFinding(
         title=title[:250],
@@ -73,6 +79,7 @@ def parse_agent_finding(text: str, program: BountyProgram) -> BountyFinding | No
         team_handle=program.team_handle,
         program_url=program.url,
         confidence=confidence,
+        evidence_commands=evidence_cmds or None,
     )
 
 

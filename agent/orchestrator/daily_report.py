@@ -107,24 +107,28 @@ def _format_bounty_section(bounty_summary: dict[str, Any] | None) -> str:
         return "Отключено (`BOUNTY_ENABLED=false`)."
 
     lines: list[str] = []
-    program = bounty_summary.get("researched_program")
-    if program:
-        lines.append(f"**Программа:** {program}")
+    purged = bounty_summary.get("purged_ids") or []
+    if purged:
+        lines.append(f"**Отсеяно:** {', '.join(f'#{i}' for i in purged)}")
+
+    tried = bounty_summary.get("programs_tried") or []
+    if tried:
+        lines.append(f"**Программы:** {', '.join(tried)}")
+    elif bounty_summary.get("researched_program"):
+        lines.append(f"**Программа:** {bounty_summary['researched_program']}")
 
     if bounty_summary.get("finding_found"):
         ids = bounty_summary.get("draft_ids") or []
-        lines.append(f"**Новый отчёт:** #{', #'.join(str(i) for i in ids)}")
+        lines.append(f"**Submit-ready:** #{', #'.join(str(i) for i in ids)}")
     elif bounty_summary.get("skipped_reason"):
         lines.append(f"_{bounty_summary.get('message') or 'Пропущено'}_")
     else:
-        lines.append("_Submit-ready finding не найден — черновик не создан._")
+        lines.append("_Submit-ready finding не найден после deep research._")
 
-    msg = bounty_summary.get("message")
-    if msg and bounty_summary.get("finding_found"):
-        lines.append(msg)
+    for line in (bounty_summary.get("research_log") or [])[-4:]:
+        lines.append(f"- {line}")
 
-    pending_note = "Проверь `/bounty` → `/approve bounty <id>` для авто-сабмита."
-    lines.append(pending_note)
+    lines.append("`/bounty` → `/approve bounty <id>`")
     return "\n".join(lines)
 
 
