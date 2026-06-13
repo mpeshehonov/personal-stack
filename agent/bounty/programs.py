@@ -13,6 +13,7 @@ class BountyProgram:
     name: str
     platform: Platform
     url: str
+    team_handle: str
     focus: str
     notes: str = ""
 
@@ -23,6 +24,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Shopify",
         platform="hackerone",
         url="https://hackerone.com/shopify",
+        team_handle="shopify",
         focus="E-commerce platform, Liquid, APIs, merchant apps",
         notes="Strong web/API surface; good fit for JS/Node research.",
     ),
@@ -30,6 +32,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="GitLab",
         platform="hackerone",
         url="https://hackerone.com/gitlab",
+        team_handle="gitlab",
         focus="Git hosting, CI/CD, web UI, GraphQL",
         notes="Ruby/JS stack; extensive self-hosted and SaaS scope.",
     ),
@@ -37,6 +40,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Cloudflare",
         platform="hackerone",
         url="https://hackerone.com/cloudflare",
+        team_handle="cloudflare",
         focus="CDN, Workers, DNS, dashboard",
         notes="Edge compute and web infrastructure; read scope carefully.",
     ),
@@ -44,6 +48,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Stripe",
         platform="hackerone",
         url="https://hackerone.com/stripe",
+        team_handle="stripe",
         focus="Payments API, Dashboard, Connect, webhooks",
         notes="High-quality program; strict rules on live payment data.",
     ),
@@ -51,6 +56,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Node.js",
         platform="hackerone",
         url="https://hackerone.com/nodejs",
+        team_handle="nodejs",
         focus="Node.js runtime, npm ecosystem coordination",
         notes="Core runtime and ecosystem; aligns with JS stack skills.",
     ),
@@ -58,6 +64,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Automattic",
         platform="hackerone",
         url="https://hackerone.com/automattic",
+        team_handle="automattic",
         focus="WordPress.com, WooCommerce, PHP/JS plugins",
         notes="Large WordPress/JS plugin surface.",
     ),
@@ -65,6 +72,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Slack",
         platform="hackerone",
         url="https://hackerone.com/slack",
+        team_handle="slack",
         focus="Workspace apps, APIs, OAuth, web client",
         notes="Enterprise messaging; web and API heavy.",
     ),
@@ -72,6 +80,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Mozilla",
         platform="bugcrowd",
         url="https://bugcrowd.com/mozilla",
+        team_handle="mozilla",
         focus="Firefox, web services, MDN-adjacent properties",
         notes="Browser and web platform research.",
     ),
@@ -79,6 +88,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="Datadog",
         platform="hackerone",
         url="https://hackerone.com/datadog",
+        team_handle="datadog",
         focus="Observability SaaS, agents, dashboard",
         notes="SaaS dashboard and API testing.",
     ),
@@ -86,6 +96,7 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         name="IKEA",
         platform="intigriti",
         url="https://app.intigriti.com/programs/ikea/ikea/detail",
+        team_handle="ikea",
         focus="Retail web apps, APIs, mobile backends",
         notes="Public Intigriti program with web scope.",
     ),

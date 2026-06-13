@@ -100,18 +100,46 @@ def _format_job_hunt_section(job_summary: dict[str, Any] | None) -> str:
     return "\n".join(lines)
 
 
+def _format_bounty_section(bounty_summary: dict[str, Any] | None) -> str:
+    if not bounty_summary:
+        return "—"
+    if bounty_summary.get("skipped_reason") == "disabled":
+        return "Отключено (`BOUNTY_ENABLED=false`)."
+
+    lines: list[str] = []
+    program = bounty_summary.get("researched_program")
+    if program:
+        lines.append(f"**Программа:** {program}")
+
+    if bounty_summary.get("finding_found"):
+        ids = bounty_summary.get("draft_ids") or []
+        lines.append(f"**Новый отчёт:** #{', #'.join(str(i) for i in ids)}")
+    elif bounty_summary.get("skipped_reason"):
+        lines.append(f"_{bounty_summary.get('message') or 'Пропущено'}_")
+    else:
+        lines.append("_Submit-ready finding не найден — черновик не создан._")
+
+    msg = bounty_summary.get("message")
+    if msg and bounty_summary.get("finding_found"):
+        lines.append(msg)
+
+    pending_note = "Проверь `/bounty` → `/approve bounty <id>` для авто-сабмита."
+    lines.append(pending_note)
+    return "\n".join(lines)
+
+
 def format_daily_report_rich(
     *,
     health: HealthSnapshot,
     summary: str,
     fin_summary: dict[str, Any],
-    draft_ids: list[int],
+    bounty_summary: dict[str, Any] | None = None,
     job_summary: dict[str, Any] | None = None,
     commit_report: str,
     status: str = "finished",
 ) -> str:
     finance_block = format_finance_section(fin_summary)
-    drafts = ", ".join(f"#{i}" for i in draft_ids) if draft_ids else "—"
+    bounty_block = _format_bounty_section(bounty_summary)
     job_block = _format_job_hunt_section(job_summary)
     return f"""# Ежедневный отчёт
 
@@ -131,7 +159,7 @@ def format_daily_report_rich(
 
 ## Баг-баунти
 
-Черновики: {drafts}
+{bounty_block}
 
 ## Поиск работы
 

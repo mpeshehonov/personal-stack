@@ -31,6 +31,7 @@ from orchestrator.health import collect_health
 from orchestrator.memory import get_latest_daily_log
 from orchestrator.state import (
     get_bounty_draft,
+    get_bounty_draft_meta,
     get_last_daily_run,
     get_last_run,
     init_db,
@@ -39,8 +40,13 @@ from orchestrator.state import (
     list_bounty_drafts,
     list_job_leads,
     today_pnl,
+    update_bounty_draft_meta,
     update_bounty_status,
 )
+from bounty.config import BOUNTY_AUTO_SUBMIT, BOUNTY_ENABLED
+from bounty.models import BountyFinding
+from bounty.scanner import manual_bounty_research
+from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
 from telegram_bot.rich_send import reply_rich, send_rich_markdown
 from telegram_bot.streaming import AnswerStreamer
@@ -212,9 +218,10 @@ def _help_text() -> str:
         "/finance — geoblock, paper-сделки, цель $15k\n"
         "/ask <вопрос> — ответ без изменений на сервере\n"
         "/task <текст> — git pull, правки, commit, push, deploy\n"
-        "/bounty — черновики bug bounty\n"
+        "/bounty — готовые отчёты bug bounty (semi-auto)\n"
+        "/bounty hunt — принудительный ресёрч сейчас\n"
         "/jobs — топ вакансий (job hunt, read-only)\n"
-        "/approve bounty <id> — одобрить черновик\n"
+        "/approve bounty <id> — одобрить и отправить отчёт (HackerOne)\n"
         "/reject bounty <id> — отклонить черновик\n"
         "/memory — итог последнего daily-цикла\n"
         "/pause — приостановить автономию\n"
@@ -401,26 +408,54 @@ def _parse_bounty_draft_id(args: list[str]) -> int | None:
 async def cmd_bounty(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
+
+    if context.args and context.args[0].lower() == "hunt":
+        if not BOUNTY_ENABLED:
+            await update.message.reply_text("Bounty отключён (BOUNTY_ENABLED=false).")
+            return
+        await update.message.reply_text(
+            "Запускаю bounty research (Cursor agent). Это может занять несколько минут…"
+        )
+        result = await asyncio.to_thread(manual_bounty_research)
+        msg = result.message or "Готово."
+        if result.draft_ids:
+            msg += f"\n\nНовые отчёты: {', '.join(f'#{i}' for i in result.draft_ids)}"
+        await reply_rich(update, f"## Bounty hunt\n\n{msg}")
+        return
+
     pending = list_bounty_drafts(status="pending", limit=15)
+    auto_note = (
+        "После `/approve bounty <id>` отчёт **автоматически отправится** на HackerOne."
+        if BOUNTY_AUTO_SUBMIT and hackerone_configured()
+        else "Настрой `secrets/.env.bounty` для авто-сабмита на HackerOne."
+    )
     if not pending:
         await reply_rich(
             update,
-            "## Bug bounty\n\nНет ожидающих черновиков.\n\n"
-            "Ежедневный скан создаёт advisory-черновики. Одобряй: `/approve bounty <id>`",
+            "## Bug bounty (semi-auto)\n\n"
+            "Нет ожидающих отчётов.\n\n"
+            "Daily-цикл ищет **готовые submit-ready findings** (не GHSA-наводки).\n"
+            "Принудительно: `/bounty hunt`\n\n"
+            f"{auto_note}",
         )
         return
-    lines = ["# Bug bounty", "", "**Ожидающие черновики:**", ""]
+    lines = ["# Bug bounty", "", "**Готовые отчёты (pending):**", ""]
     for row in pending:
         title = row["title"]
         if len(title) > 70:
             title = title[:67] + "..."
+        meta = get_bounty_draft_meta(int(row["id"]))
+        sev = meta.get("severity", "?")
+        program = meta.get("program_name", "?")
         lines.append(f"- **#{row['id']}** — {title}")
-        lines.append(f"  _создан: {row['ts'][:19]}_")
+        lines.append(f"  _{program}, severity: {sev}, создан: {row['ts'][:19]}_")
     lines.extend(
         [
             "",
-            "`/approve bounty <id>` — готов к ручной отправке",
+            "`/approve bounty <id>` — одобрить и отправить",
             "`/reject bounty <id>` — отклонить",
+            "",
+            auto_note,
         ]
     )
     await reply_rich(update, "\n".join(lines))
@@ -497,14 +532,62 @@ async def cmd_approve_bounty(update, context) -> None:
     if draft["status"] != "pending":
         await update.message.reply_text(f"Черновик #{draft_id} уже в статусе «{draft['status']}».")
         return
+
+    meta = get_bounty_draft_meta(draft_id)
+    finding = BountyFinding.from_meta(meta)
     update_bounty_status(draft_id, "approved")
-    await reply_rich(
-        update,
-        f"## Черновик #{draft_id} одобрен\n\n"
-        f"**Заголовок:** {draft['title']}\n\n"
-        f"{draft['body']}\n\n"
-        "_Отправляй только после проверки scope, impact и шагов воспроизведения._",
-    )
+
+    lines = [
+        f"## Отчёт #{draft_id} одобрен",
+        "",
+        f"**{draft['title']}**",
+        "",
+        draft["body"],
+    ]
+
+    if BOUNTY_AUTO_SUBMIT and finding:
+        submit_result = await asyncio.to_thread(submit_finding, finding)
+        if submit_result.ok:
+            update_bounty_status(draft_id, "submitted")
+            meta.update(
+                {
+                    "external_id": submit_result.external_id,
+                    "report_url": submit_result.report_url,
+                }
+            )
+            update_bounty_draft_meta(draft_id, meta)
+            lines.extend(
+                [
+                    "",
+                    f"**Сабмит:** {submit_result.message}",
+                    f"**Ссылка:** {submit_result.report_url or '—'}",
+                ]
+            )
+        else:
+            update_bounty_status(draft_id, "submit_failed")
+            lines.extend(
+                [
+                    "",
+                    f"**Сабмит не удался:** {submit_result.message}",
+                    "_Отчёт выше — можно отправить вручную на платформе программы._",
+                ]
+            )
+    elif finding and finding.platform != "hackerone":
+        lines.extend(
+            [
+                "",
+                f"_Авто-сабмит для {finding.platform} пока недоступен._",
+                f"Отправь вручную: {finding.program_url}",
+            ]
+        )
+    elif not BOUNTY_AUTO_SUBMIT:
+        lines.append("\n\n_Авто-сабмит выключен (BOUNTY_AUTO_SUBMIT=false)._")
+    else:
+        lines.append(
+            "\n\n_Старый черновик без structured meta — отправь вручную по тексту выше._"
+        )
+
+    await reply_rich(update, "\n".join(lines))
 
 
 async def cmd_reject_bounty(update, context) -> None:

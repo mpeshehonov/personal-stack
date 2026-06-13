@@ -10,7 +10,7 @@
 - Secrets: /opt/personal-stack/secrets (never commit)
 
 ## Rules
-1. Never submit bug bounty reports without Telegram approval
+1. Bug bounty: orchestrator создаёт **только submit-ready отчёты**; submit **только** после `/approve bounty <id>` (авто на HackerOne если настроено)
 2. Never bypass Risk Engine for finance
 3. Max 1-2 site improvements per day
 4. Use scripts/redeploy-site.sh to restart site

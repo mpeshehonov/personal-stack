@@ -88,6 +88,15 @@ def init_db() -> None:
             );
             """
         )
+        _migrate_schema(conn)
+
+
+def _migrate_schema(conn: sqlite3.Connection) -> None:
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(bounty_drafts)")}
+    if "meta_json" not in cols:
+        conn.execute(
+            "ALTER TABLE bounty_drafts ADD COLUMN meta_json TEXT NOT NULL DEFAULT '{}'"
+        )
 
 
 @contextmanager
@@ -204,13 +213,44 @@ def last_run_summary() -> str | None:
     return f"[{run['ts']}] {run['status']}: {run['summary'] or '—'}"
 
 
-def add_bounty_draft(title: str, body: str) -> int:
+def add_bounty_draft(title: str, body: str, meta: dict[str, Any] | None = None) -> int:
+    meta_json = json.dumps(meta or {}, ensure_ascii=False)
     with get_conn() as conn:
         cur = conn.execute(
-            "INSERT INTO bounty_drafts(ts, title, body) VALUES(?, ?, ?)",
-            (_utcnow(), title, body),
+            "INSERT INTO bounty_drafts(ts, title, body, meta_json) VALUES(?, ?, ?, ?)",
+            (_utcnow(), title, body, meta_json),
         )
         return int(cur.lastrowid)
+
+
+def get_bounty_draft_meta(draft_id: int) -> dict[str, Any]:
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT meta_json FROM bounty_drafts WHERE id = ?", (draft_id,)
+        ).fetchone()
+    if not row:
+        return {}
+    try:
+        data = json.loads(row["meta_json"] or "{}")
+    except json.JSONDecodeError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def update_bounty_draft_meta(draft_id: int, meta: dict[str, Any]) -> None:
+    with get_conn() as conn:
+        conn.execute(
+            "UPDATE bounty_drafts SET meta_json = ? WHERE id = ?",
+            (json.dumps(meta, ensure_ascii=False), draft_id),
+        )
+
+
+def count_bounty_drafts_by_status(status: str) -> int:
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT COUNT(*) AS c FROM bounty_drafts WHERE status = ?", (status,)
+        ).fetchone()
+    return int(row["c"]) if row else 0
 
 
 def get_bounty_draft(draft_id: int) -> sqlite3.Row | None:

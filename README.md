@@ -54,7 +54,9 @@ bash scripts/deploy-stack.sh
 - `/task <text>` — queue agent task
 - `/ask <text>` — one-shot Cursor prompt
 - `/pause` / `/resume` — autonomy control
-- `/approve bounty <id>` — approve bounty draft
+- `/bounty` — pending submit-ready reports
+- `/bounty hunt` — force research now
+- `/approve bounty <id>` — approve and auto-submit (HackerOne)
 
 ## Local dev
 

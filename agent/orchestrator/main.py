@@ -90,6 +90,7 @@ async def run_daily_cycle() -> None:
     health = collect_health()
     fin_summary: dict = {}
     draft_ids: list[int] = []
+    bounty_summary: dict = {}
     job_summary: dict | None = None
     status = "finished"
     try:
@@ -119,7 +120,9 @@ async def run_daily_cycle() -> None:
         fin_summary = await asyncio.to_thread(finance.daily_analysis)
         if proposal_outcomes:
             fin_summary["agent_proposals"] = proposal_outcomes
-        draft_ids = await asyncio.to_thread(daily_bounty_scan)
+        bounty_result = await asyncio.to_thread(daily_bounty_scan)
+        bounty_summary = bounty_result.to_dict()
+        draft_ids = bounty_summary.get("draft_ids") or []
         job_summary = await asyncio.to_thread(daily_job_scan)
 
         log_run("daily", "finished", summary[:12000])
@@ -135,7 +138,7 @@ async def run_daily_cycle() -> None:
                 health=health,
                 summary=summary,
                 fin_summary=fin_summary,
-                draft_ids=draft_ids,
+                bounty_summary=bounty_summary,
                 job_summary=job_summary,
                 commit_report=commit_report,
                 status=status,
