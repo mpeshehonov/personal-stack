@@ -48,6 +48,7 @@ from bounty.models import BountyFinding
 from bounty.scanner import manual_bounty_research, purge_bounty_queue
 from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
+from telegram_bot.background import job_running, list_running_jobs, start_background_job
 from telegram_bot.rich_send import reply_rich, send_rich_markdown
 from telegram_bot.streaming import AnswerStreamer
 
@@ -235,7 +236,12 @@ def _help_text() -> str:
 async def cmd_status(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    await reply_rich(update, _format_status_rich(collect_health()))
+    h = await asyncio.to_thread(collect_health)
+    body = _format_status_rich(h)
+    running = list_running_jobs()
+    if running:
+        body += "\n\n## Фоновые задачи\n\n" + ", ".join(f"`{n}`" for n in running)
+    await reply_rich(update, body)
 
 
 async def _run_streaming(
@@ -433,17 +439,33 @@ async def cmd_bounty(update, context) -> None:
         if not BOUNTY_ENABLED:
             await update.message.reply_text("Bounty отключён (BOUNTY_ENABLED=false).")
             return
+        if job_running("bounty_hunt"):
+            await update.message.reply_text(
+                "Bounty hunt уже идёт в фоне. /status — другие команды работают."
+            )
+            return
+
+        chat_id = update.effective_chat.id
+        bot = context.bot
+
+        async def _run_hunt() -> None:
+            result = await asyncio.to_thread(manual_bounty_research)
+            parts = [result.message or "Готово."]
+            if result.purged_ids:
+                parts.insert(0, f"Отсеяно: {', '.join(f'#{i}' for i in result.purged_ids)}")
+            if result.draft_ids:
+                parts.append(f"Submit-ready: {', '.join(f'#{i}' for i in result.draft_ids)}")
+            await send_rich_markdown(
+                bot,
+                chat_id=chat_id,
+                markdown="## Bounty hunt — готово\n\n" + "\n\n".join(parts),
+            )
+
+        ok, msg = start_background_job("bounty_hunt", chat_id, _run_hunt)
         await update.message.reply_text(
-            "Deep bounty research: purge → до 3 программ → auto-QA → reviewer. "
-            "Может занять 15–40 мин…"
+            f"{msg}\n\nDeep research: purge → до 3 программ → QA → reviewer.\n"
+            "15–40 мин. Можно пользоваться /status, /bounty и остальными командами."
         )
-        result = await asyncio.to_thread(manual_bounty_research)
-        parts = [result.message or "Готово."]
-        if result.purged_ids:
-            parts.insert(0, f"Отсеяно: {', '.join(f'#{i}' for i in result.purged_ids)}")
-        if result.draft_ids:
-            parts.append(f"Submit-ready: {', '.join(f'#{i}' for i in result.draft_ids)}")
-        await reply_rich(update, "## Bounty hunt\n\n" + "\n\n".join(parts))
         return
 
     pending = list_bounty_drafts(status="pending", limit=15)
@@ -468,6 +490,7 @@ async def cmd_bounty(update, context) -> None:
         if len(title) > 70:
             title = title[:67] + "..."
         meta = get_bounty_draft_meta(int(row["id"]))
+        sev = meta.get("severity", "?")
         score = meta.get("quality_score", "—")
         program = meta.get("program_name", "?")
         lines.append(f"- **#{row['id']}** — {title}")
@@ -688,19 +711,19 @@ def main() -> None:
         .post_init(post_init)
         .build()
     )
-    app.add_handler(CommandHandler("status", cmd_status))
-    app.add_handler(CommandHandler("finance", cmd_finance))
-    app.add_handler(CommandHandler("task", cmd_task))
-    app.add_handler(CommandHandler("ask", cmd_ask))
-    app.add_handler(CommandHandler("pause", cmd_pause))
-    app.add_handler(CommandHandler("resume", cmd_resume))
-    app.add_handler(CommandHandler("memory", cmd_memory))
-    app.add_handler(CommandHandler("bounty", cmd_bounty))
-    app.add_handler(CommandHandler("jobs", cmd_jobs))
-    app.add_handler(CommandHandler("approve", cmd_approve_bounty))
-    app.add_handler(CommandHandler("reject", cmd_reject_bounty))
-    app.add_handler(CommandHandler("help", cmd_help))
-    app.add_handler(CommandHandler("start", cmd_help))
+    app.add_handler(CommandHandler("status", cmd_status, block=False))
+    app.add_handler(CommandHandler("finance", cmd_finance, block=False))
+    app.add_handler(CommandHandler("task", cmd_task, block=False))
+    app.add_handler(CommandHandler("ask", cmd_ask, block=False))
+    app.add_handler(CommandHandler("pause", cmd_pause, block=False))
+    app.add_handler(CommandHandler("resume", cmd_resume, block=False))
+    app.add_handler(CommandHandler("memory", cmd_memory, block=False))
+    app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
+    app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
+    app.add_handler(CommandHandler("approve", cmd_approve_bounty, block=False))
+    app.add_handler(CommandHandler("reject", cmd_reject_bounty, block=False))
+    app.add_handler(CommandHandler("help", cmd_help, block=False))
+    app.add_handler(CommandHandler("start", cmd_help, block=False))
 
     logger.info("Telegram-бот запускается")
     app.run_polling(allowed_updates=["message"])
