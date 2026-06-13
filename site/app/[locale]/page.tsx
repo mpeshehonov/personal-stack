@@ -39,7 +39,7 @@ export default async function HomePage({
         dict={dict}
         experiences={previewExperiences}
       />
-      <section className="pb-16">
+      <section className="section">
         <p className="section-label">{dict.sections.skills}</p>
         <h2 className="section-title mb-3">{dict.sections.skills}</h2>
         <p className="mb-8 max-w-2xl text-ink-muted">{dict.sections.skillsDesc}</p>

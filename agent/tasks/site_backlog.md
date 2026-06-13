@@ -17,18 +17,18 @@
 
 ## Milestone A2 — Visual polish
 
-- [ ] **SB-06** Typography scale + section spacing system (consistent 8/10 rhythm)
+- [x] **SB-06** Typography scale + section spacing system (consistent 8/10 rhythm)
 - [ ] **SB-07** Subtle scroll animations (framer-motion, respect reduced-motion)
 - [ ] **SB-08** Dark/light theme toggle
 - [ ] **SB-09** Custom OG image per page (or dynamic `/api/og`)
-- [ ] **SB-10** Footer: availability badge («open to offers» / «busy»)
+- [x] **SB-10** Footer: availability badge («open to offers» / «busy»)
 
 ## Milestone A3 — Conversion
 
 - [ ] **SB-11** Prominent Telegram + email CTA on every page
 - [ ] **SB-12** `/resume` — downloadable PDF CTA above fold, print stylesheet
 - [ ] **SB-13** Privacy-friendly visit counter (no Google Analytics)
-- [ ] **SB-14** JSON-LD Person schema for SEO
+- [x] **SB-14** JSON-LD Person schema for SEO
 
 ## Rules for agent
 

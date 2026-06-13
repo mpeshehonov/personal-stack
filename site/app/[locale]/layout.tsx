@@ -6,6 +6,8 @@ import resumeEn from "@/content/resume/en/resume.json";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getDictionary } from "@/lib/i18n";
+import { buildPersonJsonLd } from "@/lib/person-schema";
+import { parseAvailability } from "@/lib/availability";
 import { defaultLocale, locales, type Locale } from "@/middleware";
 import "../globals.css";
 
@@ -70,15 +72,27 @@ export default async function LocaleLayout({
   const locale = raw as Locale;
   const dict = getDictionary(locale);
   const resume = locale === "en" ? resumeEn : resumeRu;
+  const personJsonLd = buildPersonJsonLd(locale, resume);
 
   return (
     <html lang={locale} className={`${inter.variable} ${jetbrains.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+      </head>
       <body className="overflow-x-hidden font-sans">
         <Header locale={locale} dict={dict} />
         <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           {children}
         </main>
-        <Footer locale={locale} dict={dict} name={resume.name} />
+        <Footer
+          locale={locale}
+          dict={dict}
+          name={resume.name}
+          availability={parseAvailability(resume.availability)}
+        />
       </body>
     </html>
   );

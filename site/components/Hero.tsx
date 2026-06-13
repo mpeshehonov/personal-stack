@@ -5,6 +5,8 @@ import type { Dictionary } from "@/lib/i18n";
 import { localizedPath } from "@/lib/i18n";
 import type { Locale } from "@/middleware";
 import { highlightSkills } from "@/lib/skills";
+import { AvailabilityBadge } from "./AvailabilityBadge";
+import { parseAvailability } from "@/lib/availability";
 import { SocialLinks } from "./SocialLinks";
 
 type ResumeMeta = {
@@ -12,6 +14,7 @@ type ResumeMeta = {
   title: string;
   location: string;
   summary: string;
+  availability?: string;
 };
 
 type Props = {
@@ -30,9 +33,13 @@ export function Hero({ locale, dict, resume }: Props) {
           {resume.name}
         </h1>
         <p className="mb-2 text-xl text-ink-muted sm:text-2xl">{resume.title}</p>
-        <p className="mb-6 flex items-center gap-2 text-sm text-ink-faint">
-          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
-          {dict.cta.openToOffers} · {resume.location}
+        <p className="mb-6 flex flex-wrap items-center gap-3 text-sm text-ink-faint">
+          <AvailabilityBadge
+            status={parseAvailability(resume.availability)}
+            dict={dict}
+            size="sm"
+          />
+          <span>{resume.location}</span>
         </p>
         <p className="mb-8 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
           {resume.summary}

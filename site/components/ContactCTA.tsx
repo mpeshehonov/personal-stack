@@ -17,7 +17,7 @@ export function ContactCTA({ locale, dict }: Props) {
       : "Senior Frontend / Fullstack — удалённо или гибрид. Напишите в Telegram или на почту, отвечу в течение дня.";
 
   return (
-    <section className="pb-16">
+    <section className="section">
       <div className="card bg-gradient-to-br from-accent-soft to-surface p-8 sm:p-10">
         <p className="section-label">{dict.sections.contact}</p>
         <h2 className="section-title mb-3">{dict.cta.openToOffers}</h2>

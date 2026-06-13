@@ -44,7 +44,9 @@
     "education": "Образование"
   },
   "footer": {
-    "built": "Next.js · TypeScript · Tailwind"
+    "built": "Next.js · TypeScript · Tailwind",
+    "availabilityOpen": "Открыт к предложениям",
+    "availabilityBusy": "Занят"
   },
   "lang": {
     "ru": "RU",

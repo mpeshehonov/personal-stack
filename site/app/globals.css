@@ -17,6 +17,18 @@
 }
 
 @layer components {
+  .section {
+    @apply pb-16;
+  }
+
+  .section-intro {
+    @apply mb-8 flex flex-wrap items-end justify-between gap-4;
+  }
+
+  .section-desc {
+    @apply mt-2 max-w-xl text-ink-muted;
+  }
+
   .section-label {
     @apply mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent;
   }

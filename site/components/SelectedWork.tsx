@@ -15,12 +15,12 @@ type Props = {
 
 export function SelectedWork({ locale, dict, projects }: Props) {
   return (
-    <section className="pb-16">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <section className="section">
+      <div className="section-intro">
         <div>
           <p className="section-label">{dict.sections.selectedWork}</p>
           <h2 className="section-title">{dict.sections.selectedWork}</h2>
-          <p className="mt-2 max-w-xl text-ink-muted">{dict.sections.selectedWorkDesc}</p>
+          <p className="section-desc">{dict.sections.selectedWorkDesc}</p>
         </div>
         <Link
           href={localizedPath(locale, "/projects")}
