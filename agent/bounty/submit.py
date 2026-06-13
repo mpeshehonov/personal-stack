@@ -7,12 +7,13 @@ from dataclasses import dataclass
 
 import httpx
 
-from bounty.config import HACKERONE_API_TOKEN, HACKERONE_API_USERNAME
+from bounty.config import HACKERONE_API_IDENTIFIER, HACKERONE_API_TOKEN
 from bounty.models import BountyFinding
 
 logger = logging.getLogger(__name__)
 
-HACKERONE_REPORTS_URL = "https://api.hackerone.com/v1/reports"
+HACKERONE_REPORTS_URL = "https://api.hackerone.com/v1/hackers/reports"
+HACKERONE_ME_URL = "https://api.hackerone.com/v1/hackers/me"
 
 
 @dataclass
@@ -25,7 +26,29 @@ class SubmitResult:
 
 
 def hackerone_configured() -> bool:
-    return bool(HACKERONE_API_USERNAME and HACKERONE_API_TOKEN)
+    return bool(HACKERONE_API_IDENTIFIER and HACKERONE_API_TOKEN)
+
+
+def verify_hackerone_auth() -> tuple[bool, str]:
+    if not hackerone_configured():
+        return False, "HackerOne API не настроен"
+    try:
+        resp = httpx.get(
+            HACKERONE_ME_URL,
+            auth=(HACKERONE_API_IDENTIFIER, HACKERONE_API_TOKEN),
+            headers={"Accept": "application/json"},
+            timeout=30,
+        )
+    except httpx.HTTPError as e:
+        return False, str(e)
+    if resp.status_code == 200:
+        return True, "OK"
+    if resp.status_code == 401:
+        return (
+            False,
+            "401 Unauthorized — проверь HACKERONE_API_IDENTIFIER (не handle?) и токен в secrets/.env.bounty",
+        )
+    return False, f"HTTP {resp.status_code}: {resp.text[:200]}"
 
 
 def submit_finding(finding: BountyFinding) -> SubmitResult:
@@ -64,6 +87,7 @@ def submit_hackerone(finding: BountyFinding) -> SubmitResult:
                 "team_handle": finding.team_handle,
                 "title": finding.title,
                 "vulnerability_information": vulnerability_information[:50000],
+                "impact": finding.impact[:10000],
                 "severity_rating": finding.severity,
             },
         }
@@ -73,7 +97,7 @@ def submit_hackerone(finding: BountyFinding) -> SubmitResult:
         resp = httpx.post(
             HACKERONE_REPORTS_URL,
             json=payload,
-            auth=(HACKERONE_API_USERNAME, HACKERONE_API_TOKEN),
+            auth=(HACKERONE_API_IDENTIFIER, HACKERONE_API_TOKEN),
             headers={"Accept": "application/json"},
             timeout=60,
         )

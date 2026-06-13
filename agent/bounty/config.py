@@ -14,6 +14,10 @@ BOUNTY_MAX_PENDING = int(os.environ.get("BOUNTY_MAX_PENDING", "2"))
 BOUNTY_RESEARCH_COOLDOWN_HOURS = int(os.environ.get("BOUNTY_RESEARCH_COOLDOWN_HOURS", "20"))
 
 HACKERONE_API_USERNAME = os.environ.get("HACKERONE_API_USERNAME", "").strip()
+# Some accounts use a separate token identifier from HackerOne settings (Basic auth username).
+HACKERONE_API_IDENTIFIER = (
+    os.environ.get("HACKERONE_API_IDENTIFIER", "").strip() or HACKERONE_API_USERNAME
+)
 HACKERONE_API_TOKEN = os.environ.get("HACKERONE_API_TOKEN", "").strip()
 
 KV_PROGRAM_INDEX = "bounty_program_index"
