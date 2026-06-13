@@ -13,7 +13,8 @@ from bounty.models import BountyFinding
 logger = logging.getLogger(__name__)
 
 HACKERONE_REPORTS_URL = "https://api.hackerone.com/v1/hackers/reports"
-HACKERONE_ME_URL = "https://api.hackerone.com/v1/hackers/me"
+# /hackers/me often returns 401 even with valid creds; me/reports is a reliable auth probe.
+HACKERONE_AUTH_CHECK_URL = "https://api.hackerone.com/v1/hackers/me/reports"
 
 
 @dataclass
@@ -34,10 +35,11 @@ def verify_hackerone_auth() -> tuple[bool, str]:
         return False, "HackerOne API не настроен"
     try:
         resp = httpx.get(
-            HACKERONE_ME_URL,
+            HACKERONE_AUTH_CHECK_URL,
             auth=(HACKERONE_API_IDENTIFIER, HACKERONE_API_TOKEN),
             headers={"Accept": "application/json"},
             timeout=30,
+            params={"page[size]": 1},
         )
     except httpx.HTTPError as e:
         return False, str(e)
