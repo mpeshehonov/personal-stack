@@ -20,6 +20,7 @@ from finance.proposal_parser import extract_trade_proposals
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
 from orchestrator.git_deploy import apply_daily_commit, apply_task_deploy, pull_latest
 from orchestrator.daily_report import format_daily_report_rich
+from orchestrator.format_ru import run_status_ru
 from orchestrator.health import collect_health
 from orchestrator.memory import build_context_pack, ensure_daily_log
 from telegram_bot.rich_send import notify_allowed_users
@@ -82,7 +83,7 @@ async def process_task(row) -> None:
 async def run_daily_cycle() -> None:
     if kv_get("autonomy_paused") == "true":
         logger.info("Autonomy paused, skipping daily cycle")
-        await notify_allowed_users("## Daily cycle\n\nПропущен: автономия на паузе.")
+        await notify_allowed_users("## Ежедневный цикл\n\nПропущен: автономия на паузе.")
         return
 
     summary = ""
@@ -129,16 +130,24 @@ async def run_daily_cycle() -> None:
         log_run("daily", "error", summary[:12000])
     finally:
         commit_report = await asyncio.to_thread(apply_daily_commit, summary)
-        report_md = format_daily_report_rich(
-            health=health,
-            summary=summary,
-            fin_summary=fin_summary,
-            draft_ids=draft_ids,
-            job_summary=job_summary,
-            commit_report=commit_report,
-            status=status,
-        )
-        await notify_allowed_users(report_md)
+        try:
+            report_md = format_daily_report_rich(
+                health=health,
+                summary=summary,
+                fin_summary=fin_summary,
+                draft_ids=draft_ids,
+                job_summary=job_summary,
+                commit_report=commit_report,
+                status=status,
+            )
+            await notify_allowed_users(report_md)
+        except Exception as e:
+            logger.exception("Daily report notify failed")
+            await notify_allowed_users(
+                f"# Ежедневный отчёт\n\n**Статус:** {run_status_ru(status)}\n\n"
+                f"Не удалось сформировать полный отчёт: `{e}`\n\n"
+                f"**Git:** {commit_report}\n\n**Агент:** {(summary or '—')[:800]}"
+            )
 
 
 async def worker_loop() -> None:

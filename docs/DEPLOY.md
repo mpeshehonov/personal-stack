@@ -171,20 +171,15 @@ GIT_BRANCH=main STACK_DIR=/opt/personal-stack ./scripts/deploy-from-git.sh
 
 ---
 
-## 5. Optional — GitHub Actions auto-deploy
+## 5. Deploy без GitHub Actions
 
-Workflow: `.github/workflows/deploy.yml` (disabled until secrets are set).
+Автодеплой через GitHub Actions **отключён**: агент на сервере сам делает `git pull` и `./scripts/deploy-from-git.sh` после задач (`/task`), а daily-цикл только пушит `agent/memory/` без redeploy.
 
-In GitHub → **Settings → Secrets and variables → Actions**, add:
+Ручной деплой на сервере:
 
-| Secret | Example |
-|--------|---------|
-| `DEPLOY_HOST` | `89.124.70.216` |
-| `DEPLOY_USER` | `agent` |
-| `DEPLOY_KEY` | Private SSH key with access to `agent@` server |
-| `DEPLOY_PATH` | `/opt/personal-stack` (optional) |
-
-Push to `main` then runs the same `deploy-from-git.sh` on the server. You can also trigger manually via **Actions → Deploy → Run workflow**.
+```bash
+cd /opt/personal-stack && git pull --ff-only origin main && ./scripts/deploy-from-git.sh
+```
 
 ---
 

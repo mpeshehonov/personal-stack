@@ -10,7 +10,7 @@ import { SelectedWork } from "@/components/SelectedWork";
 import { ExperiencePreview } from "@/components/ExperiencePreview";
 import { ContactCTA } from "@/components/ContactCTA";
 import { getDictionary } from "@/lib/i18n";
-import { getExperiences } from "@/lib/resume-data";
+import { getHomePreviewExperiences } from "@/lib/experience-preview";
 import { getFeaturedProjects } from "@/lib/projects";
 import { getSkillGroups } from "@/lib/skills";
 
@@ -24,7 +24,7 @@ export default async function HomePage({
   const dict = getDictionary(locale);
   const resume = locale === "en" ? resumeEn : resumeRu;
   const featuredProjects = getFeaturedProjects(locale);
-  const previewExperiences = getExperiences(locale).slice(0, 3);
+  const previewExperiences = getHomePreviewExperiences(locale);
 
   return (
     <>

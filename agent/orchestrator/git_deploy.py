@@ -173,7 +173,7 @@ def deploy(*, restart_telegram: bool = True, restart_orchestrator: bool = True) 
 def apply_daily_commit(summary: str = "") -> str:
     """Commit and push daily agent memory writes. No deploy."""
     if not has_uncommitted_changes():
-        return "Daily commit: изменений нет"
+        return "Коммит daily: изменений нет"
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     msg = f"chore(memory): daily log {today}"
@@ -184,8 +184,8 @@ def apply_daily_commit(summary: str = "") -> str:
 
     ok, log = commit_and_push(msg)
     if ok:
-        return "Daily commit: OK"
-    return f"Daily commit: ошибка\n{log[:500]}"
+        return "Коммит daily: OK"
+    return f"Коммит daily: ошибка\n{log[:500]}"
 
 
 def apply_task_deploy(task_summary: str) -> str:

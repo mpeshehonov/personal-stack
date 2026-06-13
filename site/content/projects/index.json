@@ -149,15 +149,15 @@
       "ru": "sendonate.com — донаты и OBS-оверлей",
       "en": "sendonate.com — donations and OBS overlay"
     },
-    "company": { "ru": "POTALONU LLC", "en": "POTALONU LLC" },
+    "company": { "ru": "sendonate.com", "en": "sendonate.com" },
     "role": { "ru": "Fullstack / Frontend", "en": "Fullstack / Frontend" },
     "tagline": {
-      "ru": "Донаты для стримеров внутри POTALONU: кабинет, Mini App и OBS",
-      "en": "Streamer donations at POTALONU: dashboard, Mini App, and OBS"
+      "ru": "Донаты для стримеров: кабинет, Mini App и OBS-оверлей",
+      "en": "Streamer donations: dashboard, Mini App, and OBS overlay"
     },
     "problem": {
-      "ru": "Стример принимает донат в Telegram, настраивает алерты в кабинете и показывает их в OBS — три разных клиента, один backend.",
-      "en": "Streamers accept tips in Telegram, configure alerts in a dashboard, and show them in OBS — three clients, one backend."
+      "ru": "Стример принимает донат в Telegram, настраивает алерты в кабинете и показывает их в OBS — три клиента, один backend sendonate.",
+      "en": "Streamers accept tips in Telegram, configure alerts in a dashboard, and show them in OBS — three clients, one sendonate backend."
     },
     "contribution": {
       "ru": "В monolith/sendonate: React + Vite кабинет, Telegram Mini App и websocket-pages для OBS. Orval по OpenAPI, очередь алертов и reconnect на WebSocket.",

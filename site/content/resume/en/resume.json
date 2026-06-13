@@ -4,7 +4,7 @@
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Sochi, Russia",
-  "summary": "Senior Frontend / Fullstack since 2018. B2B, e-commerce, real-time, Telegram Mini Apps — complex UI, RBAC, Orval/OpenAPI, production systems.",
+  "summary": "Frontend / Fullstack since 2018, Senior level. B2B, e-commerce, real-time, Telegram Mini Apps — complex UI, RBAC, Orval/OpenAPI, production systems.",
   "skills": [
     "TypeScript",
     "React",
@@ -13,7 +13,6 @@
     "Orval",
     "Telegram Mini Apps",
     "Nest.js",
-    "Keycloak",
     "Playwright",
     "Docker"
   ],

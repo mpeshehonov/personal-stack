@@ -94,29 +94,28 @@ def run_cursor_prompt(prompt: str, one_shot: bool = False) -> str:
 
 def run_daily_agent(context: str, light_mode: bool) -> str:
     mode_note = (
-        "LIGHT MODE: skip finance trades and heavy PDF rebuild. Focus on health report and critical site fixes only."
+        "ОБЛЕГЧЁННЫЙ РЕЖИМ: без finance-сделок и тяжёлых PDF. Только health и критичные правки сайта."
         if light_mode
-        else "FULL MODE: site improvements, bounty research, finance analysis."
+        else "ПОЛНЫЙ РЕЖИМ: улучшения сайта, bounty, finance."
     )
-    prompt = f"""You are the autonomous agent for /opt/personal-stack.
+    prompt = f"""Ты автономный агент для /opt/personal-stack.
 
 {mode_note}
 
 {context}
 
-Instructions:
-1. Check site health; if down, fix and run scripts/redeploy-site.sh
-2. Pick at most 1-2 items from site backlog; commit changes to site/
-3. Research bug bounty opportunities; draft reports only (never submit)
-4. Analyze finance opportunities; output JSON proposals for risk engine
-5. Append lessons to agent/memory/lessons/ if you learned something durable
-6. Update agent/memory/daily/ today log with sections: Summary, Site, Finance, Bug Bounty, Lessons
+Инструкции:
+1. Проверь здоровье сайта; если лежит — почини и запусти scripts/redeploy-site.sh
+2. Возьми не больше 1–2 пунктов из бэклога сайта; коммить изменения в site/
+3. Исследуй bug bounty; только черновики (никогда submit)
+4. Проанализируй finance; выводи JSON-предложения для risk engine (формат на английском)
+5. Добавь уроки в agent/memory/lessons/, если узнал что-то полезное
+6. Обнови agent/memory/daily/ сегодняшний лог разделами: Итог, Сайт, Финансы, Баг-баунти, Уроки — **на русском**
 
-Work only inside /opt/personal-stack. Never expose secrets.
+Работай только в /opt/personal-stack. Не раскрывай секреты.
 """
-    # one_shot: no persistent bridge between daily runs (saves ~100+ MB RAM)
     summary = run_cursor_prompt(prompt, one_shot=True)
-    append_daily_section("Summary", summary[:1500])
+    append_daily_section("Итог", summary[:1500])
     return summary
 
 

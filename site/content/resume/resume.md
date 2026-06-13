@@ -6,7 +6,7 @@ Senior Frontend-разработчик
 
 ## О себе
 
-Senior Frontend / Fullstack разработчик. Занимаюсь веб-разработкой с 2018 года: B2B, e-commerce, маркетплейсы, real-time и Telegram Mini Apps. Делаю интерфейсы со сложными сценариями, RBAC, Orval/OpenAPI и интеграциями REST, GraphQL, WebSocket.
+Frontend / Fullstack разработчик с 2018 года, уровень Senior. B2B, e-commerce, маркетплейсы, real-time и Telegram Mini Apps. Делаю интерфейсы со сложными сценариями, RBAC, Orval/OpenAPI и интеграциями REST, GraphQL, WebSocket.
 
 За это время поработал в разных доменах и командах. Кейсы — в разделе «Проекты» на сайте, полный список по запросу.
 

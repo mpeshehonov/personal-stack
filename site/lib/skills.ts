@@ -7,7 +7,7 @@ export type SkillGroup = {
 export const skillGroupsRu: SkillGroup[] = [
   {
     title: "Языки",
-    skills: ["TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3/SCSS"],
+    skills: ["TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3/SCSS", "PHP", "Node.js", "Golang"],
   },
   {
     title: "Frontend",
@@ -111,7 +111,7 @@ export const skillGroupsRu: SkillGroup[] = [
 export const skillGroupsEn: SkillGroup[] = [
   {
     title: "Languages",
-    skills: ["TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3/SCSS"],
+    skills: ["TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3/SCSS", "PHP", "Node.js", "Golang"],
   },
   {
     title: "Frontend",
@@ -227,7 +227,6 @@ export const highlightSkills = [
   "Orval",
   "Nest.js",
   "Telegram Mini Apps",
-  "Keycloak",
   "Playwright",
   "Docker",
   "GraphQL",

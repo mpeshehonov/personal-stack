@@ -6,7 +6,7 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · [Telegram:
 
 ## About
 
-Senior Frontend / Fullstack engineer since 2018: B2B, e-commerce, marketplaces, real-time, and Telegram Mini Apps. I build UIs with complex flows, RBAC, Orval/OpenAPI, and REST, GraphQL, and WebSocket integrations.
+Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, marketplaces, real-time, and Telegram Mini Apps. I build UIs with complex flows, RBAC, Orval/OpenAPI, and REST, GraphQL, and WebSocket integrations.
 
 Full case list on the Projects page; detailed PDF on request.
 

@@ -113,8 +113,8 @@ def collect_health() -> HealthSnapshot:
 def format_health(h: HealthSnapshot) -> str:
     return (
         f"CPU: {format_percent(h.cpu_percent)} | RAM: {format_percent(h.memory_percent)} "
-        f"({h.memory_available_mb:.0f} MB free)\n"
-        f"Disk: {format_percent(h.disk_percent)} | Load: {format_load(h.load_avg)}\n"
-        f"Site: {'OK' if h.site_ok else 'DOWN'} | Docker: {'OK' if h.docker_ok else 'ISSUE'}\n"
-        f"Mode: {'light' if h.light_mode else 'full'}"
+        f"({h.memory_available_mb:.0f} MB свободно)\n"
+        f"Диск: {format_percent(h.disk_percent)} | Load: {format_load(h.load_avg)}\n"
+        f"Сайт: {'OK' if h.site_ok else 'ЛЕЖИТ'} | Docker: {'OK' if h.docker_ok else 'ПРОБЛЕМА'}\n"
+        f"Режим: {'облегчённый' if h.light_mode else 'полный'}"
     )

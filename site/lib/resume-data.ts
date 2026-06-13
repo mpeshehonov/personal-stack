@@ -8,12 +8,12 @@ export type Experience = {
 };
 
 const aboutParagraphsRu = [
-  "Senior Frontend / Fullstack разработчик. Веб с 2018 года: B2B, e-commerce, маркетплейсы, real-time, Telegram Mini Apps. Делаю интерфейсы со сложными сценариями, RBAC, Orval/OpenAPI и интеграциями REST, GraphQL, WebSocket.",
+  "Frontend / Fullstack разработчик с 2018 года, уровень Senior. B2B, e-commerce, маркетплейсы, real-time, Telegram Mini Apps. Делаю интерфейсы со сложными сценариями, RBAC, Orval/OpenAPI и интеграциями REST, GraphQL, WebSocket.",
   "Работал в X5 Tech, НЛМК, BI.ZONE, Citilink и продуктовых командах. Полный список кейсов — на сайте в разделе «Проекты» и по запросу.",
 ];
 
 const aboutParagraphsEn = [
-  "Senior Frontend / Fullstack engineer since 2018: B2B, e-commerce, marketplaces, real-time, Telegram Mini Apps. Complex flows, RBAC, Orval/OpenAPI, REST, GraphQL, and WebSocket integrations.",
+  "Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, marketplaces, real-time, Telegram Mini Apps. Complex flows, RBAC, Orval/OpenAPI, REST, GraphQL, and WebSocket integrations.",
   "Experience at X5 Tech, NLMK, BI.ZONE, Citilink, and product teams. Full case list on the Projects page and on request.",
 ];
 
@@ -28,8 +28,8 @@ const experiencesRu: Experience[] = [
         name: "sendonate.com",
         stack: "React, Vite, Telegram Mini App, WebSocket, Orval, Django REST",
         bullets: [
-          "monolith: веб-кабинет, Mini App и websocket-pages для OBS — три клиента, один backend",
-          "Orval по OpenAPI, очередь алертов на WebSocket с reconnect и preload медиа",
+          "Отдельный продукт sendonate (юрлицо POTALONU LLC): monolith — кабинет, Mini App, websocket-pages для OBS",
+          "Orval по OpenAPI, очередь алертов на WebSocket с reconnect",
           "Кабинет: CRUD коллекций, настройки алертов, debounce-поиск",
         ],
       },
@@ -104,8 +104,8 @@ const experiencesEn: Experience[] = [
         name: "sendonate.com",
         stack: "React, Vite, Telegram Mini App, WebSocket, Orval, Django REST",
         bullets: [
-          "monolith: web dashboard, Mini App, and websocket-pages for OBS — three clients, one backend",
-          "Orval from OpenAPI, WebSocket alert queue with reconnect and media preload",
+          "Standalone sendonate product (POTALONU LLC): monolith — dashboard, Mini App, websocket-pages for OBS",
+          "Orval from OpenAPI, WebSocket alert queue with reconnect",
           "Dashboard: CRUD collections, alert settings, debounced search",
         ],
       },

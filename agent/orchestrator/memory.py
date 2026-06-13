@@ -34,27 +34,27 @@ def build_context_pack(health: HealthSnapshot) -> str:
     daily = _recent_daily_logs(3)
     template = _read(TASKS_DIR / "daily_prompt.md", 4000)
 
-    return f"""# Daily Agent Context
+    return f"""# Контекст daily-агента
 
-## Health
+## Здоровье сервера
 - CPU: {health.cpu_percent}%
-- RAM: {health.memory_percent}% ({health.memory_available_mb} MB free)
-- Site OK: {health.site_ok}
-- Light mode: {health.light_mode}
+- RAM: {health.memory_percent}% ({health.memory_available_mb} MB свободно)
+- Сайт OK: {health.site_ok}
+- Облегчённый режим: {health.light_mode}
 
 ## INDEX
 {index}
 
-## Goals
+## Цели
 {goals}
 
-## Site Backlog
+## Бэклог сайта
 {backlog}
 
-## Recent Daily Logs
+## Недавние daily-логи
 {daily}
 
-## Task Template
+## Шаблон задачи
 {template}
 """
 
@@ -66,7 +66,7 @@ def ensure_daily_log() -> Path:
     path = daily_dir / f"{today}.md"
     if not path.exists():
         path.write_text(
-            f"# Daily Log {today}\n\n## Summary\n\n## Site\n\n## Finance\n\n## Bug Bounty\n\n## Lessons\n\n",
+            f"# Daily Log {today}\n\n## Итог\n\n## Сайт\n\n## Финансы\n\n## Баг-баунти\n\n## Уроки\n\n",
             encoding="utf-8",
         )
     return path
