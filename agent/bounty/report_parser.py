@@ -83,6 +83,48 @@ def parse_agent_finding(text: str, program: BountyProgram) -> BountyFinding | No
     )
 
 
+def parse_research_lead(text: str, program: BountyProgram) -> dict[str, Any] | None:
+    """Extract a research lead when no submit-ready finding."""
+    if not text.strip():
+        return None
+
+    for match in _JSON_BLOCK.finditer(text):
+        try:
+            payload = json.loads(match.group(1))
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+
+        best = payload.get("best_candidate")
+        if isinstance(best, dict) and best.get("has_finding"):
+            title = str(best.get("title", "")).strip()
+            asset = str(best.get("asset", "")).strip()
+            if title and asset:
+                return {
+                    "title": title[:200],
+                    "severity": str(best.get("severity", "medium")).lower(),
+                    "asset": asset[:200],
+                    "hypothesis": str(best.get("reproduction_steps") or title)[:500],
+                    "weakness_type": str(best.get("weakness_type", ""))[:120],
+                    "notes": str(payload.get("notes", ""))[:1500],
+                }
+
+        seeds = payload.get("hypothesis_seeds")
+        if isinstance(seeds, list) and seeds:
+            seed = str(seeds[0]).strip()
+            if len(seed) > 20:
+                return {
+                    "title": seed[:200],
+                    "severity": "low",
+                    "asset": program.url,
+                    "hypothesis": seed,
+                    "notes": str(payload.get("notes", ""))[:1500],
+                }
+
+    return None
+
+
 def format_draft_body(finding: BountyFinding) -> str:
     """Human-readable draft stored in SQLite body column."""
     return "\n".join(

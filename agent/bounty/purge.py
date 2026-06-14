@@ -32,12 +32,14 @@ def purge_non_submit_drafts(*, revalidate: bool = True) -> list[int]:
 
     for row in pending:
         draft_id = int(row["id"])
-        reasons: list[str] = []
+        meta = get_bounty_draft_meta(draft_id)
+        if meta.get("kind") == "lead":
+            continue
 
+        reasons: list[str] = []
         if _is_legacy_hint(row):
             reasons.append("legacy hint draft")
 
-        meta = get_bounty_draft_meta(draft_id)
         finding = BountyFinding.from_meta(meta)
         if not finding:
             if not reasons:

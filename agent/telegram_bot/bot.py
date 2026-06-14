@@ -27,6 +27,7 @@ from orchestrator.format_ru import (
     format_usd,
     run_status_ru,
 )
+from orchestrator.cursor_session import cursor_holder
 from orchestrator.health import collect_health
 from orchestrator.memory import get_latest_daily_log
 from orchestrator.state import (
@@ -238,6 +239,9 @@ async def cmd_status(update, context) -> None:
         return
     h = await asyncio.to_thread(collect_health)
     body = _format_status_rich(h)
+    holder = cursor_holder()
+    if holder:
+        body += f"\n\n**Cursor агент:** занят `{holder}`"
     running = list_running_jobs()
     if running:
         body += "\n\n## Фоновые задачи\n\n" + ", ".join(f"`{n}`" for n in running)
@@ -463,8 +467,8 @@ async def cmd_bounty(update, context) -> None:
 
         ok, msg = start_background_job("bounty_hunt", chat_id, _run_hunt)
         await update.message.reply_text(
-            f"{msg}\n\nDeep research: purge → до 3 программ → QA → reviewer.\n"
-            "15–40 мин. Можно пользоваться /status, /bounty и остальными командами."
+            f"{msg}\n\n4 фазы: scope → recon → hunt → report (curl + tools).\n"
+            "30–90 мин. /status — фоновые задачи; /ask — когда Cursor свободен."
         )
         return
 

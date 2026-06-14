@@ -8,11 +8,14 @@ import sys
 from pathlib import Path
 
 from orchestrator.config import STACK_DIR, load_env_file
-from orchestrator.cursor_bridge import cleanup_cursor_bridge
-from orchestrator.memory import append_daily_section, build_context_pack
+from orchestrator.cursor_session import CursorBusyError, cursor_session
 from orchestrator.state import kv_get, kv_set, log_run
 
 logger = logging.getLogger(__name__)
+
+KV_BOUNTY_AGENT = "cursor_bounty_agent_id"
+KV_TASK_AGENT = "cursor_task_agent_id"
+KV_DAILY_AGENT = "cursor_agent_id"
 
 
 def _ensure_sdk():
@@ -24,72 +27,133 @@ def _ensure_sdk():
         raise
 
 
-def run_cursor_prompt(prompt: str, one_shot: bool = False) -> str:
+def _api_key() -> str | None:
     load_env_file(".env.cursor")
-    api_key = os.environ.get("CURSOR_API_KEY")
+    return os.environ.get("CURSOR_API_KEY", "").strip() or None
+
+
+def _model() -> str:
+    return os.environ.get("CURSOR_AGENT_MODEL", "auto").strip() or "auto"
+
+
+def _bounty_model() -> str:
+    return os.environ.get("BOUNTY_CURSOR_MODEL", "auto").strip() or "auto"
+
+
+def _local_opts():
+    _, _, _, LocalAgentOptions = _ensure_sdk()
+    return LocalAgentOptions(cwd=str(STACK_DIR), setting_sources=["project"])
+
+
+def _run_agent_prompt(
+    prompt: str,
+    *,
+    owner: str,
+    agent_kv_key: str,
+    model: str | None = None,
+    reset_agent: bool = False,
+) -> str:
+    """Full agent with tools (send + wait). Must run inside cursor_session."""
+    api_key = _api_key()
     if not api_key:
         return "CURSOR_API_KEY not configured in secrets/.env.cursor"
 
-    cleanup_cursor_bridge()
-    Agent, AgentOptions, CursorAgentError, LocalAgentOptions = _ensure_sdk()
-    cwd = str(STACK_DIR)
+    Agent, AgentOptions, CursorAgentError, _ = _ensure_sdk()
+    use_model = model or _model()
+    agent_id = None if reset_agent else kv_get(agent_kv_key)
 
     try:
-        if one_shot:
-            try:
-                result = Agent.prompt(
-                    prompt,
-                    AgentOptions(
-                        api_key=api_key,
-                        model="auto",
-                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                    ),
-                )
-                return result.result or f"Status: {result.status}"
-            except CursorAgentError as e:
-                return f"Cursor startup failed: {e.message}"
-
-        agent_id = kv_get("cursor_agent_id")
-        try:
-            if agent_id:
-                agent_ctx = Agent.resume(
-                    agent_id,
-                    AgentOptions(
-                        api_key=api_key,
-                        model="auto",
-                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                    ),
-                )
-            else:
-                agent_ctx = Agent.create(
-                    AgentOptions(
-                        api_key=api_key,
-                        model="auto",
-                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                    ),
-                )
-        except Exception:
+        if agent_id:
+            agent_ctx = Agent.resume(
+                agent_id,
+                AgentOptions(
+                    api_key=api_key,
+                    model=use_model,
+                    local=_local_opts(),
+                ),
+            )
+        else:
             agent_ctx = Agent.create(
                 AgentOptions(
                     api_key=api_key,
-                    model="auto",
-                    local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                    model=use_model,
+                    local=_local_opts(),
                 ),
             )
+    except Exception:
+        agent_ctx = Agent.create(
+            AgentOptions(
+                api_key=api_key,
+                model=use_model,
+                local=_local_opts(),
+            ),
+        )
 
+    try:
         with agent_ctx as agent:
-            if not agent_id:
-                kv_set("cursor_agent_id", agent.agent_id)
+            kv_set(agent_kv_key, agent.agent_id)
             run = agent.send(prompt)
             result = run.wait()
-            summary = (result.result or "")[:2000]
+            text = (result.result or "").strip()
             if result.status == "error":
-                log_run("cursor", "error", summary)
-                return f"Run failed: {summary}"
-            log_run("cursor", "finished", summary)
-            return summary
-    finally:
-        cleanup_cursor_bridge()
+                log_run("cursor", "error", text[:500])
+                return f"Run failed: {text[:500]}"
+            log_run("cursor", "finished", text[:500])
+            return text
+    except CursorAgentError as e:
+        return f"Cursor startup failed: {e.message}"
+
+
+def run_cursor_prompt(
+    prompt: str,
+    one_shot: bool = False,
+    *,
+    owner: str = "cursor",
+    agent_kv_key: str = KV_DAILY_AGENT,
+    model: str | None = None,
+    reset_agent: bool = False,
+) -> str:
+    """Run Cursor agent. Uses exclusive session lock."""
+    try:
+        with cursor_session(owner):
+            if one_shot:
+                Agent, AgentOptions, CursorAgentError, _ = _ensure_sdk()
+                api_key = _api_key()
+                if not api_key:
+                    return "CURSOR_API_KEY not configured in secrets/.env.cursor"
+                try:
+                    result = Agent.prompt(
+                        prompt,
+                        AgentOptions(
+                            api_key=api_key,
+                            model=model or _model(),
+                            local=_local_opts(),
+                        ),
+                    )
+                    return result.result or f"Status: {result.status}"
+                except CursorAgentError as e:
+                    return f"Cursor startup failed: {e.message}"
+            return _run_agent_prompt(
+                prompt,
+                owner=owner,
+                agent_kv_key=agent_kv_key,
+                model=model,
+                reset_agent=reset_agent,
+            )
+    except CursorBusyError as e:
+        return str(e)
+
+
+def run_bounty_agent_prompt(prompt: str, *, phase: str, reset: bool = False) -> str:
+    """Deep bounty phase — full agent with project skills + tools."""
+    return run_cursor_prompt(
+        prompt,
+        one_shot=False,
+        owner=f"bounty:{phase}",
+        agent_kv_key=KV_BOUNTY_AGENT,
+        model=_bounty_model(),
+        reset_agent=reset,
+    )
 
 
 def run_daily_agent(context: str, light_mode: bool) -> str:
@@ -114,13 +178,15 @@ def run_daily_agent(context: str, light_mode: bool) -> str:
 
 Работай только в /opt/personal-stack. Не раскрывай секреты.
 """
-    summary = run_cursor_prompt(prompt, one_shot=True)
+    summary = run_cursor_prompt(prompt, one_shot=True, owner="daily")
+    from orchestrator.memory import append_daily_section
+
     append_daily_section("Итог", summary[:1500])
     return summary
 
 
 def run_ask(prompt: str) -> str:
-    return run_cursor_prompt(_wrap_ask_prompt(prompt), one_shot=True)
+    return run_cursor_prompt(_wrap_ask_prompt(prompt), one_shot=True, owner="ask")
 
 
 def _wrap_ask_prompt(user_text: str) -> str:
@@ -157,80 +223,89 @@ def _wrap_task_prompt(user_text: str) -> str:
 
 
 def run_task(prompt: str) -> str:
-    return run_cursor_prompt(_wrap_task_prompt(prompt), one_shot=False)
+    return run_cursor_prompt(
+        _wrap_task_prompt(prompt),
+        one_shot=False,
+        owner="task",
+        agent_kv_key=KV_TASK_AGENT,
+    )
 
 
-def _stream_agent(prompt: str, on_text, *, one_shot: bool) -> str:
-    load_env_file(".env.cursor")
-    api_key = os.environ.get("CURSOR_API_KEY")
+def _stream_agent(prompt: str, on_text, *, one_shot: bool, owner: str) -> str:
+    api_key = _api_key()
     if not api_key:
         msg = "CURSOR_API_KEY не настроен в secrets/.env.cursor"
         on_text(msg)
         return msg
 
-    cleanup_cursor_bridge()
-    Agent, AgentOptions, CursorAgentError, LocalAgentOptions = _ensure_sdk()
-    cwd = str(STACK_DIR)
+    Agent, AgentOptions, CursorAgentError, _ = _ensure_sdk()
     accumulated = ""
 
     try:
-        if one_shot:
-            agent_ctx = Agent.create(
-                AgentOptions(
-                    api_key=api_key,
-                    model="auto",
-                    local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                ),
-            )
-        else:
-            agent_id = kv_get("cursor_task_agent_id")
-            try:
-                if agent_id:
-                    agent_ctx = Agent.resume(
-                        agent_id,
-                        AgentOptions(
-                            api_key=api_key,
-                            model="auto",
-                            local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                        ),
-                    )
-                else:
-                    agent_ctx = Agent.create(
-                        AgentOptions(
-                            api_key=api_key,
-                            model="auto",
-                            local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
-                        ),
-                    )
-            except Exception:
+        with cursor_session(owner):
+            if one_shot:
                 agent_ctx = Agent.create(
                     AgentOptions(
                         api_key=api_key,
-                        model="auto",
-                        local=LocalAgentOptions(cwd=cwd, setting_sources=[]),
+                        model=_model(),
+                        local=_local_opts(),
                     ),
                 )
+                agent_kv_key = None
+            else:
+                agent_kv_key = KV_TASK_AGENT
+                agent_id = kv_get(agent_kv_key)
+                try:
+                    if agent_id:
+                        agent_ctx = Agent.resume(
+                            agent_id,
+                            AgentOptions(
+                                api_key=api_key,
+                                model=_model(),
+                                local=_local_opts(),
+                            ),
+                        )
+                    else:
+                        agent_ctx = Agent.create(
+                            AgentOptions(
+                                api_key=api_key,
+                                model=_model(),
+                                local=_local_opts(),
+                            ),
+                        )
+                except Exception:
+                    agent_ctx = Agent.create(
+                        AgentOptions(
+                            api_key=api_key,
+                            model=_model(),
+                            local=_local_opts(),
+                        ),
+                    )
 
-        with agent_ctx as agent:
-            if not one_shot:
-                kv_set("cursor_task_agent_id", agent.agent_id)
-            run = agent.send(prompt)
-            for chunk in run.iter_text():
-                if chunk:
-                    accumulated += chunk
+            with agent_ctx as agent:
+                if agent_kv_key:
+                    kv_set(agent_kv_key, agent.agent_id)
+                run = agent.send(prompt)
+                for chunk in run.iter_text():
+                    if chunk:
+                        accumulated += chunk
+                        on_text(accumulated)
+                result = run.wait()
+                final = (result.result or accumulated or "").strip()
+                if final and final != accumulated:
+                    accumulated = final
                     on_text(accumulated)
-            result = run.wait()
-            final = (result.result or accumulated or "").strip()
-            if final and final != accumulated:
-                accumulated = final
-                on_text(accumulated)
-            if result.status == "error":
-                err = f"Ошибка агента: {final[:500]}"
-                on_text(err)
-                log_run("cursor", "error", err[:500])
-                return err
-            log_run("cursor", "finished", final[:500])
-            return final
+                if result.status == "error":
+                    err = f"Ошибка агента: {final[:500]}"
+                    on_text(err)
+                    log_run("cursor", "error", err[:500])
+                    return err
+                log_run("cursor", "finished", final[:500])
+                return final
+    except CursorBusyError as e:
+        err = str(e)
+        on_text(err)
+        return err
     except CursorAgentError as e:
         err = f"Не удалось запустить агента: {e.message}"
         on_text(err)
@@ -240,18 +315,16 @@ def _stream_agent(prompt: str, on_text, *, one_shot: bool) -> str:
         on_text(err)
         logger.exception("_stream_agent failed")
         return err
-    finally:
-        cleanup_cursor_bridge()
 
 
 def run_ask_streaming(prompt: str, on_text) -> str:
     """Read-only Q&A with streaming."""
-    return _stream_agent(_wrap_ask_prompt(prompt), on_text, one_shot=True)
+    return _stream_agent(_wrap_ask_prompt(prompt), on_text, one_shot=True, owner="ask")
 
 
 def run_task_streaming(prompt: str, on_text) -> str:
     """Task with code changes; commit/deploy handled by caller."""
-    return _stream_agent(_wrap_task_prompt(prompt), on_text, one_shot=False)
+    return _stream_agent(_wrap_task_prompt(prompt), on_text, one_shot=False, owner="task")
 
 
 if __name__ == "__main__":

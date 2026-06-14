@@ -1,6 +1,9 @@
-# Deep bounty research — submit-ready only
+# Phase 4 — Final report (submit-ready only)
 
 Ты security researcher. Цель: **один submit-ready report** для HackerOne или честный `found: false`.
+
+## Контекст (scope → recon → hunt)
+{prior_context}
 
 ## Программа
 - **Name:** {program_name}

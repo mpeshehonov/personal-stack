@@ -57,6 +57,27 @@ When VPN is on, Russian sites (`.ru`, `.su`, `.рф`, Yandex/VK/banks/gov) go **
 
 **Setup (Happ):** import subscription → open routing link from table above → verify with `2ip.ru` (real IP) vs `ifconfig.me` (NL server IP).
 
+## Mobile data (РФ, «белые списки»)
+
+На мобильном интернете **Hysteria2 (UDP/QUIC, порты 36712/8443) часто не работает** — оператор режет UDP вне whitelist.
+
+| Сеть | Протокол | Почему |
+|------|----------|--------|
+| Wi‑Fi | Hysteria2 (Hy2) | UDP обычно проходит |
+| Mobile 4G/5G | **Xray REALITY TCP :2053** | TCP под видом `yandex.ru`, не QUIC |
+
+1. В Happ выберите профиль **Xray REALITY** (не Hy2) для мобильной сети — параметры в `vpn/xray-reality/WORKING.txt` на сервере.
+2. Routing **RU-direct** оставьте включённым.
+3. iPhone: VPN → Connect On Demand; Happ → Include all networks **ON**.
+
+## После сна ноутбука (нет reconnect)
+
+Hy2 (UDP) часто не восстанавливается после sleep.
+
+- Happ: auto-reconnect; после wake — выкл VPN → 3 сек → вкл
+- На mobile и после sleep предпочитайте **Xray TCP 2053**
+- Сервер: Hy2 idle timeout 300s в `vpn/hysteria2/config*.yaml`; после правки — `scripts/deploy-vpn.sh`
+
 **Edit whitelist:** add domains to `vpn/routing/ru-direct-sites.txt`, then:
 
 ```bash

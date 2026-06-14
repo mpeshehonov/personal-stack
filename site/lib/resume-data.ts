@@ -28,7 +28,7 @@ const experiencesRu: Experience[] = [
         name: "sendonate.com",
         stack: "React, Vite, Telegram Mini App, WebSocket, Orval, Django REST",
         bullets: [
-          "Отдельный продукт sendonate (юрлицо POTALONU LLC): monolith — кабинет, Mini App, websocket-pages для OBS",
+          "Monolith sendonate: кабинет, Mini App, websocket-pages для OBS",
           "Orval по OpenAPI, очередь алертов на WebSocket с reconnect",
           "Кабинет: CRUD коллекций, настройки алертов, debounce-поиск",
         ],
@@ -104,7 +104,7 @@ const experiencesEn: Experience[] = [
         name: "sendonate.com",
         stack: "React, Vite, Telegram Mini App, WebSocket, Orval, Django REST",
         bullets: [
-          "Standalone sendonate product (POTALONU LLC): monolith — dashboard, Mini App, websocket-pages for OBS",
+          "Monolith sendonate: dashboard, Mini App, websocket-pages for OBS",
           "Orval from OpenAPI, WebSocket alert queue with reconnect",
           "Dashboard: CRUD collections, alert settings, debounced search",
         ],
