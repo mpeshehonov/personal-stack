@@ -157,31 +157,38 @@ def run_bounty_agent_prompt(prompt: str, *, phase: str, reset: bool = False) -> 
 
 
 def run_daily_agent(context: str, light_mode: bool) -> str:
+    from orchestrator.config import TASKS_DIR
+
     mode_note = (
         "ОБЛЕГЧЁННЫЙ РЕЖИМ: без finance-сделок и тяжёлых PDF. Только health и критичные правки сайта."
         if light_mode
-        else "ПОЛНЫЙ РЕЖИМ: улучшения сайта, bounty, finance."
+        else "ПОЛНЫЙ РЕЖИМ: улучшения сайта, income backlog, finance proposals."
     )
+    harness = (TASKS_DIR / "daily_prompt.md").read_text(encoding="utf-8")
     prompt = f"""Ты автономный агент для /opt/personal-stack.
 
 {mode_note}
 
 {context}
 
-Инструкции:
-1. Проверь здоровье сайта; если лежит — почини и запусти scripts/redeploy-site.sh
-2. Возьми не больше 1–2 пунктов из бэклога сайта; коммить изменения в site/
-3. Bug bounty — **не дублируй**: semi-auto ресёрч запускает orchestrator (`bounty/scanner.py`). В daily-логе только краткий итог, если был ручной анализ.
-4. Проанализируй finance; выводи JSON-предложения для risk engine (формат на английском)
-5. Добавь уроки в agent/memory/lessons/, если узнал что-то полезное
-6. Обнови agent/memory/daily/ сегодняшний лог разделами: Итог, Сайт, Финансы, Баг-баунти, Уроки — **на русском**
+---
 
-Работай только в /opt/personal-stack. Не раскрывай секреты.
+{harness}
+
+Работай только в /opt/personal-stack. Используй инструменты (curl, чтение файлов, правки).
+Начни с секции ## План в daily-логе, затем выполни bounded work.
 """
-    summary = run_cursor_prompt(prompt, one_shot=True, owner="daily")
+    summary = run_cursor_prompt(
+        prompt,
+        one_shot=False,
+        owner="daily",
+        agent_kv_key=KV_DAILY_AGENT,
+        reset_agent=True,
+    )
     from orchestrator.memory import append_daily_section
 
-    append_daily_section("Итог", summary[:1500])
+    if not summary.startswith("Cursor ") and "Run failed" not in summary[:20]:
+        append_daily_section("Итог", summary[:1500])
     return summary
 
 

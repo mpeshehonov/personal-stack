@@ -1,5 +1,10 @@
 # Agent Memory Index
 
+## Harness
+- Map: `agent/instructions.md`
+- Daily: `agent/tasks/daily_prompt.md` + `agent/orchestrator/daily_validator.py`
+- Skills: `agent/skills/income-harness/`, `agent/skills/bounty-harness/`
+
 ## Active Agent
 - cursor_agent_id: stored in state.sqlite kv table
 - model: auto
@@ -21,7 +26,7 @@
 - Primary: Hysteria2 UDP 36712 (+ Salamander obfs) — vpn/hysteria2/WORKING.txt
 - Subscription: http://89.124.70.216:8888/sub.txt
 - **Split routing (RU direct):** http://89.124.70.216:8888/routing/happ-ru-direct.link — rebuild: `vpn/scripts/build-happ-routing.sh`
-- Fallback: VLESS Reality TCP 2053
+- Fallback: VLESS Reality TCP 2053 — `vpn/xray-reality/WORKING.txt`, Happ import: `vpn/xray-reality/README.md`
 - Site: HTTPS on 443/TCP (Caddy)
 - **Site deploy is isolated from VPN** — use `docker compose up -d site caddy` only; VPN runs in separate compose projects (`hysteria2`, `xray-reality`). See docs/VPN.md. VPN changes: `scripts/deploy-vpn.sh` only (manual).
 

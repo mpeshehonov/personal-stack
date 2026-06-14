@@ -3,7 +3,7 @@
     "slug": "self-hosted-agent-stack",
     "title": "Self-hosted agent stack: как я автоматизирую рутину",
     "date": "2026-06-13",
-    "excerpt": "Обзор self-hosted стека для AI-агентов: Coolify, Docker, GitLab CI и ежедневные автоматизации без облачных подписок.",
+    "excerpt": "Self-hosted стек для AI-агентов: orchestrator, Telegram, bounty semi-auto, finance lanes и daily harness без облачных подписок.",
     "tags": ["devops", "agents", "self-hosted"],
     "draft": false
   }

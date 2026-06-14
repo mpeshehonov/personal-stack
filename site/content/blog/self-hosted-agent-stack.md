@@ -1,39 +1,85 @@
 # Self-hosted agent stack: как я автоматизирую рутину
 
-> **Статус:** черновик. Полная версия — скоро.
-
-За последний год я собрал **self-hosted стек** для AI-агентов и ежедневных автоматизаций. Без привязки к облачным подпискам, с полным контролем над данными и деплоем.
+За последний год я собрал **self-hosted стек** для AI-агентов и ежедневных автоматизаций: VPS, Docker, Telegram-бот и Cursor SDK — без привязки к облачным «агентным» подпискам и с полным контролем над данными.
 
 ## Зачем self-hosted
 
-- **Контроль данных** — промпты, логи и артефакты остаются на своём сервере
-- **Предсказуемые расходы** — VPS + Coolify вместо pay-per-token SaaS
-- **Интеграция с GitLab** — агенты работают в том же CI/CD-контуре, что и продуктовый код
+**Контроль данных.** Промпты, логи, finance-сигналы и черновики bounty остаются на своём сервере в SQLite и markdown-памяти — не в чужом SaaS.
 
-## Стек
+**Предсказуемые расходы.** Фиксированный VPS + API Cursor вместо pay-per-seat agent platforms.
+
+**Свой CI/CD-контур.** Сайт, агент и VPN живут в одном репозитории; деплой — `git pull` и systemd, без GitHub Actions с секретами в workflow.
+
+## Архитектура
+
+```text
+Telegram (/ask, /task, /bounty)
+        │
+        ▼
+  telegram-bot ──► Cursor SDK (local bridge)
+        │
+        ▼
+ agent-orchestrator ──► daily cycle
+        │                    │
+        ├── bounty/scanner   ├── finance executor
+        ├── job_hunt         ├── site deploy
+        └── memory commit    └── Telegram report
+```
 
 | Слой | Инструмент |
-|------|-----------|
-| Оркестрация | Coolify на VPS |
-| Контейнеры | Docker Compose |
-| CI/CD | GitLab pipelines |
-| Сайт | Next.js 15, standalone output |
-| Агенты | Cursor + custom task runner |
+|------|------------|
+| VPS | Ubuntu, systemd |
+| Сайт | Next.js 15, standalone, Caddy |
+| Агенты | Cursor SDK + Python orchestrator |
+| Память | `agent/memory/` + SQLite state |
+| Уведомления | Telegram Rich Messages |
+| VPN | Hysteria2 + Xray REALITY (отдельный compose) |
 
-## Что автоматизируется
+## Ежедневный цикл
 
-1. **Ежедневный цикл** — проверка бэклога, деплой, smoke-тесты
-2. **Генерация контента** — черновики постов и обновления портфолио
-3. **Мониторинг** — health-check сервисов и уведомления в Telegram
+Каждое утро orchestrator:
+
+1. Проверяет health (CPU, RAM, сайт, Docker).
+2. Запускает **daily-агента** с harness: plan → bounded work → validate → log.
+3. Прогоняет finance scan (Azuro/CEX paper), bounty semi-auto, job hunt.
+4. Коммитит `agent/memory/`, шлёт отчёт в Telegram.
+
+Агент не «магически зарабатывает» — он работает по **lanes** из income plan: paper-trading, сигналы, контент. Рискованные действия (live trades, bounty submit) — только после `/approve` в боте.
+
+## Bug bounty semi-auto
+
+Отдельный pipeline: purge слабых драфтов → 4 фазы research (scope → recon → hunt → report) → auto-QA → reviewer → pending draft. Submit на HackerOne — только после твоего `/approve bounty`.
+
+Это снимает рутину «проверь GHSA и накинь hint», но не заменяет реальный PoC — агент обязан принести curl и submit-ready report.
+
+## Telegram-бот
+
+- `/ask` — read-only вопрос со стримингом
+- `/task` — правки кода + auto deploy
+- `/bounty hunt` — deep research в фоне (бот не блокируется)
+- `/status` — health + фоновые задачи
+
+Долгие job'ы идут в `asyncio.create_task`; Cursor SDK сериализуется через session lock — иначе bridge падает с Connection refused.
+
+## Что я бы сделал иначе с нуля
+
+1. **Harness с первого дня** — plan artifact, validators, approval gates (см. [agents-best-practices](https://github.com/DenisSergeevitch/agents-best-practices)).
+2. **Skills по lanes** — income, bounty, site — progressive disclosure вместо одного простынного prompt.
+3. **Paper trading 7 дней** до любого live finance — kill criteria в коде, не в голове.
+
+## Стек в цифрах
+
+- ~15 systemd/cron триггеров
+- 4 фазы bounty research на программу
+- 2 VPN протокола (Hy2 для Wi‑Fi, Xray REALITY TCP для mobile)
+- 0 облачных agent subscriptions
 
 ## Что дальше
 
-В следующих частях разберу:
-
-- Настройку Coolify для multi-service деплоя
-- GitLab CI pipeline для site + agent runner
-- Шаблоны задач для агентов (backlog → PR → deploy)
+- Milestone M1: $1k autonomous net к сентябрю 2026
+- Job hunt autopilot с HH API
+- Ещё посты про finance lanes и VPN split-routing
 
 ---
 
-*Связаться: [Telegram](https://t.me/makusimu_san) · [GitHub](https://github.com/mpeshehonov)*
+*Связаться: [Telegram](https://t.me/makusimu_san) · [GitHub](https://github.com/mpeshehonov) · [Сайт](https://mpeshekhonov.ru)*

@@ -20,6 +20,7 @@ from finance.proposal_parser import extract_trade_proposals
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
 from orchestrator.git_deploy import apply_daily_commit, apply_task_deploy, pull_latest
 from orchestrator.daily_report import format_daily_report_rich
+from orchestrator.daily_validator import validate_daily_log
 from orchestrator.format_ru import run_status_ru
 from orchestrator.health import collect_health
 from orchestrator.memory import build_context_pack, ensure_daily_log
@@ -109,6 +110,11 @@ async def run_daily_cycle() -> None:
 
         context = build_context_pack(health)
         summary = await asyncio.to_thread(run_daily_agent, context, health.light_mode)
+
+        log_ok, log_warnings = await asyncio.to_thread(validate_daily_log)
+        if log_warnings:
+            logger.info("Daily log validation: %s", "; ".join(log_warnings[:5]))
+            summary = summary + "\n\n[Validator] " + "; ".join(log_warnings[:3])
 
         finance = FinanceExecutor()
         agent_proposals = extract_trade_proposals(summary)

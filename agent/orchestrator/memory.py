@@ -30,9 +30,12 @@ def _recent_daily_logs(limit: int = 3) -> str:
 def build_context_pack(health: HealthSnapshot) -> str:
     index = _read(MEMORY_DIR / "INDEX.md", 3000)
     goals = _read(MEMORY_DIR / "goals.md", 2000)
+    income_plan = _read(MEMORY_DIR / "income_plan.md", 3500)
+    income_backlog = _read(TASKS_DIR / "income_backlog.md", 2500)
+    instructions = _read(MEMORY_DIR.parent / "instructions.md", 2000)
     backlog = _read(TASKS_DIR / "site_backlog.md", 2000)
     daily = _recent_daily_logs(3)
-    template = _read(TASKS_DIR / "daily_prompt.md", 4000)
+    template = _read(TASKS_DIR / "daily_prompt.md", 5000)
 
     return f"""# Контекст daily-агента
 
@@ -42,11 +45,20 @@ def build_context_pack(health: HealthSnapshot) -> str:
 - Сайт OK: {health.site_ok}
 - Облегчённый режим: {health.light_mode}
 
+## Harness map
+{instructions}
+
 ## INDEX
 {index}
 
 ## Цели
 {goals}
+
+## Income plan (M1 / lanes)
+{income_plan}
+
+## Income backlog
+{income_backlog}
 
 ## Бэклог сайта
 {backlog}
@@ -66,7 +78,7 @@ def ensure_daily_log() -> Path:
     path = daily_dir / f"{today}.md"
     if not path.exists():
         path.write_text(
-            f"# Daily Log {today}\n\n## Итог\n\n## Сайт\n\n## Финансы\n\n## Баг-баунти\n\n## Уроки\n\n",
+            f"# Daily Log {today}\n\n## План\n\n## Итог\n\n## Сайт\n\n## Финансы\n\n## Баг-баунти\n\n## Уроки\n\n",
             encoding="utf-8",
         )
     return path
