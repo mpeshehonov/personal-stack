@@ -1,4 +1,4 @@
-import { ProjectCard } from "@/components/ProjectCard";
+import { AnimatedProjectList } from "@/components/AnimatedProjectList";
 import { getDictionary } from "@/lib/i18n";
 import { getProjects } from "@/lib/projects";
 import type { Locale } from "@/middleware";
@@ -24,11 +24,7 @@ export default async function ProjectsPage({
         <h1 className="section-title mb-3">{dict.nav.projects}</h1>
         <p className="max-w-2xl text-ink-muted">{desc}</p>
       </header>
-      <div className="space-y-6">
-        {projects.map((project) => (
-          <ProjectCard key={project.slug} project={project} locale={locale} />
-        ))}
-      </div>
+      <AnimatedProjectList projects={projects} locale={locale} />
     </article>
   );
 }

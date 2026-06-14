@@ -8,7 +8,7 @@ import { Hero } from "@/components/Hero";
 import { SkillGrid } from "@/components/SkillGrid";
 import { SelectedWork } from "@/components/SelectedWork";
 import { ExperiencePreview } from "@/components/ExperiencePreview";
-import { ContactCTA } from "@/components/ContactCTA";
+import { FadeIn } from "@/components/FadeIn";
 import { getDictionary } from "@/lib/i18n";
 import { getHomePreviewExperiences } from "@/lib/experience-preview";
 import { getFeaturedProjects } from "@/lib/projects";
@@ -39,13 +39,12 @@ export default async function HomePage({
         dict={dict}
         experiences={previewExperiences}
       />
-      <section className="section">
+      <FadeIn className="section">
         <p className="section-label">{dict.sections.skills}</p>
         <h2 className="section-title mb-3">{dict.sections.skills}</h2>
         <p className="mb-8 max-w-2xl text-ink-muted">{dict.sections.skillsDesc}</p>
         <SkillGrid groups={getSkillGroups(locale)} />
-      </section>
-      <ContactCTA locale={locale} dict={dict} />
+      </FadeIn>
       <div className="pb-8 text-center">
         <Link href={localizedPath(locale, "/projects")} className="btn-secondary">
           {dict.sections.allProjects}

@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import resumeRu from "@/content/resume/resume.json";
 import resumeEn from "@/content/resume/en/resume.json";
+import { ContactCTA } from "@/components/ContactCTA";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getDictionary } from "@/lib/i18n";
@@ -87,6 +88,9 @@ export default async function LocaleLayout({
         <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           {children}
         </main>
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <ContactCTA locale={locale} dict={dict} />
+        </div>
         <Footer
           locale={locale}
           dict={dict}

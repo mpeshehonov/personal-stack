@@ -6,6 +6,7 @@ import { localizedPath } from "@/lib/i18n";
 import type { Locale } from "@/middleware";
 import type { Project } from "@/lib/projects";
 import { ProjectCard } from "./ProjectCard";
+import { FadeIn } from "./FadeIn";
 
 type Props = {
   locale: Locale;
@@ -15,7 +16,7 @@ type Props = {
 
 export function SelectedWork({ locale, dict, projects }: Props) {
   return (
-    <section className="section">
+    <FadeIn className="section">
       <div className="section-intro">
         <div>
           <p className="section-label">{dict.sections.selectedWork}</p>
@@ -30,10 +31,12 @@ export function SelectedWork({ locale, dict, projects }: Props) {
         </Link>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectCard key={project.slug} project={project} compact locale={locale} />
+        {projects.map((project, index) => (
+          <FadeIn key={project.slug} delay={index * 0.08}>
+            <ProjectCard project={project} compact locale={locale} />
+          </FadeIn>
         ))}
       </div>
-    </section>
+    </FadeIn>
   );
 }

@@ -3,6 +3,7 @@ import type { Dictionary } from "@/lib/i18n";
 import { localizedPath } from "@/lib/i18n";
 import type { Locale } from "@/middleware";
 import { ExperienceCard } from "./ExperienceCard";
+import { FadeIn } from "./FadeIn";
 import type { Experience } from "@/lib/resume-data";
 
 type Props = {
@@ -18,7 +19,7 @@ export function ExperiencePreview({ locale, dict, experiences }: Props) {
       : "7+ лет в продакшене: e-commerce, enterprise RBAC, билетные сервисы, стриминговые продукты.";
 
   return (
-    <section className="section">
+    <FadeIn className="section">
       <div className="section-intro">
         <div>
           <p className="section-label">{dict.sections.experience}</p>
@@ -33,10 +34,12 @@ export function ExperiencePreview({ locale, dict, experiences }: Props) {
         </Link>
       </div>
       <div className="space-y-4">
-        {experiences.map((exp) => (
-          <ExperienceCard key={exp.company + exp.period} exp={exp} />
+        {experiences.map((exp, index) => (
+          <FadeIn key={exp.company + exp.period} delay={index * 0.08}>
+            <ExperienceCard exp={exp} />
+          </FadeIn>
         ))}
       </div>
-    </section>
+    </FadeIn>
   );
 }

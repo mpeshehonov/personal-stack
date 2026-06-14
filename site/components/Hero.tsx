@@ -6,6 +6,7 @@ import { localizedPath } from "@/lib/i18n";
 import type { Locale } from "@/middleware";
 import { highlightSkills } from "@/lib/skills";
 import { AvailabilityBadge } from "./AvailabilityBadge";
+import { FadeIn } from "./FadeIn";
 import { parseAvailability } from "@/lib/availability";
 import { SocialLinks } from "./SocialLinks";
 
@@ -25,7 +26,7 @@ type Props = {
 
 export function Hero({ locale, dict, resume }: Props) {
   return (
-    <section className="pb-16 pt-10 sm:pb-20 sm:pt-14">
+    <FadeIn className="pb-16 pt-10 sm:pb-20 sm:pt-14">
       <div className="card relative overflow-hidden border-0 bg-gradient-to-br from-surface via-surface to-accent-soft p-8 sm:p-10">
         <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/10 blur-3xl" aria-hidden />
         <p className="section-label">{dict.hero.eyebrow}</p>
@@ -68,6 +69,6 @@ export function Hero({ locale, dict, resume }: Props) {
           </div>
         </div>
       </div>
-    </section>
+    </FadeIn>
   );
 }
