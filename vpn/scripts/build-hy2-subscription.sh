@@ -48,8 +48,22 @@ host = "89.124.70.216"
 sni = "yandex.ru"
 pin_q = f"&pinSHA256={pin}" if pin else ""
 
-for port, label in [(443, "HY2-443-mobile"), (8443, "HY2-8443"), (36712, "HY2-36712")]:
-    pwd, obfs = load_cfg(port)
+for port, label, cfg in [
+    (443, "HY2-443-mobile", "mobile"),
+    (8443, "HY2-8443", "8443"),
+    (36712, "HY2-36712", "36712"),
+]:
+    if cfg == "mobile":
+        path = hy2 / "config-mobile.yaml"
+        if not path.exists():
+            continue
+        text = path.read_text()
+        pwd_m = re.search(r'password:\s*"([^"]+)"', text)
+        obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
+        pwd = pwd_m.group(1) if pwd_m else ""
+        obfs = obfs_m.group(1) if obfs_m else ""
+    else:
+        pwd, obfs = load_cfg(port)
     if not pwd:
         continue
     obfs_q = f"&obfs=salamander&obfs-password={obfs}" if obfs else ""

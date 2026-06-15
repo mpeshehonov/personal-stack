@@ -19,10 +19,10 @@ docker rm -f xray-reality-vless 2>/dev/null || true
 
 echo "==> Start Hysteria2 (primary VPN — 443/8443/36712 UDP)"
 cd "$STACK_DIR/vpn/hysteria2"
-# Bootstrap config-443 from template if missing (copy creds from 8443)
-if [[ ! -f config-443.yaml ]] && [[ -f config-8443.yaml ]]; then
-  cp config-8443.yaml config-443.yaml
-  sed -i 's/:8443/:443/' config-443.yaml 2>/dev/null || sed -i '' 's/:8443/:443/' config-443.yaml
+# Bootstrap config-mobile from 8443 if missing (copy creds from 8443)
+if [[ ! -f config-mobile.yaml ]] && [[ -f config-8443.yaml ]]; then
+  cp config-8443.yaml config-mobile.yaml
+  sed -i 's/:8443/:443/' config-mobile.yaml 2>/dev/null || sed -i '' 's/:8443/:443/' config-mobile.yaml
 fi
 docker compose up -d --force-recreate
 sleep 3
