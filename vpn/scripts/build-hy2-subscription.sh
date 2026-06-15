@@ -48,8 +48,12 @@ host = "89.124.70.216"
 sni = "yandex.ru"
 pin_q = f"&pinSHA256={pin}" if pin else ""
 
-for port, label, cfg in [
-    (53, "Yandex-HY2-dns", "udp53"),
+def listen_port(text: str, fallback: int) -> int:
+    m = re.search(r"listen:\s*:(\d+)", text)
+    return int(m.group(1)) if m else fallback
+
+for fallback_port, label, cfg in [
+    (2053, "Yandex-HY2-alt", "udp53"),
     (443, "Yandex-HY2-mobile", "mobile"),
     (36712, "Yandex-HY2", "36712"),
     (8443, "Yandex-HY2-8443", "8443"),
@@ -59,6 +63,7 @@ for port, label, cfg in [
         if not path.exists():
             continue
         text = path.read_text()
+        port = listen_port(text, fallback_port)
         pwd_m = re.search(r'password:\s*"([^"]+)"', text)
         obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
         pwd = pwd_m.group(1) if pwd_m else ""
@@ -68,11 +73,13 @@ for port, label, cfg in [
         if not path.exists():
             continue
         text = path.read_text()
+        port = listen_port(text, fallback_port)
         pwd_m = re.search(r'password:\s*"([^"]+)"', text)
         obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
         pwd = pwd_m.group(1) if pwd_m else ""
         obfs = obfs_m.group(1) if obfs_m else ""
     else:
+        port = fallback_port
         pwd, obfs = load_cfg(port)
     if not pwd:
         continue
