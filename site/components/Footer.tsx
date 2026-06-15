@@ -10,11 +10,12 @@ type Props = {
   dict: Dictionary;
   name: string;
   availability: Availability;
+  className?: string;
 };
 
-export function Footer({ locale, dict, name, availability }: Props) {
+export function Footer({ locale, dict, name, availability, className = "" }: Props) {
   return (
-    <footer className="mt-20 border-t border-border bg-surface py-10">
+    <footer className={`mt-20 border-t border-border bg-surface py-10 ${className}`}>
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-center text-sm text-ink-faint sm:px-6 lg:px-8">
         <AvailabilityBadge status={availability} dict={dict} size="sm" />
         <p>

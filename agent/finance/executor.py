@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from finance.grid_calculator import grid_preview_for_markets
 from finance.goal_tracker import goal_progress, milestone_progress
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from finance.risk_engine import RiskEngine, TradeProposal
@@ -93,6 +94,8 @@ class FinanceExecutor:
 
         tradeable, rejected = filter_scan_markets(all_markets)
 
+        grid_previews = grid_preview_for_markets(tradeable)
+
         proposals: list[dict[str, Any]] = []
         results: list[dict[str, Any]] = []
 
@@ -138,6 +141,7 @@ class FinanceExecutor:
             "markets_after_filters": len(tradeable),
             "markets_rejected": len(rejected),
             "rejection_samples": rejected[:5],
+            "grid_previews": grid_previews,
             "proposals": proposals,
             "executions": results,
             "goal": goal_progress(),

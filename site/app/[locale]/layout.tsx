@@ -84,11 +84,11 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="overflow-x-hidden font-sans">
-        <Header locale={locale} dict={dict} />
-        <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <Header locale={locale} dict={dict} className="print:hidden" />
+        <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 print:max-w-none print:px-0">
           {children}
         </main>
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 print:hidden">
           <ContactCTA locale={locale} dict={dict} />
         </div>
         <Footer
@@ -96,6 +96,7 @@ export default async function LocaleLayout({
           dict={dict}
           name={resume.name}
           availability={parseAvailability(resume.availability)}
+          className="print:hidden"
         />
       </body>
     </html>

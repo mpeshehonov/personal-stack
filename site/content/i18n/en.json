@@ -38,6 +38,7 @@
   "resume": {
     "title": "Resume",
     "download": "Download PDF",
+    "downloadHint": "PDF for recruiters and HR — one file. Or print this page.",
     "about": "About",
     "experience": "Work experience",
     "achievements": "Achievements",

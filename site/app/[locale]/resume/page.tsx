@@ -2,6 +2,7 @@ import Link from "next/link";
 import resumeRu from "@/content/resume/resume.json";
 import resumeEn from "@/content/resume/en/resume.json";
 import { ExperienceCard } from "@/components/ExperienceCard";
+import { ResumePdfBanner } from "@/components/ResumePdfBanner";
 import { SkillGrid } from "@/components/SkillGrid";
 import { SocialLinks } from "@/components/SocialLinks";
 import { getDictionary, localizedPath } from "@/lib/i18n";
@@ -33,7 +34,9 @@ export default async function ResumePage({
   const languagesLabel = locale === "en" ? "Languages" : "Языки";
 
   return (
-    <article className="pb-20 pt-8">
+    <article className="resume-print pb-20 pt-8">
+      <ResumePdfBanner locale={locale} dict={dict} />
+
       <header className="card mb-10 p-6 sm:p-8">
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -41,7 +44,10 @@ export default async function ResumePage({
             <p className="text-lg font-medium text-accent">{resume.title}</p>
             <p className="mt-2 text-ink-faint">{resume.location}</p>
           </div>
-          <a href={localizedPath(locale, "/resume/download")} className="btn-primary shrink-0">
+          <a
+            href={localizedPath(locale, "/resume/download")}
+            className="btn-primary shrink-0 print:hidden"
+          >
             {dict.resume.download}
           </a>
         </div>
@@ -106,7 +112,7 @@ export default async function ResumePage({
         <p className="text-sm leading-relaxed text-ink-muted">{achievements}</p>
       </section>
 
-      <p className="mt-8 text-center">
+      <p className="mt-8 text-center print:hidden">
         <Link
           href={localizedPath(locale, "/projects")}
           className="text-sm font-medium text-accent hover:underline"
@@ -115,7 +121,7 @@ export default async function ResumePage({
         </Link>
       </p>
 
-      <p className="mt-4 text-center">
+      <p className="mt-4 text-center print:hidden">
         <Link
           href={localizedPath(locale, "/")}
           className="text-sm text-ink-faint hover:text-accent"

@@ -10,6 +10,7 @@ import type { Locale } from "@/middleware";
 type Props = {
   locale: Locale;
   dict: Dictionary;
+  className?: string;
 };
 
 const navKeys = [
@@ -19,7 +20,7 @@ const navKeys = [
   { href: "/resume", key: "resume" as const },
 ];
 
-export function Header({ locale, dict }: Props) {
+export function Header({ locale, dict, className = "" }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -38,7 +39,7 @@ export function Header({ locale, dict }: Props) {
   const pathWithoutLocale = pathname.replace(/^\/(ru|en)/, "") || "/";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur-md">
+    <header className={`sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur-md ${className}`}>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href={localizedPath(locale, "/")}

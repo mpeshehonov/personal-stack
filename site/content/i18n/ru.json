@@ -38,6 +38,7 @@
   "resume": {
     "title": "Резюме",
     "download": "Скачать PDF",
+    "downloadHint": "PDF для HR и рекрутеров — одним файлом. Или распечатайте эту страницу.",
     "about": "О себе",
     "experience": "Опыт работы",
     "achievements": "Достижения",
