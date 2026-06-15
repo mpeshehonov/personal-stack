@@ -706,6 +706,9 @@ def main() -> None:
             time.sleep(3600)
 
     init_db()
+    from orchestrator.cursor_session import cleanup_stale_bridges_on_startup
+
+    cleanup_stale_bridges_on_startup()
 
     from telegram.ext import Application, CommandHandler
 

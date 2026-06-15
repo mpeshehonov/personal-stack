@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import threading
+import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
@@ -29,7 +30,11 @@ def cursor_holder() -> str | None:
 
 @contextmanager
 def cursor_session(owner: str, *, block: bool = True, timeout: float | None = None):
-    """Exclusive Cursor SDK session. Cleanup runs before lock release (no bridge race)."""
+    """Exclusive Cursor SDK session.
+
+    Do NOT kill bridge processes on exit — cursor-sdk shuts down its own bridge,
+    and global cleanup races with the next session (Connection refused).
+    """
     global _holder, _since
 
     acquired = _lock.acquire(blocking=block, timeout=-1 if timeout is None else timeout)
@@ -43,9 +48,13 @@ def cursor_session(owner: str, *, block: bool = True, timeout: float | None = No
     finally:
         _holder = None
         _since = None
-        # Must finish cleanup before releasing lock — otherwise the next waiter can
-        # spawn a bridge that this cleanup immediately kills (Connection refused).
-        from orchestrator.cursor_bridge import cleanup_cursor_bridge
-
-        cleanup_cursor_bridge(grace_sec=0.5)
+        # Brief pause so the bridge port is released before the next waiter starts.
+        time.sleep(0.3)
         _lock.release()
+
+
+def cleanup_stale_bridges_on_startup() -> int:
+    """Call once at bot/orchestrator start — not between requests."""
+    from orchestrator.cursor_bridge import cleanup_cursor_bridge
+
+    return cleanup_cursor_bridge(grace_sec=1.0)

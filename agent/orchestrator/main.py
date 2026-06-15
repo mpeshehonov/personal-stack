@@ -161,6 +161,9 @@ async def run_daily_cycle() -> None:
 
 async def worker_loop() -> None:
     init_db()
+    from orchestrator.cursor_session import cleanup_stale_bridges_on_startup
+
+    cleanup_stale_bridges_on_startup()
     logger.info("Orchestrator started")
     while True:
         if kv_get("daily_trigger") == "true":

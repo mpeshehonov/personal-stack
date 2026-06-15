@@ -154,7 +154,7 @@ def run_cursor_prompt(
             out = _once()
             if _is_bridge_error(out) and attempt == 0:
                 logger.warning("Bridge error on %s, retrying", owner)
-                time.sleep(2.0)
+                time.sleep(3.0)
                 continue
             return out
         return out
