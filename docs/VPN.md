@@ -16,8 +16,8 @@ All VPN services use `restart: unless-stopped`. **Hysteria2 only** — VLESS/Xra
 | Port | Use |
 |------|-----|
 | **443** | Primary for mobile (QUIC looks like HTTPS) |
-| 8443 | Alternate |
-| 36712 | Legacy |
+| 36712 | **Yandex-HY2** — Wi‑Fi / основной |
+| 8443 | **Yandex-HY2-8443** — запасной |
 
 TCP 443 is Caddy (site). UDP 443 is Hy2 — no conflict.
 
@@ -25,7 +25,7 @@ TCP 443 is Caddy (site). UDP 443 is Hy2 — no conflict.
 
 1. Import subscription: `http://89.124.70.216:8888/sub.txt`
 2. Routing RU-direct: `http://89.124.70.216:8888/routing/happ-ru-direct.link`
-3. On **mobile**: prefer node **HY2-443-mobile**
+3. On **mobile**: prefer node **Yandex-HY2-mobile** (UDP 443); Wi‑Fi — **Yandex-HY2** (36712)
 4. Happ settings (enabled via subscription headers):
    - Include all networks **ON**
    - Exclude local + APNS **ON**

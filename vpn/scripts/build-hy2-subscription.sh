@@ -49,9 +49,9 @@ sni = "yandex.ru"
 pin_q = f"&pinSHA256={pin}" if pin else ""
 
 for port, label, cfg in [
-    (443, "HY2-443-mobile", "mobile"),
-    (8443, "HY2-8443", "8443"),
-    (36712, "HY2-36712", "36712"),
+    (443, "Yandex-HY2-mobile", "mobile"),
+    (36712, "Yandex-HY2", "36712"),
+    (8443, "Yandex-HY2-8443", "8443"),
 ]:
     if cfg == "mobile":
         path = hy2 / "config-mobile.yaml"
