@@ -42,7 +42,13 @@ def _bounty_model() -> str:
 
 def _local_opts():
     _, _, _, LocalAgentOptions = _ensure_sdk()
-    return LocalAgentOptions(cwd=str(STACK_DIR), setting_sources=["project"])
+    # Headless VPS: no IDE project settings; avoids bridge startup edge cases.
+    return LocalAgentOptions(cwd=str(STACK_DIR), setting_sources=[])
+
+
+def _is_bridge_error(msg: str) -> bool:
+    lower = msg.lower()
+    return "connection refused" in lower or "bridge request failed" in lower
 
 
 def _run_agent_prompt(
@@ -114,7 +120,9 @@ def run_cursor_prompt(
     reset_agent: bool = False,
 ) -> str:
     """Run Cursor agent. Uses exclusive session lock."""
-    try:
+    import time
+
+    def _once() -> str:
         with cursor_session(owner):
             if one_shot:
                 Agent, AgentOptions, CursorAgentError, _ = _ensure_sdk()
@@ -140,6 +148,16 @@ def run_cursor_prompt(
                 model=model,
                 reset_agent=reset_agent,
             )
+
+    try:
+        for attempt in range(2):
+            out = _once()
+            if _is_bridge_error(out) and attempt == 0:
+                logger.warning("Bridge error on %s, retrying", owner)
+                time.sleep(2.0)
+                continue
+            return out
+        return out
     except CursorBusyError as e:
         return str(e)
 
@@ -239,6 +257,8 @@ def run_task(prompt: str) -> str:
 
 
 def _stream_agent(prompt: str, on_text, *, one_shot: bool, owner: str) -> str:
+    import time
+
     api_key = _api_key()
     if not api_key:
         msg = "CURSOR_API_KEY не настроен в secrets/.env.cursor"
@@ -246,9 +266,9 @@ def _stream_agent(prompt: str, on_text, *, one_shot: bool, owner: str) -> str:
         return msg
 
     Agent, AgentOptions, CursorAgentError, _ = _ensure_sdk()
-    accumulated = ""
 
-    try:
+    def _once() -> str:
+        accumulated = ""
         with cursor_session(owner):
             if one_shot:
                 agent_ctx = Agent.create(
@@ -265,7 +285,6 @@ def _stream_agent(prompt: str, on_text, *, one_shot: bool, owner: str) -> str:
                 try:
                     if agent_id:
                         agent_ctx = Agent.resume(
-                            agent_id,
                             AgentOptions(
                                 api_key=api_key,
                                 model=_model(),
@@ -309,19 +328,35 @@ def _stream_agent(prompt: str, on_text, *, one_shot: bool, owner: str) -> str:
                     return err
                 log_run("cursor", "finished", final[:500])
                 return final
-    except CursorBusyError as e:
-        err = str(e)
-        on_text(err)
-        return err
-    except CursorAgentError as e:
-        err = f"Не удалось запустить агента: {e.message}"
-        on_text(err)
-        return err
-    except Exception as e:
-        err = f"Сбой при выполнении: {e}"
-        on_text(err)
-        logger.exception("_stream_agent failed")
-        return err
+
+    for attempt in range(2):
+        try:
+            final = _once()
+            if _is_bridge_error(final) and attempt == 0:
+                logger.warning("Bridge error streaming %s, retrying", owner)
+                time.sleep(2.0)
+                continue
+            return final
+        except CursorBusyError as e:
+            err = str(e)
+            on_text(err)
+            return err
+        except CursorAgentError as e:
+            err = f"Не удалось запустить агента: {e.message}"
+            if _is_bridge_error(err) and attempt == 0:
+                time.sleep(2.0)
+                continue
+            on_text(err)
+            return err
+        except Exception as e:
+            err = f"Сбой при выполнении: {e}"
+            on_text(err)
+            logger.exception("_stream_agent failed")
+            return err
+
+    err = "Не удалось запустить агента: bridge unavailable"
+    on_text(err)
+    return err
 
 
 def run_ask_streaming(prompt: str, on_text) -> str:

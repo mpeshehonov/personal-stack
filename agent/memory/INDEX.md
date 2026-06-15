@@ -23,12 +23,10 @@
 6. **Git workflow:** все правки только через git — перед `/task` бот делает `git pull`; после задачи auto commit+push+deploy. Не оставлять правки только на сервере. Локальная разработка → push → deploy-from-git.sh
 
 ## VPN
-- Primary: Hysteria2 UDP 36712 (+ Salamander obfs) — vpn/hysteria2/WORKING.txt
-- Subscription: http://89.124.70.216:8888/sub.txt
-- **Split routing (RU direct):** http://89.124.70.216:8888/routing/happ-ru-direct.link — rebuild: `vpn/scripts/build-happ-routing.sh`
-- Fallback: VLESS Reality TCP 2053 — `vpn/xray-reality/WORKING.txt`, Happ import: `vpn/xray-reality/README.md`
-- Site: HTTPS on 443/TCP (Caddy)
-- **Site deploy is isolated from VPN** — use `docker compose up -d site caddy` only; VPN runs in separate compose projects (`hysteria2`, `xray-reality`). See docs/VPN.md. VPN changes: `scripts/deploy-vpn.sh` only (manual).
+- Primary: Hysteria2 UDP **443** (mobile) + 8443 + 36712 — `vpn/hysteria2/WORKING.txt`
+- Subscription: http://89.124.70.216:8888/sub.txt (rebuild: `vpn/scripts/build-hy2-subscription.sh`)
+- **Split routing (RU direct):** http://89.124.70.216:8888/routing/happ-ru-direct.link
+- Site: HTTPS on 443/TCP (Caddy); Hy2 uses 443/UDP
 
 ## Links
 - Resume source: site/content/resume/resume.json

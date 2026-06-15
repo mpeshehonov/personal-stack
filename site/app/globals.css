@@ -155,10 +155,6 @@
     break-inside: avoid;
   }
 
-  .resume-pdf-banner {
-    display: none !important;
-  }
-
   .resume-print .section-label {
     color: #333 !important;
   }

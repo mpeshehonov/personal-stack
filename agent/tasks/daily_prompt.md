@@ -32,7 +32,7 @@
 ## Приоритеты (по порядку)
 
 1. **Health** — сайт лежит → починить → `scripts/redeploy-site.sh`
-2. **Site** — ≤2 пункта из `agent/tasks/site_backlog.md`
+2. **Site** — ≤2 пункта из `agent/tasks/site_backlog.md`; **сначала** `agent/skills/site-design/SKILL.md`
 3. **Income** — ≤1 пункт из `agent/tasks/income_backlog.md` (skill: income-harness)
 4. **Job hunt** — не дублировать scanner; только backlog если включено
 5. **Bounty** — краткий итог в логе; hunt не запускать

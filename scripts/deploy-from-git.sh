@@ -67,7 +67,7 @@ fi
 
 vpn_started_at() {
   docker inspect -f '{{.Name}} {{.State.StartedAt}}' \
-    hysteria2-nl-36712 hysteria2-nl-8443 hy2-subscription xray-reality-vless \
+    hysteria2-nl-443 hysteria2-nl-36712 hysteria2-nl-8443 hy2-subscription \
     2>/dev/null || true
 }
 

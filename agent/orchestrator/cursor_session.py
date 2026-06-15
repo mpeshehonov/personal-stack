@@ -29,7 +29,7 @@ def cursor_holder() -> str | None:
 
 @contextmanager
 def cursor_session(owner: str, *, block: bool = True, timeout: float | None = None):
-    """Exclusive Cursor SDK session. Cleans up bridge on exit."""
+    """Exclusive Cursor SDK session. Cleanup runs before lock release (no bridge race)."""
     global _holder, _since
 
     acquired = _lock.acquire(blocking=block, timeout=-1 if timeout is None else timeout)
@@ -43,7 +43,9 @@ def cursor_session(owner: str, *, block: bool = True, timeout: float | None = No
     finally:
         _holder = None
         _since = None
-        _lock.release()
+        # Must finish cleanup before releasing lock — otherwise the next waiter can
+        # spawn a bridge that this cleanup immediately kills (Connection refused).
         from orchestrator.cursor_bridge import cleanup_cursor_bridge
 
-        cleanup_cursor_bridge(grace_sec=1.0)
+        cleanup_cursor_bridge(grace_sec=0.5)
+        _lock.release()

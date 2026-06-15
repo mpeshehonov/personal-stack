@@ -19,6 +19,16 @@ services:
       - ./certs:/etc/hysteria/certs:ro
     command: ["server", "-c", "/etc/hysteria/config.yaml"]
 
+  hysteria2-443:
+    image: tobyxdd/hysteria:latest
+    container_name: hysteria2-nl-443
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config-443.yaml:/etc/hysteria/config.yaml:ro
+      - ./certs:/etc/hysteria/certs:ro
+    command: ["server", "-c", "/etc/hysteria/config.yaml"]
+
   hy2-subscription:
     image: nginx:alpine
     container_name: hy2-subscription

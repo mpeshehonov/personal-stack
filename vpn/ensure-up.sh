@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 # Idempotent: ensure VPN containers are running. Never force-recreate.
-# Safe to call after site deploy — does not restart healthy containers.
 set -euo pipefail
 
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 
 VPN_CONTAINERS=(
+  hysteria2-nl-443
   hysteria2-nl-36712
   hysteria2-nl-8443
   hy2-subscription
-  xray-reality-vless
 )
 
 container_running() {
@@ -34,8 +33,6 @@ if ((${#missing[@]} == 0)); then
 fi
 
 echo "VPN down: ${missing[*]} — starting stacks (no recreate)"
-cd "$STACK_DIR/vpn/xray-reality"
-docker compose up -d
 cd "$STACK_DIR/vpn/hysteria2"
 docker compose up -d
 
@@ -49,7 +46,7 @@ done
 
 if ((${#still_missing[@]} > 0)); then
   echo "VPN ensure-up failed: ${still_missing[*]} still not running" >&2
-  docker ps -a --filter "name=hysteria2" --filter "name=xray" --filter "name=hy2" \
+  docker ps -a --filter "name=hysteria2" --filter "name=hy2" \
     --format 'table {{.Names}}\t{{.Status}}' >&2
   exit 1
 fi

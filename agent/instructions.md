@@ -21,7 +21,7 @@ context pack → plan (1 item max per lane) → execute with tools → validate 
 | Income | `agent/memory/income_plan.md` | Daily + income tasks |
 | Site backlog | `agent/tasks/site_backlog.md` | Daily |
 | Bounty | `agent/tasks/bounty_*_prompt.md` | Bounty scanner only |
-| Skills | `agent/skills/*/SKILL.md` | Progressive — load when lane matches |
+| Skills | `agent/skills/*/SKILL.md` | site-design for `site/`, income/bounty for earning |
 
 ## Autonomy matrix
 
@@ -61,8 +61,9 @@ Max **1 site item + 1 income item** per cycle. Bug bounty research is orchestrat
 
 ## Skills (progressive disclosure)
 
-- `agent/skills/income-harness/SKILL.md` — M1 lanes, paper rules, kill criteria
-- `agent/skills/bounty-harness/SKILL.md` — semi-auto bounty, no GHSA spam
+- `agent/skills/income-harness/` — M1 lanes, paper rules
+- `agent/skills/bounty-harness/` — semi-auto bounty
+- `agent/skills/site-design/` — **обязательно** перед правками `site/`
 
 ## Non-goals (daily agent)
 
