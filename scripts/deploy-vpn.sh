@@ -9,6 +9,7 @@ cp "$STACK_DIR/vpn/sysctl/99-vpn-tcp-tuning.conf" /etc/sysctl.d/
 sysctl -p /etc/sysctl.d/99-vpn-tcp-tuning.conf
 
 echo "==> UFW: Hy2 UDP + subscription"
+ufw allow 53/udp
 ufw allow 443/udp
 ufw allow 36712/udp
 ufw allow 8443/udp

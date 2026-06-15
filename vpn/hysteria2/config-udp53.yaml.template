@@ -1,4 +1,4 @@
-listen: :443
+listen: :53
 
 tls:
   cert: /etc/hysteria/certs/cert.pem

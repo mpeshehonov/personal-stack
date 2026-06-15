@@ -49,11 +49,21 @@ sni = "yandex.ru"
 pin_q = f"&pinSHA256={pin}" if pin else ""
 
 for port, label, cfg in [
+    (53, "Yandex-HY2-dns", "udp53"),
     (443, "Yandex-HY2-mobile", "mobile"),
     (36712, "Yandex-HY2", "36712"),
     (8443, "Yandex-HY2-8443", "8443"),
 ]:
-    if cfg == "mobile":
+    if cfg == "udp53":
+        path = hy2 / "config-udp53.yaml"
+        if not path.exists():
+            continue
+        text = path.read_text()
+        pwd_m = re.search(r'password:\s*"([^"]+)"', text)
+        obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
+        pwd = pwd_m.group(1) if pwd_m else ""
+        obfs = obfs_m.group(1) if obfs_m else ""
+    elif cfg == "mobile":
         path = hy2 / "config-mobile.yaml"
         if not path.exists():
             continue

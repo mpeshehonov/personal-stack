@@ -21,16 +21,19 @@ masquerade:
 
 ignoreClientBandwidth: true
 
+# Server→client keepalive (helps mobile NAT)
+ping: 5s
+
 quic:
   initStreamReceiveWindow: 8388608
   maxStreamReceiveWindow: 8388608
   initConnReceiveWindow: 20971520
   maxConnReceiveWindow: 20971520
-  maxIdleTimeout: 120s
+  maxIdleTimeout: 30s
   maxIncomingStreams: 4096
-  disablePathMTUDiscovery: true
+  disablePathMTUDiscovery: false
 
-udpIdleTimeout: 120s
+udpIdleTimeout: 30s
 
 resolver:
   type: udp
