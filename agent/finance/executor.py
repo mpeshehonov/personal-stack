@@ -9,6 +9,7 @@ from finance.grid_calculator import grid_preview_for_markets
 from finance.goal_tracker import goal_progress, milestone_progress
 from finance.polymarket_client import PolymarketClient, is_geoblocked
 from finance.risk_engine import RiskEngine, TradeProposal
+from finance.signal_post import maybe_post_scan_signals
 from finance.signal_rules import filter_scan_markets
 from finance.venue_base import TradeVenue, get_enabled_venues
 from finance.wallet_manager import WalletManager
@@ -141,6 +142,7 @@ class FinanceExecutor:
             "markets_after_filters": len(tradeable),
             "markets_rejected": len(rejected),
             "rejection_samples": rejected[:5],
+            "tradeable_markets": tradeable[:10],
             "grid_previews": grid_previews,
             "proposals": proposals,
             "executions": results,
@@ -148,6 +150,7 @@ class FinanceExecutor:
             "milestone": milestone_progress(),
             "today_pnl_note": "see finance_log in state.sqlite",
         }
+        summary["signal_post"] = maybe_post_scan_signals(summary)
         log_finance("daily_analysis", summary)
         return summary
 

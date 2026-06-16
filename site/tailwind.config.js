@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,26 +10,26 @@ module.exports = {
     extend: {
       colors: {
         surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f8fafc",
-          subtle: "#f1f5f9",
-          card: "#ffffff",
+          DEFAULT: "rgb(var(--color-surface) / <alpha-value>)",
+          muted: "rgb(var(--color-surface-muted) / <alpha-value>)",
+          subtle: "rgb(var(--color-surface-subtle) / <alpha-value>)",
+          card: "rgb(var(--color-surface-card) / <alpha-value>)",
         },
         border: {
-          DEFAULT: "#e2e8f0",
-          strong: "#cbd5e1",
+          DEFAULT: "rgb(var(--color-border) / <alpha-value>)",
+          strong: "rgb(var(--color-border-strong) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "#2563eb",
-          hover: "#1d4ed8",
-          soft: "#eff6ff",
-          ring: "rgba(37, 99, 235, 0.25)",
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+          hover: "rgb(var(--color-accent-hover) / <alpha-value>)",
+          soft: "rgb(var(--color-accent-soft) / <alpha-value>)",
+          ring: "rgb(var(--color-accent-ring) / 0.25)",
         },
         ink: {
-          DEFAULT: "#0f172a",
-          muted: "#475569",
-          faint: "#64748b",
-          inverse: "#f8fafc",
+          DEFAULT: "rgb(var(--color-ink) / <alpha-value>)",
+          muted: "rgb(var(--color-ink-muted) / <alpha-value>)",
+          faint: "rgb(var(--color-ink-faint) / <alpha-value>)",
+          inverse: "rgb(var(--color-ink-inverse) / <alpha-value>)",
         },
       },
       fontFamily: {
@@ -36,8 +37,8 @@ module.exports = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06)",
-        lift: "0 4px 20px rgba(15, 23, 42, 0.08)",
+        card: "var(--shadow-card)",
+        lift: "var(--shadow-lift)",
       },
       animation: {
         "fade-up": "fadeUp 0.5s ease-out forwards",
