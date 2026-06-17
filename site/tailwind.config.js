@@ -5,30 +5,31 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f8fafc",
-          subtle: "#f1f5f9",
-          card: "#ffffff",
+          DEFAULT: "var(--color-surface)",
+          muted: "var(--color-surface-muted)",
+          subtle: "var(--color-surface-subtle)",
+          card: "var(--color-surface-card)",
         },
         border: {
-          DEFAULT: "#e2e8f0",
-          strong: "#cbd5e1",
+          DEFAULT: "var(--color-border)",
+          strong: "var(--color-border-strong)",
         },
         accent: {
-          DEFAULT: "#2563eb",
-          hover: "#1d4ed8",
-          soft: "#eff6ff",
-          ring: "rgba(37, 99, 235, 0.25)",
+          DEFAULT: "var(--color-accent)",
+          hover: "var(--color-accent-hover)",
+          soft: "var(--color-accent-soft)",
+          ring: "var(--color-accent-ring)",
         },
         ink: {
-          DEFAULT: "#0f172a",
-          muted: "#475569",
-          faint: "#64748b",
-          inverse: "#f8fafc",
+          DEFAULT: "var(--color-ink)",
+          muted: "var(--color-ink-muted)",
+          faint: "var(--color-ink-faint)",
+          inverse: "var(--color-ink-inverse)",
         },
       },
       fontFamily: {
@@ -36,8 +37,8 @@ module.exports = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06)",
-        lift: "0 4px 20px rgba(15, 23, 42, 0.08)",
+        card: "var(--shadow-card)",
+        lift: "var(--shadow-lift)",
       },
       animation: {
         "fade-up": "fadeUp 0.5s ease-out forwards",

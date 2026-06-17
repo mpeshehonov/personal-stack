@@ -7,7 +7,12 @@ import logging
 import re
 from pathlib import Path
 
-from bounty.config import BOUNTY_RESEARCH_PHASES, BOUNTY_REVIEW_ENABLED, BOUNTY_SAVE_LEADS
+from bounty.config import (
+    BOUNTY_RESEARCH_PHASES,
+    BOUNTY_REVIEW_ENABLED,
+    BOUNTY_SAVE_LEADS,
+    BOUNTY_SHOPIFY_FOCUS,
+)
 from bounty.models import BountyFinding
 from bounty.programs import BountyProgram
 from bounty.report_parser import format_draft_body, parse_agent_finding, parse_research_lead
@@ -53,15 +58,23 @@ def build_phase_prompt(
     prior_context: str = "",
 ) -> str:
     template = _load_prompt_template(template_name)
-    return template.format(
-        program_name=program.name,
-        platform=program.platform,
-        program_url=program.url,
-        team_handle=program.team_handle,
-        program_focus=program.focus,
-        program_notes=program.notes or "—",
-        prior_context=prior_context or "— (первая фаза)",
-    )
+    fmt: dict[str, str] = {
+        "program_name": program.name,
+        "platform": program.platform,
+        "program_url": program.url,
+        "team_handle": program.team_handle,
+        "program_focus": program.focus,
+        "program_notes": program.notes or "—",
+        "prior_context": prior_context or "— (первая фаза)",
+    }
+    if "{shopify_playbook}" in template:
+        playbook = ""
+        if program.team_handle == "shopify":
+            path = TASKS_DIR / "bounty_shopify_playbook.md"
+            if path.exists():
+                playbook = path.read_text(encoding="utf-8")
+        fmt["shopify_playbook"] = playbook or "—"
+    return template.format(**fmt)
 
 
 def _extract_json_blocks(text: str) -> list[dict]:

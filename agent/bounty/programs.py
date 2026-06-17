@@ -25,8 +25,8 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         platform="hackerone",
         url="https://hackerone.com/shopify",
         team_handle="shopify",
-        focus="E-commerce platform, Liquid, APIs, merchant apps",
-        notes="Strong web/API surface; good fit for JS/Node research.",
+        focus="E-commerce platform, Liquid, Admin/Storefront GraphQL, Partner apps",
+        notes="Primary target: IDOR on Admin API, OAuth apps, checkout logic. Use two dev stores.",
     ),
     BountyProgram(
         name="GitLab",

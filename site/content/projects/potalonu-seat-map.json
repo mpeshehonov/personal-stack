@@ -5,8 +5,8 @@
   "role": "Fullstack / Frontend-разработчик",
   "period": "09.2025 – н.в.",
   "tagline": "Аналог seats.io: визуальный выбор мест для билетного сервиса",
-  "problem": "Билетный сервис PREEGLOS нуждался в собственном решении для схем залов: редактор для организаторов и embed-виджет выбора мест для покупателей — без зависимости от внешних SaaS.",
-  "contribution": "Спроектировал и реализовал редактор схем залов на Canvas/SVG и embed-виджет выбора мест. Построил fullstack на Next.js 16 с PostgreSQL, Drizzle ORM и Auth.js. Настроил self-hosted поставку через Docker Compose и GitLab CI/CD.",
+  "problem": "Билетному сервису PREEGLOS нужен редактор схем залов и виджет выбора мест для покупателей — без внешнего SaaS.",
+  "contribution": "Сделал редактор залов на Canvas/SVG и виджет выбора мест. Fullstack на Next.js 16 с PostgreSQL, Drizzle ORM и Auth.js. Self-hosted: Docker Compose и GitLab CI/CD.",
   "stack": ["Next.js 16", "React 19", "PostgreSQL", "Drizzle ORM", "Auth.js", "Docker", "GitLab CI/CD", "Telegram Mini App"],
   "outcomes": [
     "Организаторы создают схемы залов без привлечения разработчиков",

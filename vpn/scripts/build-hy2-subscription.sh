@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build Happ subscription (sub.txt) from hysteria2 configs. Run on server after VPN changes.
+# Build Happ subscription (sub.txt) — single Yandex-HY2 node on 36712.
 set -euo pipefail
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 HY2_DIR="$STACK_DIR/vpn/hysteria2"
@@ -24,14 +24,25 @@ if working.exists():
     if m:
         pin = m.group(1)
 
-def load_cfg(port: int) -> tuple[str, str]:
-    path = hy2 / f"config-{port}.yaml"
-    if not path.exists():
-        return "", ""
-    text = path.read_text()
-    pwd_m = re.search(r'password:\s*"([^"]+)"', text)
-    obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
-    return (pwd_m.group(1) if pwd_m else "", obfs_m.group(1) if obfs_m else "")
+path = hy2 / "config-36712.yaml"
+if not path.exists():
+    raise SystemExit(f"Missing {path}")
+
+text = path.read_text()
+pwd_m = re.search(r'password:\s*"([^"]+)"', text)
+obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
+port_m = re.search(r"listen:\s*:(\d+)", text)
+pwd = pwd_m.group(1) if pwd_m else ""
+obfs = obfs_m.group(1) if obfs_m else ""
+port = int(port_m.group(1)) if port_m else 36712
+if not pwd:
+    raise SystemExit("No password in config-36712.yaml")
+
+host = "89.124.70.216"
+sni = "yandex.ru"
+pin_q = f"&pinSHA256={pin}" if pin else ""
+obfs_q = f"&obfs=salamander&obfs-password={obfs}" if obfs else ""
+label = "Yandex-HY2"
 
 lines = [
     "# Happ: re-import subscription after update",
@@ -42,50 +53,8 @@ lines = [
     f"routing-ru-direct: {routing_link}",
     "routing-ru-direct-json: http://89.124.70.216:8888/routing/happ-ru-direct.json",
     "",
+    f"hysteria2://{pwd}@{host}:{port}/?sni={sni}{pin_q}{obfs_q}#{label}",
 ]
-
-host = "89.124.70.216"
-sni = "yandex.ru"
-pin_q = f"&pinSHA256={pin}" if pin else ""
-
-def listen_port(text: str, fallback: int) -> int:
-    m = re.search(r"listen:\s*:(\d+)", text)
-    return int(m.group(1)) if m else fallback
-
-for fallback_port, label, cfg in [
-    (2053, "Yandex-HY2-alt", "udp53"),
-    (443, "Yandex-HY2-mobile", "mobile"),
-    (36712, "Yandex-HY2", "36712"),
-    (8443, "Yandex-HY2-8443", "8443"),
-]:
-    if cfg == "udp53":
-        path = hy2 / "config-udp53.yaml"
-        if not path.exists():
-            continue
-        text = path.read_text()
-        port = listen_port(text, fallback_port)
-        pwd_m = re.search(r'password:\s*"([^"]+)"', text)
-        obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
-        pwd = pwd_m.group(1) if pwd_m else ""
-        obfs = obfs_m.group(1) if obfs_m else ""
-    elif cfg == "mobile":
-        path = hy2 / "config-mobile.yaml"
-        if not path.exists():
-            continue
-        text = path.read_text()
-        port = listen_port(text, fallback_port)
-        pwd_m = re.search(r'password:\s*"([^"]+)"', text)
-        obfs_m = re.search(r"salamander:\s*\n\s*password:\s*\"([^\"]+)\"", text)
-        pwd = pwd_m.group(1) if pwd_m else ""
-        obfs = obfs_m.group(1) if obfs_m else ""
-    else:
-        port = fallback_port
-        pwd, obfs = load_cfg(port)
-    if not pwd:
-        continue
-    obfs_q = f"&obfs=salamander&obfs-password={obfs}" if obfs else ""
-    uri = f"hysteria2://{pwd}@{host}:{port}/?sni={sni}{pin_q}{obfs_q}#{label}"
-    lines.append(uri)
 
 sub_file.parent.mkdir(parents=True, exist_ok=True)
 sub_file.write_text("\n".join(lines) + "\n", encoding="utf-8")

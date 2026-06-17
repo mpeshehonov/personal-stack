@@ -8,8 +8,8 @@
     "company": { "ru": "X5 Tech", "en": "X5 Tech" },
     "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
     "tagline": {
-      "ru": "Согласование закупок в X5: сотни ролей и переходов состояний в одном интерфейсе",
-      "en": "Enterprise procurement approval with hundreds of roles and state transitions"
+      "ru": "Согласование закупок в X5: роли, статусы и длинные цепочки в одном интерфейсе",
+      "en": "Procurement approval at X5: roles, statuses, and long flows in one UI"
     },
     "problem": {
       "ru": "Внутренний модуль согласования закупочных процедур разросся быстрее, чем старый фронтенд: нужен единый интерфейс для ролей, статусов, черновиков и длинных сценариев согласования.",
@@ -59,7 +59,7 @@
     "outcomes": {
       "ru": [
         "Ключевые операции цеха переведены в единый веб-интерфейс",
-        "Таблицы с фильтрами и сортировкой работают с тысячами строк без просадки UX",
+        "Таблицы с фильтрами и виртуализацией — большие объёмы данных без просадки UX",
         "Sentry сократил время поиска ошибок в продакшене"
       ],
       "en": [
@@ -120,12 +120,12 @@
       "en": "In-house seats.io alternative: venue editor and seat-picker widget"
     },
     "problem": {
-      "ru": "Билетному сервису нужен редактор схем залов и embed-виджет выбора мест без зависимости от внешнего SaaS и с контролем над данными.",
-      "en": "The ticketing service needed a venue editor and embeddable seat picker without external SaaS lock-in or data outside their stack."
+      "ru": "Билетному сервису нужен редактор схем залов и виджет выбора мест без внешнего SaaS.",
+      "en": "The ticketing service needed a venue editor and seat picker widget without external SaaS lock-in."
     },
     "contribution": {
-      "ru": "seatmap-studio: HallEditor, embed `/embed/[hallId]`, события и бронирования. potalonu-frontend: витрина и Mini App. PostgreSQL, Drizzle ORM, Auth.js, GitLab CI/CD.",
-      "en": "seatmap-studio: HallEditor, embed `/embed/[hallId]`, events and bookings. potalonu-frontend: storefront and Mini App. PostgreSQL, Drizzle ORM, Auth.js, GitLab CI/CD."
+      "ru": "seatmap-studio: редактор залов, виджет выбора мест, события и бронирования. potalonu-frontend: витрина и Mini App.",
+      "en": "seatmap-studio: hall editor, seat picker widget, events and bookings. potalonu-frontend: storefront and Mini App."
     },
     "stack": ["Next.js", "React", "PostgreSQL", "Drizzle ORM", "Auth.js", "Docker", "GitLab CI/CD", "Telegram Mini App"],
     "outcomes": {
@@ -384,12 +384,12 @@
       "ru": [
         "Каталог и главная работают на Next.js с сохранением SEO-поведения",
         "Фильтры синхронизированы с URL — ссылки и «назад» работают предсказуемо",
-        "Конверсия каталога выросла примерно на 15% после улучшения UX и стабильности"
+        "Каталог стал быстрее и удобнее после миграции на Next.js"
       ],
       "en": [
         "Catalog and homepage run on Next.js with SEO behavior preserved",
         "Filters sync to URL — sharing and back navigation work predictably",
-        "Catalog conversion improved by roughly 15% after UX and stability gains"
+        "Catalog became faster and easier to use after the Next.js migration"
       ]
     },
     "featured": false,

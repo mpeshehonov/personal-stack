@@ -6,6 +6,9 @@ Team: `{team_handle}`
 ## Контекст (scope + recon)
 {prior_context}
 
+## Shopify playbook (if applicable)
+{shopify_playbook}
+
 ## Задача
 Протестируй **минимум 3 гипотезы** из recon. Для каждой: команда → результат.
 

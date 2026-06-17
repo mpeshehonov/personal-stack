@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Dictionary } from "@/lib/i18n";
 import { localizedPath } from "@/lib/i18n";
+import { headerControlClass, headerControlGroupClass } from "@/lib/header-controls";
 import type { Locale } from "@/middleware";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type Props = {
   locale: Locale;
@@ -69,19 +71,23 @@ export function Header({ locale, dict, className = "" }: Props) {
               </Link>
             );
           })}
-          <Link
-            href={localizedPath(otherLocale, pathWithoutLocale)}
-            className="ml-2 rounded-lg border border-border px-2.5 py-1.5 font-mono text-xs font-semibold text-ink-muted transition hover:border-border-strong hover:text-ink"
-            aria-label={otherLocale === "en" ? "English" : "Русский"}
-          >
-            {dict.lang[otherLocale]}
-          </Link>
+          <div className={headerControlGroupClass}>
+            <ThemeToggle className={headerControlClass} />
+            <Link
+              href={localizedPath(otherLocale, pathWithoutLocale)}
+              className={headerControlClass}
+              aria-label={otherLocale === "en" ? "English" : "Русский"}
+            >
+              {dict.lang[otherLocale]}
+            </Link>
+          </div>
         </nav>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-1.5 md:hidden">
+          <ThemeToggle className={headerControlClass} />
           <Link
             href={localizedPath(otherLocale, pathWithoutLocale)}
-            className="rounded-lg border border-border px-2 py-1 font-mono text-xs font-semibold text-ink-muted"
+            className={headerControlClass}
           >
             {dict.lang[otherLocale]}
           </Link>

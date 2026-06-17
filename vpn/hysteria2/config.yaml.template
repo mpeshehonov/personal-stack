@@ -21,7 +21,7 @@ masquerade:
 
 ignoreClientBandwidth: true
 
-# Server→client keepalive (helps mobile NAT)
+# Keep NAT mappings alive on mobile (Hysteria2 + QUIC best practice)
 ping: 5s
 
 quic:
@@ -30,7 +30,7 @@ quic:
   initConnReceiveWindow: 20971520
   maxConnReceiveWindow: 20971520
   maxIdleTimeout: 30s
-  maxIncomingStreams: 4096
+  maxIncomingStreams: 1024
   disablePathMTUDiscovery: false
 
 udpIdleTimeout: 30s

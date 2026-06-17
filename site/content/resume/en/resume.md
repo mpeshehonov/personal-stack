@@ -22,25 +22,25 @@ Sep 2025 – present | Remote
 
 sendonate.com — tipping for streamers (React 19, Vite, TypeScript, Telegram Mini App, REST, OpenAPI/Orval, TanStack Query, React Hook Form, Zod, Sentry)
 
-- Designed and built three client surfaces: streamer web dashboard on React 19 + Vite + TanStack Query + Orval + React Hook Form + Zod + Sentry, Telegram Mini App on @telegram-apps/sdk + Vite, and a separate Vite bundle for OBS / live overlay.
-- Implemented the full tipping flow: Mini App checkout, REST via Orval from OpenAPI, dashboard with CRUD collections, pagination, debounced search, and alert settings.
-- Built a real-time overlay on WebSocket with reconnect, alert queue, media preload (pako, Lottie), and TTS so tips render reliably on stream under bursty events.
+- Three clients: streamer dashboard, Telegram Mini App, and OBS overlay.
+- Donations in Mini App: checkout, Orval REST client, dashboard with collections and alerts.
+- Live overlay: WebSocket alert queue, reconnect, TTS, and animations.
 
 POTALONU / PREEGLOS — ticketing platform and seat map (Next.js 16, React 19, TypeScript, PostgreSQL, Drizzle ORM, Auth.js, Docker, Docker Compose, GitLab CI/CD)
 
-- Implemented ticketing web flows: events storefront, checkout, Telegram Mini App (`@twa-dev/sdk`), forms with React Hook Form + Zod.
-- Built seatmap-studio: hall editor, embed seat picker, events and bookings; Next.js 16, PostgreSQL, Drizzle ORM, Auth.js.
-- Self-hosted delivery: Docker Compose, GitLab CI/CD (test, build, deploy), stage on nginx.
+- Event storefront, ticket checkout, Telegram Mini App.
+- Hall layout editor and seat picker widget for partner sites.
+- Docker + GitLab CI/CD, nginx stage environment.
 
 ### X5 Tech — Frontend engineer
 
 Apr 2024 – Jul 2025 | Remote
 
-- Designed and delivered the procurement approval module (NKZ 3.0): RBAC, statuses, state transitions, drafts, and restoring user flows.
-- Integrated Keycloak authorization: SSO, roles, and RBAC matrix for module access.
-- Introduced Orval for types and API client from OpenAPI, removing manual contract updates and reducing front/back integration bugs.
-- Built forms and editing flows with react-hook-form, extended the internal UI kit and shared UI patterns.
-- Optimized the Vite build (code splitting, dynamic imports), improving initial load and responsiveness on long approval paths.
+- Procurement approval module (NKZ 3.0): roles, statuses, transitions, drafts.
+- Keycloak SSO and module access matrix.
+- Orval from OpenAPI — typed client without manual contract updates.
+- Forms with react-hook-form and shared UI kit patterns.
+- Vite code splitting on long approval flows.
 
 ### BI.ZONE — Frontend engineer
 
@@ -55,20 +55,19 @@ Jun 2023 – Mar 2024 | Remote
 
 May 2022 – Jun 2023 | Remote
 
-- Delivered the “Pig iron batch registration” web app for blast-furnace production, consolidating fragmented manual steps into one interface.
-- Configured sign-in and access control with Keycloak (SSO, roles, protected API routes).
-- Implemented RBAC over production data and complex tables on TanStack Table: sort, filter, pagination, large datasets.
-- Used React Query for caching and background refresh, reducing API load and stabilizing UX.
-- Integrated Sentry for error monitoring in production.
+- Cast iron release registration app — one UI instead of spreadsheets and forms.
+- Keycloak SSO, roles, protected API routes.
+- TanStack Table + React Query on large production datasets.
+- Sentry for production error monitoring.
 
 ### Citilink — Frontend engineer
 
 Apr 2021 – Apr 2022 | Remote
 
-- Helped migrate legacy e‑commerce sections from PHP/Symfony to Next.js, including catalog and home.
-- Built catalog UX: filters, sort, pagination, URL state, user preferences, REST-backed data loading.
-- Refined component structure and API usage for more predictable state and stable flows.
-- Worked across frontend, legacy backend, and microservices; aligned API contracts for the new site.
+- Migrated catalog and homepage from PHP/Symfony to Next.js.
+- Filters, sort, pagination, URL state.
+- REST API alignment with backend and microservices.
+- Catalog became faster and easier to use after migration.
 
 ### In2View — Fullstack / Frontend engineer
 

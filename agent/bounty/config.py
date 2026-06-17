@@ -29,6 +29,11 @@ BOUNTY_SAVE_LEADS = os.environ.get("BOUNTY_SAVE_LEADS", "true").lower() in (
     "true",
     "yes",
 )
+BOUNTY_SHOPIFY_FOCUS = os.environ.get("BOUNTY_SHOPIFY_FOCUS", "true").lower() in (
+    "1",
+    "true",
+    "yes",
+)
 
 HACKERONE_API_USERNAME = os.environ.get("HACKERONE_API_USERNAME", "").strip()
 # Some accounts use a separate token identifier from HackerOne settings (Basic auth username).

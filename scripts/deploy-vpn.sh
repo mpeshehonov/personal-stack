@@ -9,22 +9,14 @@ cp "$STACK_DIR/vpn/sysctl/99-vpn-tcp-tuning.conf" /etc/sysctl.d/
 sysctl -p /etc/sysctl.d/99-vpn-tcp-tuning.conf
 
 echo "==> UFW: Hy2 UDP + subscription"
-ufw allow 2053/udp
-ufw allow 443/udp
 ufw allow 36712/udp
-ufw allow 8443/udp
 ufw allow 8888/tcp
 
-echo "==> Stop legacy Xray (removed)"
-docker rm -f xray-reality-vless 2>/dev/null || true
+echo "==> Stop legacy Xray and extra Hy2 listeners"
+docker rm -f xray-reality-vless hysteria2-nl-443 hysteria2-nl-8443 hysteria2-nl-53 2>/dev/null || true
 
-echo "==> Start Hysteria2 (primary VPN — 443/8443/36712 UDP)"
+echo "==> Start Hysteria2 (Yandex-HY2 — UDP 36712)"
 cd "$STACK_DIR/vpn/hysteria2"
-# Bootstrap config-mobile from 8443 if missing (copy creds from 8443)
-if [[ ! -f config-mobile.yaml ]] && [[ -f config-8443.yaml ]]; then
-  cp config-8443.yaml config-mobile.yaml
-  sed -i 's/:8443/:443/' config-mobile.yaml 2>/dev/null || sed -i '' 's/:8443/:443/' config-mobile.yaml
-fi
 docker compose up -d --force-recreate
 sleep 3
 bash verify-hy2.sh
@@ -32,7 +24,7 @@ bash verify-hy2.sh
 echo "==> Build Happ RU-direct routing profile"
 bash "$STACK_DIR/vpn/scripts/build-happ-routing.sh"
 
-echo "==> Build Hy2 subscription (no VLESS)"
+echo "==> Build Hy2 subscription"
 export STACK_DIR
 bash "$STACK_DIR/vpn/scripts/build-hy2-subscription.sh"
 

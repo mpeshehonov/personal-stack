@@ -9,36 +9,6 @@ services:
       - ./certs:/etc/hysteria/certs:ro
     command: ["server", "-c", "/etc/hysteria/config.yaml"]
 
-  hysteria2-8443:
-    image: tobyxdd/hysteria:latest
-    container_name: hysteria2-nl-8443
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ./config-8443.yaml:/etc/hysteria/config.yaml:ro
-      - ./certs:/etc/hysteria/certs:ro
-    command: ["server", "-c", "/etc/hysteria/config.yaml"]
-
-  hysteria2-443:
-    image: tobyxdd/hysteria:latest
-    container_name: hysteria2-nl-443
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ./config-mobile.yaml:/etc/hysteria/config.yaml:ro
-      - ./certs:/etc/hysteria/certs:ro
-    command: ["server", "-c", "/etc/hysteria/config.yaml"]
-
-  hysteria2-53:
-    image: tobyxdd/hysteria:latest
-    container_name: hysteria2-nl-53
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ./config-udp53.yaml:/etc/hysteria/config.yaml:ro
-      - ./certs:/etc/hysteria/certs:ro
-    command: ["server", "-c", "/etc/hysteria/config.yaml"]
-
   hy2-subscription:
     image: nginx:alpine
     container_name: hy2-subscription

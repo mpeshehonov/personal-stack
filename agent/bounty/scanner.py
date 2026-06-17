@@ -10,6 +10,7 @@ from bounty.config import (
     BOUNTY_MAX_PENDING,
     BOUNTY_PROGRAMS_PER_CYCLE,
     BOUNTY_RESEARCH_COOLDOWN_HOURS,
+    BOUNTY_SHOPIFY_FOCUS,
     KV_LAST_RESEARCH,
     KV_PROGRAM_INDEX,
 )
@@ -96,8 +97,11 @@ def daily_bounty_scan(*, force: bool = False) -> BountyScanResult:
         if count_bounty_drafts_by_status("pending") >= BOUNTY_MAX_PENDING:
             break
 
-        idx = _next_program_index()
-        program = program_by_index(idx)
+        if BOUNTY_SHOPIFY_FOCUS:
+            program = program_by_index(0)  # Shopify first in WEB_JS_PROGRAMS
+        else:
+            idx = _next_program_index()
+            program = program_by_index(idx)
         result.programs_tried.append(program.name)
         result.researched_program = program.name
 
