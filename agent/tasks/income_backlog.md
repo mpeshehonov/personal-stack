@@ -6,8 +6,8 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 
 - [x] **IB-01** Enable multi-venue scan: verify `azuro_client.py` + `cex_client.py` return markets from NL VPS; log in daily Finance section
 - [x] **IB-02** Document paper-trade rules in `agent/memory/lessons/azuro_paper_rules.md` (min edge %, max drift, league whitelist)
-- [ ] **IB-03** Run 7 consecutive days paper; append stats to daily log (count, total USD, by venue)
-- [ ] **IB-04** After day 7: write go/no-go note for Azuro live in `agent/memory/lessons/`
+- [x] **IB-03** Run 7 consecutive days paper; append stats to daily log (count, total USD, by venue)
+- [x] **IB-04** After day 7: write go/no-go note for Azuro live in `agent/memory/lessons/`
 
 ## Phase 1 — M1 lanes
 
