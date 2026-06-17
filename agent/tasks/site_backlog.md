@@ -27,7 +27,7 @@
 
 - [x] **SB-11** Prominent Telegram + email CTA on every page
 - [x] **SB-12** `/resume` — downloadable PDF CTA above fold, print stylesheet
-- [ ] **SB-13** Privacy-friendly visit counter (no Google Analytics)
+- [x] **SB-13** Privacy-friendly visit counter (no Google Analytics)
 - [x] **SB-14** JSON-LD Person schema for SEO
 
 ## Rules for agent

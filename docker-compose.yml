@@ -21,6 +21,9 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+      - VISIT_COUNTER_PATH=/app/data/visits.json
+    volumes:
+      - site_data:/app/data
     expose:
       - "3000"
     networks:
@@ -40,6 +43,7 @@ volumes:
   caddy_data:
   caddy_config:
   redis_data:
+  site_data:
 
 networks:
   stack:

@@ -1,35 +1,35 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {
         surface: {
-          DEFAULT: "var(--color-surface)",
-          muted: "var(--color-surface-muted)",
-          subtle: "var(--color-surface-subtle)",
-          card: "var(--color-surface-card)",
+          DEFAULT: "rgb(var(--color-surface) / <alpha-value>)",
+          muted: "rgb(var(--color-surface-muted) / <alpha-value>)",
+          subtle: "rgb(var(--color-surface-subtle) / <alpha-value>)",
+          card: "rgb(var(--color-surface-card) / <alpha-value>)",
         },
         border: {
-          DEFAULT: "var(--color-border)",
-          strong: "var(--color-border-strong)",
+          DEFAULT: "rgb(var(--color-border) / <alpha-value>)",
+          strong: "rgb(var(--color-border-strong) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "var(--color-accent)",
-          hover: "var(--color-accent-hover)",
-          soft: "var(--color-accent-soft)",
-          ring: "var(--color-accent-ring)",
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+          hover: "rgb(var(--color-accent-hover) / <alpha-value>)",
+          soft: "rgb(var(--color-accent-soft) / <alpha-value>)",
+          ring: "rgb(var(--color-accent-ring) / 0.25)",
         },
         ink: {
-          DEFAULT: "var(--color-ink)",
-          muted: "var(--color-ink-muted)",
-          faint: "var(--color-ink-faint)",
-          inverse: "var(--color-ink-inverse)",
+          DEFAULT: "rgb(var(--color-ink) / <alpha-value>)",
+          muted: "rgb(var(--color-ink-muted) / <alpha-value>)",
+          faint: "rgb(var(--color-ink-faint) / <alpha-value>)",
+          inverse: "rgb(var(--color-ink-inverse) / <alpha-value>)",
         },
       },
       fontFamily: {

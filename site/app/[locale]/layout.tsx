@@ -76,11 +76,15 @@ export default async function LocaleLayout({
   const personJsonLd = buildPersonJsonLd(locale, resume);
 
   return (
-    <html lang={locale} className={`${inter.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`${inter.variable} ${jetbrains.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('site-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
           }}
         />
         <script

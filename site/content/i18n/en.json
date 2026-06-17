@@ -45,6 +45,7 @@
     "education": "Education"
   },
   "footer": {
+    "visits": "Visits",
     "built": "Next.js · TypeScript · Tailwind",
     "availabilityOpen": "Open to offers",
     "availabilityBusy": "Busy"
@@ -52,5 +53,9 @@
   "lang": {
     "ru": "RU",
     "en": "EN"
+  },
+  "theme": {
+    "dark": "Dark theme",
+    "light": "Light theme"
   }
 }

@@ -1,38 +1,75 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Dictionary } from "@/lib/i18n";
+import {
+  applyTheme,
+  readStoredTheme,
+  resolveTheme,
+  THEME_STORAGE_KEY,
+  type Theme,
+} from "@/lib/theme";
 
-const STORAGE_KEY = "theme";
+type Props = {
+  dict: Dictionary;
+  className?: string;
+};
 
-export function ThemeToggle({ className = "" }: { className?: string }) {
-  const [dark, setDark] = useState(false);
-  const [ready, setReady] = useState(false);
+export function ThemeToggle({ dict, className = "" }: Props) {
+  const [theme, setTheme] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const initialDark = stored === "dark";
-    document.documentElement.classList.toggle("dark", initialDark);
-    setDark(initialDark);
-    setReady(true);
+    setTheme(resolveTheme());
+    setMounted(true);
   }, []);
 
-  function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem(STORAGE_KEY, next ? "dark" : "light");
-  }
+  const toggle = () => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    applyTheme(next);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch {
+      /* private browsing */
+    }
+  };
+
+  const label = theme === "dark" ? dict.theme.light : dict.theme.dark;
+  const btnClass =
+    className ||
+    "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface text-ink-muted transition hover:border-border-strong hover:bg-surface-subtle hover:text-ink";
 
   return (
     <button
       type="button"
       onClick={toggle}
-      className={className}
-      aria-label={dark ? "Light theme" : "Dark theme"}
-      title={dark ? "Light theme" : "Dark theme"}
-      disabled={!ready}
+      className={btnClass}
+      aria-label={label}
+      title={label}
+      disabled={!mounted}
     >
-      <span aria-hidden>{dark ? "☀" : "☾"}</span>
+      <span className="sr-only">{label}</span>
+      {mounted && theme === "dark" ? (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      ) : (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M21 14.5A8.5 8.5 0 0110.5 4 7 7 0 0021 14.5z"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
     </button>
   );
 }

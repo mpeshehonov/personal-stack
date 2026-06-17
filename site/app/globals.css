@@ -2,45 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-surface: 255 255 255;
+  --color-surface-muted: 248 250 252;
+  --color-surface-subtle: 241 245 249;
+  --color-surface-card: 255 255 255;
+  --color-border: 226 232 240;
+  --color-border-strong: 203 213 225;
+  --color-accent: 37 99 235;
+  --color-accent-hover: 29 78 216;
+  --color-accent-soft: 239 246 255;
+  --color-accent-ring: 37 99 235;
+  --color-ink: 15 23 42;
+  --color-ink-muted: 71 85 105;
+  --color-ink-faint: 100 116 139;
+  --color-ink-inverse: 248 250 252;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --shadow-lift: 0 4px 20px rgba(15, 23, 42, 0.08);
+}
+
+.dark {
+  --color-surface: 30 41 59;
+  --color-surface-muted: 15 23 42;
+  --color-surface-subtle: 51 65 85;
+  --color-surface-card: 30 41 59;
+  --color-border: 51 65 85;
+  --color-border-strong: 71 85 105;
+  --color-accent: 59 130 246;
+  --color-accent-hover: 96 165 250;
+  --color-accent-soft: 30 58 95;
+  --color-accent-ring: 59 130 246;
+  --color-ink: 241 245 249;
+  --color-ink-muted: 148 163 184;
+  --color-ink-faint: 100 116 139;
+  --color-ink-inverse: 15 23 42;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lift: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
 @layer base {
-  :root {
-    --color-surface: #ffffff;
-    --color-surface-muted: #f8fafc;
-    --color-surface-subtle: #f1f5f9;
-    --color-surface-card: #ffffff;
-    --color-border: #e2e8f0;
-    --color-border-strong: #cbd5e1;
-    --color-accent: #2563eb;
-    --color-accent-hover: #1d4ed8;
-    --color-accent-soft: #eff6ff;
-    --color-accent-ring: rgba(37, 99, 235, 0.25);
-    --color-ink: #0f172a;
-    --color-ink-muted: #475569;
-    --color-ink-faint: #64748b;
-    --color-ink-inverse: #f8fafc;
-    --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
-    --shadow-lift: 0 4px 20px rgba(15, 23, 42, 0.08);
-  }
-
-  html.dark {
-    --color-surface: #0f172a;
-    --color-surface-muted: #0b1220;
-    --color-surface-subtle: #1e293b;
-    --color-surface-card: #111827;
-    --color-border: #334155;
-    --color-border-strong: #475569;
-    --color-accent: #3b82f6;
-    --color-accent-hover: #60a5fa;
-    --color-accent-soft: #1e3a5f;
-    --color-accent-ring: rgba(59, 130, 246, 0.35);
-    --color-ink: #f1f5f9;
-    --color-ink-muted: #94a3b8;
-    --color-ink-faint: #64748b;
-    --color-ink-inverse: #0f172a;
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.25);
-    --shadow-lift: 0 4px 20px rgba(0, 0, 0, 0.3);
-  }
-
   html {
     scroll-behavior: smooth;
   }
@@ -129,9 +129,9 @@
   }
 
   .prose-blog blockquote {
-    @apply my-6 border-l-4 border-accent py-3 pl-4 pr-2 italic text-ink-muted;
-    border-left-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
-    background: color-mix(in srgb, var(--color-accent-soft) 30%, transparent);
+    @apply my-6 border-l-4 py-3 pl-4 pr-2 italic text-ink-muted;
+    border-left-color: rgb(var(--color-accent) / 0.4);
+    background: rgb(var(--color-accent-soft) / 0.3);
   }
 
   .prose-blog hr {

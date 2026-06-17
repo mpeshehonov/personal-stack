@@ -3,6 +3,7 @@ import { localizedPath } from "@/lib/i18n";
 import type { Locale } from "@/middleware";
 import Link from "next/link";
 import { AvailabilityBadge } from "./AvailabilityBadge";
+import { VisitCounter } from "./VisitCounter";
 import type { Availability } from "@/lib/availability";
 
 type Props = {
@@ -22,6 +23,7 @@ export function Footer({ locale, dict, name, availability, className = "" }: Pro
           © {new Date().getFullYear()} {name}
         </p>
         <p className="font-mono text-xs">{dict.footer.built}</p>
+        <VisitCounter label={dict.footer.visits} />
         <Link href={localizedPath(locale, "/resume")} className="text-accent hover:underline">
           {dict.nav.resume}
         </Link>

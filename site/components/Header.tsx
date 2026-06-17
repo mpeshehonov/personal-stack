@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Dictionary } from "@/lib/i18n";
 import { localizedPath } from "@/lib/i18n";
 import { headerControlClass, headerControlGroupClass } from "@/lib/header-controls";
 import type { Locale } from "@/middleware";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 type Props = {
   locale: Locale;
@@ -72,7 +72,7 @@ export function Header({ locale, dict, className = "" }: Props) {
             );
           })}
           <div className={headerControlGroupClass}>
-            <ThemeToggle className={headerControlClass} />
+            <ThemeToggle dict={dict} className={headerControlClass} />
             <Link
               href={localizedPath(otherLocale, pathWithoutLocale)}
               className={headerControlClass}
@@ -84,7 +84,7 @@ export function Header({ locale, dict, className = "" }: Props) {
         </nav>
 
         <div className="flex items-center gap-1.5 md:hidden">
-          <ThemeToggle className={headerControlClass} />
+          <ThemeToggle dict={dict} className={headerControlClass} />
           <Link
             href={localizedPath(otherLocale, pathWithoutLocale)}
             className={headerControlClass}
@@ -93,7 +93,7 @@ export function Header({ locale, dict, className = "" }: Props) {
           </Link>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface text-ink"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface text-ink"
             aria-expanded={open}
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
