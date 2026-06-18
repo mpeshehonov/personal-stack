@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import resumeRu from "@/content/resume/resume.json";
 import resumeEn from "@/content/resume/en/resume.json";
@@ -13,7 +14,28 @@ import {
   getExperiences,
 } from "@/lib/resume-data";
 import { getSkillGroups } from "@/lib/skills";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/middleware";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = (raw === "en" ? "en" : "ru") as Locale;
+  const dict = getDictionary(locale);
+  const resume = locale === "en" ? resumeEn : resumeRu;
+
+  return buildPageMetadata({
+    title: dict.nav.resume,
+    description: resume.summary,
+    locale,
+    path: "/resume",
+    ogTitle: resume.name,
+    ogSubtitle: resume.title,
+  });
+}
 
 export default async function ResumePage({
   params,

@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getDictionary } from "@/lib/i18n";
 import { buildPersonJsonLd } from "@/lib/person-schema";
+import { ogImageUrl } from "@/lib/og";
 import { parseAvailability } from "@/lib/availability";
 import { defaultLocale, locales, type Locale } from "@/middleware";
 import "../globals.css";
@@ -38,6 +39,11 @@ export async function generateMetadata({
   const t = getDictionary(locale);
   const resume = locale === "en" ? resumeEn : resumeRu;
   const title = `${resume.name} — ${resume.title}`;
+  const ogImage = ogImageUrl({
+    title: resume.name,
+    subtitle: resume.title,
+    locale,
+  });
 
   return {
     title: { default: title, template: `%s — ${resume.name}` },
@@ -50,6 +56,13 @@ export async function generateMetadata({
       siteName: resume.name,
       locale: locale === "en" ? "en_US" : "ru_RU",
       type: "website",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: t.meta.description,
+      images: [ogImage],
     },
     alternates: {
       canonical: `https://mpeshekhonov.ru/${locale}`,

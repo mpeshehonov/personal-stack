@@ -1,7 +1,27 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { formatBlogDate, getBlogPosts } from "@/lib/blog";
+import { buildPageMetadata } from "@/lib/metadata";
 import { getDictionary, localizedPath } from "@/lib/i18n";
 import type { Locale } from "@/middleware";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = (raw === "en" ? "en" : "ru") as Locale;
+  const dict = getDictionary(locale);
+
+  return buildPageMetadata({
+    title: dict.sections.blog,
+    description: dict.sections.blogDesc,
+    locale,
+    path: "/blog",
+    ogSubtitle: locale === "en" ? "Blog" : "Блог",
+  });
+}
 
 export default async function BlogPage({
   params,

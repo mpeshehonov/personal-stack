@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -9,6 +10,7 @@ import {
   getBlogPostBySlug,
 } from "@/lib/blog";
 import { localizedPath } from "@/lib/i18n";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/middleware";
 
 type Props = {
@@ -20,6 +22,22 @@ export async function generateStaticParams() {
   return ["ru", "en"].flatMap((locale) =>
     slugs.map((slug) => ({ locale, slug })),
   );
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug, locale: raw } = await params;
+  const locale = raw === "en" ? "en" : "ru";
+  const post = getBlogPostBySlug(slug);
+  if (!post) return {};
+
+  return buildPageMetadata({
+    title: post.title,
+    description: post.excerpt,
+    locale,
+    path: `/blog/${slug}`,
+    ogTitle: post.title,
+    ogSubtitle: locale === "en" ? "Blog" : "Блог",
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {

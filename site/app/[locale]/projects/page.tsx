@@ -1,7 +1,31 @@
+import type { Metadata } from "next";
 import { AnimatedProjectList } from "@/components/AnimatedProjectList";
 import { getDictionary } from "@/lib/i18n";
+import { buildPageMetadata } from "@/lib/metadata";
 import { getProjects } from "@/lib/projects";
 import type { Locale } from "@/middleware";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = raw === "en" ? "en" : "ru";
+  const dict = getDictionary(locale as Locale);
+  const description =
+    locale === "en"
+      ? "Real case studies: problem → role → stack → outcome."
+      : "Кейсы из реального опыта: задача → роль → стек → результат.";
+
+  return buildPageMetadata({
+    title: dict.nav.projects,
+    description,
+    locale,
+    path: "/projects",
+    ogSubtitle: locale === "en" ? "Case studies" : "Кейсы",
+  });
+}
 
 export default async function ProjectsPage({
   params,

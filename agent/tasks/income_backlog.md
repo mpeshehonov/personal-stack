@@ -14,7 +14,7 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 - [x] **IB-05** Azuro: add simple rule filter in finance scan (skip markets below liquidity / above odds drift) — code change in executor or new `finance/signal_rules.py`
 - [x] **IB-06** CEX: implement read-only grid parameter calculator (grid levels, not live orders yet)
 - [x] **IB-07** A3 signals: add Telegram channel post helper for top-3 scan results (structured markdown)
-- [ ] **IB-08** A4 product: draft Gumroad listing copy in `agent/memory/products/agent-starter.md`
+- [x] **IB-08** A4 product: draft Gumroad listing copy in `agent/memory/products/agent-starter.md`
 - [ ] **IB-09** A5 affiliate: one blog post skeleton under `site/content/blog/` (if dir missing, create minimal MD route)
 
 ## Phase 2 — Scale (after M1 progress >30%)

@@ -20,7 +20,7 @@
 - [x] **SB-06** Typography scale + section spacing system (consistent 8/10 rhythm)
 - [x] **SB-07** Subtle scroll animations (framer-motion, respect reduced-motion)
 - [x] **SB-08** Dark/light theme toggle (default light)
-- [ ] **SB-09** Custom OG image per page (or dynamic `/api/og`)
+- [x] **SB-09** Custom OG image per page (or dynamic `/api/og`)
 - [x] **SB-10** Footer: availability badge («open to offers» / «busy»)
 
 ## Milestone A3 — Conversion
