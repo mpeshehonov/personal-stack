@@ -63,6 +63,7 @@ Max **1 site item + 1 income item** per cycle. Bug bounty research is orchestrat
 
 - `agent/skills/income-harness/` — M1 lanes, paper rules
 - `agent/skills/bounty-harness/` — semi-auto bounty
+- `agent/skills/bounty-shopify/` — Shopify dev stores + Admin API hunt
 - `agent/skills/site-design/` — **обязательно** перед правками `site/`
 
 ## Non-goals (daily agent)

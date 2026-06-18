@@ -9,6 +9,9 @@ Team: `{team_handle}`
 ## Shopify playbook (if applicable)
 {shopify_playbook}
 
+## Shopify test stores (if applicable)
+{shopify_credentials}
+
 ## Задача
 Протестируй **минимум 3 гипотезы** из recon. Для каждой: команда → результат.
 
@@ -20,7 +23,7 @@ Team: `{team_handle}`
 1. Asset + technique
 2. Exact curl/HTTP request (copy-paste ready)
 3. Response snippet (status, relevant body)
-4. Verdict: **confirmed** | **not confirmed** | **needs auth**
+4. Verdict: **confirmed** | **not confirmed** | **needs auth** (needs auth только если токена реально нет в env)
 
 ## Формат ответа
 

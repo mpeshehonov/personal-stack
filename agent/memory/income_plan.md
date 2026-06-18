@@ -22,7 +22,7 @@ Scoring: **Autonomy** = % of earning loop runnable without you after one-time se
 |---|------|----------|---------|--------|----------------|-------|
 | **A1** | **Azuro rule-based value** | 85% | $200–400 USDC | **High** | `azuro_client.py`, risk engine, Polygon wallet | Closest Polymarket substitute from NL. Needs **7+ days paper** + fixed rules (edge threshold, max odds drift), not LLM guesses. |
 | **A2** | **CEX grid / DCA (Bybit NL)** | 90% | $300–600 USDT | Medium | `cex_client.py`, API keys + KYC | Boring but fully API-driven. Small edge; fees eat profit on low capital. Good **parallel** lane while A1 validates. |
-| **A3** | **Cross-venue scan → auto Telegram signals** | 75% | $0 | Medium | Bot + daily scan + optional paid channel | Agent posts structured alerts (Azuro mispricing, CEX funding). Monetize later via paid TG group; M1 possible if 20–50 subs × $5–20/mo. |
+| **A3** | ~~Cross-venue scan → auto Telegram signals~~ | — | — | **Cancelled** | — | Removed from plan 2026-06 — no public buy-signal channel. Code (`signal_post.py`) stays optional/no-op. |
 | **A4** | **Micro digital product (agent-maintained)** | 80% | $0 | Medium | Site, Cursor agent, deploy pipeline | Sell template: "personal-stack agent starter" / VPN config kit / odds scanner script on Gumroad/Lemon Squeezy. Agent updates README + changelog. One-time sales, slow but truly passive after listing. |
 | **A5** | **Affiliate content loop** | 85% | $0 | Low | Site blog, agent daily writes | Posts with Bybit/Azuro/hosting affiliate links. $1k needs traffic; long tail. Background lane only. |
 | **A6** | **VPN subscription resale** | 70% | $0 | Low–Med | Existing Hysteria2 stack | Automate sub generation + payment webhook. Legal/ToS risk; not in core goals — **defer** unless explicit decision. |
@@ -38,8 +38,8 @@ Prioritize **two active lanes + one background lane**:
 
 ```
 Primary:   A1 Azuro (paper → live with risk caps)
-Secondary: A2 CEX grid OR A3 signal bot (pick one after paper week)
-Background: A5 affiliate posts (1/week, zero ops)
+Secondary: A2 CEX grid (API-driven diversifier)
+Background: A4 digital product + A5 affiliate (1/week)
 ```
 
 **Defer:** A6 VPN resale, A8 freelance-as-autonomy, Polymarket (geo-blocked from NL).
@@ -52,11 +52,11 @@ Background: A5 affiliate posts (1/week, zero ops)
 - [ ] `FINANCE_VENUES=azuro,cex` in finance env
 - [ ] 7 days paper on Azuro: log win-rate, avg edge, rule violations
 - [ ] CEX: read-only scan running; no live until Azuro paper reviewed
-- [ ] Kill criteria: if paper expectancy ≤ 0 after 7 days, pivot primary to **A3** (signals) + **A4** (digital product)
+- [ ] Kill criteria: if paper expectancy ≤ 0 after 7 days, pivot primary to **A4** (digital product) + **A2** (CEX grid)
 
 ### Phase 1 — M1 execution (+8 → +90 days)
 - [ ] Azuro live with `MAX_TRADE_USD≤50`, `DAILY_STOP_LOSS_USD≤75`
-- [ ] Deploy **A2** grid OR **A3** paid-signal MVP (free channel → paid tier)
+- [ ] Deploy **A2** CEX grid read-only / paper params
 - [ ] List **A4** product v0.1 (even if $9 — proves autonomous sales loop)
 - [ ] Weekly: agent updates `agent/memory/daily/` with PnL vs M1
 
@@ -89,13 +89,9 @@ Background: A5 affiliate posts (1/week, zero ops)
 
 **Path to $1k:** grid profits are small; treat as **diversifier**, not main bet.
 
-### A3 — Signal bot → paid Telegram
+### A3 — ~~Signal bot → paid Telegram~~ (cancelled)
 
-**Idea:** Free public channel with 1–2 signals/day from scan; paid tier ($10/mo) for faster + sizing.
-
-**Autonomous loop:** executor scan → format message → bot post. Payment via TG Stars / Boosty webhook (manual setup once).
-
-**Path to $1k:** 100 subs × $10 = $1k/mo (hard). More realistic: 30 subs × $15 ≈ $450/mo after 3 months growth.
+Removed from income plan — no Telegram channel for buy/trade signals. Helper code may remain disabled without `TELEGRAM_SIGNAL_CHANNEL_ID`.
 
 ### A4 — Digital product
 
@@ -141,7 +137,8 @@ Progress: `/status` in Telegram shows annual goal + M1 milestone via `goal_track
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-06-12 | M1 = $1k autonomous by Sep 2026 | Realistic first proof before $15k annual |
-| 2026-06-12 | A1+A2+A3 portfolio | NL-compatible; uses existing finance module |
+| 2026-06-12 | A1+A2 portfolio | NL-compatible; uses existing finance module |
+| 2026-06-17 | A3 signals cancelled | No TG buy-signal channel; focus A2+A4 |
 | 2026-06-12 | Bounty excluded from M1 | Not autonomous per stack rules |
 
 ---

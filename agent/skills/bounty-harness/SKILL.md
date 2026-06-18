@@ -15,6 +15,8 @@ purge → scope → recon → hunt → report → validate → reviewer → pend
 
 Cache: `agent/bounty/research_cache/<team>/`
 
+Shopify with dev stores: load `agent/skills/bounty-shopify/SKILL.md`; credentials from `secrets/.env.bounty` (`SHOPIFY_SHOP*_DOMAIN`, `SHOPIFY_SHOP*_ADMIN_TOKEN`).
+
 ## User gates
 
 - Submit-ready draft → `/approve bounty <id>` or `/reject bounty <id>`

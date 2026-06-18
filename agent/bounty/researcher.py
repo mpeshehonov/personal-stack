@@ -12,6 +12,7 @@ from bounty.config import (
     BOUNTY_REVIEW_ENABLED,
     BOUNTY_SAVE_LEADS,
     BOUNTY_SHOPIFY_FOCUS,
+    shopify_test_stores_block,
 )
 from bounty.models import BountyFinding
 from bounty.programs import BountyProgram
@@ -74,6 +75,12 @@ def build_phase_prompt(
             if path.exists():
                 playbook = path.read_text(encoding="utf-8")
         fmt["shopify_playbook"] = playbook or "—"
+    if "{shopify_credentials}" in template:
+        fmt["shopify_credentials"] = (
+            shopify_test_stores_block()
+            if program.team_handle == "shopify"
+            else "—"
+        )
     return template.format(**fmt)
 
 
@@ -103,6 +110,16 @@ def _run_phases(program: BountyProgram) -> tuple[str, list[str]]:
         prior = "\n\n---\n\n".join(context_parts[-3:])
         prompt = build_phase_prompt(template, program, prior_context=prior)
         logger.info("Bounty phase %s: %s (%s)", phase_name, program.name, program.platform)
+
+        if phase_name == "hunt" and program.team_handle == "shopify":
+            try:
+                from bounty.shopify_auth import get_admin_token, shop_has_auth
+
+                if shop_has_auth(1):
+                    get_admin_token(1)
+                    logger.info("Shopify shop1 token ready for hunt")
+            except Exception as e:
+                logger.warning("Shopify token prefetch failed: %s", e)
 
         raw = run_bounty_agent_prompt(prompt, phase=phase_name, reset=reset)
         reset = False

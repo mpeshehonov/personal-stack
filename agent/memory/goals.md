@@ -10,8 +10,8 @@
 Full plan: `agent/memory/income_plan.md`
 
 ### M1 — Autonomous floor: $1,000 by 2026-09-30
-- **Definition:** realized net profit from lanes with autonomy ≥70% (Azuro/CEX/signals/product/affiliate) — no manual trading, no bounty submission
-- **Portfolio:** A1 Azuro (primary) + A2 CEX or A3 signals (secondary) + A5 affiliate (background)
+- **Definition:** realized net profit from lanes with autonomy ≥70% (Azuro/CEX/product/affiliate) — no manual trading, no bounty submission
+- **Portfolio:** A1 Azuro (primary) + A2 CEX grid (secondary) + A4/A5 background
 - [ ] Phase 0: 7 days paper on Azuro + CEX read-only scan
 - [ ] Phase 1: go/no-go for Azuro live per paper rules
 - [ ] Track M1 in `/status` via `MILESTONE_GOAL_USD=1000`

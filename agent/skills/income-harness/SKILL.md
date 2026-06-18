@@ -11,14 +11,14 @@ Load when working on `agent/tasks/income_backlog.md` or finance proposals.
 
 **$1,000 net autonomous by 2026-09-30** — see `agent/memory/income_plan.md`.
 
-Counts toward M1: Azuro/CEX API loops, signal bot, digital product sales.
-Does **not** count: manual bounty submit, freelance, salary.
+Counts toward M1: Azuro/CEX API loops, digital product sales.
+Does **not** count: manual bounty submit, freelance, salary, Telegram signal channel (cancelled).
 
 ## Active lanes (priority)
 
 1. **A1 Azuro** — paper 7 days first; rules in `agent/memory/lessons/azuro_paper_rules.md`
-2. **A2/A3** — CEX scan or Telegram signals (pick one secondary)
-3. **A5** — affiliate blog (background, 1 post/week max)
+2. **A2** — CEX grid / scan (secondary)
+3. **A4/A5** — digital product + affiliate blog (background)
 
 ## Paper-trade rules (Azuro)
 
@@ -34,7 +34,7 @@ Does **not** count: manual bounty submit, freelance, salary.
 
 ## Kill criteria
 
-- Paper expectancy ≤ 0 after 7 days → pivot to A3 + A4
+- Paper expectancy ≤ 0 after 7 days → pivot to A4 + A2
 - Never enable live without user Telegram approval
 
 ## Validation

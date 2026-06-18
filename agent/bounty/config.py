@@ -42,5 +42,61 @@ HACKERONE_API_IDENTIFIER = (
 )
 HACKERONE_API_TOKEN = os.environ.get("HACKERONE_API_TOKEN", "").strip()
 
+# Dev stores — domain required. Token: static shpat_* OR Dev Dashboard client credentials.
+SHOPIFY_SHOP1_DOMAIN = os.environ.get("SHOPIFY_SHOP1_DOMAIN", "").strip()
+SHOPIFY_SHOP1_ADMIN_TOKEN = os.environ.get("SHOPIFY_SHOP1_ADMIN_TOKEN", "").strip()
+SHOPIFY_SHOP2_DOMAIN = os.environ.get("SHOPIFY_SHOP2_DOMAIN", "").strip()
+SHOPIFY_SHOP2_ADMIN_TOKEN = os.environ.get("SHOPIFY_SHOP2_ADMIN_TOKEN", "").strip()
+
+# Dev Dashboard app (dev.shopify.com) — exchange for 24h access token via client_credentials grant.
+SHOPIFY_APP_CLIENT_ID = os.environ.get("SHOPIFY_APP_CLIENT_ID", "").strip()
+SHOPIFY_APP_CLIENT_SECRET = os.environ.get("SHOPIFY_APP_CLIENT_SECRET", "").strip()
+
+
+def shopify_test_stores_block() -> str:
+    """Markdown for bounty prompts — never log tokens."""
+    from bounty.shopify_auth import shop_has_auth
+
+    lines: list[str] = []
+    for i in (1, 2):
+        domain = SHOPIFY_SHOP1_DOMAIN if i == 1 else SHOPIFY_SHOP2_DOMAIN
+        if not domain:
+            continue
+        if shop_has_auth(i):
+            auth = (
+                "client_credentials (24h, auto-refresh)"
+                if not (SHOPIFY_SHOP1_ADMIN_TOKEN if i == 1 else SHOPIFY_SHOP2_ADMIN_TOKEN)
+                else "static env token"
+            )
+            lines.append(f"- Shop {i}: `{domain}` — Admin API **{auth}**")
+        else:
+            lines.append(f"- Shop {i}: `{domain}` — **no token** (add shpat_ or app client id/secret)")
+
+    if not lines:
+        return (
+            "— нет dev stores в env. Добавь SHOPIFY_SHOP1_DOMAIN + "
+            "(SHOPIFY_APP_CLIENT_ID/SECRET или SHOPIFY_SHOP1_ADMIN_TOKEN) в secrets/.env.bounty"
+        )
+    token_cmd = "cd /opt/personal-stack/agent && python3 -m bounty.shopify_token --shop 1"
+    return "\n".join(
+        [
+            "Используй **только эти dev stores** (свои активы):",
+            *lines,
+            "",
+            "Получить access token (Dev Dashboard — client id/secret, живёт ~24ч):",
+            f"```\n{token_cmd}\n```",
+            "",
+            "Пример GraphQL (токен в переменную, не печатай в отчёте):",
+            "```",
+            'TOKEN=$(python3 -m bounty.shopify_token --shop 1)',
+            'curl -sS "https://SHOP.myshopify.com/admin/api/2024-10/graphql.json" \\',
+            '  -H "X-Shopify-Access-Token: $TOKEN" \\',
+            '  -H "Content-Type: application/json" \\',
+            '  -d \'{"query":"{ shop { name id } }"}\'',
+            "```",
+        ]
+    )
+
+
 KV_PROGRAM_INDEX = "bounty_program_index"
 KV_LAST_RESEARCH = "bounty_last_research_ts"
