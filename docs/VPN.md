@@ -33,7 +33,7 @@ TCP 443 is Caddy (site). Hy2 uses UDP 36712 only.
 ## Server tuning (mobile)
 
 - `ping: 5s` — server keepalive for NAT
-- `maxIdleTimeout` / `udpIdleTimeout`: **30s**
+- `maxIdleTimeout` / `udpIdleTimeout`: **120s** (30s was dropping mobile NAT sessions)
 - `disablePathMTUDiscovery: false`
 - Salamander obfs + yandex.ru masquerade
 
