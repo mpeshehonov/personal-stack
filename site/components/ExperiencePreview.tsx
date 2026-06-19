@@ -36,7 +36,7 @@ export function ExperiencePreview({ locale, dict, experiences }: Props) {
       <div className="space-y-4">
         {experiences.map((exp, index) => (
           <FadeIn key={exp.company + exp.period} delay={index * 0.08}>
-            <ExperienceCard exp={exp} />
+            <ExperienceCard exp={exp} compact locale={locale} />
           </FadeIn>
         ))}
       </div>

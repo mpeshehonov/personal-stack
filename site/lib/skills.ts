@@ -28,12 +28,13 @@ export const skillGroupsRu: SkillGroup[] = [
       "Radix UI",
       "Tailwind CSS",
       "FSD",
+      "Bitrix",
     ],
   },
   {
     title: "Визуализация",
     skills: [
-      "Cytoscape.js",
+      "D3.js",
       "Highcharts",
       "Recharts",
       "react-grid-layout",
@@ -130,12 +131,13 @@ export const skillGroupsEn: SkillGroup[] = [
       "Radix UI",
       "Tailwind CSS",
       "FSD",
+      "Bitrix",
     ],
   },
   {
     title: "Data visualization",
     skills: [
-      "Cytoscape.js",
+      "D3.js",
       "Highcharts",
       "Recharts",
       "react-grid-layout",
