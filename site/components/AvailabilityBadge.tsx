@@ -1,6 +1,5 @@
 import type { Dictionary } from "@/lib/i18n";
-
-type Availability = "open" | "busy";
+import type { Availability } from "@/lib/availability";
 
 type Props = {
   status: Availability;
@@ -10,11 +9,17 @@ type Props = {
 
 const dotColor: Record<Availability, string> = {
   open: "bg-emerald-500",
+  asap: "bg-emerald-500",
   busy: "bg-amber-500",
 };
 
 export function AvailabilityBadge({ status, dict, size = "md" }: Props) {
-  const label = status === "busy" ? dict.footer.availabilityBusy : dict.footer.availabilityOpen;
+  const label =
+    status === "busy"
+      ? dict.footer.availabilityBusy
+      : status === "asap"
+        ? dict.footer.availabilityAsap
+        : dict.footer.availabilityOpen;
   const sizeClass =
     size === "sm"
       ? "px-2.5 py-1 text-xs"

@@ -6,12 +6,12 @@
   "period": "04.2021 – 04.2022",
   "tagline": "Каталог и главная: с PHP/Symfony на современный React-стек",
   "problem": "Крупнейший российский e-commerce нуждался в миграции каталога и главной страницы с PHP/Symfony на Next.js без потери SEO, фильтрации и согласованности с микросервисной архитектурой.",
-  "contribution": "Участвовал в миграции каталога и главной: SSR-рендеринг, фильтрация, сортировка, пагинация с состоянием в URL. Согласовывал REST API-контракты между фронтендом и микросервисами.",
-  "stack": ["Next.js", "React", "TypeScript", "REST API", "SSR", "URL state"],
+  "contribution": "Миграция каталога и главной в монорепозитории yarn workspaces с shared npm-пакетами. Next.js SSR, REST API с микросервисами, Jest и code review.",
+  "stack": ["Next.js", "React", "TypeScript", "yarn workspaces", "npm packages", "Redux", "Jest", "REST API"],
   "outcomes": [
-    "Каталог и главная работают на Next.js с сохранением SEO-показателей",
-    "Фильтры и сортировка синхронизированы с URL — шаринг и возврат назад работают корректно",
-    "Typed API contracts между командами сократили цикл согласования изменений"
+    "Yarn workspaces: каталог, главная и shared npm-пакеты в одном монорепозитории",
+    "SSR на Next.js с адаптивной версткой и фильтрами в URL",
+    "Jest unit-тесты и code review в Scrum-команде e-commerce",
   ],
   "featured": false,
   "order": 5
