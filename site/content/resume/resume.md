@@ -8,11 +8,9 @@ Senior Frontend-разработчик
 
 ## О себе
 
-Frontend / Fullstack с 2018 года, уровень Senior. B2B, e-commerce, real-time, Telegram Mini Apps. Сложные UI, RBAC, Orval/OpenAPI, REST, GraphQL, WebSocket.
+Senior Frontend-разработчик, 7+ лет коммерческой разработки. React, TypeScript, Next.js: e-commerce, enterprise-модули, маркетплейсы. REST API, Git, code review, Scrum/Agile.
 
-Кейсы на [mpeshekhonov.ru](https://mpeshekhonov.ru/ru/projects), полный список по запросу.
-
-Основной стек: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL, Bitrix.
+Другие задачи и кейсы — в разделе Проекты на сайте. Fullstack: Django REST, Nest.js, PostgreSQL, SQL. Готов к выходу ASAP.
 
 ## Опыт работы
 
@@ -20,114 +18,100 @@ Frontend / Fullstack с 2018 года, уровень Senior. B2B, e-commerce, r
 
 09.2025 – н.в. | Удалённо
 
-**sendonate.com**: донаты для стримеров: Mini App, OBS overlay, кабинет
+**sendonate.com**: React-продукт для стримеров: Mini App, кабинет, OBS overlay
 
-Задача: стримеру нужен приём донатов в Telegram и live-алерт в OBS без ручной интеграции с backend.
-
-Роль: три клиента на React + Vite; REST через Orval; overlay на WebSocket; GitHub Actions для lint, build и деплоя.
+Роль: Реализовал три клиента на React + Vite + TypeScript: кабинет, Telegram Mini App, OBS overlay. REST через Orval/OpenAPI, real-time на WebSocket. Backend-интеграция с Django REST. GitHub Actions: lint, build, deploy.
 
 Результат:
 
-- Mini App принимает оплату донатов и синхронизируется с backend
-- OBS overlay показывает алерты в эфире без задержки UI
-- CI/CD выкатывает все три клиента из одного репозитория
+- Сценарий доната от Mini App до алерта в эфире
+- Orval синхронизирует типы с OpenAPI-контрактом backend
+- CI/CD выкатывает три клиента из одного репозитория
 
-Стек: React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions
+Стек: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, Git
 
-**POTALONU / PREEGLOS**: билетная витрина и редактор схем залов
+**POTALONU / PREEGLOS**: Интернет-витрина билетов и редактор схем залов
 
-Задача: организаторам нужна витрина событий с checkout и интерактивный выбор мест для сайтов партнёров.
-
-Роль: Next.js 16, PostgreSQL, Drizzle ORM, Auth.js; редактор схем на Canvas/SVG; embed-виджет; GitLab CI/CD, Docker Compose, Orval.
+Роль: Собрал витрину на Next.js 16: PostgreSQL, Drizzle ORM, Auth.js, SQL-схема данных. Редактор залов на Canvas/SVG, REST через Orval. GitLab CI/CD, Docker Compose.
 
 Результат:
 
-- Checkout и Telegram Mini App в одном продуктовом контуре
+- Покупка билета в вебе и Mini App на общей бизнес-логике
 - Партнёры встраивают виджет выбора мест без форка кода
 - Деплой через Docker Compose и GitLab pipeline
 
-Стек: Next.js, PostgreSQL, Drizzle ORM, Auth.js, Canvas, Docker, GitLab CI, Orval
+Стек: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI
 
 ### X5 Tech — Frontend-разработчик
 
 04.2024 – 07.2025 | Удалённо
 
-**НКЗ 3.0 — согласование закупок**: enterprise-модуль с RBAC и длинными цепочками статусов
+**НКЗ 3.0 — согласование закупок**: Enterprise React-модуль: RBAC, статусы, длинные формы
 
-Задача: закупки X5 требуют согласования по ролям и статусам в одном UI с десятками шагов на заявку.
-
-Роль: Keycloak SSO, Orval по OpenAPI, react-hook-form, внутренние npm-пакеты UI Kit, Vite code splitting.
+Роль: Собрал UI модуля на React + TypeScript: Keycloak SSO, Orval по OpenAPI, react-hook-form, внутренние npm-пакеты UI Kit. Vite code splitting. Scrum, code review в команде.
 
 Результат:
 
 - RBAC и статусы покрывают полный цикл согласования закупок
-- Code splitting держит UX на длинных формах
-- Scrum, code review, работа с внутренним UI Kit
+- Orval убрал ручную синхронизацию типов при смене API
+- Code splitting ускорил загрузку длинных сценариев согласования
 
-Стек: React, TypeScript, Vite, Orval, Keycloak, react-hook-form
+Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Git, Scrum
 
 ### BI.ZONE — Frontend-разработчик
 
 06.2023 – 03.2024 | Удалённо
 
-**Thread Intelligence**: анализ связей между сущностями для SOC
+**Thread Intelligence**: React + GraphQL: аналитика связей для SOC
 
-Задача: аналитикам нужен граф связей, фильтры и отчёты в одном экране.
-
-Роль: GraphQL на Apollo Client, MobX, React Query, Orval; граф связей на D3.js; виртуализация списков; дашборды Highcharts/Recharts; npm-пакеты @bizone; Jest.
+Роль: Развивал страницу анализа на React + TypeScript: GraphQL (Apollo Client), MobX, React Query, Orval. Граф на D3.js, виртуализация списков, дашборды. Jest, code review.
 
 Результат:
 
-- Аналитики строят цепочки связей в одном экране
-- Динамические отчёты на той же GraphQL-модели
+- Аналитики строят цепочки связей между сущностями в одном экране
+- Отчёты подключены к той же GraphQL-модели, что и основные сценарии
 - Виртуализация держит большие таблицы без просадки UX
 
-Стек: React, GraphQL, Apollo Client, D3.js, MobX, React Query, Orval, Highcharts
+Стек: React, TypeScript, GraphQL, REST API, D3.js, Jest, Git
 
 ### НЛМК — Frontend-разработчик
 
 05.2022 – 06.2023 | Удалённо
 
-**Регистрация выпусков чугуна**: web-приложение вместо Excel
+**Регистрация выпусков чугуна**: React SPA вместо Excel для производственных данных
 
-Задача: цех фиксировал выпуски в Excel и разрозненных формах, данные терялись.
-
-Роль: TanStack Table + React Query, Keycloak SSO и RBAC, shared UI npm-пакеты, GitLab CI, Sentry.
+Роль: Собрал SPA на React + TypeScript: TanStack Table + React Query, Keycloak SSO, RBAC. GitLab CI на merge request, Sentry в production. Code review.
 
 Результат:
 
-- Единый интерфейс регистрации вместо таблиц Excel
-- Таблицы с большими объёмами данных без просадки производительности
-- Ошибки отслеживаются в Sentry на production
+- Ключевые операции цеха переведены в web-интерфейс
+- Таблицы с фильтрами работают на больших объёмах данных
+- Sentry сократил время диагностики ошибок на production
 
-Стек: React, TanStack Table, TanStack Query, Keycloak, GitLab CI, Sentry
+Стек: React, TypeScript, TanStack Table, REST API, Keycloak, GitLab CI, Sentry
 
 ### Citilink — Frontend-разработчик
 
 04.2021 – 04.2022 | Удалённо
 
-**Миграция каталога на Next.js**: e-commerce с PHP/Symfony на React
+**citilink.ru — каталог интернет-магазина**: Миграция e-commerce с PHP/Symfony на Next.js + React
 
-Задача: перенести каталог и главную на Next.js без потери SEO и фильтров.
-
-Роль: yarn workspaces монорепо, shared npm-пакеты, фильтры/сортировка/пагинация в URL, REST API, Redux, Jest.
+Роль: Разрабатывал каталог на React + Next.js: фильтрация, сортировка, пагинация, состояние в URL. REST API с backend и микросервисами. Монорепо yarn workspaces, Redux, Jest. Code review.
 
 Результат:
 
-- Каталог и главная на Next.js с сохранением SEO
-- Shared npm-пакеты между страницами монорепо
-- Jest и code review на критичные сценарии
+- Каталог и главная работают на Next.js с сохранением SEO
+- Фильтры синхронизированы с URL для оптовых и розничных сценариев
+- Shared npm-пакеты переиспользуются между страницами монорепо
 
-Стек: Next.js, React, Redux, yarn workspaces, REST API, Jest
+Стек: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 
 ## Навыки
 
-- Языки: TypeScript, JavaScript (ES6+), HTML5, CSS3/SCSS
-- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, Bitrix, Tailwind CSS
-- Сборка: Vite, Webpack, yarn workspaces, монорепозитории, npm-пакеты, code splitting, GitLab CI, GitHub Actions, Docker
-- API и backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak, Symfony, Bitrix
-- Качество: Jest, Vitest, Playwright, Sentry, code review, Scrum
-- UI: дизайн-системы, UI Kit, адаптивная верстка, Figma, Telegram Mini Apps
+- React, TypeScript, JavaScript, HTML5, CSS3/SCSS, Next.js
+- 1C-Bitrix, PHP, jQuery, Webpack, интернет-магазины, e-commerce
+- REST API, Git, code review, Scrum/Agile, Jest, Playwright
+- PostgreSQL, SQL, Django REST, Nest.js
 
 ## Языки
 
@@ -139,8 +123,8 @@ Frontend / Fullstack с 2018 года, уровень Senior. B2B, e-commerce, r
 
 Земельно-имущественные отношения · 2015 – 2018 | Тула, Россия
 
-### Компьютерная академия ШАГ
+### Компьютерная академия «ШАГ»
 
 Веб-разработка · 2016 | Тула, Россия
 
-Хакатоны: победитель Цифровой прорыв (2021, 2020), Hack.Genesis ONLINE, финалист Virus Hack, эксперт WorldSkills.
+Победитель хакатона «Цифровой прорыв» (2021, 2020), победитель Hack.Genesis _ONLINE_, финалист Virus Hack, эксперт чемпионата WorldSkills.
