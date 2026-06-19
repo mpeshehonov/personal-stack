@@ -8,37 +8,37 @@ Senior Frontend-разработчик
 
 ## О себе
 
-Senior Frontend-разработчик, 7+ лет коммерческой разработки. React, TypeScript, Next.js: e-commerce, enterprise-модули, маркетплейсы. REST API, Git, code review, Scrum/Agile.
+Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для e-commerce, enterprise-модулей и продуктовых интерфейсов. Проектирую сложные UI, связываю frontend с typed API-контрактами и довожу фичи до production через review и CI/CD.
 
-Другие задачи и кейсы — в разделе Проекты на сайте. Fullstack: Django REST, Nest.js, PostgreSQL, SQL. Готов к выходу ASAP.
+Другие задачи и кейсы — в разделе Проекты на сайте. Backend-интеграция: Django REST, Nest.js, PostgreSQL, SQL. Сочи, удалённо. Готов к выходу ASAP.
 
 ## Опыт работы
 
-### POTALONU LLC — Fullstack / Frontend-разработчик
+### POTALONU LLC — Frontend-разработчик
 
 09.2025 – н.в. | Удалённо
 
 **sendonate.com**: React-продукт для стримеров: Mini App, кабинет, OBS overlay
 
-Роль: Реализовал три клиента на React + Vite + TypeScript: кабинет, Telegram Mini App, OBS overlay. REST через Orval/OpenAPI, real-time на WebSocket. Backend-интеграция с Django REST. GitHub Actions: lint, build, deploy.
+Роль: Спроектировал и реализовал frontend-контур sendonate.com из трёх React + Vite + TypeScript клиентов: кабинет стримера, Telegram Mini App и OBS overlay. Завёл типизированный REST-клиент через Orval/OpenAPI, real-time доставку событий по WebSocket и CI/CD в GitHub Actions для lint/build/deploy всех клиентов из одного репозитория.
 
 Результат:
 
-- Сценарий доната от Mini App до алерта в эфире
-- Orval синхронизирует типы с OpenAPI-контрактом backend
-- CI/CD выкатывает три клиента из одного репозитория
+- End-to-end сценарий доната до production: Mini App → backend → alert в OBS overlay без ручного обновления эфира
+- Orval генерирует DTO и методы API из OpenAPI-контракта — рассинхрон frontend/backend ловится на сборке
+- Единый delivery pipeline для трёх клиентов: автоматические проверки, сборка и деплой без ручных операций
 
-Стек: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, Git
+Стек: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, GitHub Actions
 
 **POTALONU / PREEGLOS**: Интернет-витрина билетов и редактор схем залов
 
-Роль: Собрал витрину на Next.js 16: PostgreSQL, Drizzle ORM, Auth.js, SQL-схема данных. Редактор залов на Canvas/SVG, REST через Orval. GitLab CI/CD, Docker Compose.
+Роль: Реализовал web-витрину PREEGLOS на Next.js с checkout-сценарием, Auth.js, PostgreSQL/Drizzle и типизированным REST-клиентом через Orval. Отдельно собрал редактор схем залов на Canvas/SVG и embeddable seat picker для партнёрских сайтов; настроил GitLab CI/CD и Docker Compose delivery.
 
 Результат:
 
-- Покупка билета в вебе и Mini App на общей бизнес-логике
-- Партнёры встраивают виджет выбора мест без форка кода
-- Деплой через Docker Compose и GitLab pipeline
+- Покупка билета в вебе и Telegram Mini App на общей модели данных и API-контрактах
+- Партнёры подключают seat picker без форка продукта: схема зала и выбор мест в одном frontend-контуре
+- Production delivery: Docker Compose окружение и GitLab pipeline собирают и выкатывают сервис без ручной сборки
 
 Стек: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI
 
@@ -48,29 +48,29 @@ Senior Frontend-разработчик, 7+ лет коммерческой ра�
 
 **НКЗ 3.0 — согласование закупок**: Enterprise React-модуль: RBAC, статусы, длинные формы
 
-Роль: Собрал UI модуля на React + TypeScript: Keycloak SSO, Orval по OpenAPI, react-hook-form, внутренние npm-пакеты UI Kit. Vite code splitting. Scrum, code review в команде.
+Роль: Разрабатывал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.
 
 Результат:
 
-- RBAC и статусы покрывают полный цикл согласования закупок
-- Orval убрал ручную синхронизацию типов при смене API
-- Code splitting ускорил загрузку длинных сценариев согласования
+- Frontend закрывает полный цикл закупочного согласования: роли, статусы, формы и переходы между этапами
+- OpenAPI/Orval сделал API-контракты проверяемыми на сборке вместо ручного обновления типов
+- Vite code splitting разделил тяжёлые approval-сценарии на независимые чанки и снизил риск регрессий
 
-Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Git, Scrum
+Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git
 
 ### BI.ZONE — Frontend-разработчик
 
 06.2023 – 03.2024 | Удалённо
 
-**Thread Intelligence**: React + GraphQL: аналитика связей для SOC
+**Threat Intelligence**: React + GraphQL: аналитика связей для SOC
 
-Роль: Развивал страницу анализа на React + TypeScript: GraphQL (Apollo Client), MobX, React Query, Orval. Граф на D3.js, виртуализация списков, дашборды. Jest, code review.
+Роль: Развивал аналитический интерфейс для SOC на React + TypeScript: GraphQL/Apollo для основной модели данных, MobX/React Query для состояния и запросов, D3.js для графа связей, виртуализация для больших списков и Jest для регрессионных проверок. Участвовал в code review и доработке UX сложных аналитических сценариев.
 
 Результат:
 
-- Аналитики строят цепочки связей между сущностями в одном экране
-- Отчёты подключены к той же GraphQL-модели, что и основные сценарии
-- Виртуализация держит большие таблицы без просадки UX
+- Граф связей, фильтры и отчёты объединены в одном рабочем экране аналитика
+- Единый GraphQL data layer для аналитики и отчётов — меньше расхождений между экраном и выгрузками
+- Виртуализация сохраняет отзывчивость интерфейса на больших списках сущностей
 
 Стек: React, TypeScript, GraphQL, REST API, D3.js, Jest, Git
 
@@ -80,15 +80,15 @@ Senior Frontend-разработчик, 7+ лет коммерческой ра�
 
 **Регистрация выпусков чугуна**: React SPA вместо Excel для производственных данных
 
-Роль: Собрал SPA на React + TypeScript: TanStack Table + React Query, Keycloak SSO, RBAC. GitLab CI на merge request, Sentry в production. Code review.
+Роль: Разработал production SPA для регистрации выпусков чугуна на React + TypeScript: таблицы и фильтры на TanStack Table, серверное состояние через React Query, Keycloak SSO/RBAC для доступа по ролям. Подключил GitLab CI checks на merge request и Sentry для диагностики production-ошибок.
 
 Результат:
 
-- Ключевые операции цеха переведены в web-интерфейс
-- Таблицы с фильтрами работают на больших объёмах данных
-- Sentry сократил время диагностики ошибок на production
+- Ключевые операции смены переведены из Excel в web-интерфейс с авторизацией и ролевыми правами
+- Таблицы и фильтры пригодны для производственных объёмов данных
+- Sentry даёт production visibility: ошибки привязаны к релизам и стек-трейсам без воспроизведения на рабочем месте
 
-Стек: React, TypeScript, TanStack Table, REST API, Keycloak, GitLab CI, Sentry
+Стек: React, TypeScript, TanStack Table, TanStack Query, REST API, Keycloak, GitLab CI, Sentry
 
 ### Citilink — Frontend-разработчик
 
@@ -96,13 +96,13 @@ Senior Frontend-разработчик, 7+ лет коммерческой ра�
 
 **citilink.ru — каталог интернет-магазина**: Миграция e-commerce с PHP/Symfony на Next.js + React
 
-Роль: Разрабатывал каталог на React + Next.js: фильтрация, сортировка, пагинация, состояние в URL. REST API с backend и микросервисами. Монорепо yarn workspaces, Redux, Jest. Code review.
+Роль: Участвовал в миграции e-commerce каталога и главной citilink.ru с PHP/Symfony на React + Next.js: фильтрация, сортировка, пагинация и URL-состояние для SEO и шаринга. Интегрировал REST API backend/микросервисов, работал в yarn workspaces монорепо, покрывал критичную логику Jest-тестами и проходил code review.
 
 Результат:
 
-- Каталог и главная работают на Next.js с сохранением SEO
-- Фильтры синхронизированы с URL для оптовых и розничных сценариев
-- Shared npm-пакеты переиспользуются между страницами монорепо
+- SEO-контур каталога сохранён при миграции на Next.js: индексируемые страницы и URL-состояние фильтров
+- Retail/wholesale сценарии через синхронизацию фильтров, сортировки и пагинации с URL
+- Shared npm-пакеты в yarn workspaces снизили дублирование между страницами каталога
 
 Стек: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 

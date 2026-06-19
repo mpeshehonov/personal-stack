@@ -8,37 +8,37 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpe
 
 ## About
 
-Senior Frontend engineer, 7+ years in commercial development. React, TypeScript, Next.js: e-commerce, enterprise modules, marketplaces. REST API, Git, code review, Scrum/Agile.
+Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for e-commerce, enterprise modules, and product workflows. Strong in complex UI, typed API contracts, production delivery, and code review.
 
-Other work and case studies — in the Projects section on the site. Fullstack: Django REST, Nest.js, PostgreSQL, SQL. Available ASAP.
+Other work and case studies — in the Projects section on the site. Backend integration: Django REST, Nest.js, PostgreSQL, SQL. Sochi, remote. Available ASAP.
 
 ## Work experience
 
-### POTALONU LLC — Fullstack / Frontend engineer
+### POTALONU LLC — Frontend engineer
 
 Sep 2025 – present | Remote
 
 **sendonate.com**: React product for streamers: Mini App, dashboard, OBS overlay
 
-Role: Built three React + Vite + TypeScript clients: dashboard, Telegram Mini App, OBS overlay. REST via Orval/OpenAPI, real-time WebSocket. Django REST backend integration. GitHub Actions CI/CD.
+Role: Designed and built the sendonate.com frontend: three React + Vite + TypeScript clients — streamer dashboard, Telegram Mini App, and OBS overlay. Typed REST client via Orval/OpenAPI, real-time event delivery over WebSocket, and GitHub Actions CI/CD for lint/build/deploy of all clients from one repository.
 
 Outcome:
 
-- End-to-end donation flow from Mini App to on-stream alert
-- Orval keeps types aligned with OpenAPI backend contracts
-- CI/CD ships all three clients from one repository
+- End-to-end donation flow in production: Mini App → backend → OBS overlay alert without manual stream refresh
+- Orval generates DTOs and API methods from OpenAPI contracts — frontend/backend drift caught at build time
+- Unified delivery pipeline for three clients: automated checks, build, and deploy without manual release steps
 
-Stack: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, Git
+Stack: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, GitHub Actions
 
 **POTALONU / PREEGLOS**: Ticket storefront and hall layout editor
 
-Role: Built Next.js 16 storefront: PostgreSQL, Drizzle ORM, Auth.js, SQL data model. Canvas/SVG hall editor, Orval REST client. GitLab CI/CD, Docker Compose.
+Role: Built PREEGLOS web storefront on Next.js with checkout, Auth.js, PostgreSQL/Drizzle, and typed REST client via Orval. Canvas/SVG hall layout editor and embeddable seat picker for partner sites; GitLab CI/CD and Docker Compose delivery.
 
 Outcome:
 
-- Ticket purchase works in web and Mini App on shared logic
-- Partners embed seat picker without forking code
-- Deploy via Docker Compose and GitLab pipeline
+- Ticket purchase in web and Telegram Mini App on shared data model and API contracts
+- Partners embed seat picker without forking: hall layout and seat selection in one frontend surface
+- Production delivery: Docker Compose environment and GitLab pipeline build and deploy without manual server builds
 
 Stack: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI
 
@@ -48,29 +48,29 @@ Apr 2024 – Jul 2025 | Remote
 
 **NKZ 3.0 — procurement approval**: Enterprise React module: RBAC, statuses, long forms
 
-Role: Built module UI on React + TypeScript: Keycloak SSO, Orval from OpenAPI, react-hook-form, internal npm UI Kit. Vite code splitting. Scrum, code review.
+Role: Developed enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in code review and split heavy flows into separate chunks via Vite code splitting.
 
 Outcome:
 
-- RBAC and statuses cover the full procurement cycle
-- Orval removed manual type sync when API changed
-- Code splitting improved load time on long approval flows
+- Frontend covers the full procurement cycle: roles, statuses, forms, and stage transitions
+- OpenAPI/Orval made API contracts verifiable at build time instead of manual type updates
+- Vite code splitting split heavy approval flows into independent chunks and reduced regression risk
 
-Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Git, Scrum
+Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git
 
 ### BI.ZONE — Frontend engineer
 
 Jun 2023 – Mar 2024 | Remote
 
-**Thread Intelligence**: React + GraphQL analytics for SOC
+**Threat Intelligence**: React + GraphQL analytics for SOC
 
-Role: Extended analysis page on React + TypeScript: GraphQL (Apollo Client), MobX, React Query, Orval. D3.js graph, virtualized lists, dashboards. Jest, code review.
+Role: Extended SOC analytics interface on React + TypeScript: GraphQL/Apollo for core data model, MobX/React Query for state and queries, D3.js relationship graph, list virtualization, and Jest regression checks. Participated in code review and UX improvements for complex analytical flows.
 
 Outcome:
 
-- Analysts build entity chains on one screen
-- Reports wired to the same GraphQL model as core flows
-- Virtualization keeps large tables responsive
+- Relationship graph, filters, and reports unified on one analyst workspace
+- Single GraphQL data layer for analytics and reports — fewer mismatches between screen and exports
+- Virtualization keeps the interface responsive on large entity lists
 
 Stack: React, TypeScript, GraphQL, REST API, D3.js, Jest, Git
 
@@ -80,15 +80,15 @@ May 2022 – Jun 2023 | Remote
 
 **Cast iron release registration**: React SPA replacing Excel for production data
 
-Role: Built React + TypeScript SPA: TanStack Table + React Query, Keycloak SSO, RBAC. GitLab CI on MR, Sentry in production. Code review.
+Role: Built production SPA for cast iron release registration on React + TypeScript: TanStack Table filters, React Query server state, Keycloak SSO/RBAC for role-based access. GitLab CI checks on merge requests and Sentry for production error diagnosis.
 
 Outcome:
 
-- Core shop-floor operations moved to a web interface
-- Filtered tables handle large datasets in production
-- Sentry reduced production incident diagnosis time
+- Core shift operations moved from Excel to a web interface with auth and role-based permissions
+- Tables and filters handle production-scale data volumes
+- Sentry provides production visibility: errors tied to releases and stack traces without on-site reproduction
 
-Stack: React, TypeScript, TanStack Table, REST API, Keycloak, GitLab CI, Sentry
+Stack: React, TypeScript, TanStack Table, TanStack Query, REST API, Keycloak, GitLab CI, Sentry
 
 ### Citilink — Frontend engineer
 
@@ -96,13 +96,13 @@ Apr 2021 – Apr 2022 | Remote
 
 **citilink.ru — online store catalog**: E-commerce migration from PHP/Symfony to Next.js + React
 
-Role: Built catalog on React + Next.js: filters, sort, pagination, URL state. REST API with backend and microservices. Yarn workspaces monorepo, Redux, Jest. Code review.
+Role: Contributed to citilink.ru e-commerce catalog and homepage migration from PHP/Symfony to React + Next.js: filters, sort, pagination, and URL state for SEO and sharing. Integrated REST API with backend and microservices, worked in yarn workspaces monorepo, covered critical logic with Jest tests, and participated in code review.
 
 Outcome:
 
-- Catalog and homepage on Next.js with SEO preserved
-- URL-synced filters for wholesale and retail flows
-- Shared npm packages reused across monorepo pages
+- Catalog SEO preserved on Next.js migration: indexable pages and URL-synced filter state
+- Retail/wholesale flows via URL-synced filters, sort, and pagination
+- Shared npm packages in yarn workspaces reduced duplication across catalog pages
 
 Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 
