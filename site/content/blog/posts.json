@@ -6,5 +6,13 @@
     "excerpt": "Self-hosted стек для AI-агентов: orchestrator, Telegram, bounty semi-auto, finance lanes и daily harness без облачных подписок.",
     "tags": ["devops", "agents", "self-hosted"],
     "draft": false
+  },
+  {
+    "slug": "cex-grid-trading-bybit",
+    "title": "CEX grid trading: как настроить сетку на Bybit без ручных ордеров",
+    "date": "2026-06-19",
+    "excerpt": "Grid trading на CEX: paper workflow, grid calculator, risk caps и affiliate-ready черновик для A5 lane.",
+    "tags": ["finance", "cex", "grid-trading", "affiliate"],
+    "draft": true
   }
 ]

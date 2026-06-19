@@ -15,7 +15,7 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 - [x] **IB-06** CEX: implement read-only grid parameter calculator (grid levels, not live orders yet)
 - [x] **IB-07** ~~A3 signals: Telegram channel~~ — helper shipped (`signal_post.py`); **lane cancelled**, do not configure `TELEGRAM_SIGNAL_CHANNEL_ID`
 - [x] **IB-08** A4 product: draft Gumroad listing copy in `agent/memory/products/agent-starter.md`
-- [ ] **IB-09** A5 affiliate: one blog post skeleton under `site/content/blog/` (if dir missing, create minimal MD route)
+- [x] **IB-09** A5 affiliate: one blog post skeleton under `site/content/blog/` (if dir missing, create minimal MD route)
 
 ## Phase 2 — Scale (after M1 progress >30%)
 
