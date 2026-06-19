@@ -4,18 +4,19 @@
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Sochi, Russia",
-  "summary": "Frontend / Fullstack since 2018, Senior. B2B, e-commerce, real-time, Telegram Mini Apps. Available ASAP.",
+  "summary": "Senior Frontend, 7+ years commercial development. React, TypeScript, Next.js, e-commerce, 1C-Bitrix. REST API, Git, code review. Available ASAP.",
   "skills": [
-    "TypeScript",
     "React",
+    "TypeScript",
+    "JavaScript",
+    "1C-Bitrix",
     "Next.js",
-    "TanStack Query",
-    "Orval",
-    "Telegram Mini Apps",
-    "Nest.js",
-    "Playwright",
-    "GraphQL",
-    "Docker"
+    "REST API",
+    "Git",
+    "Webpack",
+    "e-commerce",
+    "HTML5",
+    "CSS3"
   ],
   "availability": "asap",
   "links": {

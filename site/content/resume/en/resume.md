@@ -8,11 +8,9 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpe
 
 ## About
 
-Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, real-time, Telegram Mini Apps. Complex UI, RBAC, Orval/OpenAPI, REST, GraphQL, WebSocket.
+Senior Frontend engineer, 7+ years in commercial development. React, TypeScript, Next.js: e-commerce, enterprise modules, marketplaces. REST API, Git, code review, Scrum/Agile.
 
-Case studies at [mpeshekhonov.ru/projects](https://mpeshekhonov.ru/en/projects).
-
-Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL, Bitrix.
+Other work and case studies — in the Projects section on the site. Fullstack: Django REST, Nest.js, PostgreSQL, SQL. Available ASAP.
 
 ## Work experience
 
@@ -20,114 +18,100 @@ Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, R
 
 Sep 2025 – present | Remote
 
-**sendonate.com** — streamer donations: Mini App, OBS overlay, dashboard
+**sendonate.com**: React product for streamers: Mini App, dashboard, OBS overlay
 
-Problem: streamers needed Telegram donations and live OBS alerts without manual backend integration.
-
-Role: three React + Vite clients; Orval REST; WebSocket overlay; GitHub Actions for lint, build, deploy.
+Role: Built three React + Vite + TypeScript clients: dashboard, Telegram Mini App, OBS overlay. REST via Orval/OpenAPI, real-time WebSocket. Django REST backend integration. GitHub Actions CI/CD.
 
 Outcome:
 
-- Mini App handles donation checkout synced with backend
-- OBS overlay shows live alerts without UI lag
-- CI/CD ships all three clients from one repo
+- End-to-end donation flow from Mini App to on-stream alert
+- Orval keeps types aligned with OpenAPI backend contracts
+- CI/CD ships all three clients from one repository
 
-Stack: React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions
+Stack: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, Git
 
-**POTALONU / PREEGLOS** — event storefront and hall layout editor
+**POTALONU / PREEGLOS**: Ticket storefront and hall layout editor
 
-Problem: organizers needed an event storefront with checkout and seat selection for partner sites.
-
-Role: Next.js 16, PostgreSQL, Drizzle ORM, Auth.js; Canvas/SVG hall editor; embed widget; GitLab CI/CD, Docker Compose, Orval.
+Role: Built Next.js 16 storefront: PostgreSQL, Drizzle ORM, Auth.js, SQL data model. Canvas/SVG hall editor, Orval REST client. GitLab CI/CD, Docker Compose.
 
 Outcome:
 
-- Checkout and Telegram Mini App in one product stack
+- Ticket purchase works in web and Mini App on shared logic
 - Partners embed seat picker without forking code
 - Deploy via Docker Compose and GitLab pipeline
 
-Stack: Next.js, PostgreSQL, Drizzle ORM, Auth.js, Canvas, Docker, GitLab CI, Orval
+Stack: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI
 
 ### X5 Tech — Frontend engineer
 
 Apr 2024 – Jul 2025 | Remote
 
-**NKZ 3.0 — procurement approval** — enterprise module with RBAC and long status chains
+**NKZ 3.0 — procurement approval**: Enterprise React module: RBAC, statuses, long forms
 
-Problem: X5 procurement required role-based approval in one UI with dozens of steps per request.
-
-Role: Keycloak SSO, Orval from OpenAPI, react-hook-form, internal npm UI Kit packages, Vite code splitting.
+Role: Built module UI on React + TypeScript: Keycloak SSO, Orval from OpenAPI, react-hook-form, internal npm UI Kit. Vite code splitting. Scrum, code review.
 
 Outcome:
 
 - RBAC and statuses cover the full procurement cycle
-- Code splitting keeps UX on long forms
-- Scrum, code review, internal UI Kit
+- Orval removed manual type sync when API changed
+- Code splitting improved load time on long approval flows
 
-Stack: React, TypeScript, Vite, Orval, Keycloak, react-hook-form
+Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Git, Scrum
 
 ### BI.ZONE — Frontend engineer
 
 Jun 2023 – Mar 2024 | Remote
 
-**Thread Intelligence**: entity relationship analysis for SOC
+**Thread Intelligence**: React + GraphQL analytics for SOC
 
-Problem: analysts needed relationship graphs, filters, and reports on one screen.
-
-Role: GraphQL on Apollo Client, MobX, React Query, Orval; relationship graph on D3.js; virtualized lists; Highcharts/Recharts dashboards; @bizone npm packages; Jest.
+Role: Extended analysis page on React + TypeScript: GraphQL (Apollo Client), MobX, React Query, Orval. D3.js graph, virtualized lists, dashboards. Jest, code review.
 
 Outcome:
 
-- Analysts build entity relationship chains on one screen
-- Dynamic reports wired to the same GraphQL model
+- Analysts build entity chains on one screen
+- Reports wired to the same GraphQL model as core flows
 - Virtualization keeps large tables responsive
 
-Stack: React, GraphQL, Apollo Client, D3.js, MobX, React Query, Orval, Highcharts
+Stack: React, TypeScript, GraphQL, REST API, D3.js, Jest, Git
 
 ### NLMK — Frontend engineer
 
 May 2022 – Jun 2023 | Remote
 
-**Cast iron release registration** — web app replacing Excel
+**Cast iron release registration**: React SPA replacing Excel for production data
 
-Problem: the shop floor tracked releases in Excel and scattered forms; data was lost.
-
-Role: TanStack Table + React Query, Keycloak SSO and RBAC, shared UI npm packages, GitLab CI, Sentry.
+Role: Built React + TypeScript SPA: TanStack Table + React Query, Keycloak SSO, RBAC. GitLab CI on MR, Sentry in production. Code review.
 
 Outcome:
 
-- Single registration UI replaced Excel spreadsheets
-- Tables with large datasets stay performant
-- Production errors tracked in Sentry
+- Core shop-floor operations moved to a web interface
+- Filtered tables handle large datasets in production
+- Sentry reduced production incident diagnosis time
 
-Stack: React, TanStack Table, TanStack Query, Keycloak, GitLab CI, Sentry
+Stack: React, TypeScript, TanStack Table, REST API, Keycloak, GitLab CI, Sentry
 
 ### Citilink — Frontend engineer
 
 Apr 2021 – Apr 2022 | Remote
 
-**Catalog migration to Next.js** — e-commerce from PHP/Symfony to React
+**citilink.ru — online store catalog**: E-commerce migration from PHP/Symfony to Next.js + React
 
-Problem: migrate catalog and homepage to Next.js without losing SEO and filters.
-
-Role: yarn workspaces monorepo, shared npm packages, filters/sort/pagination in URL, REST API, Redux, Jest.
+Role: Built catalog on React + Next.js: filters, sort, pagination, URL state. REST API with backend and microservices. Yarn workspaces monorepo, Redux, Jest. Code review.
 
 Outcome:
 
 - Catalog and homepage on Next.js with SEO preserved
-- Shared npm packages across monorepo pages
-- Jest and code review on critical catalog flows
+- URL-synced filters for wholesale and retail flows
+- Shared npm packages reused across monorepo pages
 
-Stack: Next.js, React, Redux, yarn workspaces, REST API, Jest
+Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 
 ## Skills
 
-- Languages: TypeScript, JavaScript (ES6+), HTML5, CSS3/SCSS
-- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, Bitrix, Tailwind CSS
-- Build: Vite, Webpack, yarn workspaces, monorepos, npm packages, code splitting, GitLab CI, GitHub Actions, Docker
-- API & backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak, Symfony, Bitrix
-- Quality: Jest, Vitest, Playwright, Sentry, code review, Scrum
-- UI: design systems, UI kits, responsive layout, Figma, Telegram Mini Apps
+- React, TypeScript, JavaScript, HTML5, CSS3/SCSS, Next.js
+- 1C-Bitrix, PHP, jQuery, Webpack, online stores, e-commerce
+- REST API, Git, code review, Scrum/Agile, Jest, Playwright
+- PostgreSQL, SQL, Django REST, Nest.js
 
 ## Languages
 
@@ -136,12 +120,12 @@ Stack: Next.js, React, Redux, yarn workspaces, REST API, Jest
 
 ## Education & community
 
-### Tula State Municipal Construction College
+### Tula State Communal Construction College
 
-Land and property (vocational) · 2015 – 2018 | Tula, Russia
+Land and property relations · 2015 – 2018 | Tula, Russia
 
 ### Computer Academy STEP
 
 Web development · 2016 | Tula, Russia
 
-Hackathons: winner, Digital Breakthrough (2021, 2020); Hack.Genesis ONLINE; Virus Hack finalist; WorldSkills expert.
+Winner of Digital Breakthrough hackathon (2021, 2020), Hack.Genesis _ONLINE_, Virus Hack finalist, WorldSkills championship expert.

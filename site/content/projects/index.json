@@ -329,26 +329,29 @@
       "en": "A major e-commerce site migrated catalog and homepage from legacy PHP/Symfony to Next.js while keeping filters, SSR, and microservice alignment."
     },
     "contribution": {
-      "ru": "Участвовал в миграции: SSR, фильтрация, сортировка, пагинация с состоянием в URL, согласование REST API с backend-командами.",
-      "en": "Contributed to migration: SSR, filters, sorting, URL-state pagination, REST API alignment with backend teams."
+      "ru": "Участвовал в миграции интернет-магазина: SSR на Next.js, фильтрация, сортировка, пагинация с состоянием в URL, REST API с backend-командами. Code review, Jest.",
+      "en": "Contributed to online store migration: Next.js SSR, filters, sort, URL-state pagination, REST API with backend teams. Code review, Jest."
     },
     "stack": [
       "Next.js",
       "React",
       "TypeScript",
+      "JavaScript",
       "REST API",
-      "SSR"
+      "SSR",
+      "Jest",
+      "Git"
     ],
     "outcomes": {
       "ru": [
-        "Каталог и главная работают на Next.js с сохранением SEO-поведения",
-        "Фильтры синхронизированы с URL — ссылки и «назад» работают предсказуемо",
-        "Каталог стал быстрее и удобнее после миграции на Next.js"
+        "Каталог интернет-магазина на Next.js с сохранением SEO",
+        "Фильтры синхронизированы с URL для оптовых и розничных сценариев",
+        "REST-контракты согласованы с backend и микросервисами"
       ],
       "en": [
-        "Catalog and homepage run on Next.js with SEO behavior preserved",
-        "Filters sync to URL — sharing and back navigation work predictably",
-        "Catalog became faster and easier to use after the Next.js migration"
+        "Online store catalog on Next.js with SEO preserved",
+        "URL-synced filters for wholesale and retail flows",
+        "REST contracts aligned with backend and microservices"
       ]
     },
     "featured": false,
@@ -951,8 +954,8 @@
   {
     "slug": "beauty-shop",
     "title": {
-      "ru": "beauty-shop.ru",
-      "en": "beauty-shop.ru"
+      "ru": "Интернет-магазин на 1C-Bitrix",
+      "en": "Online store on 1C-Bitrix"
     },
     "company": {
       "ru": "Maximaster / e-commerce",
@@ -963,32 +966,39 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "Каталог косметики на Bitrix",
-      "en": "Cosmetics catalog on Bitrix"
+      "ru": "Каталог, корзина и фильтры в коммерческом e-commerce",
+      "en": "Catalog, cart, and filters in commercial e-commerce"
     },
     "problem": {
-      "ru": "Интернет-магазину нужны адаптивный каталог, фильтры и корзина в рамках ограничений Bitrix CMS.",
-      "en": "The shop needed a responsive catalog, filters, and cart within Bitrix CMS constraints."
+      "ru": "Интернет-магазину косметики нужны адаптивный каталог, фильтры и корзина в рамках 1C-Bitrix и Symfony.",
+      "en": "A cosmetics store needed a responsive catalog, filters, and cart within 1C-Bitrix and Symfony."
     },
     "contribution": {
-      "ru": "Вёрстка и доработка каталога и карточек товаров, фильтры и интеграция с корзиной на Bitrix + Symfony.",
-      "en": "Built and extended catalog and product pages, filters, and cart integration on Bitrix + Symfony."
+      "ru": "Дорабатывал компоненты и шаблоны 1C-Bitrix: каталог, карточки товаров, фильтры, корзина. HTML5, CSS3/SCSS, jQuery, JavaScript, Webpack, Git. Интеграция с backend на PHP/Symfony.",
+      "en": "Extended 1C-Bitrix components and templates: catalog, product pages, filters, cart. HTML5, CSS3/SCSS, jQuery, JavaScript, Webpack, Git. PHP/Symfony backend integration."
     },
     "stack": [
-      "Bitrix",
-      "Symfony",
-      "jQuery",
+      "1C-Bitrix",
+      "PHP",
+      "HTML5",
+      "CSS3",
       "SCSS",
-      "Webpack"
+      "jQuery",
+      "JavaScript",
+      "Webpack",
+      "Git",
+      "MySQL"
     ],
     "outcomes": {
       "ru": [
         "Адаптивный каталог и карточки на всех breakpoints",
-        "Фильтры и сортировка работают в легаси-стеке"
+        "Фильтры и корзина стабильны на production",
+        "Коммерческая разработка в команде с Git и code review"
       ],
       "en": [
-        "Responsive catalog and product cards across breakpoints",
-        "Filters and sort work in legacy stack"
+        "Responsive catalog and product pages across breakpoints",
+        "Filters and cart stable in production",
+        "Commercial team delivery with Git and code review"
       ]
     },
     "featured": false,
@@ -1021,10 +1031,14 @@
       "en": "Extended catalog, filters, and product cards; optimized frontend for mobile traffic."
     },
     "stack": [
-      "Bitrix",
-      "jQuery",
+      "1C-Bitrix",
+      "PHP",
+      "HTML5",
       "SCSS",
-      "Webpack"
+      "jQuery",
+      "JavaScript",
+      "Webpack",
+      "Git"
     ],
     "outcomes": {
       "ru": [
@@ -1067,10 +1081,13 @@
     },
     "stack": [
       "Symfony",
-      "Bitrix",
+      "1C-Bitrix",
+      "PHP",
       "jQuery",
+      "JavaScript",
       "SCSS",
-      "Webpack"
+      "Webpack",
+      "Git"
     ],
     "outcomes": {
       "ru": [
@@ -1112,10 +1129,14 @@
       "en": "Extended catalog and cart UI, responsive layout on jQuery + SCSS."
     },
     "stack": [
-      "Bitrix",
-      "jQuery",
+      "1C-Bitrix",
+      "PHP",
+      "HTML5",
       "SCSS",
-      "Webpack"
+      "jQuery",
+      "JavaScript",
+      "Webpack",
+      "Git"
     ],
     "outcomes": {
       "ru": [
@@ -1157,10 +1178,14 @@
       "en": "Maintained and extended site sections, built new blocks on Bitrix + jQuery."
     },
     "stack": [
-      "Bitrix",
-      "jQuery",
+      "1C-Bitrix",
+      "PHP",
+      "HTML5",
       "SCSS",
-      "Webpack"
+      "jQuery",
+      "JavaScript",
+      "Webpack",
+      "Git"
     ],
     "outcomes": {
       "ru": [
@@ -1202,10 +1227,14 @@
       "en": "Maintained and extended client UI, integrated with backend API."
     },
     "stack": [
-      "Bitrix",
-      "jQuery",
+      "1C-Bitrix",
+      "PHP",
+      "HTML5",
       "SCSS",
-      "Webpack"
+      "jQuery",
+      "JavaScript",
+      "Webpack",
+      "Git"
     ],
     "outcomes": {
       "ru": [

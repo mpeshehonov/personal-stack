@@ -60,9 +60,35 @@ Regenerate PDF: copy md to `~/personal/cv/`, `make resume-main`, copy to `site/p
 
 **Public site:** sensitive or NDA work uses generic titles only (e.g. `marketplace-nda`). Do not publish client names, domains, or product themes (escort/adult, etc.). Private ids like `auraescort` map to `marketplace-nda` on the site — one card, no duplicate.
 
+## Experience vs projects (timeline policy)
+
+- **`/resume` experience:** last **5 employers only**, with dates (POTALONU → X5 → BI.ZONE → NLMK → Citilink).
+- **Everything else** (Citilink, In2View, Bitrix shops, side gigs, parallel work): **projects only**, no dates on project cards.
+- **About block:** point to `/projects` vaguely («другие задачи и кейсы»); no company names or stack lists for that section.
+- **Skills:** keep ATS keywords (1C-Bitrix, etc.) even when role is in projects, not experience.
+- On **PDF / HH**: user may use a fuller timeline offline; site is intentionally shorter.
+
 ## Red flags (cut or rewrite)
 
 - Stack dumps without action
 - Repeated opener every bullet
 - «Единый интерфейс» without saying for whom
 - Fake metrics from old CV templates
+
+## Multi-vacancy soft targeting (RF market)
+
+When optimizing for several JDs at once (Bitrix + React + e-commerce + fullstack):
+
+| JD theme | Mirror honestly in summary, skills, 1–2 bullets |
+|----------|--------------------------------------------------|
+| 1C-Bitrix / web on Bitrix | `1C-Bitrix`, компоненты/шаблоны, PHP, jQuery, SCSS, Webpack, MySQL, интернет-магазин; roles Maximaster + Energosoft |
+| React / JS frontend | `React`, `TypeScript`, `JavaScript`, `HTML5`, `CSS3`, REST API, Git, code review |
+| E-commerce | Citilink, Bitrix shops, marketplace-nda, каталог/корзина/фильтры, опт/розница |
+| Python + React | `Python (Django REST)` only where true (sendonate); `SQL`, PostgreSQL, REST |
+| Enterprise / gov-style | X5, NLMK, BI.ZONE; Scrum, GitLab CI, Keycloak, RBAC |
+
+**Do not claim:** Vue, Bitrix24 modules, Bitrix certificates, 3+ years Python, RabbitMQ, Elasticsearch unless verified.
+
+**RU ATS:** verbatim strings from JD (`1C-Bitrix`, `REST API`, `Git`, `интернет-магазин`) in summary + skills + experience. HR scans summary in 6s; tech lead reads outcomes.
+
+**Strong bullet test:** Can you defend it in an interview? Does it name tool + action + who benefited?
