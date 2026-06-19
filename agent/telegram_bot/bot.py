@@ -31,8 +31,10 @@ from orchestrator.cursor_session import cursor_holder
 from orchestrator.health import collect_health
 from orchestrator.memory import get_latest_daily_log
 from orchestrator.state import (
+    add_job_application,
     get_bounty_draft,
     get_bounty_draft_meta,
+    get_job_lead,
     get_last_daily_run,
     get_last_run,
     init_db,
@@ -49,6 +51,8 @@ from bounty.models import BountyFinding
 from bounty.scanner import manual_bounty_research, purge_bounty_queue
 from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
+from job_hunt.drafter import draft_cover_letter, format_draft_markdown
+from job_hunt.scanner import scan_and_store_leads
 from telegram_bot.background import job_running, list_running_jobs, start_background_job
 from telegram_bot.rich_send import reply_rich, send_rich_markdown
 from telegram_bot.streaming import AnswerStreamer
@@ -80,6 +84,7 @@ BOT_COMMANDS = [
     ("task", "Задача: правки + commit + deploy"),
     ("bounty", "Черновики bug bounty"),
     ("jobs", "Вакансии job hunt"),
+    ("cover", "Сопровод к вакансии"),
     ("memory", "Итог последнего daily-цикла"),
     ("pause", "Приостановить автономию"),
     ("resume", "Возобновить автономию"),
@@ -224,7 +229,10 @@ def _help_text() -> str:
         "/bounty hunt — deep research (до 3 программ)\n"
         "/bounty purge — отсеять не-submit pending\n"
         "/bounty test — проверить HackerOne API\n"
-        "/jobs — топ вакансий (job hunt, read-only)\n"
+        "/jobs — топ вакансий (job hunt)\n"
+        "/jobs scan — поиск новых вакансий (фон)\n"
+        "/cover <id> — сопровод для лида (HH, ≤500 символов)\n"
+        "/cover <id> email — сопровод для email-отклика\n"
         "/approve bounty <id> — одобрить и отправить отчёт (HackerOne)\n"
         "/reject bounty <id> — отклонить черновик\n"
         "/memory — итог последнего daily-цикла\n"
@@ -549,16 +557,103 @@ def _format_jobs_rich() -> str:
     lines.extend(
         [
             "",
-            "_Read-only: отклики только после `/approve apply <id>` (Phase 1)._",
+            "`/jobs scan` — поиск новых вакансий",
+            "`/cover <id>` — сопровод (отправляешь сам)",
         ]
     )
     return "\n".join(lines)
 
 
+def _lead_row_to_dict(row) -> dict:
+    return {k: row[k] for k in row.keys()}
+
+
 async def cmd_jobs(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
+
+    if context.args and context.args[0].lower() == "scan":
+        if not JOBHUNT_ENABLED:
+            await update.message.reply_text(
+                "Job hunt отключён. Скопируй secrets/.env.jobhunt.template → secrets/.env.jobhunt"
+            )
+            return
+        if job_running("job_scan"):
+            await update.message.reply_text(
+                "Скан вакансий уже идёт. /status — фоновые задачи."
+            )
+            return
+
+        chat_id = update.effective_chat.id
+        bot = context.bot
+
+        async def _run_scan() -> None:
+            summary = await asyncio.to_thread(scan_and_store_leads)
+            parts = [
+                f"Просмотрено: **{summary.get('fetched', 0)}** "
+                f"(HH {summary.get('by_source', {}).get('hh', 0)}, "
+                f"Habr {summary.get('by_source', {}).get('habr', 0)})",
+                f"Новых лидов: **{summary.get('new_count', 0)}**",
+                f"Ниже порога: {summary.get('below_threshold', 0)} · "
+                f"уже в базе: {summary.get('skipped_existing', 0)}",
+            ]
+            top = summary.get("top_leads") or []
+            if top:
+                parts.append("")
+                parts.append("**Топ новых:**")
+                for lead in top[:5]:
+                    parts.append(
+                        f"- #{lead['id']} ({lead['score']}) {lead['company']}: "
+                        f"[{lead['title'][:50]}]({lead['url']})"
+                    )
+            parts.append("")
+            parts.append("Список: `/jobs` · сопровод: `/cover <id>`")
+            await send_rich_markdown(
+                bot,
+                chat_id=chat_id,
+                markdown="## Job hunt — скан готов\n\n" + "\n".join(parts),
+            )
+
+        ok, msg = start_background_job("job_scan", chat_id, _run_scan)
+        await update.message.reply_text(
+            f"{msg}\n\nHH + Habr, score ≥ {JOBHUNT_MIN_MATCH}. Результат придёт сюда."
+        )
+        return
+
     await reply_rich(update, _format_jobs_rich())
+
+
+async def cmd_cover(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    if not context.args:
+        await update.message.reply_text(
+            "Использование:\n"
+            "/cover <id> — короткий текст для HH/Habr\n"
+            "/cover <id> email — письмо для email-отклика\n\n"
+            "ID из `/jobs`"
+        )
+        return
+    try:
+        lead_id = int(context.args[0])
+    except ValueError:
+        await update.message.reply_text("Неверный id. Пример: /cover 12")
+        return
+
+    channel = "hh"
+    if len(context.args) > 1 and context.args[1].lower() in ("email", "mail", "e"):
+        channel = "email"
+
+    row = get_job_lead(lead_id)
+    if not row:
+        await update.message.reply_text(f"Лид #{lead_id} не найден. См. /jobs")
+        return
+
+    lead = _lead_row_to_dict(row)
+    draft = await asyncio.to_thread(draft_cover_letter, lead, channel=channel)
+    add_job_application(lead_id, cover_letter=draft["body"], status="draft")
+
+    await reply_rich(update, format_draft_markdown(draft, lead_id=lead_id))
 
 
 async def cmd_approve_bounty(update, context) -> None:
@@ -727,6 +822,7 @@ def main() -> None:
     app.add_handler(CommandHandler("memory", cmd_memory, block=False))
     app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
+    app.add_handler(CommandHandler("cover", cmd_cover, block=False))
     app.add_handler(CommandHandler("approve", cmd_approve_bounty, block=False))
     app.add_handler(CommandHandler("reject", cmd_reject_bounty, block=False))
     app.add_handler(CommandHandler("help", cmd_help, block=False))

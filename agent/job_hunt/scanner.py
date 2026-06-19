@@ -19,6 +19,7 @@ from job_hunt.config import (
     JOBHUNT_HH_TEXT,
     JOBHUNT_MIN_MATCH,
     JOBHUNT_USER_AGENT,
+    hh_search_queries,
 )
 from job_hunt.habr import fetch_habr_vacancies
 from job_hunt.matcher import load_resume_skills, score_vacancy
@@ -91,11 +92,17 @@ def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
     """Fetch from enabled sources. HH often 403 from NL — Habr fills the gap."""
     vacancies: list[dict[str, Any]] = []
     counts: dict[str, int] = {"hh": 0, "habr": 0}
+    seen_hh: set[str] = set()
 
     if JOBHUNT_HH_ENABLED:
-        hh = fetch_hh_vacancies()
-        counts["hh"] = len(hh)
-        vacancies.extend(hh)
+        for query in hh_search_queries():
+            for item in fetch_hh_vacancies(text=query):
+                vid = str(item.get("id", ""))
+                if not vid or vid in seen_hh:
+                    continue
+                seen_hh.add(vid)
+                vacancies.append(item)
+        counts["hh"] = len(seen_hh)
 
     if JOBHUNT_HABR_ENABLED:
         habr = fetch_habr_vacancies()
