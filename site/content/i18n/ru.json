@@ -48,6 +48,7 @@
     "visits": "Визиты",
     "built": "Next.js · TypeScript · Tailwind",
     "availabilityOpen": "Открыт к предложениям",
+    "availabilityAsap": "Готов к выходу ASAP",
     "availabilityBusy": "Занят"
   },
   "lang": {

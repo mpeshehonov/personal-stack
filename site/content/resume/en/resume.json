@@ -4,19 +4,22 @@
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Sochi, Russia",
-  "summary": "Frontend / Fullstack since 2018, Senior level. B2B, e-commerce, real-time, Telegram Mini Apps — complex UI, RBAC, Orval/OpenAPI, production systems.",
+  "summary": "Frontend / Fullstack since 2018, Senior. Available ASAP. npm packages, GitLab CI / GitHub Actions, monorepos, React, TypeScript, Orval/OpenAPI.",
   "skills": [
     "TypeScript",
+    "JavaScript",
     "React",
+    "npm packages",
+    "GitLab CI",
+    "GitHub Actions",
+    "yarn workspaces",
     "Next.js",
     "TanStack Query",
     "Orval",
-    "Telegram Mini Apps",
-    "Nest.js",
-    "Playwright",
-    "Docker"
+    "Jest",
+    "Playwright"
   ],
-  "availability": "open",
+  "availability": "asap",
   "links": {
     "telegram": "https://t.me/makusimu_san",
     "linkedin": "https://www.linkedin.com/in/makusimu",

@@ -1,5 +1,7 @@
-export type Availability = "open" | "busy";
+export type Availability = "open" | "busy" | "asap";
 
 export function parseAvailability(value?: string): Availability {
-  return value === "busy" ? "busy" : "open";
+  if (value === "busy") return "busy";
+  if (value === "asap") return "asap";
+  return "open";
 }

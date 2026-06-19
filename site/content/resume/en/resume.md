@@ -4,15 +4,17 @@ Senior Frontend Engineer
 
 Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
 
+**Available to start ASAP.**
+
 ## About
 
-Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, marketplaces, real-time, and Telegram Mini Apps. I build UIs with complex flows, RBAC, Orval/OpenAPI, and REST, GraphQL, and WebSocket integrations.
+Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, real-time, Telegram Mini Apps. Complex UI, RBAC, API design, Orval/OpenAPI, REST, GraphQL, WebSocket.
 
 Full case list on the Projects page; detailed PDF on request.
 
-Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Radix UI, Tailwind CSS, Sentry, Playwright. For fullstack work I use Nest.js (REST, DTOs, Socket.io gateways, TypeORM, PostgreSQL) and REST integrations.
+Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL.
 
-Highlights: X5 Tech — procurement approval with RBAC; NLMK — production data app; BI.ZONE — Thread Intelligence; Citilink — Symfony to Next.js migration; POTALONU — sendonate.com and PREEGLOS seat maps.
+Experience with internal npm packages and monorepos (yarn workspaces), GitLab CI and GitHub Actions, code review and Scrum. X5 Tech, NLMK, BI.ZONE, Citilink, POTALONU.
 
 ## Work experience
 
@@ -20,73 +22,64 @@ Highlights: X5 Tech — procurement approval with RBAC; NLMK — production data
 
 Sep 2025 – present | Remote
 
-sendonate.com — tipping for streamers (React 19, Vite, TypeScript, Telegram Mini App, REST, OpenAPI/Orval, TanStack Query, React Hook Form, Zod, Sentry)
+sendonate.com (React 19, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions)
 
-- Three clients: streamer dashboard, Telegram Mini App, and OBS overlay.
-- Donations in Mini App: checkout, Orval REST client, dashboard with collections and alerts.
-- Live overlay: WebSocket alert queue, reconnect, TTS, and animations.
+- Three React 19 clients: dashboard, Telegram Mini App, OBS overlay.
+- Shared npm packages for UI and utils across Mini App and web dashboard.
+- GitHub Actions: lint, build, deploy; Orval REST client, WebSocket overlay.
 
-POTALONU / PREEGLOS — ticketing platform and seat map (Next.js 16, React 19, TypeScript, PostgreSQL, Drizzle ORM, Auth.js, Docker, Docker Compose, GitLab CI/CD)
+POTALONU / PREEGLOS (Next.js 16, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD)
 
-- Event storefront, ticket checkout, Telegram Mini App.
-- Hall layout editor and seat picker widget for partner sites.
-- Docker + GitLab CI/CD, nginx stage environment.
+- Storefront, checkout, Telegram Mini App, hall layout editor.
+- GitLab CI/CD: test, build, nginx stage; Docker Compose.
+- REST API design with backend, typed client via OpenAPI.
 
 ### X5 Tech — Frontend engineer
 
 Apr 2024 – Jul 2025 | Remote
 
-- Procurement approval module (NKZ 3.0): roles, statuses, transitions, drafts.
-- Keycloak SSO and module access matrix.
-- Orval from OpenAPI — typed client without manual contract updates.
-- Forms with react-hook-form and shared UI kit patterns.
-- Vite code splitting on long approval flows.
+- Procurement approval (NKZ 3.0): RBAC, statuses, long approval chains.
+- Internal npm packages for UI kit and shared types; Scrum, code review, grooming.
+- Orval from OpenAPI: REST contract design and sync with backend.
+- Vite code splitting; useMemo/useCallback on heavy forms and tables.
 
 ### BI.ZONE — Frontend engineer
 
 Jun 2023 – Mar 2024 | Remote
 
-- Shipped features for Thread Intelligence: React 16, TypeScript, Webpack, MobX, React Query, React Hook Form, axios, styled-components, BEM, @bizone components, i18next; OpenAPI client via Orval; GraphQL with Apollo Client.
-- Built entity analysis: relationship graphs on Cytoscape.js, advanced filters and analyst workflows.
-- Dynamic reports and dashboards: Highcharts, Recharts, react-grid-layout; heavy lists and grids with react-virtualized, @tanstack/react-virtual, lazy loading.
-- Dynamic reporting module on GraphQL (Apollo Client) tied to the analytics data model and existing Thread Intelligence workflows.
+- Thread Intelligence: GraphQL (Apollo), MobX, React Query, Orval.
+- Internal @bizone npm packages; Cytoscape.js graphs, dashboards, virtualization.
+- Render optimization: lazy loading, react-virtualized, Chrome DevTools profiling.
+- Code review, legacy code navigation, Jest unit tests.
 
 ### NLMK — Frontend engineer
 
 May 2022 – Jun 2023 | Remote
 
-- Cast iron release registration app — one UI instead of spreadsheets and forms.
-- Keycloak SSO, roles, protected API routes.
-- TanStack Table + React Query on large production datasets.
-- Sentry for production error monitoring.
+- Cast iron release SPA replacing spreadsheets and scattered forms.
+- GitLab CI: lint, test, build on merge requests; Keycloak SSO and RBAC.
+- Internal npm packages for shared UI and utils; TanStack Table + React Query.
+- Sentry, Jest unit tests on table and filter business logic.
 
 ### Citilink — Frontend engineer
 
 Apr 2021 – Apr 2022 | Remote
 
-- Migrated catalog and homepage from PHP/Symfony to Next.js.
-- Filters, sort, pagination, URL state.
-- REST API alignment with backend and microservices.
-- Catalog became faster and easier to use after migration.
-
-### In2View — Fullstack / Frontend engineer
-
-Feb 2018 – Mar 2021 | Remote
-
-- Built the In2View B2B platform for respondent discovery and customer-development research: React, Redux Toolkit, Firebase, Vite, Formik, react-router, i18next; marketing site on Gatsby + Contentful with Framer Motion.
-- Implemented matching between respondents and clients from reference profiles; end-to-end client and server logic with REST API, JWT, and role-based access.
-- Shipped PWA and two-factor auth via Firebase Authentication; reports, tables, filters, and aggregations for corporate users.
-- Owned the production MVP: application architecture, RBAC, data storage; evolved codebase structure as the product grew.
+- Yarn workspaces monorepo: catalog, homepage, shared npm packages.
+- Migrated catalog and homepage from PHP/Symfony to Next.js (SSR, responsive layout).
+- REST API design with backend and microservices; Redux on catalog.
+- Jest unit tests, code review in Scrum e-commerce team.
 
 ## Skills
 
 - Languages: TypeScript, JavaScript (ES6+), HTML5, CSS3/SCSS
-- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, Redux-Saga, MobX, React Query (TanStack Query), TanStack Table, React Hook Form, Zod, Formik, react-router, Framer Motion, Radix UI, Tailwind CSS
-- Complex UI & data visualization: Cytoscape.js, Highcharts, Recharts, react-grid-layout, react-virtualized, @tanstack/react-virtual, Canvas
-- Build & frontend infra: Vite, Webpack, Git, monorepos, code splitting, dynamic imports, tree shaking, CI/CD, GitHub Actions, GitLab CI/CD, Jenkins, Docker, Docker Compose, Coolify
-- Integrations & backend: REST API, GraphQL (Apollo Client), OpenAPI/Orval, WebSocket, Socket.io, WebRTC, Keycloak, Nest.js (REST, modules, DTOs, TypeORM), Drizzle ORM, PostgreSQL, Firebase (Auth, Functions), Auth.js, JWT/Passport, Node.js, Symfony, Bitrix, jQuery
-- Observability & quality: Sentry, Kibana, Grafana, Jest, Vitest, Playwright
-- UI & product: design systems and UI kits, Material UI, styled-components, BEM, i18next, Telegram Mini Apps, Figma
+- React: hooks (useMemo, useCallback, useReducer), Redux Toolkit, Redux-Saga, MobX, TanStack Query, React Hook Form, Zod, react-router, Framer Motion, Radix UI, Tailwind CSS
+- Build: Vite, Webpack, yarn workspaces, monorepos, npm packages (own and internal), code splitting, tree shaking
+- CI/CD: GitLab CI, GitHub Actions, Jenkins, Docker, Docker Compose
+- API & backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak
+- Quality: Jest, Vitest, Playwright, Sentry; Chrome DevTools (JS debug, Performance, rendering)
+- Process: Scrum, code review, grooming, design review, caniuse for JS/CSS
+- UI: design systems, UI kits, Material UI, styled-components, BEM, responsive layout, Figma
 
 ## Languages
 
@@ -103,4 +96,4 @@ Land and property (vocational) · 2015 – 2018 | Tula, Russia
 
 Web development · 2016 | Tula, Russia
 
-Hackathons & community: winner, Digital Breakthrough (2021, 2020); winner, Hack.Genesis ONLINE; finalist, Virus Hack; expert, WorldSkills.
+Hackathons: winner, Digital Breakthrough (2021, 2020); Hack.Genesis ONLINE; Virus Hack finalist; WorldSkills expert.
