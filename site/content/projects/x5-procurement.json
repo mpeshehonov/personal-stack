@@ -6,12 +6,12 @@
   "period": "04.2024 – 07.2025",
   "tagline": "Enterprise-закупки: RBAC и длинные сценарии согласования",
   "problem": "Модуль согласования закупок вырос быстрее старого фронтенда: нужен единый интерфейс для разных ролей, статусов, черновиков и длинных цепочек согласования.",
-  "contribution": "UI модуля с RBAC и длинными цепочками согласования. Внутренние npm-пакеты UI Kit, Orval по OpenAPI, Scrum и code review.",
-  "stack": ["React", "TypeScript", "Orval", "OpenAPI", "Vite", "TanStack Query", "npm packages", "GitLab CI"],
+  "contribution": "UI модуля с RBAC и длинными цепочками согласования. Keycloak SSO, Orval по OpenAPI, внутренние npm-пакеты UI Kit.",
+  "stack": ["React", "TypeScript", "Orval", "OpenAPI", "Vite", "TanStack Query", "Keycloak"],
   "outcomes": [
-    "Внутренние npm-пакеты UI Kit и shared types переиспользуются между командами",
-    "Orval синхронизирует REST контракты с backend без ручных правок",
-    "Vite code splitting и useMemo/useCallback на тяжёлых формах согласования",
+    "Единый typed API contract между фронтендом и backend",
+    "Vite code splitting на длинных сценариях согласования",
+    "RBAC-матрица без дублирования UI-компонентов",
   ],
   "featured": true,
   "order": 1

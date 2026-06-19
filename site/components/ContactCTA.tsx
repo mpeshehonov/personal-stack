@@ -31,7 +31,7 @@ export function ContactCTA({ locale, dict }: Props) {
             {dict.cta.email}
           </a>
         </div>
-        <SocialLinks />
+        <SocialLinks locale={locale} />
       </div>
     </section>
   );

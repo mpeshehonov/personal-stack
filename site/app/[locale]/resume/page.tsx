@@ -72,7 +72,7 @@ export default async function ResumePage({
           </a>
           <span className="text-ink-faint">{resume.phone}</span>
         </div>
-        <SocialLinks />
+        <SocialLinks locale={locale} />
       </header>
 
       <section className="mb-12">

@@ -13,7 +13,6 @@ export const skillGroupsRu: SkillGroup[] = [
     title: "Frontend",
     skills: [
       "React",
-      "useMemo / useCallback / useReducer",
       "Next.js (SSR/SSG)",
       "Redux Toolkit",
       "Redux-Saga",
@@ -50,12 +49,13 @@ export const skillGroupsRu: SkillGroup[] = [
     skills: [
       "Vite",
       "Webpack",
+      "Git",
       "yarn workspaces",
       "монорепозитории",
-      "npm-пакеты (собственные и внутренние)",
+      "npm-пакеты",
+      "code splitting",
       "GitLab CI",
       "GitHub Actions",
-      "Jenkins",
       "Docker",
       "Docker Compose",
       "CI/CD",
@@ -88,17 +88,7 @@ export const skillGroupsRu: SkillGroup[] = [
   },
   {
     title: "Качество",
-    skills: [
-      "Jest",
-      "Vitest",
-      "Playwright",
-      "Sentry",
-      "Chrome DevTools",
-      "Kibana",
-      "Grafana",
-      "code review",
-      "Scrum",
-    ],
+    skills: ["Sentry", "Jest", "Vitest", "Playwright", "code review", "Scrum"],
   },
   {
     title: "UI & Продукт",
@@ -125,7 +115,6 @@ export const skillGroupsEn: SkillGroup[] = [
     title: "Frontend",
     skills: [
       "React",
-      "useMemo / useCallback / useReducer",
       "Next.js (SSR/SSG)",
       "Redux Toolkit",
       "Redux-Saga",
@@ -162,12 +151,13 @@ export const skillGroupsEn: SkillGroup[] = [
     skills: [
       "Vite",
       "Webpack",
+      "Git",
       "yarn workspaces",
       "monorepos",
-      "npm packages (own and internal)",
+      "npm packages",
+      "code splitting",
       "GitLab CI",
       "GitHub Actions",
-      "Jenkins",
       "Docker",
       "Docker Compose",
       "CI/CD",
@@ -200,17 +190,7 @@ export const skillGroupsEn: SkillGroup[] = [
   },
   {
     title: "Quality",
-    skills: [
-      "Jest",
-      "Vitest",
-      "Playwright",
-      "Sentry",
-      "Chrome DevTools",
-      "Kibana",
-      "Grafana",
-      "code review",
-      "Scrum",
-    ],
+    skills: ["Sentry", "Jest", "Vitest", "Playwright", "code review", "Scrum"],
   },
   {
     title: "UI & Product",
@@ -236,15 +216,14 @@ export function getSkillGroups(locale: "ru" | "en"): SkillGroup[] {
 export const skillGroups = skillGroupsRu;
 
 export const highlightSkills = [
-  "TypeScript",
-  "React",
-  "npm packages",
-  "GitLab CI",
-  "GitHub Actions",
-  "yarn workspaces",
   "Next.js",
+  "React",
+  "TypeScript",
   "TanStack Query",
   "Orval",
-  "Jest",
+  "Telegram Mini Apps",
+  "Nest.js",
   "Playwright",
+  "GraphQL",
+  "Docker",
 ];
