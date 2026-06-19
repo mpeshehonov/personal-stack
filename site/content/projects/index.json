@@ -5,8 +5,14 @@
       "ru": "Модуль согласования закупок НКЗ 3.0",
       "en": "Procurement approval module (NKZ 3.0)"
     },
-    "company": { "ru": "X5 Tech", "en": "X5 Tech" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "X5 Tech",
+      "en": "X5 Tech"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Согласование закупок в X5: роли, статусы и длинные цепочки в одном интерфейсе",
       "en": "Procurement approval at X5: roles, statuses, and long flows in one UI"
@@ -16,15 +22,24 @@
       "en": "The procurement approval module outgrew the legacy frontend: teams needed one interface for roles, statuses, drafts, and long approval flows."
     },
     "contribution": {
-      "ru": "Спроектировал и реализовал UI-слой модуля: матрица RBAC, переходы состояний, формы с валидацией, история изменений. Подключил Keycloak (SSO) и Orval-клиент по OpenAPI.",
-      "en": "Designed and built the module UI: RBAC matrix, state transitions, validated forms, change history. Integrated Keycloak SSO and an Orval client from OpenAPI."
+      "ru": "Собрал UI-слой модуля: матрица RBAC, переходы состояний, формы с валидацией, история изменений. Keycloak SSO, Orval по OpenAPI, Vite code splitting.",
+      "en": "Built the module UI: RBAC matrix, state transitions, validated forms, change history. Keycloak SSO, Orval from OpenAPI, Vite code splitting."
     },
-    "stack": ["React", "TypeScript", "Keycloak", "Orval", "OpenAPI", "Vite", "TanStack Query", "react-hook-form"],
+    "stack": [
+      "React",
+      "TypeScript",
+      "Keycloak",
+      "Orval",
+      "OpenAPI",
+      "Vite",
+      "TanStack Query",
+      "react-hook-form"
+    ],
     "outcomes": {
       "ru": [
         "Модуль закрывает полный цикл согласования закупок в одном интерфейсе",
         "Orval убрал ручную синхронизацию типов при смене OpenAPI",
-        "Keycloak подключил SSO и матрицу ролей к UI"
+        "Vite code splitting ускорил первую загрузку на длинных сценариях"
       ],
       "en": [
         "Consolidated procurement approval into one predictable interface",
@@ -36,85 +51,19 @@
     "order": 1
   },
   {
-    "slug": "nlmk-iron-registration",
-    "title": {
-      "ru": "Регистрация выпусков чугуна",
-      "en": "Cast iron release registration"
-    },
-    "company": { "ru": "НЛМК", "en": "NLMK" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
-    "tagline": {
-      "ru": "Производственные данные доменного цеха вместо Excel и бумажных форм",
-      "en": "Production data for blast furnace operations instead of spreadsheets"
-    },
-    "problem": {
-      "ru": "Операторы доменного производства фиксировали выпуски чугуна вручную: данные терялись, фильтрация по сменам занимала время, сеть на площадке нестабильная.",
-      "en": "Blast furnace operators recorded cast iron releases manually: data was hard to filter by shift, and plant network connectivity was unreliable."
-    },
-    "contribution": {
-      "ru": "Собрал SPA на React с TanStack Table для больших объёмов данных, кэшированием через React Query и мониторингом через Sentry. Настроил вход через Keycloak.",
-      "en": "Built a React SPA with TanStack Table for large datasets, React Query caching, and Sentry monitoring. Integrated Keycloak authentication."
-    },
-    "stack": ["React", "TypeScript", "Keycloak", "TanStack Table", "TanStack Query", "Sentry", "REST API"],
-    "outcomes": {
-      "ru": [
-        "Ключевые операции цеха переведены в единый веб-интерфейс",
-        "Таблицы с фильтрами и виртуализацией — большие объёмы данных без просадки UX",
-        "Sentry сократил время поиска ошибок в продакшене"
-      ],
-      "en": [
-        "Core shop-floor operations moved into one web interface",
-        "Filtered, sortable tables handle thousands of rows without UX degradation",
-        "Sentry reduced time to diagnose production issues"
-      ]
-    },
-    "featured": true,
-    "order": 2
-  },
-  {
-    "slug": "zodiaclab",
-    "title": {
-      "ru": "ZodiacLab — маркетплейс и консультации",
-      "en": "ZodiacLab — marketplace and consultations"
-    },
-    "company": { "ru": "ZodiacLab", "en": "ZodiacLab" },
-    "role": { "ru": "Fullstack / Frontend", "en": "Fullstack / Frontend" },
-    "tagline": {
-      "ru": "Маркетплейс услуг с каталогом, заказами и видеоконсультациями в браузере",
-      "en": "Services marketplace with catalog, orders, and in-browser video consultations"
-    },
-    "problem": {
-      "ru": "Продукту нужны витрина, личный кабинет, чаты и живые аудио/видео-консультации между пользователями — без разрыва между клиентом и backend.",
-      "en": "The product needed a storefront, account area, chats, and live A/V consultations between users — with tight client–backend alignment."
-    },
-    "contribution": {
-      "ru": "zodiaclub-front на Next.js 15: каталог, ЛК, чаты. WebRTC через Socket.io (`webrtc_offer/answer/ice`), Orval, Playwright e2e. Доработки Nest.js backend.",
-      "en": "zodiaclub-front on Next.js 15: catalog, account, chats. WebRTC via Socket.io signaling, Orval, Playwright e2e. Nest.js backend extensions."
-    },
-    "stack": ["Next.js", "React", "TypeScript", "Nest.js", "WebRTC", "Socket.io", "Orval", "Playwright", "PostgreSQL"],
-    "outcomes": {
-      "ru": [
-        "Пользователь проходит путь от каталога до оплаченной консультации в одном продукте",
-        "Видеозвонки работают через WebRTC с очередью ICE-кандидатов до установки соединения",
-        "OpenAPI-контракты синхронизированы между клиентом и backend через Orval"
-      ],
-      "en": [
-        "Users complete the journey from catalog to paid consultation in one product",
-        "Video calls run on WebRTC with ICE candidate queueing before connection setup",
-        "OpenAPI contracts stay aligned between client and backend via Orval"
-      ]
-    },
-    "featured": true,
-    "order": 3
-  },
-  {
     "slug": "potalonu-seat-map",
     "title": {
       "ru": "PREEGLOS — редактор схем залов",
       "en": "PREEGLOS — seat map editor"
     },
-    "company": { "ru": "POTALONU / PREEGLOS", "en": "POTALONU / PREEGLOS" },
-    "role": { "ru": "Fullstack / Frontend", "en": "Fullstack / Frontend" },
+    "company": {
+      "ru": "POTALONU / PREEGLOS",
+      "en": "POTALONU / PREEGLOS"
+    },
+    "role": {
+      "ru": "Fullstack / Frontend",
+      "en": "Fullstack / Frontend"
+    },
     "tagline": {
       "ru": "Свой аналог seats.io: редактор зала для организаторов и виджет выбора мест",
       "en": "In-house seats.io alternative: venue editor and seat-picker widget"
@@ -127,7 +76,16 @@
       "ru": "seatmap-studio: редактор залов, виджет выбора мест, события и бронирования. potalonu-frontend: витрина и Mini App.",
       "en": "seatmap-studio: hall editor, seat picker widget, events and bookings. potalonu-frontend: storefront and Mini App."
     },
-    "stack": ["Next.js", "React", "PostgreSQL", "Drizzle ORM", "Auth.js", "Docker", "GitLab CI/CD", "Telegram Mini App"],
+    "stack": [
+      "Next.js",
+      "React",
+      "PostgreSQL",
+      "Drizzle ORM",
+      "Auth.js",
+      "Docker",
+      "GitLab CI/CD",
+      "Telegram Mini App"
+    ],
     "outcomes": {
       "ru": [
         "Организаторы собирают схемы залов без участия разработчиков",
@@ -141,7 +99,7 @@
       ]
     },
     "featured": true,
-    "order": 4
+    "order": 2
   },
   {
     "slug": "sendonate-donations",
@@ -149,8 +107,14 @@
       "ru": "sendonate.com — донаты и OBS-оверлей",
       "en": "sendonate.com — donations and OBS overlay"
     },
-    "company": { "ru": "sendonate.com", "en": "sendonate.com" },
-    "role": { "ru": "Fullstack / Frontend", "en": "Fullstack / Frontend" },
+    "company": {
+      "ru": "sendonate.com",
+      "en": "sendonate.com"
+    },
+    "role": {
+      "ru": "Fullstack / Frontend",
+      "en": "Fullstack / Frontend"
+    },
     "tagline": {
       "ru": "Донаты для стримеров: кабинет, Mini App и OBS-оверлей",
       "en": "Streamer donations: dashboard, Mini App, and OBS overlay"
@@ -163,7 +127,15 @@
       "ru": "В monolith/sendonate: React + Vite кабинет, Telegram Mini App и websocket-pages для OBS. Orval по OpenAPI, очередь алертов и reconnect на WebSocket.",
       "en": "In monolith/sendonate: React + Vite dashboard, Telegram Mini App, and websocket-pages for OBS. Orval from OpenAPI, alert queue and WebSocket reconnect."
     },
-    "stack": ["React", "Vite", "TypeScript", "Telegram Mini App", "WebSocket", "Orval", "Django REST"],
+    "stack": [
+      "React",
+      "Vite",
+      "TypeScript",
+      "Telegram Mini App",
+      "WebSocket",
+      "Orval",
+      "Django REST"
+    ],
     "outcomes": {
       "ru": [
         "Три клиента ходят в один API — донат не теряется между Mini App и эфиром",
@@ -171,9 +143,111 @@
         "Sentry и Orval на фронте упрощают отлов ошибок в продакшене"
       ],
       "en": [
-        "Donation from Mini App to on-stream alert completes in tens of seconds",
-        "Shared UI components across web and Telegram surfaces",
-        "OBS overlay queues alerts during donation bursts"
+        "Three clients share one API — tips are not lost between Mini App and stream",
+        "OBS overlay queues alerts during donation bursts",
+        "Sentry and Orval simplify production error tracking"
+      ]
+    },
+    "featured": true,
+    "order": 3
+  },
+  {
+    "slug": "zodiaclab",
+    "title": {
+      "ru": "ZodiacLab — маркетплейс и консультации",
+      "en": "ZodiacLab — marketplace and consultations"
+    },
+    "company": {
+      "ru": "ZodiacLab",
+      "en": "ZodiacLab"
+    },
+    "role": {
+      "ru": "Fullstack / Frontend",
+      "en": "Fullstack / Frontend"
+    },
+    "tagline": {
+      "ru": "Маркетплейс услуг с каталогом, заказами и видеоконсультациями в браузере",
+      "en": "Services marketplace with catalog, orders, and in-browser video consultations"
+    },
+    "problem": {
+      "ru": "Продукту нужны витрина, личный кабинет, чаты и живые аудио/видео-консультации между пользователями — без разрыва между клиентом и backend.",
+      "en": "The product needed a storefront, account area, chats, and live A/V consultations between users — with tight client–backend alignment."
+    },
+    "contribution": {
+      "ru": "zodiaclub-front на Next.js 15: каталог, ЛК, чаты. WebRTC через Socket.io (`webrtc_offer/answer/ice`), Orval, Playwright e2e. Доработки Nest.js backend.",
+      "en": "zodiaclub-front on Next.js 15: catalog, account, chats. WebRTC via Socket.io signaling, Orval, Playwright e2e. Nest.js backend extensions."
+    },
+    "stack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Nest.js",
+      "WebRTC",
+      "Socket.io",
+      "Orval",
+      "Playwright",
+      "PostgreSQL"
+    ],
+    "outcomes": {
+      "ru": [
+        "Пользователь проходит путь от каталога до оплаченной консультации в одном продукте",
+        "Видеозвонки работают через WebRTC с очередью ICE-кандидатов до установки соединения",
+        "OpenAPI-контракты синхронизированы между клиентом и backend через Orval"
+      ],
+      "en": [
+        "Users complete the journey from catalog to paid consultation in one product",
+        "Video calls run on WebRTC with ICE candidate queueing before connection setup",
+        "OpenAPI contracts stay aligned between client and backend via Orval"
+      ]
+    },
+    "featured": true,
+    "order": 4
+  },
+  {
+    "slug": "nlmk-iron-registration",
+    "title": {
+      "ru": "Регистрация выпусков чугуна",
+      "en": "Cast iron release registration"
+    },
+    "company": {
+      "ru": "НЛМК",
+      "en": "NLMK"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Производственные данные доменного цеха вместо Excel и бумажных форм",
+      "en": "Production data for blast furnace operations instead of spreadsheets"
+    },
+    "problem": {
+      "ru": "Операторы доменного производства фиксировали выпуски чугуна вручную: данные терялись, фильтрация по сменам занимала время, сеть на площадке нестабильная.",
+      "en": "Blast furnace operators recorded cast iron releases manually: data was hard to filter by shift, and plant network connectivity was unreliable."
+    },
+    "contribution": {
+      "ru": "Собрал SPA на React с TanStack Table для больших объёмов данных, кэшированием через React Query и мониторингом через Sentry. Настроил вход через Keycloak.",
+      "en": "Built a React SPA with TanStack Table for large datasets, React Query caching, and Sentry monitoring. Integrated Keycloak authentication."
+    },
+    "stack": [
+      "React",
+      "TypeScript",
+      "Keycloak",
+      "TanStack Table",
+      "TanStack Query",
+      "Sentry",
+      "REST API"
+    ],
+    "outcomes": {
+      "ru": [
+        "Ключевые операции цеха переведены в единый веб-интерфейс",
+        "Таблицы с фильтрами и виртуализацией — большие объёмы данных без просадки UX",
+        "Sentry сократил время поиска ошибок в продакшене"
+      ],
+      "en": [
+        "Core shop-floor operations moved into one web interface",
+        "Filtered, sortable tables handle large datasets without UX degradation",
+        "Sentry reduced time to diagnose production issues"
       ]
     },
     "featured": true,
@@ -185,8 +259,14 @@
       "ru": "SmartFish — сервис управления",
       "en": "SmartFish — management platform"
     },
-    "company": { "ru": "SmartFish", "en": "SmartFish" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "SmartFish",
+      "en": "SmartFish"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Клиент для рыбоводных хозяйств: участки, цехи, склады, сотрудники",
       "en": "Client for fish farms: sites, workshops, warehouses, staff"
@@ -199,7 +279,18 @@
       "ru": "Развиваю smartfish-frontend (FSD): участки, бассейны, склады, цехи, сотрудники, карты Yandex Maps, аналитика. Kubb/Orval по OpenAPI specs (sites, pools, warehouses, analytics и др.).",
       "en": "Develop smartfish-frontend (FSD): sites, pools, warehouses, workshops, staff, Yandex Maps, analytics. Kubb/Orval from OpenAPI specs (sites, pools, warehouses, analytics, etc.)."
     },
-    "stack": ["React", "TypeScript", "Vite", "Effector", "FSD", "Kubb", "Orval", "Yandex Maps", "Recharts", "Vitest"],
+    "stack": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Effector",
+      "FSD",
+      "Kubb",
+      "Orval",
+      "Yandex Maps",
+      "Recharts",
+      "Vitest"
+    ],
     "outcomes": {
       "ru": [
         "Модули производства и склада живут в одном SPA с RBAC по ролям",
@@ -216,157 +307,19 @@
     "order": 6
   },
   {
-    "slug": "smartfish-kkm",
-    "title": {
-      "ru": "SmartFish KKM — кассовый модуль",
-      "en": "SmartFish KKM — point of sale"
-    },
-    "company": { "ru": "SmartFish", "en": "SmartFish" },
-    "role": { "ru": "Fullstack", "en": "Fullstack" },
-    "tagline": {
-      "ru": "Касса в smartfish-frontend + NestJS backend для смен и фискализации",
-      "en": "POS in smartfish-frontend + NestJS backend for shifts and fiscal"
-    },
-    "problem": {
-      "ru": "Рознице нужны смены, оплаты и фискальные чеки — отдельный backend и UI-модуль в основном клиенте.",
-      "en": "Retail needed shifts, payments, and fiscal receipts — a dedicated backend and UI module in the main client."
-    },
-    "contribution": {
-      "ru": "smartfish-kkm-backend на NestJS: Shifts, Products, Payments, Fiscal, Shop. На фронте — KKM-слайс с Orval/Kubb по API_kkm.yaml.",
-      "en": "smartfish-kkm-backend on NestJS: Shifts, Products, Payments, Fiscal, Shop. Frontend KKM slice with Orval/Kubb from API_kkm.yaml."
-    },
-    "stack": ["NestJS", "TypeORM", "PostgreSQL", "Swagger", "React", "Kubb", "Orval"],
-    "outcomes": {
-      "ru": [
-        "Swagger описывает POS API — фронт генерирует клиент, а не копирует DTO руками",
-        "Модуль KKM встроен в smartfish-frontend, без отдельного приложения",
-        "Фискализация и оплаты вынесены в отдельные Nest-модули"
-      ],
-      "en": [
-        "Swagger documents POS API — frontend generates the client instead of copying DTOs",
-        "KKM module lives inside smartfish-frontend, no separate app",
-        "Fiscal and Payments split into dedicated Nest modules"
-      ]
-    },
-    "featured": false,
-    "order": 7
-  },
-  {
-    "slug": "smartfish-backend",
-    "title": {
-      "ru": "SmartFish — API витрины и B2B",
-      "en": "SmartFish — storefront and B2B API"
-    },
-    "company": { "ru": "SmartFish", "en": "SmartFish" },
-    "role": { "ru": "Fullstack", "en": "Fullstack" },
-    "tagline": {
-      "ru": "NestJS backend для заказов, корзины, оплат и админки (akvaprom / B2B)",
-      "en": "NestJS backend for orders, cart, payments, and admin (akvaprom / B2B)"
-    },
-    "problem": {
-      "ru": "Публичная витрина, B2B-кабинет и Aquaprom сидят на одном API — нужны заказы, корзина, RBAC и платежи в одном backend.",
-      "en": "Public storefront, B2B cabinet, and Aquaprom share one API — orders, cart, RBAC, and payments in one backend."
-    },
-    "contribution": {
-      "ru": "Дорабатываю smartfish-landing/apps/backend: orders, cart, payments, promocodes, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets.",
-      "en": "Extend smartfish-landing/apps/backend: orders, cart, payments, promocodes, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets."
-    },
-    "stack": ["NestJS", "TypeORM", "PostgreSQL", "OpenAPI", "Docker", "WebSockets"],
-    "outcomes": {
-      "ru": [
-        "B2B и розница ходят в один backend через /backend-api",
-        "Админка закрывает каталог, пользователей и промокоды",
-        "Контракты отдаются фронтам b2b-sm и landing-smartfish"
-      ],
-      "en": [
-        "B2B and retail hit the same backend via /backend-api",
-        "Admin covers catalog, users, and promocodes",
-        "Contracts feed b2b-sm and landing-smartfish frontends"
-      ]
-    },
-    "featured": false,
-    "order": 8
-  },
-  {
-    "slug": "smartfish-landing",
-    "title": {
-      "ru": "SmartFish — витрина akvaprom.kg",
-      "en": "SmartFish — akvaprom.kg storefront"
-    },
-    "company": { "ru": "SmartFish", "en": "SmartFish" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
-    "tagline": {
-      "ru": "Публичный сайт: каталог, корзина, checkout, профиль",
-      "en": "Public site: catalog, cart, checkout, profile"
-    },
-    "problem": {
-      "ru": "Нужен маркетинговый сайт и интернет-магазин на одном домене (akvaprom.kg), без смешения с ERP-клиентом.",
-      "en": "Marketing site and online shop on one domain (akvaprom.kg), separate from the ERP client."
-    },
-    "contribution": {
-      "ru": "landing-smartfish на Next.js: главная с каруселями и категориями, shop/checkout/profile, Yandex Metrika, Framer Motion. Монорепо smartfish-landing — зеркало прод-сборки.",
-      "en": "landing-smartfish on Next.js: homepage with carousels and categories, shop/checkout/profile, Yandex Metrika, Framer Motion. smartfish-landing monorepo mirrors production."
-    },
-    "stack": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion", "Yandex Metrika"],
-    "outcomes": {
-      "ru": [
-        "Покупатель идёт от главной до checkout без перехода в ERP",
-        "Контент и витрину можно катить отдельно от smartfish-frontend",
-        "Адаптив под мобильный трафик витрины"
-      ],
-      "en": [
-        "Shoppers go from homepage to checkout without opening the ERP",
-        "Marketing and storefront deploy separately from smartfish-frontend",
-        "Responsive layout for mobile traffic"
-      ]
-    },
-    "featured": false,
-    "order": 9
-  },
-  {
-    "slug": "smartfish-bots",
-    "title": {
-      "ru": "SmartFish — Telegram-боты",
-      "en": "SmartFish — Telegram bots"
-    },
-    "company": { "ru": "SmartFish", "en": "SmartFish" },
-    "role": { "ru": "Fullstack", "en": "Fullstack" },
-    "tagline": {
-      "ru": "B2B-отчёты в Telegram и уведомления о розничных заказах",
-      "en": "B2B Telegram reports and retail order alerts"
-    },
-    "problem": {
-      "ru": "Менеджерам B2B нужны утренние/дневные сводки заказов в Telegram, а рознице — мгновенное сообщение о новом заказе.",
-      "en": "B2B managers need morning/noon order summaries in Telegram; retail needs instant alerts on new orders."
-    },
-    "contribution": {
-      "ru": "В smartfish-landing/backend: telegram-reports (ежедневные XLSX-отчёты B2B, напоминания), aquaprom-telegram (webhook-бот, подписчики), уведомления о retail-заказах.",
-      "en": "In smartfish-landing/backend: telegram-reports (daily B2B XLSX reports, reminders), aquaprom-telegram (webhook bot, subscribers), retail order notifications."
-    },
-    "stack": ["NestJS", "Telegram Bot API", "TypeORM", "PostgreSQL", "node-cron"],
-    "outcomes": {
-      "ru": [
-        "Отчёт B2B уходит в чат по расписанию с XLSX-вложением",
-        "Новый розничный заказ триггерит сообщение в Telegram",
-        "Подписчики и команды бота хранятся в PostgreSQL"
-      ],
-      "en": [
-        "Scheduled B2B report posts to chat with XLSX attachment",
-        "New retail order triggers a Telegram message",
-        "Bot subscribers and commands stored in PostgreSQL"
-      ]
-    },
-    "featured": false,
-    "order": 10
-  },
-  {
     "slug": "citilink-migration",
     "title": {
       "ru": "Миграция e-commerce на Next.js",
       "en": "E-commerce migration to Next.js"
     },
-    "company": { "ru": "Citilink", "en": "Citilink" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "Citilink",
+      "en": "Citilink"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Каталог и главная: с PHP/Symfony на Next.js без потери SEO",
       "en": "Catalog and homepage: Symfony to Next.js without losing SEO"
@@ -379,7 +332,13 @@
       "ru": "Участвовал в миграции: SSR, фильтрация, сортировка, пагинация с состоянием в URL, согласование REST API с backend-командами.",
       "en": "Contributed to migration: SSR, filters, sorting, URL-state pagination, REST API alignment with backend teams."
     },
-    "stack": ["Next.js", "React", "TypeScript", "REST API", "SSR"],
+    "stack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "REST API",
+      "SSR"
+    ],
     "outcomes": {
       "ru": [
         "Каталог и главная работают на Next.js с сохранением SEO-поведения",
@@ -393,7 +352,7 @@
       ]
     },
     "featured": false,
-    "order": 11
+    "order": 7
   },
   {
     "slug": "bizone-thread-intelligence",
@@ -401,8 +360,14 @@
       "ru": "Thread Intelligence",
       "en": "Thread Intelligence"
     },
-    "company": { "ru": "BI.ZONE", "en": "BI.ZONE" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "BI.ZONE",
+      "en": "BI.ZONE"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Аналитика угроз: графы связей, отчёты и тяжёлые таблицы",
       "en": "Threat intelligence: relationship graphs, reports, and heavy grids"
@@ -412,15 +377,25 @@
       "en": "Security analysts needed entity graphs, filters over large datasets, and configurable dashboards in one product."
     },
     "contribution": {
-      "ru": "Реализовал страницу анализа на Cytoscape.js, модули GraphQL на Apollo Client, виртуализированные таблицы и дашборды на Highcharts и Recharts.",
-      "en": "Built entity analysis on Cytoscape.js, GraphQL modules on Apollo Client, virtualized grids, and dashboards with Highcharts and Recharts."
+      "ru": "Страница анализа сущностей: граф связей на D3.js, сложные фильтры, GraphQL-отчёты на Apollo Client. npm-пакеты @bizone, виртуализация тяжёлых списков.",
+      "en": "Entity analysis page: relationship graph on D3.js, advanced filters, GraphQL reports on Apollo Client. @bizone npm packages, virtualized heavy lists."
     },
-    "stack": ["React", "GraphQL", "Apollo Client", "MobX", "Cytoscape.js", "Highcharts", "Orval"],
+    "stack": [
+      "React",
+      "D3.js",
+      "GraphQL",
+      "Apollo Client",
+      "MobX",
+      "React Query",
+      "Orval",
+      "Highcharts",
+      "Recharts"
+    ],
     "outcomes": {
       "ru": [
-        "Аналитики видят связи между сущностями в интерактивном графе",
-        "Динамические отчёты подключаются к той же модели данных, что и основные сценарии",
-        "Тяжёлые списки не «вешают» браузер благодаря виртуализации"
+        "Аналитики строят цепочки связей между сущностями в одном экране",
+        "Динамические отчёты подключены к той же GraphQL-модели, что и основные сценарии",
+        "Виртуализация держит большие таблицы без просадки UX"
       ],
       "en": [
         "Analysts explore entity relationships in an interactive graph",
@@ -429,7 +404,7 @@
       ]
     },
     "featured": false,
-    "order": 12
+    "order": 8
   },
   {
     "slug": "potalonu-tickets",
@@ -437,8 +412,14 @@
       "ru": "potalonu.com — афиша и билеты",
       "en": "potalonu.com — events and tickets"
     },
-    "company": { "ru": "POTALONU", "en": "POTALONU" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "POTALONU",
+      "en": "POTALONU"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Витрина мероприятий и покупка билетов в вебе и Telegram Mini App",
       "en": "Events storefront and ticket purchase on web and Telegram Mini App"
@@ -451,7 +432,14 @@
       "ru": "Собрал витрину на Next.js 16: Orval, TanStack Query, формы React Hook Form + Zod, next-intl, Mini App на `@twa-dev/sdk`, графики Chart.js.",
       "en": "Built the Next.js 16 storefront: Orval, TanStack Query, React Hook Form + Zod, next-intl, Mini App on `@twa-dev/sdk`, Chart.js analytics."
     },
-    "stack": ["Next.js", "Orval", "TanStack Query", "next-intl", "Telegram Mini App", "Chart.js"],
+    "stack": [
+      "Next.js",
+      "Orval",
+      "TanStack Query",
+      "next-intl",
+      "Telegram Mini App",
+      "Chart.js"
+    ],
     "outcomes": {
       "ru": [
         "Покупка билета доступна и в вебе, и в Mini App с общей логикой",
@@ -465,151 +453,7 @@
       ]
     },
     "featured": false,
-    "order": 13
-  },
-  {
-    "slug": "in2view",
-    "title": {
-      "ru": "In2View — B2B-платформа исследований",
-      "en": "In2View — B2B research platform"
-    },
-    "company": { "ru": "In2View", "en": "In2View" },
-    "role": { "ru": "Fullstack", "en": "Fullstack" },
-    "tagline": {
-      "ru": "Мэтчинг респондентов и заказчиков для кастдев-исследований",
-      "en": "Matching respondents and clients for customer development research"
-    },
-    "problem": {
-      "ru": "Стартапу нужен MVP: поиск респондентов, анкеты, роли, отчёты и маркетинговый сайт — с нуля до production.",
-      "en": "The startup needed an MVP: respondent search, surveys, roles, reports, and a marketing site — from zero to production."
-    },
-    "contribution": {
-      "ru": "Разработал платформу на React + Redux Toolkit и REST API, маркетинг на Gatsby + Contentful, Firebase Auth с 2FA и PWA.",
-      "en": "Built the platform on React + Redux Toolkit and REST API, marketing on Gatsby + Contentful, Firebase Auth with 2FA and PWA."
-    },
-    "stack": ["React", "Redux Toolkit", "Firebase", "Gatsby", "Framer Motion", "JWT"],
-    "outcomes": {
-      "ru": [
-        "MVP вышел в production с ролевой моделью и мэтчингом по анкетам",
-        "PWA и 2FA закрыли базовые требования корпоративных клиентов",
-        "Маркетинговый сайт и приложение развиваются параллельно"
-      ],
-      "en": [
-        "MVP shipped to production with roles and survey-based matching",
-        "PWA and 2FA met baseline enterprise client requirements",
-        "Marketing site and app evolved in parallel"
-      ]
-    },
-    "featured": false,
-    "order": 14
-  },
-  {
-    "slug": "duckmaster",
-    "title": {
-      "ru": "DuckMaster — игра в Telegram",
-      "en": "DuckMaster — Telegram game"
-    },
-    "company": { "ru": "Коммерческий проект", "en": "Commercial project" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
-    "tagline": {
-      "ru": "Игровой Mini App: онбординг, боевая механика и стабильные релизы",
-      "en": "Game Mini App: onboarding, combat mechanics, stable releases"
-    },
-    "problem": {
-      "ru": "Игре в Telegram нужны новый онбординг и механика атак без просадки производительности на слабых устройствах.",
-      "en": "The Telegram game needed new onboarding and attack mechanics without hurting performance on low-end devices."
-    },
-    "contribution": {
-      "ru": "Вынес игровую логику в Redux-Saga, оптимизировал Vite-сборку и конвертацию в WebP, покрыл ключевые сценарии Vitest.",
-      "en": "Moved game logic into Redux-Saga, optimized Vite builds and WebP conversion, covered key flows with Vitest."
-    },
-    "stack": ["React", "Redux-Saga", "Vite", "Vitest", "WebSocket", "Telegram Mini App"],
-    "outcomes": {
-      "ru": [
-        "Новый онбординг и атаки выкатились без регрессий в core-лупе",
-        "WebP и chunking уменьшили вес ассетов для мобильных клиентов",
-        "Vitest страхует релизы игровых сценариев"
-      ],
-      "en": [
-        "New onboarding and attacks shipped without core-loop regressions",
-        "WebP and chunking reduced asset weight on mobile clients",
-        "Vitest guards game-flow releases"
-      ]
-    },
-    "featured": false,
-    "order": 15
-  },
-  {
-    "slug": "handstars",
-    "title": {
-      "ru": "HandStars — игра в Telegram",
-      "en": "HandStars — Telegram game"
-    },
-    "company": { "ru": "Коммерческий проект", "en": "Commercial project" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
-    "tagline": {
-      "ru": "Mini App с real-time, TonConnect и анимациями",
-      "en": "Mini App with real-time, TonConnect, and motion"
-    },
-    "problem": {
-      "ru": "Игра должна работать в Telegram WebApp: сокеты, кошелёк TON, анимации и аналитика — в одном клиенте.",
-      "en": "The game had to run in Telegram WebApp: sockets, TON wallet, animations, and analytics in one client."
-    },
-    "contribution": {
-      "ru": "Собрал UI на React + MobX, real-time через socket.io, TonConnect, Orval для REST, Framer Motion и Lottie для анимаций.",
-      "en": "Built UI on React + MobX, real-time via socket.io, TonConnect, Orval for REST, Framer Motion and Lottie for motion."
-    },
-    "stack": ["React", "MobX", "socket.io", "TonConnect", "Orval", "Framer Motion", "Telegram Mini App"],
-    "outcomes": {
-      "ru": [
-        "Играбельный Mini App с оплатами через TON",
-        "Real-time события не блокируют UI благодаря отдельному слою состояния",
-        "Аналитика Telegram подключена для продуктовых решений"
-      ],
-      "en": [
-        "Playable Mini App with TON payments",
-        "Real-time events don't block UI thanks to a dedicated state layer",
-        "Telegram analytics wired for product decisions"
-      ]
-    },
-    "featured": false,
-    "order": 16
-  },
-  {
-    "slug": "it-simulator",
-    "title": {
-      "ru": "Симулятор IT-карьеры",
-      "en": "IT career simulator"
-    },
-    "company": { "ru": "Коммерческий проект", "en": "Commercial project" },
-    "role": { "ru": "Fullstack", "en": "Fullstack" },
-    "tagline": {
-      "ru": "Пиксель-арт игра о карьере разработчика в Telegram",
-      "en": "Pixel-art developer career game in Telegram"
-    },
-    "problem": {
-      "ru": "Нужен лёгкий игровой MVP внутри Telegram с сохранением прогресса между сессиями.",
-      "en": "A lightweight game MVP inside Telegram needed persistent progress between sessions."
-    },
-    "contribution": {
-      "ru": "Собрал игру на Next.js App Router, Zustand, Radix UI, Supabase SSR для профиля и прогресса, адаптация под WebApp viewport.",
-      "en": "Built the game on Next.js App Router, Zustand, Radix UI, Supabase SSR for profile and progress, WebApp viewport adaptation."
-    },
-    "stack": ["Next.js", "Zustand", "Supabase", "Telegram WebApp", "Tailwind CSS"],
-    "outcomes": {
-      "ru": [
-        "Играбельный MVP внутри Telegram без отдельной установки",
-        "Прогресс сохраняется в Supabase между заходами",
-        "UI адаптирован под ограничения WebApp"
-      ],
-      "en": [
-        "Playable MVP inside Telegram without a separate install",
-        "Progress persists in Supabase between sessions",
-        "UI adapted to WebApp constraints"
-      ]
-    },
-    "featured": false,
-    "order": 17
+    "order": 9
   },
   {
     "slug": "marketplace-nda",
@@ -617,8 +461,14 @@
       "ru": "Маркетплейс (NDA)",
       "en": "Marketplace (NDA)"
     },
-    "company": { "ru": "NDA", "en": "NDA" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "NDA",
+      "en": "NDA"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Маркетплейс с нуля: каталог, checkout, i18n",
       "en": "Marketplace from scratch: catalog, checkout, i18n"
@@ -628,10 +478,21 @@
       "en": "An NDA client needed the full user journey from catalog to checkout with localization and observability."
     },
     "contribution": {
-      "ru": "Спроектировал архитектуру на Next.js 14, Orval, next-intl, Storybook, e2e на Playwright, Sentry в production.",
-      "en": "Designed Next.js 14 architecture with Orval, next-intl, Storybook, Playwright e2e, and Sentry in production."
+      "ru": "Собрал приложение на Next.js 14: Orval, TailwindCSS, React Hook Form + Zod, next-intl, Storybook, e2e на Playwright, Sentry в production.",
+      "en": "Built the Next.js 14 app: Orval, TailwindCSS, React Hook Form + Zod, next-intl, Storybook, Playwright e2e, and Sentry in production."
     },
-    "stack": ["Next.js", "Orval", "next-intl", "Playwright", "Storybook", "Sentry"],
+    "stack": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Orval",
+      "React Hook Form",
+      "Zod",
+      "next-intl",
+      "Playwright",
+      "Storybook",
+      "Sentry"
+    ],
     "outcomes": {
       "ru": [
         "Пользовательский флоу от каталога до checkout закрыт в одном приложении",
@@ -645,7 +506,349 @@
       ]
     },
     "featured": false,
-    "order": 18
+    "order": 10
+  },
+  {
+    "slug": "in2view",
+    "title": {
+      "ru": "In2View — B2B-платформа исследований",
+      "en": "In2View — B2B research platform"
+    },
+    "company": {
+      "ru": "In2View",
+      "en": "In2View"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "Мэтчинг респондентов и заказчиков для кастдев-исследований",
+      "en": "Matching respondents and clients for customer development research"
+    },
+    "problem": {
+      "ru": "Стартапу нужен MVP: поиск респондентов, анкеты, роли, отчёты и маркетинговый сайт — с нуля до production.",
+      "en": "The startup needed an MVP: respondent search, surveys, roles, reports, and a marketing site — from zero to production."
+    },
+    "contribution": {
+      "ru": "Разработал платформу на React + Redux Toolkit и REST API, маркетинг на Gatsby + Contentful, Firebase Auth с 2FA и PWA.",
+      "en": "Built the platform on React + Redux Toolkit and REST API, marketing on Gatsby + Contentful, Firebase Auth with 2FA and PWA."
+    },
+    "stack": [
+      "React",
+      "Redux Toolkit",
+      "Firebase",
+      "Gatsby",
+      "Framer Motion",
+      "JWT"
+    ],
+    "outcomes": {
+      "ru": [
+        "MVP вышел в production с ролевой моделью и мэтчингом по анкетам",
+        "PWA и 2FA закрыли базовые требования корпоративных клиентов",
+        "Маркетинговый сайт и приложение развиваются параллельно"
+      ],
+      "en": [
+        "MVP shipped to production with roles and survey-based matching",
+        "PWA and 2FA met baseline enterprise client requirements",
+        "Marketing site and app evolved in parallel"
+      ]
+    },
+    "featured": false,
+    "order": 11
+  },
+  {
+    "slug": "rostelecom-yaga",
+    "title": {
+      "ru": "Яга — корпоративный трекер задач",
+      "en": "Yaga — enterprise task tracker"
+    },
+    "company": {
+      "ru": "Ростелеком",
+      "en": "Rostelecom"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Модуль шаблонов бизнес-процессов в аналоге Jira",
+      "en": "Business process template module in a Jira-like system"
+    },
+    "problem": {
+      "ru": "Корпоративной системе нужны настраиваемые шаблоны процессов без правок кода при каждом новом сценарии.",
+      "en": "The enterprise system needed configurable process templates without code changes for each new workflow."
+    },
+    "contribution": {
+      "ru": "Модуль шаблонов на React + Redux Toolkit, REST по OpenAPI. Декомпозиция задач, code review, мемоизация тяжёлых экранов.",
+      "en": "Template module on React + Redux Toolkit, REST via OpenAPI. Task breakdown, code review, memoization on heavy screens."
+    },
+    "stack": [
+      "React",
+      "TypeScript",
+      "Redux Toolkit",
+      "OpenAPI",
+      "REST API"
+    ],
+    "outcomes": {
+      "ru": [
+        "Шаблоны процессов настраиваются без участия разработчиков",
+        "OpenAPI-контракт синхронизирован между frontend и backend",
+        "Команда работала в Scrum с регулярным CR"
+      ],
+      "en": [
+        "Process templates configurable without developer involvement",
+        "OpenAPI contract kept frontend and backend aligned",
+        "Team worked in Scrum with regular code review"
+      ]
+    },
+    "featured": false,
+    "order": 12
+  },
+  {
+    "slug": "sbertech-opensearch",
+    "title": {
+      "ru": "OpenSearch Dashboards + Vault",
+      "en": "OpenSearch Dashboards + Vault"
+    },
+    "company": {
+      "ru": "СберТех",
+      "en": "SberTech"
+    },
+    "role": {
+      "ru": "Frontend / Node.js",
+      "en": "Frontend / Node.js"
+    },
+    "tagline": {
+      "ru": "Автоматизация сертификатов и визуализация логов",
+      "en": "Certificate automation and log visualization"
+    },
+    "problem": {
+      "ru": "OpenSearch Dashboards нужно безопасно подключить к Vault и обновлять TLS-сертификаты без ручных операций.",
+      "en": "OpenSearch Dashboards had to integrate with Vault and rotate TLS certificates without manual ops."
+    },
+    "contribution": {
+      "ru": "Интеграция Dashboards с Vault на Node.js, GitLab CI для ротации сертификатов, Jest-тесты на pipeline.",
+      "en": "Dashboards–Vault integration in Node.js, GitLab CI certificate rotation, Jest tests in pipeline."
+    },
+    "stack": [
+      "Node.js",
+      "OpenSearch Dashboards",
+      "Vault",
+      "GitLab CI",
+      "Jest",
+      "Kibana"
+    ],
+    "outcomes": {
+      "ru": [
+        "Сертификаты обновляются через CI без простоя дашбордов",
+        "Jest покрывает критичные шаги интеграции",
+        "Модуль визуализации подключён к корпоративному контуру"
+      ],
+      "en": [
+        "Certificates rotate via CI without dashboard downtime",
+        "Jest covers critical integration steps",
+        "Visualization module wired into corporate environment"
+      ]
+    },
+    "featured": false,
+    "order": 13
+  },
+  {
+    "slug": "smartfish-kkm",
+    "title": {
+      "ru": "SmartFish KKM — кассовый модуль",
+      "en": "SmartFish KKM — point of sale"
+    },
+    "company": {
+      "ru": "SmartFish",
+      "en": "SmartFish"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "Касса в smartfish-frontend + NestJS backend для смен и фискализации",
+      "en": "POS in smartfish-frontend + NestJS backend for shifts and fiscal"
+    },
+    "problem": {
+      "ru": "Рознице нужны смены, оплаты и фискальные чеки — отдельный backend и UI-модуль в основном клиенте.",
+      "en": "Retail needed shifts, payments, and fiscal receipts — a dedicated backend and UI module in the main client."
+    },
+    "contribution": {
+      "ru": "smartfish-kkm-backend на NestJS: Shifts, Products, Payments, Fiscal, Shop. На фронте — KKM-слайс с Orval/Kubb по API_kkm.yaml.",
+      "en": "smartfish-kkm-backend on NestJS: Shifts, Products, Payments, Fiscal, Shop. Frontend KKM slice with Orval/Kubb from API_kkm.yaml."
+    },
+    "stack": [
+      "NestJS",
+      "TypeORM",
+      "PostgreSQL",
+      "Swagger",
+      "React",
+      "Kubb",
+      "Orval"
+    ],
+    "outcomes": {
+      "ru": [
+        "Swagger описывает POS API — фронт генерирует клиент, а не копирует DTO руками",
+        "Модуль KKM встроен в smartfish-frontend, без отдельного приложения",
+        "Фискализация и оплаты вынесены в отдельные Nest-модули"
+      ],
+      "en": [
+        "Swagger documents POS API — frontend generates the client instead of copying DTOs",
+        "KKM module lives inside smartfish-frontend, no separate app",
+        "Fiscal and Payments split into dedicated Nest modules"
+      ]
+    },
+    "featured": false,
+    "order": 14
+  },
+  {
+    "slug": "smartfish-backend",
+    "title": {
+      "ru": "SmartFish — API витрины и B2B",
+      "en": "SmartFish — storefront and B2B API"
+    },
+    "company": {
+      "ru": "SmartFish",
+      "en": "SmartFish"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "NestJS backend для заказов, корзины, оплат и админки (akvaprom / B2B)",
+      "en": "NestJS backend for orders, cart, payments, and admin (akvaprom / B2B)"
+    },
+    "problem": {
+      "ru": "Публичная витрина, B2B-кабинет и Aquaprom сидят на одном API — нужны заказы, корзина, RBAC и платежи в одном backend.",
+      "en": "Public storefront, B2B cabinet, and Aquaprom share one API — orders, cart, RBAC, and payments in one backend."
+    },
+    "contribution": {
+      "ru": "Дорабатываю smartfish-landing/apps/backend: orders, cart, payments, promocodes, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets.",
+      "en": "Extend smartfish-landing/apps/backend: orders, cart, payments, promocodes, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets."
+    },
+    "stack": [
+      "NestJS",
+      "TypeORM",
+      "PostgreSQL",
+      "OpenAPI",
+      "Docker",
+      "WebSockets"
+    ],
+    "outcomes": {
+      "ru": [
+        "B2B и розница ходят в один backend через /backend-api",
+        "Админка закрывает каталог, пользователей и промокоды",
+        "Контракты отдаются фронтам b2b-sm и landing-smartfish"
+      ],
+      "en": [
+        "B2B and retail hit the same backend via /backend-api",
+        "Admin covers catalog, users, and promocodes",
+        "Contracts feed b2b-sm and landing-smartfish frontends"
+      ]
+    },
+    "featured": false,
+    "order": 15
+  },
+  {
+    "slug": "smartfish-landing",
+    "title": {
+      "ru": "SmartFish — витрина akvaprom.kg",
+      "en": "SmartFish — akvaprom.kg storefront"
+    },
+    "company": {
+      "ru": "SmartFish",
+      "en": "SmartFish"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Публичный сайт: каталог, корзина, checkout, профиль",
+      "en": "Public site: catalog, cart, checkout, profile"
+    },
+    "problem": {
+      "ru": "Нужен маркетинговый сайт и интернет-магазин на одном домене (akvaprom.kg), без смешения с ERP-клиентом.",
+      "en": "Marketing site and online shop on one domain (akvaprom.kg), separate from the ERP client."
+    },
+    "contribution": {
+      "ru": "landing-smartfish на Next.js: главная с каруселями и категориями, shop/checkout/profile, Yandex Metrika, Framer Motion. Монорепо smartfish-landing — зеркало прод-сборки.",
+      "en": "landing-smartfish on Next.js: homepage with carousels and categories, shop/checkout/profile, Yandex Metrika, Framer Motion. smartfish-landing monorepo mirrors production."
+    },
+    "stack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Yandex Metrika"
+    ],
+    "outcomes": {
+      "ru": [
+        "Покупатель идёт от главной до checkout без перехода в ERP",
+        "Контент и витрину можно катить отдельно от smartfish-frontend",
+        "Адаптив под мобильный трафик витрины"
+      ],
+      "en": [
+        "Shoppers go from homepage to checkout without opening the ERP",
+        "Marketing and storefront deploy separately from smartfish-frontend",
+        "Responsive layout for mobile traffic"
+      ]
+    },
+    "featured": false,
+    "order": 16
+  },
+  {
+    "slug": "smartfish-bots",
+    "title": {
+      "ru": "SmartFish — Telegram-боты",
+      "en": "SmartFish — Telegram bots"
+    },
+    "company": {
+      "ru": "SmartFish",
+      "en": "SmartFish"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "B2B-отчёты в Telegram и уведомления о розничных заказах",
+      "en": "B2B Telegram reports and retail order alerts"
+    },
+    "problem": {
+      "ru": "Менеджерам B2B нужны утренние/дневные сводки заказов в Telegram, а рознице — мгновенное сообщение о новом заказе.",
+      "en": "B2B managers need morning/noon order summaries in Telegram; retail needs instant alerts on new orders."
+    },
+    "contribution": {
+      "ru": "В smartfish-landing/backend: telegram-reports (ежедневные XLSX-отчёты B2B, напоминания), aquaprom-telegram (webhook-бот, подписчики), уведомления о retail-заказах.",
+      "en": "In smartfish-landing/backend: telegram-reports (daily B2B XLSX reports, reminders), aquaprom-telegram (webhook bot, subscribers), retail order notifications."
+    },
+    "stack": [
+      "NestJS",
+      "Telegram Bot API",
+      "TypeORM",
+      "PostgreSQL",
+      "node-cron"
+    ],
+    "outcomes": {
+      "ru": [
+        "Отчёт B2B уходит в чат по расписанию с XLSX-вложением",
+        "Новый розничный заказ триггерит сообщение в Telegram",
+        "Подписчики и команды бота хранятся в PostgreSQL"
+      ],
+      "en": [
+        "Scheduled B2B report posts to chat with XLSX attachment",
+        "New retail order triggers a Telegram message",
+        "Bot subscribers and commands stored in PostgreSQL"
+      ]
+    },
+    "featured": false,
+    "order": 17
   },
   {
     "slug": "stratwise",
@@ -653,8 +856,14 @@
       "ru": "Stratwise.ai — торговые стратегии",
       "en": "Stratwise.ai — trading strategies"
     },
-    "company": { "ru": "Stratwise", "en": "Stratwise" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "Stratwise",
+      "en": "Stratwise"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Конструктор стратегий и графики котировок",
       "en": "Strategy builder and quote charts"
@@ -667,7 +876,14 @@
       "ru": "Реализовал экраны на React + Vite, интеграцию с Firebase, графики TradingView lightweight-charts и Recharts, REST через axios.",
       "en": "Built screens on React + Vite, Firebase integration, TradingView lightweight-charts and Recharts, REST via axios."
     },
-    "stack": ["React", "Vite", "TradingView", "Recharts", "Firebase", "axios"],
+    "stack": [
+      "React",
+      "Vite",
+      "TradingView",
+      "Recharts",
+      "Firebase",
+      "axios"
+    ],
     "outcomes": {
       "ru": [
         "Пользователь собирает и просматривает стратегии в одном интерфейсе",
@@ -681,7 +897,7 @@
       ]
     },
     "featured": false,
-    "order": 19
+    "order": 18
   },
   {
     "slug": "quan2um",
@@ -689,8 +905,14 @@
       "ru": "Quan2um — криптобиржа",
       "en": "Quan2um — crypto exchange"
     },
-    "company": { "ru": "Quan2um", "en": "Quan2um" },
-    "role": { "ru": "Frontend-разработчик", "en": "Frontend engineer" },
+    "company": {
+      "ru": "Quan2um",
+      "en": "Quan2um"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
     "tagline": {
       "ru": "Торговый терминал: стакан, ордера, кошелёк Solana",
       "en": "Trading terminal: order book, orders, Solana wallet"
@@ -703,7 +925,14 @@
       "ru": "Разрабатывал интерфейс на Lit, поток рынка через socket.io, web3.js и адаптеры кошельков, сборка esbuild.",
       "en": "Built the UI on Lit, market stream via socket.io, web3.js and wallet adapters, esbuild pipeline."
     },
-    "stack": ["Lit", "Solana", "web3.js", "socket.io", "esbuild", "TradingView"],
+    "stack": [
+      "Lit",
+      "Solana",
+      "web3.js",
+      "socket.io",
+      "esbuild",
+      "TradingView"
+    ],
     "outcomes": {
       "ru": [
         "Ордера и стакан обновляются по WebSocket без перезагрузки страницы",
@@ -717,6 +946,513 @@
       ]
     },
     "featured": false,
+    "order": 19
+  },
+  {
+    "slug": "beauty-shop",
+    "title": {
+      "ru": "beauty-shop.ru",
+      "en": "beauty-shop.ru"
+    },
+    "company": {
+      "ru": "Maximaster / e-commerce",
+      "en": "Maximaster / e-commerce"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Каталог косметики на Bitrix",
+      "en": "Cosmetics catalog on Bitrix"
+    },
+    "problem": {
+      "ru": "Интернет-магазину нужны адаптивный каталог, фильтры и корзина в рамках ограничений Bitrix CMS.",
+      "en": "The shop needed a responsive catalog, filters, and cart within Bitrix CMS constraints."
+    },
+    "contribution": {
+      "ru": "Вёрстка и доработка каталога и карточек товаров, фильтры и интеграция с корзиной на Bitrix + Symfony.",
+      "en": "Built and extended catalog and product pages, filters, and cart integration on Bitrix + Symfony."
+    },
+    "stack": [
+      "Bitrix",
+      "Symfony",
+      "jQuery",
+      "SCSS",
+      "Webpack"
+    ],
+    "outcomes": {
+      "ru": [
+        "Адаптивный каталог и карточки на всех breakpoints",
+        "Фильтры и сортировка работают в легаси-стеке"
+      ],
+      "en": [
+        "Responsive catalog and product cards across breakpoints",
+        "Filters and sort work in legacy stack"
+      ]
+    },
+    "featured": false,
     "order": 20
+  },
+  {
+    "slug": "fitomarket",
+    "title": {
+      "ru": "fitomarket.ru",
+      "en": "fitomarket.ru"
+    },
+    "company": {
+      "ru": "Maximaster / e-commerce",
+      "en": "Maximaster / e-commerce"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Магазин фитопродукции на Bitrix",
+      "en": "Phytoproducts store on Bitrix"
+    },
+    "problem": {
+      "ru": "E-commerce на Bitrix с большим каталогом: нужны стабильные фильтры и быстрая карточка товара.",
+      "en": "Bitrix e-commerce with a large catalog needed stable filters and a fast product page."
+    },
+    "contribution": {
+      "ru": "Доработка каталога, фильтров и карточек; оптимизация фронтенда под мобильный трафик.",
+      "en": "Extended catalog, filters, and product cards; optimized frontend for mobile traffic."
+    },
+    "stack": [
+      "Bitrix",
+      "jQuery",
+      "SCSS",
+      "Webpack"
+    ],
+    "outcomes": {
+      "ru": [
+        "Каталог и фильтры стабильны на production",
+        "Карточки товаров адаптированы под mobile"
+      ],
+      "en": [
+        "Catalog and filters stable in production",
+        "Product pages adapted for mobile"
+      ]
+    },
+    "featured": false,
+    "order": 21
+  },
+  {
+    "slug": "energosoft",
+    "title": {
+      "ru": "energosoft.ru",
+      "en": "energosoft.ru"
+    },
+    "company": {
+      "ru": "Energosoft",
+      "en": "Energosoft"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Учёт электроэнергии: формы и отчёты",
+      "en": "Power metering: forms and reports"
+    },
+    "problem": {
+      "ru": "Сервис учёта электроэнергии работал на тяжёлых postback-формах; пользователям нужен отзывчивый UI.",
+      "en": "The power metering service used heavy postback forms; users needed a responsive UI."
+    },
+    "contribution": {
+      "ru": "Перевёл формы и таблицы на AJAX, доработал UI на Symfony + Bitrix.",
+      "en": "Migrated forms and tables to AJAX, extended UI on Symfony + Bitrix."
+    },
+    "stack": [
+      "Symfony",
+      "Bitrix",
+      "jQuery",
+      "SCSS",
+      "Webpack"
+    ],
+    "outcomes": {
+      "ru": [
+        "Формы и отчёты работают без полной перезагрузки страницы",
+        "Пользователи быстрее заполняют типовые сценарии"
+      ],
+      "en": [
+        "Forms and reports work without full page reload",
+        "Users complete common flows faster"
+      ]
+    },
+    "featured": false,
+    "order": 22
+  },
+  {
+    "slug": "baucenter",
+    "title": {
+      "ru": "Бауцентр",
+      "en": "Baucenter"
+    },
+    "company": {
+      "ru": "Baucenter",
+      "en": "Baucenter"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Каталог строительных товаров на Bitrix",
+      "en": "Building supplies catalog on Bitrix"
+    },
+    "problem": {
+      "ru": "Интернет-магазину нужны доработки каталога и корзины в существующем Bitrix-контуре.",
+      "en": "The store needed catalog and cart improvements in an existing Bitrix setup."
+    },
+    "contribution": {
+      "ru": "Доработал интерфейсы каталога и корзины, адаптивная вёрстка на jQuery + SCSS.",
+      "en": "Extended catalog and cart UI, responsive layout on jQuery + SCSS."
+    },
+    "stack": [
+      "Bitrix",
+      "jQuery",
+      "SCSS",
+      "Webpack"
+    ],
+    "outcomes": {
+      "ru": [
+        "Каталог и корзина работают на mobile и desktop",
+        "Изменения выкатывались без простоя витрины"
+      ],
+      "en": [
+        "Catalog and cart work on mobile and desktop",
+        "Changes shipped without storefront downtime"
+      ]
+    },
+    "featured": false,
+    "order": 23
+  },
+  {
+    "slug": "specdep",
+    "title": {
+      "ru": "specdep.ru",
+      "en": "specdep.ru"
+    },
+    "company": {
+      "ru": "Specdep",
+      "en": "Specdep"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Корпоративный сайт на Bitrix",
+      "en": "Corporate site on Bitrix"
+    },
+    "problem": {
+      "ru": "Корпоративному сайту нужна поддержка и развитие фронтенда в легаси Bitrix.",
+      "en": "The corporate site needed frontend maintenance and growth on legacy Bitrix."
+    },
+    "contribution": {
+      "ru": "Поддержка и развитие разделов сайта, вёрстка новых блоков на Bitrix + jQuery.",
+      "en": "Maintained and extended site sections, built new blocks on Bitrix + jQuery."
+    },
+    "stack": [
+      "Bitrix",
+      "jQuery",
+      "SCSS",
+      "Webpack"
+    ],
+    "outcomes": {
+      "ru": [
+        "Новые разделы выходили в срок в рамках CMS",
+        "Единый SCSS-стек для всех страниц"
+      ],
+      "en": [
+        "New sections shipped on schedule within CMS",
+        "Shared SCSS stack across pages"
+      ]
+    },
+    "featured": false,
+    "order": 24
+  },
+  {
+    "slug": "energoshop-workshop",
+    "title": {
+      "ru": "workshop.energoshop.ru",
+      "en": "workshop.energoshop.ru"
+    },
+    "company": {
+      "ru": "Energosoft",
+      "en": "Energosoft"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Web-интерфейс сервиса мастерской",
+      "en": "Workshop service web UI"
+    },
+    "problem": {
+      "ru": "Отдельному сервису мастерской нужен клиентский интерфейс поверх Bitrix backend.",
+      "en": "A workshop service needed a client UI on top of Bitrix backend."
+    },
+    "contribution": {
+      "ru": "Поддержка и развитие клиентской части, интеграция с backend API.",
+      "en": "Maintained and extended client UI, integrated with backend API."
+    },
+    "stack": [
+      "Bitrix",
+      "jQuery",
+      "SCSS",
+      "Webpack"
+    ],
+    "outcomes": {
+      "ru": [
+        "Клиентский UI стабилен на production",
+        "Формы синхронизированы с backend"
+      ],
+      "en": [
+        "Client UI stable in production",
+        "Forms synced with backend"
+      ]
+    },
+    "featured": false,
+    "order": 25
+  },
+  {
+    "slug": "zenit-tickets",
+    "title": {
+      "ru": "tickets.fc-zenit.ru",
+      "en": "tickets.fc-zenit.ru"
+    },
+    "company": {
+      "ru": "FC Zenit",
+      "en": "FC Zenit"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Продажа билетов и схема стадиона",
+      "en": "Ticket sales and stadium map"
+    },
+    "problem": {
+      "ru": "Болельщику нужно выбрать место на интерактивной схеме стадиона и оформить билет.",
+      "en": "Fans needed to pick a seat on an interactive stadium map and complete checkout."
+    },
+    "contribution": {
+      "ru": "Отрисовка схемы стадиона на Canvas, интеграция с backend продажи билетов.",
+      "en": "Stadium map rendering on Canvas, integration with ticket sales backend."
+    },
+    "stack": [
+      "Canvas",
+      "JavaScript",
+      "REST API"
+    ],
+    "outcomes": {
+      "ru": [
+        "Интерактивный выбор мест на схеме арены",
+        "Схема синхронизирована с доступностью мест"
+      ],
+      "en": [
+        "Interactive seat selection on arena map",
+        "Map synced with seat availability"
+      ]
+    },
+    "featured": false,
+    "order": 26
+  },
+  {
+    "slug": "aurumline-webview",
+    "title": {
+      "ru": "Aurumline WebView",
+      "en": "Aurumline WebView"
+    },
+    "company": {
+      "ru": "Коммерческий проект",
+      "en": "Commercial project"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "WebView-клиент под мобильное приложение",
+      "en": "WebView client for mobile app"
+    },
+    "problem": {
+      "ru": "Мобильному приложению нужен встроенный web-клиент с ограничениями WebView.",
+      "en": "The mobile app needed an embedded web client with WebView constraints."
+    },
+    "contribution": {
+      "ru": "Адаптировал React-интерфейс под WebView: viewport, навигация, bridge с native.",
+      "en": "Adapted React UI for WebView: viewport, navigation, native bridge."
+    },
+    "stack": [
+      "React",
+      "TypeScript",
+      "WebView"
+    ],
+    "outcomes": {
+      "ru": [
+        "UI работает в iOS и Android WebView",
+        "Навигация согласована с native shell"
+      ],
+      "en": [
+        "UI works in iOS and Android WebView",
+        "Navigation aligned with native shell"
+      ]
+    },
+    "featured": false,
+    "order": 27
+  },
+  {
+    "slug": "duckmaster",
+    "title": {
+      "ru": "DuckMaster — игра в Telegram",
+      "en": "DuckMaster — Telegram game"
+    },
+    "company": {
+      "ru": "Коммерческий проект",
+      "en": "Commercial project"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Игровой Mini App: онбординг, боевая механика и стабильные релизы",
+      "en": "Game Mini App: onboarding, combat mechanics, stable releases"
+    },
+    "problem": {
+      "ru": "Игре в Telegram нужны новый онбординг и механика атак без просадки производительности на слабых устройствах.",
+      "en": "The Telegram game needed new onboarding and attack mechanics without hurting performance on low-end devices."
+    },
+    "contribution": {
+      "ru": "Вынес игровую логику в Redux-Saga, оптимизировал Vite-сборку и конвертацию в WebP, покрыл ключевые сценарии Vitest.",
+      "en": "Moved game logic into Redux-Saga, optimized Vite builds and WebP conversion, covered key flows with Vitest."
+    },
+    "stack": [
+      "React",
+      "Redux-Saga",
+      "Vite",
+      "Vitest",
+      "WebSocket",
+      "Telegram Mini App"
+    ],
+    "outcomes": {
+      "ru": [
+        "Новый онбординг и атаки выкатились без регрессий в core-лупе",
+        "WebP и chunking уменьшили вес ассетов для мобильных клиентов",
+        "Vitest страхует релизы игровых сценариев"
+      ],
+      "en": [
+        "New onboarding and attacks shipped without core-loop regressions",
+        "WebP and chunking reduced asset weight on mobile clients",
+        "Vitest guards game-flow releases"
+      ]
+    },
+    "featured": false,
+    "order": 28
+  },
+  {
+    "slug": "handstars",
+    "title": {
+      "ru": "HandStars — игра в Telegram",
+      "en": "HandStars — Telegram game"
+    },
+    "company": {
+      "ru": "Коммерческий проект",
+      "en": "Commercial project"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Mini App с real-time, TonConnect и анимациями",
+      "en": "Mini App with real-time, TonConnect, and motion"
+    },
+    "problem": {
+      "ru": "Игра должна работать в Telegram WebApp: сокеты, кошелёк TON, анимации и аналитика — в одном клиенте.",
+      "en": "The game had to run in Telegram WebApp: sockets, TON wallet, animations, and analytics in one client."
+    },
+    "contribution": {
+      "ru": "Собрал UI на React + MobX, real-time через socket.io, TonConnect, Orval для REST, Framer Motion и Lottie для анимаций.",
+      "en": "Built UI on React + MobX, real-time via socket.io, TonConnect, Orval for REST, Framer Motion and Lottie for motion."
+    },
+    "stack": [
+      "React",
+      "MobX",
+      "socket.io",
+      "TonConnect",
+      "Orval",
+      "Framer Motion",
+      "Telegram Mini App"
+    ],
+    "outcomes": {
+      "ru": [
+        "Играбельный Mini App с оплатами через TON",
+        "Real-time события не блокируют UI благодаря отдельному слою состояния",
+        "Аналитика Telegram подключена для продуктовых решений"
+      ],
+      "en": [
+        "Playable Mini App with TON payments",
+        "Real-time events don't block UI thanks to a dedicated state layer",
+        "Telegram analytics wired for product decisions"
+      ]
+    },
+    "featured": false,
+    "order": 29
+  },
+  {
+    "slug": "it-simulator",
+    "title": {
+      "ru": "Симулятор IT-карьеры",
+      "en": "IT career simulator"
+    },
+    "company": {
+      "ru": "Коммерческий проект",
+      "en": "Commercial project"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "Пиксель-арт игра о карьере разработчика в Telegram",
+      "en": "Pixel-art developer career game in Telegram"
+    },
+    "problem": {
+      "ru": "Нужен лёгкий игровой MVP внутри Telegram с сохранением прогресса между сессиями.",
+      "en": "A lightweight game MVP inside Telegram needed persistent progress between sessions."
+    },
+    "contribution": {
+      "ru": "Собрал игру на Next.js App Router, Zustand, Radix UI, Supabase SSR для профиля и прогресса, адаптация под WebApp viewport.",
+      "en": "Built the game on Next.js App Router, Zustand, Radix UI, Supabase SSR for profile and progress, WebApp viewport adaptation."
+    },
+    "stack": [
+      "Next.js",
+      "Zustand",
+      "Supabase",
+      "Telegram WebApp",
+      "Tailwind CSS"
+    ],
+    "outcomes": {
+      "ru": [
+        "Играбельный MVP внутри Telegram без отдельной установки",
+        "Прогресс сохраняется в Supabase между заходами",
+        "UI адаптирован под ограничения WebApp"
+      ],
+      "en": [
+        "Playable MVP inside Telegram without a separate install",
+        "Progress persists in Supabase between sessions",
+        "UI adapted to WebApp constraints"
+      ]
+    },
+    "featured": false,
+    "order": 30
   }
 ]

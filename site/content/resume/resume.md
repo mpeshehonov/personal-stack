@@ -12,7 +12,7 @@ Frontend / Fullstack с 2018 года, уровень Senior. B2B, e-commerce, r
 
 Кейсы на [mpeshekhonov.ru](https://mpeshekhonov.ru/ru/projects), полный список по запросу.
 
-Основной стек: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL.
+Основной стек: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL, Bitrix.
 
 ## Опыт работы
 
@@ -20,60 +20,112 @@ Frontend / Fullstack с 2018 года, уровень Senior. B2B, e-commerce, r
 
 09.2025 – н.в. | Удалённо
 
-sendonate.com (React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions)
+**sendonate.com**: донаты для стримеров: Mini App, OBS overlay, кабинет
 
-- Три клиента: кабинет стримера, Telegram Mini App, OBS overlay.
-- Mini App: оплата донатов, REST через Orval; overlay в эфире на WebSocket.
-- GitHub Actions для lint, build и деплоя.
+Задача: стримеру нужен приём донатов в Telegram и live-алерт в OBS без ручной интеграции с backend.
 
-POTALONU / PREEGLOS (Next.js 16, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD)
+Роль: три клиента на React + Vite; REST через Orval; overlay на WebSocket; GitHub Actions для lint, build и деплоя.
 
-- Витрина событий, checkout, Telegram Mini App.
-- Редактор схем залов на Canvas/SVG и виджет выбора мест для сайтов партнёров.
-- GitLab CI/CD, Docker Compose; REST через Orval.
+Результат:
+
+- Mini App принимает оплату донатов и синхронизируется с backend
+- OBS overlay показывает алерты в эфире без задержки UI
+- CI/CD выкатывает все три клиента из одного репозитория
+
+Стек: React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions
+
+**POTALONU / PREEGLOS**: билетная витрина и редактор схем залов
+
+Задача: организаторам нужна витрина событий с checkout и интерактивный выбор мест для сайтов партнёров.
+
+Роль: Next.js 16, PostgreSQL, Drizzle ORM, Auth.js; редактор схем на Canvas/SVG; embed-виджет; GitLab CI/CD, Docker Compose, Orval.
+
+Результат:
+
+- Checkout и Telegram Mini App в одном продуктовом контуре
+- Партнёры встраивают виджет выбора мест без форка кода
+- Деплой через Docker Compose и GitLab pipeline
+
+Стек: Next.js, PostgreSQL, Drizzle ORM, Auth.js, Canvas, Docker, GitLab CI, Orval
 
 ### X5 Tech — Frontend-разработчик
 
 04.2024 – 07.2025 | Удалённо
 
-- Модуль согласования закупок (НКЗ 3.0): RBAC, статусы, длинные цепочки согласования.
-- Keycloak SSO, Orval по OpenAPI, формы на react-hook-form.
-- Внутренние npm-пакеты UI Kit; Scrum, code review.
-- Vite: code splitting на длинных сценариях согласования.
+**НКЗ 3.0 — согласование закупок**: enterprise-модуль с RBAC и длинными цепочками статусов
+
+Задача: закупки X5 требуют согласования по ролям и статусам в одном UI с десятками шагов на заявку.
+
+Роль: Keycloak SSO, Orval по OpenAPI, react-hook-form, внутренние npm-пакеты UI Kit, Vite code splitting.
+
+Результат:
+
+- RBAC и статусы покрывают полный цикл согласования закупок
+- Code splitting держит UX на длинных формах
+- Scrum, code review, работа с внутренним UI Kit
+
+Стек: React, TypeScript, Vite, Orval, Keycloak, react-hook-form
 
 ### BI.ZONE — Frontend-разработчик
 
 06.2023 – 03.2024 | Удалённо
 
-- Thread Intelligence: GraphQL (Apollo), MobX, React Query, Orval.
-- Граф связей на Cytoscape.js, дашборды, виртуализация списков.
-- Внутренние npm-пакеты @bizone; Jest unit-тесты.
-- Code review, разбор чужого кода.
+**Thread Intelligence**: анализ связей между сущностями для SOC
+
+Задача: аналитикам нужен граф связей, фильтры и отчёты в одном экране.
+
+Роль: GraphQL на Apollo Client, MobX, React Query, Orval; граф связей на D3.js; виртуализация списков; дашборды Highcharts/Recharts; npm-пакеты @bizone; Jest.
+
+Результат:
+
+- Аналитики строят цепочки связей в одном экране
+- Динамические отчёты на той же GraphQL-модели
+- Виртуализация держит большие таблицы без просадки UX
+
+Стек: React, GraphQL, Apollo Client, D3.js, MobX, React Query, Orval, Highcharts
 
 ### НЛМК — Frontend-разработчик
 
 05.2022 – 06.2023 | Удалённо
 
-- Приложение регистрации выпусков чугуна вместо Excel и разрозненных форм.
-- TanStack Table + React Query на больших объёмах данных.
-- GitLab CI на MR; Keycloak SSO и RBAC; внутренние npm-пакеты shared UI.
-- Sentry в продакшене.
+**Регистрация выпусков чугуна**: web-приложение вместо Excel
+
+Задача: цех фиксировал выпуски в Excel и разрозненных формах, данные терялись.
+
+Роль: TanStack Table + React Query, Keycloak SSO и RBAC, shared UI npm-пакеты, GitLab CI, Sentry.
+
+Результат:
+
+- Единый интерфейс регистрации вместо таблиц Excel
+- Таблицы с большими объёмами данных без просадки производительности
+- Ошибки отслеживаются в Sentry на production
+
+Стек: React, TanStack Table, TanStack Query, Keycloak, GitLab CI, Sentry
 
 ### Citilink — Frontend-разработчик
 
 04.2021 – 04.2022 | Удалённо
 
-- Миграция каталога и главной с PHP/Symfony на Next.js.
-- Монорепозиторий yarn workspaces, shared npm-пакеты.
-- Фильтры, сортировка, пагинация, состояние в URL.
-- REST API с backend и микросервисами; Redux, Jest, code review.
+**Миграция каталога на Next.js**: e-commerce с PHP/Symfony на React
+
+Задача: перенести каталог и главную на Next.js без потери SEO и фильтров.
+
+Роль: yarn workspaces монорепо, shared npm-пакеты, фильтры/сортировка/пагинация в URL, REST API, Redux, Jest.
+
+Результат:
+
+- Каталог и главная на Next.js с сохранением SEO
+- Shared npm-пакеты между страницами монорепо
+- Jest и code review на критичные сценарии
+
+Стек: Next.js, React, Redux, yarn workspaces, REST API, Jest
 
 ## Навыки
 
 - Языки: TypeScript, JavaScript (ES6+), HTML5, CSS3/SCSS
-- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, react-router, Framer Motion, Radix UI, Tailwind CSS
+- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, Bitrix, Tailwind CSS
 - Сборка: Vite, Webpack, yarn workspaces, монорепозитории, npm-пакеты, code splitting, GitLab CI, GitHub Actions, Docker
-- API и backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak
+- API и backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak, Symfony, Bitrix
 - Качество: Jest, Vitest, Playwright, Sentry, code review, Scrum
 - UI: дизайн-системы, UI Kit, адаптивная верстка, Figma, Telegram Mini Apps
 

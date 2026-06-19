@@ -1,29 +1,68 @@
 ---
 name: resume-copy
-description: Rewrite resume and portfolio bullets to be clear, credible, and human. Use when editing resume-data.ts, resume.md, project case studies, or CV bullets.
+description: Rewrite resume and portfolio bullets for ATS and human readers. Use when editing resume-data.ts, resume.md, project case studies, or CV bullets.
 ---
 
 # Resume copy
 
-## Rules
+## Goal
 
-1. **Plain language** — no paths (`/embed/...`), no internal codenames unless the product name is public (sendonate, PREEGLOS).
-2. **One idea per bullet** — outcome or responsibility, not a stack dump.
-3. **Credible scale** — avoid "hundreds of roles", "thousands of rows" unless you can defend the number. Prefer "different roles", "large datasets", "long approval flows".
-4. **Strong verbs, varied openers** — не повторять «Спроектировал и реализовал» / «Designed and built» в каждом пункте.
-5. **Metrics only when real** — no invented percentages (e.g. 15% conversion) without a source.
-6. **RU and EN in sync** — update `site/lib/resume-data.ts`, `site/content/resume/resume.md`, `site/content/resume/en/resume.md`, and matching `site/content/projects/*.json` titles/outcomes.
+Bullets pass ATS keyword filters and read clearly to a tech lead in 6 seconds. No fluff, no AI tells.
 
-## Bullet template
+## Bullet formula
 
-`[What you built]` + `[how / with what, briefly]` + `[result for user or team]`
+**Verb + what + tech/context + result** (15–25 words, 1–2 lines)
 
 Example:
-- Bad: `embed-виджет /embed/[hallId], события и бронирования`
-- Good: `Виджет выбора мест для сайтов партнёров — события и бронирования`
+- Bad: `Участвовал в разработке модуля согласования закупок`
+- Good: `Собрал UI модуля НКЗ 3.0: RBAC, статусы, Orval по OpenAPI, Vite code splitting на длинных сценариях`
 
-## Files to touch together
+## Verbs (past tense for past roles)
 
-- `site/lib/resume-data.ts` — live /resume page
-- `site/content/resume/resume.md` + `en/resume.md` — PDF source (sync via `scripts/sync-resume.sh` from ~/personal/cv when needed)
-- `site/content/projects/index.json` — case cards on homepage
+Built, Shipped, Migrated, Optimized, Implemented, Integrated, Refactored, Designed, Architected, Reduced, Automated.
+
+Avoid: «Спроектировал и реализовал» in every bullet, «Responsible for», «Worked on», «Participated in».
+
+## ATS rules
+
+1. Mirror job keywords naturally (React, TypeScript, REST API, GitLab CI, npm, Jest) — not keyword stuffing.
+2. List both `React` and framework names where relevant; include `JavaScript` and `TypeScript`.
+3. Name concrete tools in bullets, not only in skills section.
+4. Quantify when defensible: bundle size, tables rows, teams, modules, deploy time. No invented percentages (e.g. 15% conversion) without source.
+5. Plain language — no paths (`/embed/...`), no internal codenames unless public product name.
+6. No long dashes (—) and no curly quotes in RU copy; use hyphen or comma.
+
+## Project / experience block structure (site)
+
+Match `ProjectCard` layout:
+
+| Field | Purpose |
+|-------|---------|
+| tagline | One line value prop |
+| problem | Context for HR |
+| contribution | What you did (role) |
+| outcomes | 2–3 result bullets with impact |
+| stack | Tags, max 8 on card |
+
+## RU and EN sync
+
+Update together:
+- `site/lib/resume-data.ts` — live /resume
+- `site/content/resume/resume.md` + `en/resume.md` — PDF source
+- `site/content/projects/index.json` — case cards
+- `site/lib/skills.ts` — skill groups
+
+Regenerate PDF: copy md to `~/personal/cv/`, `make resume-main`, copy to `site/public/`.
+
+## Source of truth for projects
+
+`~/personal/cv/projects.md` — all projects must appear on `/projects`, ranked best → weakest; games and pet projects last.
+
+**Public site:** sensitive or NDA work uses generic titles only (e.g. `marketplace-nda`). Do not publish client names, domains, or product themes (escort/adult, etc.). Private ids like `auraescort` map to `marketplace-nda` on the site — one card, no duplicate.
+
+## Red flags (cut or rewrite)
+
+- Stack dumps without action
+- Repeated opener every bullet
+- «Единый интерфейс» without saying for whom
+- Fake metrics from old CV templates

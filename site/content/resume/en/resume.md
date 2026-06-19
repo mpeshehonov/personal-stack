@@ -12,7 +12,7 @@ Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, real-ti
 
 Case studies at [mpeshekhonov.ru/projects](https://mpeshekhonov.ru/en/projects).
 
-Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL.
+Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL, Bitrix.
 
 ## Work experience
 
@@ -20,60 +20,112 @@ Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, R
 
 Sep 2025 – present | Remote
 
-sendonate.com (React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions)
+**sendonate.com** — streamer donations: Mini App, OBS overlay, dashboard
 
-- Three clients: streamer dashboard, Telegram Mini App, OBS overlay.
-- Mini App checkout, Orval REST client; live WebSocket overlay.
-- GitHub Actions for lint, build, and deploy.
+Problem: streamers needed Telegram donations and live OBS alerts without manual backend integration.
 
-POTALONU / PREEGLOS (Next.js 16, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD)
+Role: three React + Vite clients; Orval REST; WebSocket overlay; GitHub Actions for lint, build, deploy.
 
-- Event storefront, checkout, Telegram Mini App.
-- Hall layout editor on Canvas/SVG and seat picker widget for partner sites.
-- GitLab CI/CD, Docker Compose; Orval REST client.
+Outcome:
+
+- Mini App handles donation checkout synced with backend
+- OBS overlay shows live alerts without UI lag
+- CI/CD ships all three clients from one repo
+
+Stack: React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions
+
+**POTALONU / PREEGLOS** — event storefront and hall layout editor
+
+Problem: organizers needed an event storefront with checkout and seat selection for partner sites.
+
+Role: Next.js 16, PostgreSQL, Drizzle ORM, Auth.js; Canvas/SVG hall editor; embed widget; GitLab CI/CD, Docker Compose, Orval.
+
+Outcome:
+
+- Checkout and Telegram Mini App in one product stack
+- Partners embed seat picker without forking code
+- Deploy via Docker Compose and GitLab pipeline
+
+Stack: Next.js, PostgreSQL, Drizzle ORM, Auth.js, Canvas, Docker, GitLab CI, Orval
 
 ### X5 Tech — Frontend engineer
 
 Apr 2024 – Jul 2025 | Remote
 
-- Procurement approval (NKZ 3.0): RBAC, statuses, long approval chains.
-- Keycloak SSO, Orval from OpenAPI, react-hook-form.
-- Internal npm packages for UI kit; Scrum, code review.
-- Vite code splitting on long approval flows.
+**NKZ 3.0 — procurement approval** — enterprise module with RBAC and long status chains
+
+Problem: X5 procurement required role-based approval in one UI with dozens of steps per request.
+
+Role: Keycloak SSO, Orval from OpenAPI, react-hook-form, internal npm UI Kit packages, Vite code splitting.
+
+Outcome:
+
+- RBAC and statuses cover the full procurement cycle
+- Code splitting keeps UX on long forms
+- Scrum, code review, internal UI Kit
+
+Stack: React, TypeScript, Vite, Orval, Keycloak, react-hook-form
 
 ### BI.ZONE — Frontend engineer
 
 Jun 2023 – Mar 2024 | Remote
 
-- Thread Intelligence: GraphQL (Apollo), MobX, React Query, Orval.
-- Relationship graphs on Cytoscape.js, dashboards, virtualized lists.
-- Internal @bizone npm packages; Jest unit tests.
-- Code review, legacy code navigation.
+**Thread Intelligence**: entity relationship analysis for SOC
+
+Problem: analysts needed relationship graphs, filters, and reports on one screen.
+
+Role: GraphQL on Apollo Client, MobX, React Query, Orval; relationship graph on D3.js; virtualized lists; Highcharts/Recharts dashboards; @bizone npm packages; Jest.
+
+Outcome:
+
+- Analysts build entity relationship chains on one screen
+- Dynamic reports wired to the same GraphQL model
+- Virtualization keeps large tables responsive
+
+Stack: React, GraphQL, Apollo Client, D3.js, MobX, React Query, Orval, Highcharts
 
 ### NLMK — Frontend engineer
 
 May 2022 – Jun 2023 | Remote
 
-- Cast iron release app replacing spreadsheets and scattered forms.
-- TanStack Table + React Query on large datasets.
-- GitLab CI on MR; Keycloak SSO and RBAC; internal shared UI npm packages.
-- Sentry in production.
+**Cast iron release registration** — web app replacing Excel
+
+Problem: the shop floor tracked releases in Excel and scattered forms; data was lost.
+
+Role: TanStack Table + React Query, Keycloak SSO and RBAC, shared UI npm packages, GitLab CI, Sentry.
+
+Outcome:
+
+- Single registration UI replaced Excel spreadsheets
+- Tables with large datasets stay performant
+- Production errors tracked in Sentry
+
+Stack: React, TanStack Table, TanStack Query, Keycloak, GitLab CI, Sentry
 
 ### Citilink — Frontend engineer
 
 Apr 2021 – Apr 2022 | Remote
 
-- Migrated catalog and homepage from PHP/Symfony to Next.js.
-- Yarn workspaces monorepo, shared npm packages.
-- Filters, sort, pagination, URL state.
-- REST API with backend and microservices; Redux, Jest, code review.
+**Catalog migration to Next.js** — e-commerce from PHP/Symfony to React
+
+Problem: migrate catalog and homepage to Next.js without losing SEO and filters.
+
+Role: yarn workspaces monorepo, shared npm packages, filters/sort/pagination in URL, REST API, Redux, Jest.
+
+Outcome:
+
+- Catalog and homepage on Next.js with SEO preserved
+- Shared npm packages across monorepo pages
+- Jest and code review on critical catalog flows
+
+Stack: Next.js, React, Redux, yarn workspaces, REST API, Jest
 
 ## Skills
 
 - Languages: TypeScript, JavaScript (ES6+), HTML5, CSS3/SCSS
-- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, react-router, Framer Motion, Radix UI, Tailwind CSS
+- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, Bitrix, Tailwind CSS
 - Build: Vite, Webpack, yarn workspaces, monorepos, npm packages, code splitting, GitLab CI, GitHub Actions, Docker
-- API & backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak
+- API & backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak, Symfony, Bitrix
 - Quality: Jest, Vitest, Playwright, Sentry, code review, Scrum
 - UI: design systems, UI kits, responsive layout, Figma, Telegram Mini Apps
 

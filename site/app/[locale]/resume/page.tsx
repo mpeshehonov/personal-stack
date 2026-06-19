@@ -90,7 +90,7 @@ export default async function ResumePage({
         <h2 className="section-title mb-6">{dict.resume.experience}</h2>
         <div className="space-y-4">
           {experiences.map((exp) => (
-            <ExperienceCard key={exp.company + exp.period} exp={exp} />
+            <ExperienceCard key={exp.company + exp.period} exp={exp} locale={locale} />
           ))}
         </div>
       </section>
