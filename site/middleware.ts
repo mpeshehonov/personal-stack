@@ -9,8 +9,6 @@ function getLocale(request: NextRequest): Locale {
   if (cookie && locales.includes(cookie as Locale)) {
     return cookie as Locale;
   }
-  const accept = request.headers.get("accept-language") ?? "";
-  if (accept.toLowerCase().startsWith("en")) return "en";
   return defaultLocale;
 }
 

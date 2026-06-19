@@ -4,23 +4,22 @@
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Сочи, Россия",
-  "summary": "Frontend / Fullstack с 2018 года, Senior. Готов к выходу ASAP. npm-пакеты, GitLab CI / GitHub Actions, монорепозитории, React, TypeScript, Orval/OpenAPI.",
+  "summary": "Frontend / Fullstack с 2018 года, Senior. B2B, e-commerce, real-time, Telegram Mini Apps. Готов к выходу ASAP.",
   "skills": [
     "TypeScript",
-    "JavaScript",
     "React",
-    "npm packages",
-    "GitLab CI",
-    "GitHub Actions",
-    "yarn workspaces",
     "Next.js",
     "TanStack Query",
     "Orval",
-    "Jest",
-    "Playwright"
+    "Telegram Mini Apps",
+    "Nest.js",
+    "Playwright",
+    "GraphQL",
+    "Docker"
   ],
   "availability": "asap",
   "links": {
+    "website": "https://mpeshekhonov.ru/ru",
     "telegram": "https://t.me/makusimu_san",
     "linkedin": "https://www.linkedin.com/in/makusimu",
     "github": "https://github.com/mpeshehonov"

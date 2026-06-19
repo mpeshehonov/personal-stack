@@ -1,14 +1,20 @@
-import resume from "@/content/resume/resume.json";
+import resumeRu from "@/content/resume/resume.json";
+import resumeEn from "@/content/resume/en/resume.json";
+import type { Locale } from "@/middleware";
 
-const socials = [
-  { href: resume.links.telegram, label: "Telegram", icon: "TG" },
-  { href: resume.links.linkedin, label: "LinkedIn", icon: "in" },
-  { href: resume.links.github, label: "GitHub", icon: "GH" },
-];
+type Props = { className?: string; locale?: Locale };
 
-type Props = { className?: string };
+export function SocialLinks({ className = "", locale = "ru" }: Props) {
+  const resume = locale === "en" ? resumeEn : resumeRu;
+  const siteLabel = locale === "en" ? "Site" : "Сайт";
 
-export function SocialLinks({ className = "" }: Props) {
+  const socials = [
+    { href: resume.links.website, label: siteLabel, icon: "WWW" },
+    { href: resume.links.telegram, label: "Telegram", icon: "TG" },
+    { href: resume.links.linkedin, label: "LinkedIn", icon: "in" },
+    { href: resume.links.github, label: "GitHub", icon: "GH" },
+  ];
+
   return (
     <div className={`flex flex-wrap gap-3 ${className}`}>
       {socials.map(({ href, label, icon }) => (

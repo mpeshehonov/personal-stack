@@ -2,19 +2,17 @@
 
 Senior Frontend Engineer
 
-Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
+Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
 
 **Available to start ASAP.**
 
 ## About
 
-Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, real-time, Telegram Mini Apps. Complex UI, RBAC, API design, Orval/OpenAPI, REST, GraphQL, WebSocket.
+Frontend / Fullstack engineer since 2018, Senior level. B2B, e-commerce, real-time, Telegram Mini Apps. Complex UI, RBAC, Orval/OpenAPI, REST, GraphQL, WebSocket.
 
-Full case list on the Projects page; detailed PDF on request.
+Case studies at [mpeshekhonov.ru/projects](https://mpeshekhonov.ru/en/projects).
 
 Core stack: Next.js, React, TypeScript, Vite, TanStack Query, Orval + OpenAPI, React Hook Form, Zod, Redux/MobX, Sentry, Jest/Vitest, Playwright. Fullstack: Nest.js, Node.js, PostgreSQL.
-
-Experience with internal npm packages and monorepos (yarn workspaces), GitLab CI and GitHub Actions, code review and Scrum. X5 Tech, NLMK, BI.ZONE, Citilink, POTALONU.
 
 ## Work experience
 
@@ -22,64 +20,62 @@ Experience with internal npm packages and monorepos (yarn workspaces), GitLab CI
 
 Sep 2025 – present | Remote
 
-sendonate.com (React 19, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions)
+sendonate.com (React, Vite, TypeScript, Telegram Mini App, Orval, WebSocket, GitHub Actions)
 
-- Three React 19 clients: dashboard, Telegram Mini App, OBS overlay.
-- Shared npm packages for UI and utils across Mini App and web dashboard.
-- GitHub Actions: lint, build, deploy; Orval REST client, WebSocket overlay.
+- Three clients: streamer dashboard, Telegram Mini App, OBS overlay.
+- Mini App checkout, Orval REST client; live WebSocket overlay.
+- GitHub Actions for lint, build, and deploy.
 
 POTALONU / PREEGLOS (Next.js 16, PostgreSQL, Drizzle ORM, Auth.js, Docker, GitLab CI/CD)
 
-- Storefront, checkout, Telegram Mini App, hall layout editor.
-- GitLab CI/CD: test, build, nginx stage; Docker Compose.
-- REST API design with backend, typed client via OpenAPI.
+- Event storefront, checkout, Telegram Mini App.
+- Hall layout editor on Canvas/SVG and seat picker widget for partner sites.
+- GitLab CI/CD, Docker Compose; Orval REST client.
 
 ### X5 Tech — Frontend engineer
 
 Apr 2024 – Jul 2025 | Remote
 
 - Procurement approval (NKZ 3.0): RBAC, statuses, long approval chains.
-- Internal npm packages for UI kit and shared types; Scrum, code review, grooming.
-- Orval from OpenAPI: REST contract design and sync with backend.
-- Vite code splitting; useMemo/useCallback on heavy forms and tables.
+- Keycloak SSO, Orval from OpenAPI, react-hook-form.
+- Internal npm packages for UI kit; Scrum, code review.
+- Vite code splitting on long approval flows.
 
 ### BI.ZONE — Frontend engineer
 
 Jun 2023 – Mar 2024 | Remote
 
 - Thread Intelligence: GraphQL (Apollo), MobX, React Query, Orval.
-- Internal @bizone npm packages; Cytoscape.js graphs, dashboards, virtualization.
-- Render optimization: lazy loading, react-virtualized, Chrome DevTools profiling.
-- Code review, legacy code navigation, Jest unit tests.
+- Relationship graphs on Cytoscape.js, dashboards, virtualized lists.
+- Internal @bizone npm packages; Jest unit tests.
+- Code review, legacy code navigation.
 
 ### NLMK — Frontend engineer
 
 May 2022 – Jun 2023 | Remote
 
-- Cast iron release SPA replacing spreadsheets and scattered forms.
-- GitLab CI: lint, test, build on merge requests; Keycloak SSO and RBAC.
-- Internal npm packages for shared UI and utils; TanStack Table + React Query.
-- Sentry, Jest unit tests on table and filter business logic.
+- Cast iron release app replacing spreadsheets and scattered forms.
+- TanStack Table + React Query on large datasets.
+- GitLab CI on MR; Keycloak SSO and RBAC; internal shared UI npm packages.
+- Sentry in production.
 
 ### Citilink — Frontend engineer
 
 Apr 2021 – Apr 2022 | Remote
 
-- Yarn workspaces monorepo: catalog, homepage, shared npm packages.
-- Migrated catalog and homepage from PHP/Symfony to Next.js (SSR, responsive layout).
-- REST API design with backend and microservices; Redux on catalog.
-- Jest unit tests, code review in Scrum e-commerce team.
+- Migrated catalog and homepage from PHP/Symfony to Next.js.
+- Yarn workspaces monorepo, shared npm packages.
+- Filters, sort, pagination, URL state.
+- REST API with backend and microservices; Redux, Jest, code review.
 
 ## Skills
 
 - Languages: TypeScript, JavaScript (ES6+), HTML5, CSS3/SCSS
-- React: hooks (useMemo, useCallback, useReducer), Redux Toolkit, Redux-Saga, MobX, TanStack Query, React Hook Form, Zod, react-router, Framer Motion, Radix UI, Tailwind CSS
-- Build: Vite, Webpack, yarn workspaces, monorepos, npm packages (own and internal), code splitting, tree shaking
-- CI/CD: GitLab CI, GitHub Actions, Jenkins, Docker, Docker Compose
+- Frontend: React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, React Hook Form, Zod, react-router, Framer Motion, Radix UI, Tailwind CSS
+- Build: Vite, Webpack, yarn workspaces, monorepos, npm packages, code splitting, GitLab CI, GitHub Actions, Docker
 - API & backend: REST, GraphQL (Apollo), OpenAPI/Orval, WebSocket, Node.js, Nest.js, Keycloak
-- Quality: Jest, Vitest, Playwright, Sentry; Chrome DevTools (JS debug, Performance, rendering)
-- Process: Scrum, code review, grooming, design review, caniuse for JS/CSS
-- UI: design systems, UI kits, Material UI, styled-components, BEM, responsive layout, Figma
+- Quality: Jest, Vitest, Playwright, Sentry, code review, Scrum
+- UI: design systems, UI kits, responsive layout, Figma, Telegram Mini Apps
 
 ## Languages
 

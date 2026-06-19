@@ -54,7 +54,7 @@ export function Hero({ locale, dict, resume }: Props) {
             {dict.hero.ctaPdf}
           </a>
         </div>
-        <SocialLinks className="mb-8" />
+        <SocialLinks className="mb-8" locale={locale} />
         <div>
           <p className="section-label">{dict.hero.skillsLabel}</p>
           <div className="flex flex-wrap gap-2">

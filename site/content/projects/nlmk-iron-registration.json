@@ -6,12 +6,12 @@
   "period": "05.2022 – 06.2023",
   "tagline": "Промышленный интерфейс для доменного производства",
   "problem": "Доменное производство НЛМК нуждалось в веб-приложении для регистрации выпусков чугуна: большие таблицы, фильтрация по сменам и цехам, работа операторов в условиях нестабильной сети.",
-  "contribution": "SPA на React с TanStack Table, внутренними npm-пакетами shared UI, GitLab CI на merge request и Jest unit-тестами.",
-  "stack": ["React", "TypeScript", "TanStack Table", "TanStack Query", "GitLab CI", "npm packages", "Jest", "Sentry"],
+  "contribution": "SPA на React с TanStack Table для производственных данных. GitLab CI, внутренние npm-пакеты shared UI, Sentry.",
+  "stack": ["React", "TypeScript", "TanStack Table", "TanStack Query", "GitLab CI", "Sentry", "REST API"],
   "outcomes": [
-    "GitLab CI: lint, test, build на каждый merge request",
-    "Внутренние npm-пакеты shared UI и утилит между модулями приложения",
-    "Jest unit-тесты на фильтры и бизнес-логику таблиц; Sentry в продакшене",
+    "Таблицы с фильтрами на больших объёмах данных",
+    "GitLab CI на merge request",
+    "Единый интерфейс вместо Excel-форм",
   ],
   "featured": true,
   "order": 2
