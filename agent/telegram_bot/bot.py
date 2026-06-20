@@ -589,13 +589,25 @@ async def cmd_jobs(update, context) -> None:
 
         async def _run_scan() -> None:
             summary = await asyncio.to_thread(scan_and_store_leads)
+            by_source = summary.get("by_source") or {}
+            source_labels = {
+                "hh": "HH",
+                "habr": "Habr",
+                "hirify": "Hirify",
+                "hirehi": "HireHi",
+                "telegram": "TG",
+            }
+            source_line = ", ".join(
+                f"{source_labels.get(src, src)} {count}"
+                for src, count in by_source.items()
+                if count
+            ) or "—"
             parts = [
-                f"Просмотрено: **{summary.get('fetched', 0)}** "
-                f"(HH {summary.get('by_source', {}).get('hh', 0)}, "
-                f"Habr {summary.get('by_source', {}).get('habr', 0)})",
+                f"Просмотрено: **{summary.get('fetched', 0)}** ({source_line})",
                 f"Новых лидов: **{summary.get('new_count', 0)}**",
                 f"Ниже порога: {summary.get('below_threshold', 0)} · "
-                f"уже в базе: {summary.get('skipped_existing', 0)}",
+                f"уже в базе: {summary.get('skipped_existing', 0)} · "
+                f"дубли: {summary.get('skipped_duplicates', 0)}",
             ]
             top = summary.get("top_leads") or []
             if top:
@@ -616,7 +628,7 @@ async def cmd_jobs(update, context) -> None:
 
         ok, msg = start_background_job("job_scan", chat_id, _run_scan)
         await update.message.reply_text(
-            f"{msg}\n\nHH + Habr, score ≥ {JOBHUNT_MIN_MATCH}. Результат придёт сюда."
+            f"{msg}\n\nHH + Habr + Hirify + HireHi + TG, score ≥ {JOBHUNT_MIN_MATCH}. Результат придёт сюда."
         )
         return
 

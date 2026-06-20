@@ -32,3 +32,44 @@ JOBHUNT_HH_MAX_PAGES = int(os.environ.get("JOBHUNT_HH_MAX_PAGES", "2"))
 JOBHUNT_HH_ENABLED = os.environ.get("JOBHUNT_HH_ENABLED", "true").lower() in ("true", "1", "yes")
 JOBHUNT_HABR_ENABLED = os.environ.get("JOBHUNT_HABR_ENABLED", "true").lower() in ("true", "1", "yes")
 JOBHUNT_HABR_QUERY = os.environ.get("JOBHUNT_HABR_QUERY", "frontend react typescript")
+
+JOBHUNT_HIRIFY_ENABLED = os.environ.get("JOBHUNT_HIRIFY_ENABLED", "true").lower() in ("true", "1", "yes")
+JOBHUNT_HIRIFY_QUERY = os.environ.get("JOBHUNT_HIRIFY_QUERY", "frontend react typescript")
+JOBHUNT_HIRIFY_QUERIES = os.environ.get("JOBHUNT_HIRIFY_QUERIES", "").strip()
+JOBHUNT_HIRIFY_MAX_PAGES = int(os.environ.get("JOBHUNT_HIRIFY_MAX_PAGES", "2"))
+
+JOBHUNT_HIREHI_ENABLED = os.environ.get("JOBHUNT_HIREHI_ENABLED", "true").lower() in ("true", "1", "yes")
+JOBHUNT_HIREHI_SUBCATEGORIES = os.environ.get("JOBHUNT_HIREHI_SUBCATEGORIES", "frontend,fullstack")
+JOBHUNT_HIREHI_MAX_PAGES = int(os.environ.get("JOBHUNT_HIREHI_MAX_PAGES", "2"))
+JOBHUNT_HIREHI_LIMIT = int(os.environ.get("JOBHUNT_HIREHI_LIMIT", "50"))
+
+JOBHUNT_TG_ENABLED = os.environ.get("JOBHUNT_TG_ENABLED", "true").lower() in ("true", "1", "yes")
+JOBHUNT_TG_CHANNELS = os.environ.get(
+    "JOBHUNT_TG_CHANNELS",
+    "frontend_rabota,job_react,proglib_jobs",
+)
+JOBHUNT_TG_KEYWORDS = os.environ.get(
+    "JOBHUNT_TG_KEYWORDS",
+    "frontend,front-end,react,typescript,next.js,nextjs,javascript,fullstack,full-stack,фронтенд,фронт",
+)
+
+
+def hirify_search_queries() -> list[str]:
+    if JOBHUNT_HIRIFY_QUERIES:
+        parts = [q.strip() for q in JOBHUNT_HIRIFY_QUERIES.split(",") if q.strip()]
+        if parts:
+            return parts
+    return [JOBHUNT_HIRIFY_QUERY]
+
+
+def hirehi_subcategories() -> list[str]:
+    parts = [s.strip() for s in JOBHUNT_HIREHI_SUBCATEGORIES.split(",") if s.strip()]
+    return parts or ["frontend"]
+
+
+def tg_channel_names() -> list[str]:
+    return [c.strip().lstrip("@") for c in JOBHUNT_TG_CHANNELS.split(",") if c.strip()]
+
+
+def tg_match_keywords() -> tuple[str, ...]:
+    return tuple(k.strip().lower() for k in JOBHUNT_TG_KEYWORDS.split(",") if k.strip())

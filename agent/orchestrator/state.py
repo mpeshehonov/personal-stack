@@ -402,6 +402,22 @@ def job_lead_exists(source: str, external_id: str) -> bool:
         return row is not None
 
 
+def job_lead_url_exists(url: str) -> bool:
+    """Cross-source duplicate check by normalized vacancy URL."""
+    url = (url or "").strip()
+    if not url:
+        return False
+    norm = url.lower().rstrip("/").removeprefix("https://").removeprefix("http://").removeprefix("www.")
+    with get_conn() as conn:
+        rows = conn.execute("SELECT url FROM job_leads WHERE url != ''").fetchall()
+        for row in rows:
+            stored = (row["url"] or "").strip().lower().rstrip("/")
+            stored = stored.removeprefix("https://").removeprefix("http://").removeprefix("www.")
+            if stored == norm:
+                return True
+        return False
+
+
 def get_job_lead(lead_id: int) -> sqlite3.Row | None:
     with get_conn() as conn:
         return conn.execute("SELECT * FROM job_leads WHERE id = ?", (lead_id,)).fetchone()

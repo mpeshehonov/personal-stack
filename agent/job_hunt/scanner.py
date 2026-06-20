@@ -17,13 +17,20 @@ from job_hunt.config import (
     JOBHUNT_HH_MAX_PAGES,
     JOBHUNT_HH_PER_PAGE,
     JOBHUNT_HH_TEXT,
+    JOBHUNT_HIREHI_ENABLED,
+    JOBHUNT_HIRIFY_ENABLED,
     JOBHUNT_MIN_MATCH,
+    JOBHUNT_TG_ENABLED,
     JOBHUNT_USER_AGENT,
     hh_search_queries,
 )
+from job_hunt.dedup import dedupe_vacancies, vacancy_fingerprint
 from job_hunt.habr import fetch_habr_vacancies
+from job_hunt.hirehi import fetch_all_hirehi_vacancies
+from job_hunt.hirify import fetch_all_hirify_vacancies
 from job_hunt.matcher import load_resume_skills, score_vacancy
-from orchestrator.state import add_job_lead, job_lead_exists
+from job_hunt.telegram_channels import fetch_all_tg_vacancies
+from orchestrator.state import add_job_lead, job_lead_exists, job_lead_url_exists
 
 logger = logging.getLogger(__name__)
 
@@ -88,10 +95,20 @@ def fetch_hh_vacancies(
     return results
 
 
+def _empty_source_counts() -> dict[str, int]:
+    return {
+        "hh": 0,
+        "habr": 0,
+        "hirify": 0,
+        "hirehi": 0,
+        "telegram": 0,
+    }
+
+
 def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
-    """Fetch from enabled sources. HH often 403 from NL — Habr fills the gap."""
+    """Fetch from enabled sources. Dedup across sources by URL + title/company."""
     vacancies: list[dict[str, Any]] = []
-    counts: dict[str, int] = {"hh": 0, "habr": 0}
+    counts = _empty_source_counts()
     seen_hh: set[str] = set()
 
     if JOBHUNT_HH_ENABLED:
@@ -101,6 +118,7 @@ def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
                 if not vid or vid in seen_hh:
                     continue
                 seen_hh.add(vid)
+                item["_source"] = "hh"
                 vacancies.append(item)
         counts["hh"] = len(seen_hh)
 
@@ -109,7 +127,25 @@ def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
         counts["habr"] = len(habr)
         vacancies.extend(habr)
 
-    return vacancies, counts
+    if JOBHUNT_HIRIFY_ENABLED:
+        hirify = fetch_all_hirify_vacancies()
+        counts["hirify"] = len(hirify)
+        vacancies.extend(hirify)
+
+    if JOBHUNT_HIREHI_ENABLED:
+        hirehi = fetch_all_hirehi_vacancies()
+        counts["hirehi"] = len(hirehi)
+        vacancies.extend(hirehi)
+
+    if JOBHUNT_TG_ENABLED:
+        tg = fetch_all_tg_vacancies()
+        counts["telegram"] = len(tg)
+        vacancies.extend(tg)
+
+    deduped, skipped = dedupe_vacancies(vacancies)
+    if skipped:
+        logger.info("Cross-source dedup removed %s duplicate vacancies", skipped)
+    return deduped, counts
 
 
 def _vacancy_to_lead_fields(
@@ -157,14 +193,16 @@ def scan_and_store_leads(
 ) -> dict[str, Any]:
     """Score vacancies, insert new high-match leads. Returns scan summary."""
     min_match = min_match if min_match is not None else JOBHUNT_MIN_MATCH
-    source_counts: dict[str, int] = {"hh": 0, "habr": 0}
+    source_counts = _empty_source_counts()
     if vacancies is None:
         vacancies, source_counts = fetch_all_vacancies()
 
     resume_skills = load_resume_skills()
     new_lead_ids: list[int] = []
     skipped_existing = 0
+    skipped_duplicates = 0
     below_threshold = 0
+    seen_fingerprints: set[str] = set()
 
     for vacancy in vacancies:
         source = vacancy.get("_source") or "hh"
@@ -175,6 +213,16 @@ def scan_and_store_leads(
             skipped_existing += 1
             continue
 
+        url = vacancy.get("alternate_url") or ""
+        if url and job_lead_url_exists(url):
+            skipped_duplicates += 1
+            continue
+
+        fp = vacancy_fingerprint(vacancy)
+        if fp and len(fp) >= 8 and fp in seen_fingerprints:
+            skipped_duplicates += 1
+            continue
+
         score, reasons = score_vacancy(vacancy, resume_skills=resume_skills)
         if score < min_match:
             below_threshold += 1
@@ -183,6 +231,8 @@ def scan_and_store_leads(
         fields = _vacancy_to_lead_fields(vacancy, match_score=score, match_reasons=reasons)
         lead_id = add_job_lead(**fields)
         new_lead_ids.append(lead_id)
+        if fp and len(fp) >= 8:
+            seen_fingerprints.add(fp)
 
     top_leads = list_job_leads_for_summary(new_lead_ids)
     return {
@@ -191,6 +241,7 @@ def scan_and_store_leads(
         "by_source": source_counts,
         "new_count": len(new_lead_ids),
         "skipped_existing": skipped_existing,
+        "skipped_duplicates": skipped_duplicates,
         "below_threshold": below_threshold,
         "top_leads": top_leads,
     }
