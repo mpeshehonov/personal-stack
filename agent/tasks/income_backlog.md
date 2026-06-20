@@ -20,7 +20,7 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 ## Phase 2 — Scale (after M1 progress >30%)
 
 - [ ] **IB-10** Bounty: Shopify deep-dive with dev-store Admin API tokens (see `agent/skills/bounty-shopify/`)
-- [ ] **IB-11** Review milestone progress; propose capital / venue reallocation in daily Summary
+- [x] **IB-11** Review milestone progress; propose capital / venue reallocation in daily Summary
 
 ## Rules
 
