@@ -108,10 +108,13 @@ Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 
 ## Skills
 
-- React, TypeScript, JavaScript, HTML5, CSS3/SCSS, Next.js
-- 1C-Bitrix, PHP, jQuery, Webpack, online stores, e-commerce
-- REST API, Git, code review, Scrum/Agile, Jest, Playwright
-- PostgreSQL, SQL, Django REST, Nest.js
+- **Languages:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
+- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Tailwind CSS, jQuery, responsive layout
+- **CMS:** Contentful, Strapi, WordPress, 1C-Bitrix, headless CMS, CMS integrations with Next.js/Node.js
+- **Build & Git:** Git, Webpack, Vite, yarn workspaces, monorepos, npm packages, code splitting, GitLab CI, GitHub Actions, Docker, CI/CD
+- **API & backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PHP, Symfony, MySQL, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, Bitrix components & templates, Keycloak, Auth.js
+- **Quality & process:** Jest, Vitest, Playwright, Sentry, code review, Scrum, Agile
+- **UI & product:** e-commerce, design systems, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 
 ## Languages
 

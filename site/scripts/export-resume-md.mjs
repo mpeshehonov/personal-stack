@@ -11,12 +11,14 @@ const runner = path.join(__dirname, ".export-resume-runner.ts");
 writeFileSync(
   runner,
   `import { getAboutParagraphs, getExperiences, getAchievements, getEducation } from "../lib/resume-data.ts";
+import { getSkillGroups } from "../lib/skills.ts";
 const locale = (process.argv[2] === "en" ? "en" : "ru") as "ru" | "en";
 console.log(JSON.stringify({
   about: getAboutParagraphs(locale),
   exps: getExperiences(locale),
   edu: getEducation(locale),
   ach: getAchievements(locale),
+  skillGroups: getSkillGroups(locale),
 }));`
 );
 
@@ -56,29 +58,17 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpe
     }
   }
 
+  md += renderSkillSection(locale, data.skillGroups);
+
   md += isRu
-    ? `## Навыки
-
-- React, TypeScript, JavaScript, HTML5, CSS3/SCSS, Next.js
-- 1C-Bitrix, PHP, jQuery, Webpack, интернет-магазины, e-commerce
-- REST API, Git, code review, Scrum/Agile, Jest, Playwright
-- PostgreSQL, SQL, Django REST, Nest.js
-
-## Языки
+    ? `## Иностранные языки
 
 - Английский — B1
 
 ## Образование и сообщество
 
 `
-    : `## Skills
-
-- React, TypeScript, JavaScript, HTML5, CSS3/SCSS, Next.js
-- 1C-Bitrix, PHP, jQuery, Webpack, online stores, e-commerce
-- REST API, Git, code review, Scrum/Agile, Jest, Playwright
-- PostgreSQL, SQL, Django REST, Nest.js
-
-## Languages
+    : `## Languages
 
 - English — B1
 - Russian — native
@@ -89,6 +79,16 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpe
 
   for (const e of data.edu) md += `### ${e.school}\n\n${e.field} · ${e.period} | ${e.location}\n\n`;
   md += data.ach + "\n";
+  return md;
+}
+
+function renderSkillSection(locale, groups) {
+  const heading = locale === "ru" ? "Навыки" : "Skills";
+  let md = `## ${heading}\n\n`;
+  for (const g of groups) {
+    md += `- **${g.title}:** ${g.skills.join(", ")}\n`;
+  }
+  md += "\n";
   return md;
 }
 

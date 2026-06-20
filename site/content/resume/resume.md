@@ -108,12 +108,15 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 
 ## Навыки
 
-- React, TypeScript, JavaScript, HTML5, CSS3/SCSS, Next.js
-- 1C-Bitrix, PHP, jQuery, Webpack, интернет-магазины, e-commerce
-- REST API, Git, code review, Scrum/Agile, Jest, Playwright
-- PostgreSQL, SQL, Django REST, Nest.js
+- **Языки:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
+- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Tailwind CSS, jQuery, адаптивная вёрстка
+- **CMS:** Contentful, Strapi, WordPress, 1C-Bitrix, headless CMS, интеграции CMS с Next.js/Node.js
+- **Сборка и Git:** Git, Webpack, Vite, yarn workspaces, монорепозитории, npm-пакеты, code splitting, GitLab CI, GitHub Actions, Docker, CI/CD
+- **API и backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PHP, Symfony, MySQL, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, компоненты и шаблоны Bitrix, Keycloak, Auth.js
+- **Качество и процессы:** Jest, Vitest, Playwright, Sentry, code review, Scrum, Agile
+- **UI & продукт:** e-commerce, дизайн-системы, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 
-## Языки
+## Иностранные языки
 
 - Английский — B1
 
