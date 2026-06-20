@@ -79,12 +79,17 @@ docker compose build site
 docker compose up -d site caddy redis
 
 if [[ "$RESTART_SYSTEMD" == "1" ]]; then
-  echo "==> Restarting systemd services"
-  if [[ "$RESTART_ORCHESTRATOR" == "1" ]]; then
-    sudo systemctl restart agent-orchestrator
-  fi
-  if [[ "$RESTART_TELEGRAM" == "1" ]]; then
-    sudo systemctl restart telegram-bot
+  if sudo -n true 2>/dev/null; then
+    echo "==> Restarting systemd services"
+    if [[ "$RESTART_ORCHESTRATOR" == "1" ]]; then
+      sudo systemctl restart agent-orchestrator
+    fi
+    if [[ "$RESTART_TELEGRAM" == "1" ]]; then
+      sudo systemctl restart telegram-bot
+    fi
+  else
+    echo "==> Skip systemd restart (no passwordless sudo for $(id -un))"
+    echo "    Run: sudo systemctl restart agent-orchestrator telegram-bot"
   fi
 fi
 

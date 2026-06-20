@@ -21,34 +21,68 @@ PHONE = "+7 950 919-67-86"
 NAME = "Максим Пешехонов"
 
 # Named proofs — one per letter (skill: no resume dump)
+
+_AI_CHARS = str.maketrans({
+    "—": ",",
+    "–": "-",
+    "→": " ",
+    "←": " ",
+    "⇒": " ",
+    "·": ",",
+    "•": " ",
+    "…": ".",
+})
+_AI_PATTERNS = [
+    (re.compile(r"\s*->\s*"), " "),
+    (re.compile(r"\s*=>\s*"), " "),
+    (re.compile(r"\s*\|\s*"), ", "),
+    (re.compile(r",\s*,+"), ","),
+    (re.compile(r"\s{2,}"), " "),
+]
+
+
+def _validate_cyrillic_name(text: str) -> None:
+    for line in text.splitlines():
+        if "Пешех" in line or "Максим" in line:
+            for ch in line:
+                if ch.isalpha() and ord(ch) < 128:
+                    raise ValueError(f"Latin letter in name line: {line!r}")
+
+
+def humanize_cover_text(text: str) -> str:
+    out = text.translate(_AI_CHARS)
+    for pattern, repl in _AI_PATTERNS:
+        out = pattern.sub(repl, out)
+    out = re.sub(r"\n{3,}", "\n\n", out).strip()
+    _validate_cyrillic_name(out)
+    return out
+
+
 PROOFS: dict[str, str] = {
     "ecommerce": (
-        "Релевантный кейс: миграция каталога citilink.ru на Next.js + React "
-        "(фильтры, URL state, SEO); сейчас checkout-витрина PREEGLOS на Next.js + Orval."
+        "На Citilink переносил каталог citilink.ru на Next.js и React: "
+        "фильтры, URL state, SEO. Сейчас checkout PREEGLOS на Next.js с Orval."
     ),
     "enterprise": (
-        "Релевантный кейс: enterprise-модуль согласования закупок в X5 Tech "
-        "(React/TS, Keycloak SSO, Orval/OpenAPI, react-hook-form, code splitting)."
+        "На X5 Tech делал модуль согласования закупок: React, TypeScript, "
+        "Keycloak SSO, Orval по OpenAPI, длинные формы, code splitting."
     ),
     "product": (
-        "Релевантный кейс: sendonate.com — три React + Vite клиента, WebSocket real-time, "
-        "Orval/OpenAPI и CI/CD из одного репозитория."
+        "На sendonate.com три React-клиента, WebSocket, Orval и CI/CD из одного репозитория."
     ),
     "bitrix": (
-        "Есть опыт 1C-Bitrix и Symfony/MySQL (кейсы в разделе Проекты на сайте); "
-        "основной фокус последних лет — React/TypeScript/Next.js в e-commerce и enterprise."
+        "Есть опыт 1C-Bitrix и Symfony/MySQL (кейсы на сайте). "
+        "Сейчас основной фокус React, TypeScript, Next.js."
     ),
     "python": (
-        "Frontend-first: в POTALONU связал React-клиенты с Django REST через Orval/OpenAPI; "
-        "до этого — React/TS в X5 и Citilink."
+        "Frontend-first: в POTALONU связал React с Django REST через Orval. "
+        "До этого React в X5 и Citilink."
     ),
     "data": (
-        "Релевантный кейс: BI.ZONE Threat Intelligence — React/TS, GraphQL, D3.js-граф, "
-        "виртуализация больших списков."
+        "В BI.ZONE Threat Intelligence: React, GraphQL, D3-граф, виртуализация списков."
     ),
     "general": (
-        "Последние роли: X5 Tech (React/TS, Keycloak, Orval), Citilink (Next.js e-commerce), "
-        "сейчас продуктовые клиенты на React + Vite."
+        "Последние роли X5 Tech и Citilink, сейчас продуктовые клиенты на React и Vite."
     ),
 }
 
@@ -117,21 +151,39 @@ def classify_vacancy(text: str) -> str:
 def _jd_hook(title: str, company: str, text: str, kind: str) -> str:
     company_part = f" в {company}" if company else ""
     if kind == "ecommerce":
-        return f"Откликаюсь на вакансию «{title}»{company_part}: в описании e-commerce и React/Next — близко к моему опыту миграции каталога и checkout-сценариев."
+        return (
+            f"Пишу по вакансии «{title}»{company_part}. "
+            f"У вас e-commerce и React, это близко к моему опыту каталога и checkout."
+        )
     if kind == "enterprise":
-        return f"Откликаюсь на «{title}»{company_part}: задачи про enterprise UI, роли и длинные формы пересекаются с модулем согласования закупок в X5 Tech."
+        return (
+            f"Пишу по «{title}»{company_part}. "
+            f"Enterprise UI, роли и длинные формы делал в X5 Tech."
+        )
     if kind == "bitrix":
-        return f"Пишу по «{title}»{company_part}: в стеке Bitrix/CMS — есть коммерческий бэкграунд; основной фокус сейчас React/TypeScript/Next.js."
+        return (
+            f"Пишу по «{title}»{company_part}. "
+            f"Bitrix есть в проектах, сейчас основной стек React и TypeScript."
+        )
     if kind == "python":
-        return f"Откликаюсь на «{title}»{company_part}: frontend-first, с опытом интеграции React-клиентов с Django REST backend."
+        return (
+            f"Пишу по «{title}»{company_part}. "
+            f"Frontend-first, React-клиенты с Django REST backend."
+        )
     if kind == "product":
-        return f"Откликаюсь на «{title}»{company_part}: продуктовые интерфейсы и несколько клиентов на одном backend — мой текущий профиль."
-    return f"Откликаюсь на «{title}»{company_part}: стек React/TypeScript/Next.js совпадает с моим последним опытом."
+        return (
+            f"Пишу по «{title}»{company_part}. "
+            f"Несколько клиентов на одном backend, это мой текущий профиль."
+        )
+    return (
+        f"Пишу по «{title}»{company_part}. "
+        f"React и TypeScript совпадают с моим последним опытом."
+    )
 
 
 def _subject_line(title: str) -> str:
     short = title[:60].strip() if title else "Frontend"
-    return f"Senior Frontend (React/TS) — {NAME} / {short}"
+    return f"Senior Frontend, React - {NAME} / {short}"
 
 
 def draft_cover_hh(lead: dict[str, Any]) -> str:
@@ -144,15 +196,15 @@ def draft_cover_hh(lead: dict[str, Any]) -> str:
     # First sentence from summary (trim)
     line1 = summary.split(".")[0].strip()
     if len(line1) > 120:
-        line1 = "Senior Frontend, 7+ лет: React, TypeScript, Next.js."
+        line1 = "Senior Frontend, 7 лет: React, TypeScript, Next.js."
     line2 = proof.split(".")[0].strip() + "."
-    body = f"{line1} {line2} Удалённо, Сочи, ASAP. Кейсы: {RESUME_URL}"
+    body = f"{line1} {line2} Удалённо, Сочи. {RESUME_URL}"
     if len(body) > 500:
         body = (
-            f"Senior Frontend, 7+ лет: React/TS/Next.js. {line2} "
-            f"Удалённо, ASAP. {RESUME_URL}"
+            f"Senior Frontend, 7 лет, React и TypeScript. {line2} "
+            f"Удалённо, Сочи. {RESUME_URL}"
         )
-    return body[:500]
+    return humanize_cover_text(body[:500])
 
 
 def draft_cover_email(lead: dict[str, Any]) -> str:
@@ -170,16 +222,16 @@ def draft_cover_email(lead: dict[str, Any]) -> str:
         "",
         proof,
         "",
-        "Удалённо из Сочи, готов к выходу ASAP.",
+        "Удалённо из Сочи, могу выйти в ближайшее время.",
         "",
-        f"Резюме и кейсы: {RESUME_URL}",
+        f"Резюме: {RESUME_URL}",
         f"Telegram: {TELEGRAM}",
         "",
         "С уважением,",
         NAME,
         PHONE,
     ]
-    return "\n".join(paragraphs)
+    return humanize_cover_text("\n".join(paragraphs))
 
 
 def draft_cover_letter(
@@ -229,7 +281,7 @@ def format_draft_markdown(draft: dict[str, str], *, lead_id: int) -> str:
             draft["body"],
             "```",
             "",
-            f"_Hook: {draft['hook_kind']}. Отправь сам — агент письма не шлёт._",
+            f"_Тип: {draft['hook_kind']}. Отправь сам._",
             f"_PDF: {RESUME_URL.replace('/ru/resume', '/ru/resume/download')}_",
         ]
     )

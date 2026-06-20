@@ -7,39 +7,98 @@ description: Write job application cover letters for RF IT market (HH, Habr, ema
 
 ## Goal
 
-A recruiter reads 50+ откликов. Yours should prove **fit in 15 seconds**: one relevant hook, one proof, one clear ask. Not a second resume, not ChatGPT tone.
+Recruiter читает 50+ откликов. За 15 секунд должно быть ясно: ты подходишь, есть один кейс, понятно как связаться. Не второе резюме и не текст из ChatGPT.
 
 ## When to use
 
-- Vacancy asks for email apply (`hr@…`, `jobs@…`, direct recruiter mail)
-- HH/Habr отклик with optional cover letter field
-- `/approve apply <id>` flow in job hunt (draft before send)
-- User pastes vacancy text and asks for сопровод
+- Email apply (`hr@…`, прямой контакт рекрутера)
+- HH/Habr поле сопроводительного
+- `/cover <id>` в job hunt
+- User вставил текст вакансии и просит сопровод
 
 ## Inputs (read before writing)
 
-1. Full vacancy text (title, company, requirements, nice-to-have, format)
-2. `site/content/resume/resume.json` — summary + skills for keyword mirror
-3. `site/lib/resume-data.ts` — pick **one** experience block + **one** project that match this JD (do not dump all employers)
-4. Contact email from vacancy; if missing, ask user
-5. Apply channel: email / HH form / Telegram — affects length and sign-off
+1. Полный текст вакансии
+2. `site/content/resume/resume.json` — summary + skills
+3. `site/lib/resume-data.ts` — **один** опыт + **один** проект под JD (не весь список работодателей)
+4. Email из вакансии; если нет — спросить
+5. Канал: email / HH / форма — от этого длина и подпись
 
-**Hard rules:** only facts from resume and projects. No invented employers, years, or tools. No Vue, Bitrix24, 3+ years Python unless in resume.
+**Hard rules:** только факты из резюме. Не придумывать годы, работодателей, инструменты. Нет Vue, Bitrix24, 3+ года Python, если этого нет в резюме.
 
-## Structure (RU email apply, 120–180 words)
+---
+
+## Human voice (главное правило)
+
+Пиши как живой разработчик в личном письме рекрутеру: простые слова, короткие фразы, без «литературности». Можно начать с «Пишу по вакансии…» или сразу с сути. Предложения разной длины. Одна мысль — одно предложение.
+
+**Имя и подпись (обязательная проверка перед выдачей):**
+
+- Только кириллица: `Максим Пешехонов` — эталон для копипаста:
+  ```
+  Максим Пешехонов
+  ```
+  (все буквы кириллические, без латинской `o`, `a`, `e`, `c`, `p`, `x`)
+- Перед выдачей user: проверь имя/фамилию посимвольно. Частая ошибка LLM: `Пешехонов` с латинской `o` в конце.
+- Телефон: `+7 950 919-67-86`, email: `kassady71@gmail.com`
+
+---
+
+## AI-маркеры: запрещено
+
+### Символы и оформление
+
+| Запрещено | Чем заменить |
+|-----------|--------------|
+| Длинное тире `—` | запятая, точка или обычный дефис `-` (макс. 0–1 дефис на весь текст) |
+| Среднее тире `–` в диапазонах | `3-5`, `140-180` |
+| Стрелки `→` `←` `=>` `->` | «на», «в», «через» или ничего |
+| Точка по центру `·` | запятая или перенос строки |
+| Вертикальная черта `\|` как разделитель | перенос строки |
+| Маркированные списки в теле письма | связный текст абзацами |
+| `...` многоточие | не использовать |
+| Emoji, ✓, ★, → | никогда |
+| Кавычки-ёлочки в каждом втором слове | только если цитируешь название вакансии |
+| `:` в начале каждой строки (pseudo-bullets) | обычные предложения |
+| ALL CAPS, `[React/TS]` в теме | простой текст: `React, TypeScript` |
+| Markdown bold/headers в теле для user | plain text |
+
+### Слова и шаблоны (AI slop)
+
+- «Меня заинтересовала ваша вакансия» / «I am writing to express»
+- «уникальная возможность», «динамичная команда», «профессиональный рост»
+- «обладаю уверенными/глубокими знаниями», «обширный опыт»
+- «командный игрок», «горящие глаза», «быстро обучаюсь»
+- «буду рад стать частью вашей команды профессионалов»
+- «внесу вклад в развитие продукта»
+- «не только X, но и Y» (параллельные триады)
+- «важно отметить», «следует подчеркнуть», «в заключение»
+- «релевантный кейс:» как заголовок (просто расскажи что делал)
+- «Hook:», «Match notes:» в тексте для user (только во внутренних заметках агента)
+
+### Структурные маркеры
+
+- Одинаковая длина всех предложений
+- Ровно 3 абзаца по 2 предложения «как в учебнике»
+- 15 технологий через слэш в одном предложении
+- Повтор summary из резюме целиком
+
+---
+
+## Structure (email, 120–180 слов)
 
 ```
-Тема: Frontend-разработчик — [Имя] / [ключевое из JD, 3–5 слов]
+Тема: [роль из JD] - Максим Пешехонов
 
 Здравствуйте!
 
-[1 предложение: роль + почему эта компания/продукт — конкретно из текста вакансии, не «интересная компания»]
+[зачем пишешь + одна деталь из их текста вакансии]
 
-[2–3 предложения: один релевантный кейс — компания или продукт, стек из JD, результат без выдуманных цифр]
+[1 кейс: где, что делал, стек из JD своими словами]
 
-[1 предложение: формат — удалённо, Сочи, готов к выходу ASAP если уместно]
+[формат работы, город, когда можешь выйти]
 
-Резюме и кейсы: https://mpeshekhonov.ru/ru/resume
+Резюме: https://mpeshekhonov.ru/ru/resume
 Telegram: @makusimu_san
 
 С уважением,
@@ -47,74 +106,75 @@ Telegram: @makusimu_san
 +7 950 919-67-86
 ```
 
-**Subject line:** `[Senior Frontend / React] — Максим Пешехонов` or mirror their title wording. No emoji, no ALL CAPS.
+Тема письма: без скобок `[ ]`, без слэш-спама. Пример: `Frontend React, TypeScript - Максим Пешехонов`
 
-## Structure (HH / Habr short field, ≤500 chars)
+## Structure (HH / Habr, до 500 символов)
 
-- Line 1: grade + stack match (`Senior Frontend, React/TS/Next.js, 7+ лет`)
-- Line 2: one proof bullet from best matching role
-- Line 3: ссылка на сайт + ASAP / remote
-
-## Tone (RF IT, 2026)
-
-| Do | Don't |
-|----|-------|
-| Короткие предложения, 12–20 слов | «Добрый день! Меня заинтересовала ваша вакансия…» |
-| Конкретный продукт/задача из JD | «Я командный игрок с горящими глазами» |
-| «Делал X на React/TS для Y» | «Обладаю обширным опытом в…» |
-| «Готов обсудить» / «Могу соз созвон» | «Буду рад стать частью вашей динамичной команды» |
-| «Удалённо, Сочи» если релевантно | Повтор всего резюме |
-| Один стек-мост: Orval, Keycloak, e-commerce | Список из 15 технологий |
-
-## Anti-slop checklist (must pass before output)
-
-- [ ] No opening «Меня заинтересовала ваша вакансия» / «I am writing to express»
-- [ ] No «уникальная возможность», «динамичная команда», «профессиональный рост»
-- [ ] No em dash spam (—); max 1 in whole letter
-- [ ] No bullet list longer than 3 items in email body
-- [ ] At least one phrase **verbatim or paraphrased from JD** (their stack, domain, product)
-- [ ] At least one **named proof** (X5 / Citilink / sendonate / BI.ZONE — pick one relevant)
-- [ ] Word count 120–180 (email) or ≤500 chars (HH field)
-- [ ] Sign-off matches channel (email: full contacts; HH: link only)
-
-## Vacancy-type hooks (pick one)
-
-| JD focus | Lead with |
-|----------|-----------|
-| React / Next e-commerce | Citilink migration, PREEGLOS checkout, URL/SEO filters |
-| Enterprise / RBAC | X5 НКЗ Keycloak + Orval + long forms |
-| Product / startup | sendonate 3 clients, WebSocket, CI/CD monorepo |
-| Bitrix / CMS | projects section + Symfony/PHP background (not in experience dates) |
-| Python + React | POTALONU Django REST integration, frontend-first framing |
-| SOC / data-heavy UI | BI.ZONE Threat Intelligence, GraphQL, virtualization |
-
-## Output format
-
-Deliver to user/Telegram:
-
-```markdown
-## Draft — [Company] / [Title]
-
-**To:** hr@example.com  
-**Subject:** …
-
-[letter body]
+Один абзац, без списков. Grade + стек + один факт + ссылка + remote/ASAP.
 
 ---
-**Match notes:** (internal, optional) which resume block used, JD keywords hit
-**Attachments:** resume PDF RU / EN — confirm before send
+
+## Tone (RF IT)
+
+| Делай | Не делай |
+|-------|----------|
+| «На X5 делал формы с Keycloak» | «Обладаю опытом enterprise-разработки» |
+| «Пишу по вакансии frontend» | «Добрый день! Меня заинтересовала…» |
+| «Могу созвониться на этой неделе» | «Буду рад присоединиться к команде» |
+| Один стек из их JD | Список из 10 технологий |
+| «Удалённо, Сочи» | Пересказ всего резюме |
+
+---
+
+## Pre-output checklist
+
+- [ ] Нет `—`, `→`, `·`, emoji, markdown-списков в теле
+- [ ] Имя и фамилия полностью кириллицей, без латинских o/a/e внутри
+- [ ] Нет slop-фраз из таблицы выше
+- [ ] Есть одна фраза из их вакансии (стек, продукт, задача)
+- [ ] Есть один named proof (X5 / Citilink / sendonate / BI.ZONE)
+- [ ] 120–180 слов (email) или ≤500 символов (HH)
+- [ ] Прочитай вслух: звучит как человек, не как пресс-релиз
+
+---
+
+## Vacancy hooks (один на письмо)
+
+| JD | С чего начать |
+|----|----------------|
+| React / Next e-commerce | Citilink, каталог, checkout, SEO |
+| Enterprise / RBAC | X5, Keycloak, Orval, длинные формы |
+| Product / startup | sendonate, WebSocket, CI/CD |
+| Bitrix / CMS | проекты на 1C-Bitrix + честно про текущий React |
+| Python + React | POTALONU, Django REST, frontend-first |
+| SOC / data UI | BI.ZONE, GraphQL, тяжёлые списки |
+
+---
+
+## Output format (для user / Telegram)
+
+```markdown
+## [Компания] / [Должность]
+
+**Куда:** email или форма
+**Тема:** …
+
+[plain text письма, готово к копированию]
+
+---
+_match notes (только для агента, не в письмо): какой блок резюме, какие слова из JD_
 ```
 
-## Send gate (job hunt integration)
+## Send gate
 
-- Draft only — user sends manually (no agent SMTP)
-- `/cover <id>` in Telegram generates draft; stored in `job_applications`
-- Never send from agent without explicit user action outside bot
+- Только черновик, user шлёт сам
+- `/cover <id>` в Telegram
+- Агент не отправляет письма
 
-## Self-check with resume-copy
+## Honesty
 
-Same honesty rules as `agent/skills/resume-copy/SKILL.md`: no fake metrics, no keyword stuffing, RU plain language.
+Те же правила что `agent/skills/resume-copy/SKILL.md`: без выдуманных метрик и keyword stuffing.
 
 ## Examples
 
-Good vs bad letters and HH snippets: [examples.md](examples.md)
+[examples.md](examples.md)

@@ -1068,12 +1068,12 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "Учёт электроэнергии: формы и отчёты",
-      "en": "Power metering: forms and reports"
+      "ru": "Учёт электроэнергии для энергосбытовых компаний",
+      "en": "Power metering for energy retail companies"
     },
     "problem": {
-      "ru": "Сервис учёта электроэнергии работал на тяжёлых postback-формах; пользователям нужен отзывчивый UI.",
-      "en": "The power metering service used heavy postback forms; users needed a responsive UI."
+      "ru": "Сервис учёта электроэнергии для энергосбытовых компаний работал на тяжёлых postback-формах; нужен отзывчивый UI для форм и отчётов.",
+      "en": "An electricity accounting service for energy retail companies relied on heavy postback forms; users needed a responsive UI for forms and reports."
     },
     "contribution": {
       "ru": "Перевёл формы и таблицы на AJAX, доработал UI на Symfony + Bitrix.",
@@ -1117,24 +1117,24 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "Каталог строительных товаров на Bitrix",
-      "en": "Building supplies catalog on Bitrix"
+      "ru": "Интернет-магазин на Next.js",
+      "en": "Online store on Next.js"
     },
     "problem": {
-      "ru": "Интернет-магазину нужны доработки каталога и корзины в существующем Bitrix-контуре.",
-      "en": "The store needed catalog and cart improvements in an existing Bitrix setup."
+      "ru": "Интернет-магазину строительных материалов нужны каталог и корзина на современном frontend-стеке.",
+      "en": "A building supplies store needed catalog and cart on a modern frontend stack."
     },
     "contribution": {
-      "ru": "Доработал интерфейсы каталога и корзины, адаптивная вёрстка на jQuery + SCSS.",
-      "en": "Extended catalog and cart UI, responsive layout on jQuery + SCSS."
+      "ru": "Разрабатывал интерфейсы каталога и корзины на Next.js, адаптивная вёрстка и интеграция с backend API.",
+      "en": "Built catalog and cart UI on Next.js, responsive layout and backend API integration."
     },
     "stack": [
-      "1C-Bitrix",
-      "PHP",
+      "Next.js",
+      "React",
+      "TypeScript",
       "HTML5",
       "SCSS",
-      "jQuery",
-      "JavaScript",
+      "REST API",
       "Webpack",
       "Git"
     ],
@@ -1203,8 +1203,8 @@
   {
     "slug": "energoshop-workshop",
     "title": {
-      "ru": "workshop.energoshop.ru",
-      "en": "workshop.energoshop.ru"
+      "ru": "workshop.energosoft.com",
+      "en": "workshop.energosoft.com"
     },
     "company": {
       "ru": "Energosoft",
@@ -1215,16 +1215,16 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "Web-интерфейс сервиса мастерской",
-      "en": "Workshop service web UI"
+      "ru": "Учёт электроэнергии для энергосбытовых компаний",
+      "en": "Electricity accounting for energy retail companies"
     },
     "problem": {
-      "ru": "Отдельному сервису мастерской нужен клиентский интерфейс поверх Bitrix backend.",
-      "en": "A workshop service needed a client UI on top of Bitrix backend."
+      "ru": "Энергосбытовым компаниям нужен web-интерфейс для учёта электроэнергии: формы, таблицы и отчёты.",
+      "en": "Energy retail companies needed a web UI for electricity accounting: forms, tables, and reports."
     },
     "contribution": {
-      "ru": "Поддержка и развитие клиентской части, интеграция с backend API.",
-      "en": "Maintained and extended client UI, integrated with backend API."
+      "ru": "Разрабатывал клиентскую часть сервиса: формы и таблицы на AJAX, интеграция с Symfony/Bitrix backend.",
+      "en": "Built the client side of the service: AJAX forms and tables, integration with Symfony/Bitrix backend."
     },
     "stack": [
       "1C-Bitrix",
