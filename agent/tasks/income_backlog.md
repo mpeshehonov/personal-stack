@@ -21,6 +21,7 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 
 - [ ] **IB-10** Bounty: Shopify deep-dive with dev-store Admin API tokens (see `agent/skills/bounty-shopify/`)
 - [x] **IB-11** Review milestone progress; propose capital / venue reallocation in daily Summary
+- [x] **IB-12** A5: publish affiliate blog post (`cex-grid-trading-bybit.md`, `draft: false`, plain links until ref IDs in secrets)
 
 ## Rules
 

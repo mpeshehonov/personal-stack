@@ -28,7 +28,10 @@
     "contact": "Get in touch",
     "contactDesc": "Open to job opportunities and interesting product work.",
     "blog": "Blog",
-    "blogDesc": "Notes on engineering, infrastructure, and tooling."
+    "blogDesc": "Notes on engineering, infrastructure, and tooling.",
+    "latestBlog": "From the blog",
+    "latestBlogDesc": "Notes on infrastructure, agent stack, and autonomous finance lanes.",
+    "allPosts": "All posts"
   },
   "cta": {
     "telegram": "Message on Telegram",

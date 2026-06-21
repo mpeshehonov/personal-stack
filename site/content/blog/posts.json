@@ -11,8 +11,8 @@
     "slug": "cex-grid-trading-bybit",
     "title": "CEX grid trading: как настроить сетку на Bybit без ручных ордеров",
     "date": "2026-06-19",
-    "excerpt": "Grid trading на CEX: paper workflow, grid calculator, risk caps и affiliate-ready черновик для A5 lane.",
-    "tags": ["finance", "cex", "grid-trading", "affiliate"],
-    "draft": true
+    "excerpt": "Grid trading на CEX: paper workflow, grid calculator, risk caps и когда grid не работает — primary lane A2 после Azuro NO-GO.",
+    "tags": ["finance", "cex", "grid-trading"],
+    "draft": false
   }
 ]

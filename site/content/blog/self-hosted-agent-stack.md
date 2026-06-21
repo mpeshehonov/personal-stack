@@ -78,7 +78,7 @@ Telegram (/ask, /task, /bounty)
 
 - Milestone M1: $1k autonomous net к сентябрю 2026
 - Job hunt autopilot с HH API
-- Ещё посты про finance lanes и VPN split-routing
+- [CEX grid trading на Bybit](/blog/cex-grid-trading-bybit) — primary finance lane после Azuro NO-GO
 
 ---
 

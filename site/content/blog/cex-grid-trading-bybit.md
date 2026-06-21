@@ -1,7 +1,5 @@
 # CEX grid trading: как настроить сетку на Bybit без ручных ордеров
 
-> **Draft skeleton (A5 affiliate).** Замените `YOUR_AFFILIATE_ID` на реальные ссылки перед публикацией.
-
 Grid trading на CEX — один из немногих **полностью API-driven** способов зарабатывать на волатильности без prediction markets. После paper-фазы на Azuro я переключил primary lane на **A2 CEX grid** — boring, но автономно.
 
 ## Что такое grid trading
@@ -15,7 +13,16 @@ Grid trading на CEX — один из немногих **полностью AP
 | Уровни | 5–10 (arithmetic grid) |
 | Размер на уровень | $25–50 (paper first) |
 
-<!-- TODO: скриншот grid preview из finance/grid_calculator -->
+## Пример grid preview (paper scan)
+
+Из `grid_calculator.py` на текущем скане (BTCUSDT, $300 capital, 5 levels, 10% span):
+
+```text
+BTCUSDT grid: $61,042 – $67,468 (anchor ~$64,255)
+Per level: ~$60 · arithmetic · read-only preview
+```
+
+Это **не** live-ордера — только preview перед approval и `FINANCE_LIVE`.
 
 ## Почему Bybit (NL-friendly)
 
@@ -23,7 +30,7 @@ Grid trading на CEX — один из немногих **полностью AP
 - Низкие maker fees при grid (важно: fees съедают edge на малом капитале)
 - Unified account для spot grid bots
 
-**Affiliate:** [Bybit — регистрация](https://www.bybit.com/invite?ref=YOUR_AFFILIATE_ID) *(заменить ref)*
+[Bybit — регистрация](https://www.bybit.com/)
 
 ## Paper → live workflow
 
@@ -46,18 +53,16 @@ daily scan → filter (liquidity, drift) → grid preview → JSON proposal → 
 
 Grid bot живёт на том же VPS, что и agent stack — systemd + cron, без облачных «trading bot SaaS».
 
-**Affiliate (hosting):** [Hetzner Cloud](https://hetzner.cloud/?ref=YOUR_AFFILIATE_ID) · [DigitalOcean](https://www.digitalocean.com/?refcode=YOUR_AFFILIATE_ID)
-
-<!-- TODO: добавить реальные affiliate IDs в secrets, не в git -->
+- [Hetzner Cloud](https://www.hetzner.com/cloud)
+- [DigitalOcean](https://www.digitalocean.com/)
 
 ## Связанные посты
 
 - [Self-hosted agent stack](/blog/self-hosted-agent-stack) — orchestrator + finance scan
-- *(TODO)* Azuro paper rules — почему NO-GO для live
 
 ## Disclosure
 
-Пост содержит affiliate-ссылки. Это не финансовый совет — только описание моего paper/live workflow. DYOR.
+Ссылки на сервисы — без affiliate ref (можно добавить позже). Это не финансовый совет — только описание моего paper/live workflow. DYOR.
 
 ---
 
