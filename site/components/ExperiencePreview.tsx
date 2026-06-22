@@ -15,8 +15,8 @@ type Props = {
 export function ExperiencePreview({ locale, dict, experiences }: Props) {
   const desc =
     locale === "en"
-      ? "7+ years commercial dev: React/TypeScript e-commerce, 1C-Bitrix stores, enterprise modules. Git, REST, code review."
-      : "7+ лет коммерческой разработки: React/TypeScript, e-commerce, 1C-Bitrix, enterprise-модули. Git, REST, code review.";
+      ? "7+ years commercial dev: React/TypeScript, enterprise modules, e-commerce, real-time products. Git, REST/GraphQL, code review."
+      : "7+ лет коммерческой разработки: React/TypeScript, enterprise-модули, e-commerce, real-time продукты. Git, REST/GraphQL, code review.";
 
   return (
     <FadeIn className="section">
