@@ -17,12 +17,12 @@ export type Experience = {
 
 const aboutParagraphsRu = [
   "Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для enterprise-сервисов, e-commerce, real-time интерфейсов и Telegram Mini Apps. Специализируюсь на сложных пользовательских сценариях: роли и права, длинные формы, typed API-контракты, GraphQL/REST, WebSocket и дизайн-системы.",
-  "Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production. Сочи, удалённо. Готов к выходу ASAP.",
+  "Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production.",
 ];
 
 const aboutParagraphsEn = [
   "Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for enterprise systems, e-commerce, real-time products, and Telegram Mini Apps. Focus areas: complex workflows, RBAC, long forms, typed API contracts, GraphQL/REST, WebSocket, and design systems.",
-  "I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production. Sochi, remote. Available ASAP.",
+  "I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production.",
 ];
 
 const experiencesRu: Experience[] = [

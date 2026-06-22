@@ -34,14 +34,14 @@ function render(locale, data) {
 
 Senior Frontend-разработчик
 
-Сочи, Россия · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov) · Дата рождения: 28.05.1996
+Удалённо, РФ · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov) · Дата рождения: 28.05.1996
 
 **Готов к выходу ASAP.**`
     : `# Maksim Peshekhonov
 
 Senior Frontend Engineer
 
-Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
+Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
 
 **Available to start ASAP.**`;
 

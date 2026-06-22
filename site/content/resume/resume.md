@@ -2,7 +2,7 @@
 
 Senior Frontend-разработчик
 
-Сочи, Россия · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Дата рождения: 28.05.1996
+Удалённо, РФ · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Дата рождения: 28.05.1996
 
 **Готов к выходу ASAP.**
 
@@ -10,7 +10,7 @@ Senior Frontend-разработчик
 
 Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для enterprise-сервисов, e-commerce, real-time интерфейсов и Telegram Mini Apps. Специализируюсь на сложных пользовательских сценариях: роли и права, длинные формы, typed API-контракты, GraphQL/REST, WebSocket и дизайн-системы.
 
-Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production. Сочи, удалённо. Готов к выходу ASAP.
+Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production.
 
 ## Опыт работы
 

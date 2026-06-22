@@ -2,7 +2,7 @@
 
 Senior Frontend Engineer
 
-Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
+Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
 
 **Available to start ASAP.**
 
@@ -10,7 +10,7 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpe
 
 Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for enterprise systems, e-commerce, real-time products, and Telegram Mini Apps. Focus areas: complex workflows, RBAC, long forms, typed API contracts, GraphQL/REST, WebSocket, and design systems.
 
-I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production. Sochi, remote. Available ASAP.
+I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production.
 
 ## Work experience
 
