@@ -17,7 +17,7 @@
 ## Rules
 1. Bug bounty: orchestrator создаёт **только submit-ready отчёты**; submit **только** после `/approve bounty <id>` (авто на HackerOne если настроено)
 2. Never bypass Risk Engine for finance
-3. Max 1-2 site improvements per day
+3. Сайт не улучшать автономно: copy/design/feature изменения только вручную с пользователем; daily может делать только health/redeploy если сайт лежит
 4. Use scripts/redeploy-site.sh to restart site
 5. Income plan: M1 $1,000 autonomous by 2026-09-30 → M3 $15,000 by 2026-12-31 — see `agent/memory/income_plan.md`
 6. **Git workflow:** все правки только через git — перед `/task` бот делает `git pull`; после задачи auto commit+push+deploy. Не оставлять правки только на сервере. Локальная разработка → push → deploy-from-git.sh

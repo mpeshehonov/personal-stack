@@ -7,14 +7,11 @@ import resumeEn from "@/content/resume/en/resume.json";
 import { Hero } from "@/components/Hero";
 import { SkillGrid } from "@/components/SkillGrid";
 import { SelectedWork } from "@/components/SelectedWork";
-import { BlogPreview } from "@/components/BlogPreview";
-import { ProductTeaser } from "@/components/ProductTeaser";
 import { ExperiencePreview } from "@/components/ExperiencePreview";
 import { FadeIn } from "@/components/FadeIn";
 import { getDictionary } from "@/lib/i18n";
 import { getHomePreviewExperiences } from "@/lib/experience-preview";
 import { getFeaturedProjects } from "@/lib/projects";
-import { getLatestBlogPosts } from "@/lib/blog";
 import { getSkillGroups } from "@/lib/skills";
 
 export default async function HomePage({
@@ -28,7 +25,6 @@ export default async function HomePage({
   const resume = locale === "en" ? resumeEn : resumeRu;
   const featuredProjects = getFeaturedProjects(locale);
   const previewExperiences = getHomePreviewExperiences(locale);
-  const latestPosts = getLatestBlogPosts(2);
 
   return (
     <>
@@ -43,8 +39,6 @@ export default async function HomePage({
         dict={dict}
         experiences={previewExperiences}
       />
-      <BlogPreview locale={locale} dict={dict} posts={latestPosts} />
-      <ProductTeaser locale={locale} dict={dict} />
       <FadeIn className="section">
         <p className="section-label">{dict.sections.skills}</p>
         <h2 className="section-title mb-3">{dict.sections.skills}</h2>

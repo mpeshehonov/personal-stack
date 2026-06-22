@@ -28,15 +28,7 @@
     "contact": "Связаться",
     "contactDesc": "Открыт к предложениям о работе и интересным продуктовым задачам.",
     "blog": "Блог",
-    "blogDesc": "Заметки о разработке, инфраструктуре и инструментах.",
-    "latestBlog": "Из блога",
-    "latestBlogDesc": "Заметки про инфраструктуру, agent stack и автономные finance lanes.",
-    "allPosts": "Все посты",
-    "productTeaser": "Продукт",
-    "productTitle": "Personal Stack Agent Starter",
-    "productTeaserDesc": "Self-hosted harness для AI-агентов: orchestrator, Telegram-бот, finance scan и deploy pipeline — без SaaS lock-in. Скоро на Gumroad.",
-    "productTeaserCta": "Подробнее в блоге",
-    "productTeaserEarlyAccess": "Ранний доступ"
+    "blogDesc": "Заметки о разработке, инфраструктуре и инструментах."
   },
   "cta": {
     "telegram": "Написать в Telegram",

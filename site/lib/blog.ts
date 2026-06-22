@@ -23,10 +23,6 @@ export function getBlogPosts(): BlogPostMeta[] {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-export function getLatestBlogPosts(limit = 2): BlogPostMeta[] {
-  return getBlogPosts().slice(0, limit);
-}
-
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   const meta = (postsManifest as BlogPostMeta[]).find((p) => p.slug === slug);
   if (!meta) return undefined;

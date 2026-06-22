@@ -27,23 +27,23 @@
 - **Done when:** …
 ```
 
-Максимум **1 пункт site_backlog + 1 пункт income_backlog** за цикл. Bounty hunt — только orchestrator.
+Сайт не улучшать автономно: только health/redeploy, если прод лежит. Любые copy/design/feature изменения сайта — только вручную с пользователем. Максимум **1 пункт income_backlog** за цикл. Bounty hunt — только orchestrator.
 
 ## Приоритеты (по порядку)
 
 1. **Health** — сайт лежит → починить → `scripts/redeploy-site.sh`
-2. **Site** — ≤2 пункта из `agent/tasks/site_backlog.md`; **сначала** `agent/skills/site-design/SKILL.md`
-3. **Income** — ≤1 пункт из `agent/tasks/income_backlog.md` (skill: income-harness)
-4. **Job hunt** — не дублировать scanner; только backlog если включено
-5. **Bounty** — краткий итог в логе; hunt не запускать
-6. **Finance** — JSON proposals для risk engine (English JSON)
-7. **Memory** — уроки в `agent/memory/lessons/` при повторяющихся сбоях
+2. **Income** — ≤1 пункт из `agent/tasks/income_backlog.md` (skill: income-harness)
+3. **Job hunt** — не дублировать scanner; только backlog если включено
+4. **Bounty** — краткий итог в логе; hunt не запускать
+5. **Finance** — JSON proposals для risk engine (English JSON)
+6. **Memory** — уроки в `agent/memory/lessons/` при повторяющихся сбоях
 
 ## Checkpoints (отметь в ## Итог)
 
 - [ ] Health OK или redeploy
 - [ ] Plan записан
-- [ ] ≤1 site + ≤1 income change
+- [ ] Сайт не менялся автономно, кроме emergency health/redeploy
+- [ ] ≤1 income change
 - [ ] Секции daily заполнены
 - [ ] Нет секретов в выводе
 
