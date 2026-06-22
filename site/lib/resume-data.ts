@@ -16,48 +16,48 @@ export type Experience = {
 };
 
 const aboutParagraphsRu = [
-  "Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для e-commerce, enterprise-модулей и продуктовых интерфейсов. Проектирую сложные UI, связываю frontend с typed API-контрактами и довожу фичи до production через review и CI/CD.",
-  "Другие задачи и кейсы — в разделе Проекты на сайте. Backend-интеграция: Django REST, Nest.js, PostgreSQL, SQL. Сочи, удалённо. Готов к выходу ASAP.",
+  "Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для enterprise-сервисов, e-commerce, real-time интерфейсов и Telegram Mini Apps. Специализируюсь на сложных пользовательских сценариях: роли и права, длинные формы, typed API-контракты, GraphQL/REST, WebSocket и дизайн-системы.",
+  "Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production. Сочи, удалённо. Готов к выходу ASAP.",
 ];
 
 const aboutParagraphsEn = [
-  "Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for e-commerce, enterprise modules, and product workflows. Strong in complex UI, typed API contracts, production delivery, and code review.",
-  "Other work and case studies — in the Projects section on the site. Backend integration: Django REST, Nest.js, PostgreSQL, SQL. Sochi, remote. Available ASAP.",
+  "Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for enterprise systems, e-commerce, real-time products, and Telegram Mini Apps. Focus areas: complex workflows, RBAC, long forms, typed API contracts, GraphQL/REST, WebSocket, and design systems.",
+  "I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production. Sochi, remote. Available ASAP.",
 ];
 
 const experiencesRu: Experience[] = [
   {
     company: "POTALONU LLC",
     role: "Frontend-разработчик",
-    period: "09.2025 – н.в.",
+    period: "09.2025 – 06.2026",
     location: "Удалённо",
     blocks: [
       {
         title: "sendonate.com",
         tagline: "React-продукт для стримеров: Mini App, кабинет, OBS overlay",
         problem:
-          "Стример принимает донаты в Telegram и показывает алерты в OBS: три клиента должны работать с одним backend без рассинхрона.",
+          "Стример принимает донаты в Telegram, настраивает виджеты в кабинете и показывает алерты в OBS: три клиента должны работать с одним backend без рассинхрона.",
         contribution:
-          "Спроектировал и реализовал frontend-контур sendonate.com из трёх React + Vite + TypeScript клиентов: кабинет стримера, Telegram Mini App и OBS overlay. Завёл типизированный REST-клиент через Orval/OpenAPI, real-time доставку событий по WebSocket и CI/CD в GitHub Actions для lint/build/deploy всех клиентов из одного репозитория.",
-        stack: ["React", "TypeScript", "Vite", "REST API", "Orval", "WebSocket", "Django REST", "GitHub Actions"],
+          "Спроектировал frontend-контур sendonate.com из трёх React + Vite + TypeScript клиентов: кабинет стримера, Telegram Mini App и OBS overlay. Развивал дизайн виджетов донатов и сценарии кабинета, завёл типизированный REST-клиент через Orval/OpenAPI, real-time доставку событий по WebSocket и CI/CD для lint/build/deploy всех клиентов из одного репозитория.",
+        stack: ["React", "TypeScript", "Vite", "REST API", "Orval", "WebSocket", "Django REST", "GitHub Actions", "Sentry"],
         outcomes: [
-          "End-to-end сценарий доната до production: Mini App → backend → alert в OBS overlay без ручного обновления эфира",
-          "Orval генерирует DTO и методы API из OpenAPI-контракта — рассинхрон frontend/backend ловится на сборке",
-          "Единый delivery pipeline для трёх клиентов: автоматические проверки, сборка и деплой без ручных операций",
+          "End-to-end сценарий доната доведён до production: Mini App, backend, кабинет стримера и alert в OBS overlay работают как один продуктовый флоу",
+          "WebSocket-оверлей обрабатывает последовательные донаты через очередь алертов и reconnect без ручного обновления эфира",
+          "Orval и общий delivery pipeline уменьшают рассинхрон между клиентами и backend при изменении API-контрактов",
         ],
       },
       {
         title: "POTALONU / PREEGLOS",
         tagline: "Интернет-витрина билетов и редактор схем залов",
         problem:
-          "Билетному сервису нужны витрина с checkout, Telegram Mini App и embed-виджет выбора мест для партнёров.",
+          "Билетному сервису нужны витрина с checkout, Telegram Mini App и собственный seats.io-like редактор залов без зависимости от внешнего SaaS.",
         contribution:
-          "Реализовал web-витрину PREEGLOS на Next.js с checkout-сценарием, Auth.js, PostgreSQL/Drizzle и типизированным REST-клиентом через Orval. Отдельно собрал редактор схем залов на Canvas/SVG и embeddable seat picker для партнёрских сайтов; настроил GitLab CI/CD и Docker Compose delivery.",
-        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "SQL", "Orval", "Docker", "GitLab CI"],
+          "Реализовал web-витрину PREEGLOS на Next.js с checkout-сценарием, Auth.js, PostgreSQL/Drizzle и типизированным REST-клиентом через Orval. Отдельно собрал сервис для схем залов: редактор, хранение структуры мест и embeddable seat picker для партнёрских сайтов; настроил GitLab CI/CD и Docker Compose delivery.",
+        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "SQL", "Orval", "Docker", "GitLab CI", "Auth.js"],
         outcomes: [
-          "Покупка билета в вебе и Telegram Mini App на общей модели данных и API-контрактах",
-          "Партнёры подключают seat picker без форка продукта: схема зала и выбор мест в одном frontend-контуре",
-          "Production delivery: Docker Compose окружение и GitLab pipeline собирают и выкатывают сервис без ручной сборки",
+          "Организаторы могут заводить залы и продавать места через виджет без ручной отрисовки схем под каждое событие",
+          "Покупка билета в вебе и Telegram Mini App работает на общей модели данных и API-контрактах",
+          "Production delivery через Docker Compose и GitLab pipeline снижает количество ручных операций при выкладке",
         ],
       },
     ],
@@ -72,14 +72,14 @@ const experiencesRu: Experience[] = [
         title: "НКЗ 3.0 — согласование закупок",
         tagline: "Enterprise React-модуль: RBAC, статусы, длинные формы",
         problem:
-          "Внутренний сервис закупок требовал единого UI для ролей, статусов и многошагового согласования заявок.",
+          "Внутренний сервис закупок требовал единого UI для ролей, статусов, черновиков и многошагового согласования заявок.",
         contribution:
-          "Разрабатывал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git"],
+          "Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в декомпозиции задач, code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.",
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form"],
         outcomes: [
           "Frontend закрывает полный цикл закупочного согласования: роли, статусы, формы и переходы между этапами",
-          "OpenAPI/Orval сделал API-контракты проверяемыми на сборке вместо ручного обновления типов",
-          "Vite code splitting разделил тяжёлые approval-сценарии на независимые чанки и снизил риск регрессий",
+          "OpenAPI/Orval сделал API-контракты проверяемыми на сборке и снизил зависимость от ручного обновления типов",
+          "Code review, UI Kit и единые паттерны форм помогали держать сложные сценарии согласованными между задачами",
         ],
       },
     ],
@@ -96,11 +96,11 @@ const experiencesRu: Experience[] = [
         problem:
           "Аналитикам нужны граф связей, фильтры и отчёты в одном интерфейсе без переключения между инструментами.",
         contribution:
-          "Развивал аналитический интерфейс для SOC на React + TypeScript: GraphQL/Apollo для основной модели данных, MobX/React Query для состояния и запросов, D3.js для графа связей, виртуализация для больших списков и Jest для регрессионных проверок. Участвовал в code review и доработке UX сложных аналитических сценариев.",
+          "Развивал аналитический интерфейс для SOC на React + TypeScript: GraphQL/Apollo для основной модели данных, MobX/React Query для состояния и запросов, D3.js для графа связей, виртуализация для больших списков и Jest для регрессионных проверок. Участвовал в code review, доработке UX сложных аналитических сценариев и оптимизации тяжёлых экранов.",
         stack: ["React", "TypeScript", "GraphQL", "REST API", "D3.js", "Jest", "Git"],
         outcomes: [
           "Граф связей, фильтры и отчёты объединены в одном рабочем экране аналитика",
-          "Единый GraphQL data layer для аналитики и отчётов — меньше расхождений между экраном и выгрузками",
+          "Единый GraphQL/Apollo data layer для аналитики и отчётов — меньше расхождений между экраном и выгрузками",
           "Виртуализация сохраняет отзывчивость интерфейса на больших списках сущностей",
         ],
       },
@@ -122,7 +122,7 @@ const experiencesRu: Experience[] = [
         stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "REST API", "Keycloak", "GitLab CI", "Sentry"],
         outcomes: [
           "Ключевые операции смены переведены из Excel в web-интерфейс с авторизацией и ролевыми правами",
-          "Таблицы и фильтры пригодны для производственных объёмов данных",
+          "Таблицы, фильтры и серверное состояние рассчитаны на производственные объёмы данных и работу по сменам",
           "Sentry даёт production visibility: ошибки привязаны к релизам и стек-трейсам без воспроизведения на рабочем месте",
         ],
       },
@@ -145,7 +145,7 @@ const experiencesRu: Experience[] = [
         outcomes: [
           "SEO-контур каталога сохранён при миграции на Next.js: индексируемые страницы и URL-состояние фильтров",
           "Retail/wholesale сценарии через синхронизацию фильтров, сортировки и пагинации с URL",
-          "Shared npm-пакеты в yarn workspaces снизили дублирование между страницами каталога",
+          "Shared npm-пакеты в yarn workspaces помогали переиспользовать логику между страницами каталога и главной",
         ],
       },
     ],
@@ -156,35 +156,35 @@ const experiencesEn: Experience[] = [
   {
     company: "POTALONU LLC",
     role: "Frontend engineer",
-    period: "Sep 2025 – present",
+    period: "Sep 2025 – Jun 2026",
     location: "Remote",
     blocks: [
       {
         title: "sendonate.com",
         tagline: "React product for streamers: Mini App, dashboard, OBS overlay",
         problem:
-          "Streamers accept tips in Telegram and show OBS alerts: three clients must stay in sync with one backend.",
+          "Streamers accept tips in Telegram, configure donation widgets in the dashboard, and show OBS alerts: three clients must stay in sync with one backend.",
         contribution:
-          "Designed and built the sendonate.com frontend: three React + Vite + TypeScript clients — streamer dashboard, Telegram Mini App, and OBS overlay. Typed REST client via Orval/OpenAPI, real-time event delivery over WebSocket, and GitHub Actions CI/CD for lint/build/deploy of all clients from one repository.",
-        stack: ["React", "TypeScript", "Vite", "REST API", "Orval", "WebSocket", "Django REST", "GitHub Actions"],
+          "Designed the sendonate.com frontend: three React + Vite + TypeScript clients — streamer dashboard, Telegram Mini App, and OBS overlay. Evolved donation widget designs and dashboard flows, added a typed REST client via Orval/OpenAPI, real-time event delivery over WebSocket, and CI/CD for all clients from one repository.",
+        stack: ["React", "TypeScript", "Vite", "REST API", "Orval", "WebSocket", "Django REST", "GitHub Actions", "Sentry"],
         outcomes: [
-          "End-to-end donation flow in production: Mini App → backend → OBS overlay alert without manual stream refresh",
-          "Orval generates DTOs and API methods from OpenAPI contracts — frontend/backend drift caught at build time",
-          "Unified delivery pipeline for three clients: automated checks, build, and deploy without manual release steps",
+          "End-to-end donation flow shipped to production: Mini App, backend, streamer dashboard, and OBS overlay work as one product flow",
+          "WebSocket overlay handles sequential donation events with alert queueing and reconnect without manual stream refresh",
+          "Orval and one delivery pipeline reduce drift between clients and backend when API contracts change",
         ],
       },
       {
         title: "POTALONU / PREEGLOS",
         tagline: "Ticket storefront and hall layout editor",
         problem:
-          "The ticketing service needed a checkout storefront, Telegram Mini App, and embeddable seat picker for partners.",
+          "The ticketing service needed a checkout storefront, Telegram Mini App, and a seats.io-like hall editor without external SaaS lock-in.",
         contribution:
-          "Built PREEGLOS web storefront on Next.js with checkout, Auth.js, PostgreSQL/Drizzle, and typed REST client via Orval. Canvas/SVG hall layout editor and embeddable seat picker for partner sites; GitLab CI/CD and Docker Compose delivery.",
-        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "SQL", "Orval", "Docker", "GitLab CI"],
+          "Built PREEGLOS web storefront on Next.js with checkout, Auth.js, PostgreSQL/Drizzle, and typed REST client via Orval. Built the hall layout service: editor, seat data model, and embeddable seat picker for partner sites; GitLab CI/CD and Docker Compose delivery.",
+        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "SQL", "Orval", "Docker", "GitLab CI", "Auth.js"],
         outcomes: [
-          "Ticket purchase in web and Telegram Mini App on shared data model and API contracts",
-          "Partners embed seat picker without forking: hall layout and seat selection in one frontend surface",
-          "Production delivery: Docker Compose environment and GitLab pipeline build and deploy without manual server builds",
+          "Organizers can create venue layouts and sell seats through an embedded widget without custom drawing per event",
+          "Ticket purchase in web and Telegram Mini App runs on one data model and API contracts",
+          "Docker Compose and GitLab pipeline reduce manual work during production delivery",
         ],
       },
     ],
@@ -201,12 +201,12 @@ const experiencesEn: Experience[] = [
         problem:
           "Internal procurement needed one UI for roles, statuses, and multi-step approval flows.",
         contribution:
-          "Developed enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in code review and split heavy flows into separate chunks via Vite code splitting.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git"],
+          "Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in task decomposition, code review, and split heavy flows into chunks via Vite code splitting.",
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form"],
         outcomes: [
           "Frontend covers the full procurement cycle: roles, statuses, forms, and stage transitions",
-          "OpenAPI/Orval made API contracts verifiable at build time instead of manual type updates",
-          "Vite code splitting split heavy approval flows into independent chunks and reduced regression risk",
+          "OpenAPI/Orval made API contracts verifiable at build time and reduced manual type updates",
+          "Code review, UI Kit, and shared form patterns kept complex flows consistent across tasks",
         ],
       },
     ],
@@ -223,11 +223,11 @@ const experiencesEn: Experience[] = [
         problem:
           "Analysts needed relationship graphs, filters, and reports on one screen without switching tools.",
         contribution:
-          "Extended SOC analytics interface on React + TypeScript: GraphQL/Apollo for core data model, MobX/React Query for state and queries, D3.js relationship graph, list virtualization, and Jest regression checks. Participated in code review and UX improvements for complex analytical flows.",
+          "Extended SOC analytics interface on React + TypeScript: GraphQL/Apollo for core data model, MobX/React Query for state and queries, D3.js relationship graph, list virtualization, and Jest regression checks. Participated in code review, UX improvements for complex analytical flows, and optimization of heavy screens.",
         stack: ["React", "TypeScript", "GraphQL", "REST API", "D3.js", "Jest", "Git"],
         outcomes: [
           "Relationship graph, filters, and reports unified on one analyst workspace",
-          "Single GraphQL data layer for analytics and reports — fewer mismatches between screen and exports",
+          "Single GraphQL/Apollo data layer for analytics and reports — fewer mismatches between screen and exports",
           "Virtualization keeps the interface responsive on large entity lists",
         ],
       },
@@ -249,7 +249,7 @@ const experiencesEn: Experience[] = [
         stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "REST API", "Keycloak", "GitLab CI", "Sentry"],
         outcomes: [
           "Core shift operations moved from Excel to a web interface with auth and role-based permissions",
-          "Tables and filters handle production-scale data volumes",
+          "Tables, filters, and server state support production data volumes and shift-based workflows",
           "Sentry provides production visibility: errors tied to releases and stack traces without on-site reproduction",
         ],
       },
@@ -272,7 +272,7 @@ const experiencesEn: Experience[] = [
         outcomes: [
           "Catalog SEO preserved on Next.js migration: indexable pages and URL-synced filter state",
           "Retail/wholesale flows via URL-synced filters, sort, and pagination",
-          "Shared npm packages in yarn workspaces reduced duplication across catalog pages",
+          "Shared npm packages in yarn workspaces helped reuse logic between catalog and homepage",
         ],
       },
     ],

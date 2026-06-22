@@ -8,39 +8,39 @@ Senior Frontend-разработчик
 
 ## О себе
 
-Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для e-commerce, enterprise-модулей и продуктовых интерфейсов. Проектирую сложные UI, связываю frontend с typed API-контрактами и довожу фичи до production через review и CI/CD.
+Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для enterprise-сервисов, e-commerce, real-time интерфейсов и Telegram Mini Apps. Специализируюсь на сложных пользовательских сценариях: роли и права, длинные формы, typed API-контракты, GraphQL/REST, WebSocket и дизайн-системы.
 
-Другие задачи и кейсы — в разделе Проекты на сайте. Backend-интеграция: Django REST, Nest.js, PostgreSQL, SQL. Сочи, удалённо. Готов к выходу ASAP.
+Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production. Сочи, удалённо. Готов к выходу ASAP.
 
 ## Опыт работы
 
 ### POTALONU LLC — Frontend-разработчик
 
-09.2025 – н.в. | Удалённо
+09.2025 – 06.2026 | Удалённо
 
 **sendonate.com**: React-продукт для стримеров: Mini App, кабинет, OBS overlay
 
-Роль: Спроектировал и реализовал frontend-контур sendonate.com из трёх React + Vite + TypeScript клиентов: кабинет стримера, Telegram Mini App и OBS overlay. Завёл типизированный REST-клиент через Orval/OpenAPI, real-time доставку событий по WebSocket и CI/CD в GitHub Actions для lint/build/deploy всех клиентов из одного репозитория.
+Роль: Спроектировал frontend-контур sendonate.com из трёх React + Vite + TypeScript клиентов: кабинет стримера, Telegram Mini App и OBS overlay. Развивал дизайн виджетов донатов и сценарии кабинета, завёл типизированный REST-клиент через Orval/OpenAPI, real-time доставку событий по WebSocket и CI/CD для lint/build/deploy всех клиентов из одного репозитория.
 
 Результат:
 
-- End-to-end сценарий доната до production: Mini App → backend → alert в OBS overlay без ручного обновления эфира
-- Orval генерирует DTO и методы API из OpenAPI-контракта — рассинхрон frontend/backend ловится на сборке
-- Единый delivery pipeline для трёх клиентов: автоматические проверки, сборка и деплой без ручных операций
+- End-to-end сценарий доната доведён до production: Mini App, backend, кабинет стримера и alert в OBS overlay работают как один продуктовый флоу
+- WebSocket-оверлей обрабатывает последовательные донаты через очередь алертов и reconnect без ручного обновления эфира
+- Orval и общий delivery pipeline уменьшают рассинхрон между клиентами и backend при изменении API-контрактов
 
-Стек: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, GitHub Actions
+Стек: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, GitHub Actions, Sentry
 
 **POTALONU / PREEGLOS**: Интернет-витрина билетов и редактор схем залов
 
-Роль: Реализовал web-витрину PREEGLOS на Next.js с checkout-сценарием, Auth.js, PostgreSQL/Drizzle и типизированным REST-клиентом через Orval. Отдельно собрал редактор схем залов на Canvas/SVG и embeddable seat picker для партнёрских сайтов; настроил GitLab CI/CD и Docker Compose delivery.
+Роль: Реализовал web-витрину PREEGLOS на Next.js с checkout-сценарием, Auth.js, PostgreSQL/Drizzle и типизированным REST-клиентом через Orval. Отдельно собрал сервис для схем залов: редактор, хранение структуры мест и embeddable seat picker для партнёрских сайтов; настроил GitLab CI/CD и Docker Compose delivery.
 
 Результат:
 
-- Покупка билета в вебе и Telegram Mini App на общей модели данных и API-контрактах
-- Партнёры подключают seat picker без форка продукта: схема зала и выбор мест в одном frontend-контуре
-- Production delivery: Docker Compose окружение и GitLab pipeline собирают и выкатывают сервис без ручной сборки
+- Организаторы могут заводить залы и продавать места через виджет без ручной отрисовки схем под каждое событие
+- Покупка билета в вебе и Telegram Mini App работает на общей модели данных и API-контрактах
+- Production delivery через Docker Compose и GitLab pipeline снижает количество ручных операций при выкладке
 
-Стек: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI
+Стек: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI, Auth.js
 
 ### X5 Tech — Frontend-разработчик
 
@@ -48,15 +48,15 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 
 **НКЗ 3.0 — согласование закупок**: Enterprise React-модуль: RBAC, статусы, длинные формы
 
-Роль: Разрабатывал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.
+Роль: Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в декомпозиции задач, code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.
 
 Результат:
 
 - Frontend закрывает полный цикл закупочного согласования: роли, статусы, формы и переходы между этапами
-- OpenAPI/Orval сделал API-контракты проверяемыми на сборке вместо ручного обновления типов
-- Vite code splitting разделил тяжёлые approval-сценарии на независимые чанки и снизил риск регрессий
+- OpenAPI/Orval сделал API-контракты проверяемыми на сборке и снизил зависимость от ручного обновления типов
+- Code review, UI Kit и единые паттерны форм помогали держать сложные сценарии согласованными между задачами
 
-Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git
+Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git, react-hook-form
 
 ### BI.ZONE — Frontend-разработчик
 
@@ -64,12 +64,12 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 
 **Threat Intelligence**: React + GraphQL: аналитика связей для SOC
 
-Роль: Развивал аналитический интерфейс для SOC на React + TypeScript: GraphQL/Apollo для основной модели данных, MobX/React Query для состояния и запросов, D3.js для графа связей, виртуализация для больших списков и Jest для регрессионных проверок. Участвовал в code review и доработке UX сложных аналитических сценариев.
+Роль: Развивал аналитический интерфейс для SOC на React + TypeScript: GraphQL/Apollo для основной модели данных, MobX/React Query для состояния и запросов, D3.js для графа связей, виртуализация для больших списков и Jest для регрессионных проверок. Участвовал в code review, доработке UX сложных аналитических сценариев и оптимизации тяжёлых экранов.
 
 Результат:
 
 - Граф связей, фильтры и отчёты объединены в одном рабочем экране аналитика
-- Единый GraphQL data layer для аналитики и отчётов — меньше расхождений между экраном и выгрузками
+- Единый GraphQL/Apollo data layer для аналитики и отчётов — меньше расхождений между экраном и выгрузками
 - Виртуализация сохраняет отзывчивость интерфейса на больших списках сущностей
 
 Стек: React, TypeScript, GraphQL, REST API, D3.js, Jest, Git
@@ -85,7 +85,7 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 Результат:
 
 - Ключевые операции смены переведены из Excel в web-интерфейс с авторизацией и ролевыми правами
-- Таблицы и фильтры пригодны для производственных объёмов данных
+- Таблицы, фильтры и серверное состояние рассчитаны на производственные объёмы данных и работу по сменам
 - Sentry даёт production visibility: ошибки привязаны к релизам и стек-трейсам без воспроизведения на рабочем месте
 
 Стек: React, TypeScript, TanStack Table, TanStack Query, REST API, Keycloak, GitLab CI, Sentry
@@ -102,18 +102,18 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 
 - SEO-контур каталога сохранён при миграции на Next.js: индексируемые страницы и URL-состояние фильтров
 - Retail/wholesale сценарии через синхронизацию фильтров, сортировки и пагинации с URL
-- Shared npm-пакеты в yarn workspaces снизили дублирование между страницами каталога
+- Shared npm-пакеты в yarn workspaces помогали переиспользовать логику между страницами каталога и главной
 
 Стек: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 
 ## Навыки
 
 - **Языки:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
-- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Tailwind CSS, jQuery, адаптивная вёрстка
+- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Feature-Sliced Design, Tailwind CSS, CSS-in-JS / Emotion, jQuery, адаптивная вёрстка
 - **CMS:** Contentful, Strapi, WordPress, 1C-Bitrix, headless CMS, интеграции CMS с Next.js/Node.js
 - **Сборка и Git:** Git, Webpack, Vite, yarn workspaces, монорепозитории, npm-пакеты, code splitting, GitLab CI, GitHub Actions, Docker, CI/CD
 - **API и backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PHP, Symfony, MySQL, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, компоненты и шаблоны Bitrix, Keycloak, Auth.js
-- **Качество и процессы:** Jest, Vitest, Playwright, Sentry, code review, Scrum, Agile
+- **Качество и процессы:** Jest, Vitest, Playwright, Storybook, Sentry, code review, Scrum, Agile
 - **UI & продукт:** e-commerce, дизайн-системы, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 
 ## Иностранные языки

@@ -69,12 +69,12 @@
       "en": "In-house seats.io alternative: venue editor and seat-picker widget"
     },
     "problem": {
-      "ru": "Билетному сервису нужен редактор схем залов и виджет выбора мест без внешнего SaaS.",
-      "en": "The ticketing service needed a venue editor and seat picker widget without external SaaS lock-in."
+      "ru": "Билетному сервису нужен свой seats.io-like редактор схем залов и виджет выбора мест, который можно встроить в сайт мероприятий без внешнего SaaS.",
+      "en": "The ticketing service needed its own seats.io-like venue editor and seat picker widget that could be embedded into event sites without external SaaS."
     },
     "contribution": {
-      "ru": "seatmap-studio: редактор залов, виджет выбора мест, события и бронирования. potalonu-frontend: витрина и Mini App.",
-      "en": "seatmap-studio: hall editor, seat picker widget, events and bookings. potalonu-frontend: storefront and Mini App."
+      "ru": "seatmap-studio: редактор залов, модель мест, виджет выбора мест, события и бронирования. potalonu-frontend: витрина, checkout и Mini App на тех же API-контрактах.",
+      "en": "seatmap-studio: hall editor, seat model, seat picker widget, events, and bookings. potalonu-frontend: storefront, checkout, and Mini App on the same API contracts."
     },
     "stack": [
       "Next.js",
@@ -88,14 +88,14 @@
     ],
     "outcomes": {
       "ru": [
-        "Организаторы собирают схемы залов без участия разработчиков",
-        "Виджет встраивается в витрину и Telegram Mini App",
-        "Данные и инфраструктура остаются на стороне заказчика"
+        "Организаторы заводят схемы залов и подключают выбор мест без отдельной разработки под каждую площадку",
+        "Виджет встраивается в витрину мероприятий и Telegram Mini App",
+        "Данные о залах, местах и покупках остаются в инфраструктуре продукта"
       ],
       "en": [
-        "Organizers build venue layouts without developer involvement",
-        "Widget embeds into the storefront and Telegram Mini App",
-        "Data and infrastructure stay under customer control"
+        "Organizers create venue layouts and connect seat selection without custom work per venue",
+        "Widget embeds into the event storefront and Telegram Mini App",
+        "Hall, seat, and purchase data stay inside the product infrastructure"
       ]
     },
     "featured": true,
@@ -124,8 +124,8 @@
       "en": "Streamers accept tips in Telegram, configure alerts in a dashboard, and show them in OBS — three clients, one sendonate backend."
     },
     "contribution": {
-      "ru": "В monolith/sendonate: React + Vite кабинет, Telegram Mini App и websocket-pages для OBS. Orval по OpenAPI, очередь алертов и reconnect на WebSocket.",
-      "en": "In monolith/sendonate: React + Vite dashboard, Telegram Mini App, and websocket-pages for OBS. Orval from OpenAPI, alert queue and WebSocket reconnect."
+      "ru": "В monolith/sendonate: React + Vite кабинет, Telegram Mini App и websocket-pages для OBS. Развивал дизайн виджетов донатов и функционал кабинета стримеров; Orval по OpenAPI, очередь алертов и reconnect на WebSocket.",
+      "en": "In monolith/sendonate: React + Vite dashboard, Telegram Mini App, and websocket-pages for OBS. Evolved donation widget designs and streamer-dashboard functionality; Orval from OpenAPI, alert queue, and WebSocket reconnect."
     },
     "stack": [
       "React",
@@ -138,14 +138,14 @@
     ],
     "outcomes": {
       "ru": [
-        "Три клиента ходят в один API — донат не теряется между Mini App и эфиром",
+        "Три клиента ходят в один API — донат не теряется между Mini App, кабинетом и эфиром",
         "OBS-оверлей держит очередь алертов, если донаты идут пачкой",
-        "Sentry и Orval на фронте упрощают отлов ошибок в продакшене"
+        "Sentry и Orval на фронте упрощают отлов ошибок и синхронизацию контрактов в production"
       ],
       "en": [
-        "Three clients share one API — tips are not lost between Mini App and stream",
+        "Three clients share one API — tips are not lost between Mini App, dashboard, and stream",
         "OBS overlay queues alerts during donation bursts",
-        "Sentry and Orval simplify production error tracking"
+        "Sentry and Orval simplify production error tracking and contract sync"
       ]
     },
     "featured": true,
@@ -268,16 +268,16 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "Клиент для рыбоводных хозяйств: участки, цехи, склады, сотрудники",
-      "en": "Client for fish farms: sites, workshops, warehouses, staff"
+      "ru": "FSD-клиент для рыбоводных хозяйств: участки, цехи, склады, сотрудники",
+      "en": "FSD client for fish farms: sites, workshops, warehouses, staff"
     },
     "problem": {
-      "ru": "На производстве десятки сущностей и API-контрактов — операторам нужен один понятный интерфейс, а не разрозненные экраны.",
-      "en": "Dozens of entities and API contracts on the farm — operators need one clear UI, not scattered screens."
+      "ru": "В производственном сервисе десятки сущностей, ролей и API-контрактов: операторам нужен один предсказуемый интерфейс вместо разрозненных экранов.",
+      "en": "The production service has dozens of entities, roles, and API contracts: operators need one predictable interface instead of scattered screens."
     },
     "contribution": {
-      "ru": "Развиваю smartfish-frontend (FSD): участки, бассейны, склады, цехи, сотрудники, карты Yandex Maps, аналитика. Kubb/Orval по OpenAPI specs (sites, pools, warehouses, analytics и др.).",
-      "en": "Develop smartfish-frontend (FSD): sites, pools, warehouses, workshops, staff, Yandex Maps, analytics. Kubb/Orval from OpenAPI specs (sites, pools, warehouses, analytics, etc.)."
+      "ru": "Развиваю smartfish-frontend на React + TypeScript + FSD: участки, бассейны, склады, цехи, сотрудники, RBAC, карты Yandex Maps и аналитика. Kubb/Orval генерируют клиент и типы по OpenAPI specs (sites, pools, warehouses, analytics и др.).",
+      "en": "Develop smartfish-frontend on React + TypeScript + FSD: sites, pools, warehouses, workshops, staff, RBAC, Yandex Maps, and analytics. Kubb/Orval generate clients and types from OpenAPI specs (sites, pools, warehouses, analytics, etc.)."
     },
     "stack": [
       "React",
@@ -293,14 +293,14 @@
     ],
     "outcomes": {
       "ru": [
-        "Модули производства и склада живут в одном SPA с RBAC по ролям",
-        "Codegen по десяткам OpenAPI-спек — меньше ручной возни с типами",
-        "Vitest на ключевых сценариях перед релизами"
+        "FSD-разбиение удерживает производственные модули в понятных границах вместо роста одного большого SPA",
+        "RBAC, карты, склады и аналитика живут в одном интерфейсе для операционных ролей",
+        "Codegen по OpenAPI снижает ручную синхронизацию типов между frontend и backend"
       ],
       "en": [
-        "Production and warehouse modules live in one SPA with role-based access",
-        "Codegen across dozens of OpenAPI specs — less manual type work",
-        "Vitest on key flows before releases"
+        "FSD boundaries keep production modules understandable instead of growing one large SPA",
+        "RBAC, maps, warehouses, and analytics live in one interface for operational roles",
+        "OpenAPI codegen reduces manual type synchronization between frontend and backend"
       ]
     },
     "featured": true,
@@ -730,8 +730,8 @@
       "en": "Public storefront, B2B cabinet, and Aquaprom share one API — orders, cart, RBAC, and payments in one backend."
     },
     "contribution": {
-      "ru": "Дорабатываю smartfish-landing/apps/backend: orders, cart, payments, promocodes, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets.",
-      "en": "Extend smartfish-landing/apps/backend: orders, cart, payments, promocodes, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets."
+      "ru": "Дорабатываю smartfish-landing/apps/backend: orders, cart, payments, promocodes, bonus system, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets.",
+      "en": "Extend smartfish-landing/apps/backend: orders, cart, payments, promocodes, bonus system, admin, RBAC. TypeORM + PostgreSQL, webhooks, websockets."
     },
     "stack": [
       "NestJS",
@@ -744,12 +744,12 @@
     "outcomes": {
       "ru": [
         "B2B и розница ходят в один backend через /backend-api",
-        "Админка закрывает каталог, пользователей и промокоды",
+        "Админка закрывает каталог, пользователей, промокоды и бонусные сценарии",
         "Контракты отдаются фронтам b2b-sm и landing-smartfish"
       ],
       "en": [
         "B2B and retail hit the same backend via /backend-api",
-        "Admin covers catalog, users, and promocodes",
+        "Admin covers catalog, users, promocodes, and bonus flows",
         "Contracts feed b2b-sm and landing-smartfish frontends"
       ]
     },
@@ -771,16 +771,16 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "Публичный сайт: каталог, корзина, checkout, профиль",
-      "en": "Public site: catalog, cart, checkout, profile"
+      "ru": "Next.js интернет-магазин: каталог, checkout, бонусы, промокоды, SEO",
+      "en": "Next.js online store: catalog, checkout, bonuses, promocodes, SEO"
     },
     "problem": {
-      "ru": "Нужен маркетинговый сайт и интернет-магазин на одном домене (akvaprom.kg), без смешения с ERP-клиентом.",
-      "en": "Marketing site and online shop on one domain (akvaprom.kg), separate from the ERP client."
+      "ru": "Нужен маркетинговый сайт и интернет-магазин на одном домене (akvaprom.kg): каталог, checkout, профиль, бонусы и промокоды без смешения с ERP-клиентом.",
+      "en": "Marketing site and online shop on one domain (akvaprom.kg): catalog, checkout, profile, bonuses, and promocodes separate from the ERP client."
     },
     "contribution": {
-      "ru": "landing-smartfish на Next.js: главная с каруселями и категориями, shop/checkout/profile, Yandex Metrika, Framer Motion. Монорепо smartfish-landing — зеркало прод-сборки.",
-      "en": "landing-smartfish on Next.js: homepage with carousels and categories, shop/checkout/profile, Yandex Metrika, Framer Motion. smartfish-landing monorepo mirrors production."
+      "ru": "landing-smartfish на Next.js: главная с каруселями и категориями, shop/checkout/profile, бонусные сценарии, промокоды, Yandex Metrika, Framer Motion. Монорепо smartfish-landing — зеркало прод-сборки.",
+      "en": "landing-smartfish on Next.js: homepage with carousels and categories, shop/checkout/profile, bonus flows, promocodes, Yandex Metrika, Framer Motion. smartfish-landing monorepo mirrors production."
     },
     "stack": [
       "Next.js",
@@ -792,14 +792,14 @@
     ],
     "outcomes": {
       "ru": [
-        "Покупатель идёт от главной до checkout без перехода в ERP",
-        "Контент и витрину можно катить отдельно от smartfish-frontend",
-        "Адаптив под мобильный трафик витрины"
+        "Покупатель проходит путь от главной до checkout без перехода в ERP",
+        "Бонусы и промокоды вынесены в пользовательские сценарии интернет-магазина",
+        "Витрина akvaprom.kg вышла на первую страницу Яндекса по целевому направлению"
       ],
       "en": [
         "Shoppers go from homepage to checkout without opening the ERP",
-        "Marketing and storefront deploy separately from smartfish-frontend",
-        "Responsive layout for mobile traffic"
+        "Bonuses and promocodes are part of the online-store user flows",
+        "akvaprom.kg storefront reached the first page of Yandex for its target direction"
       ]
     },
     "featured": false,

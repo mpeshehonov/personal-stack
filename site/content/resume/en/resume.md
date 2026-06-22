@@ -8,39 +8,39 @@ Sochi, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpe
 
 ## About
 
-Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for e-commerce, enterprise modules, and product workflows. Strong in complex UI, typed API contracts, production delivery, and code review.
+Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for enterprise systems, e-commerce, real-time products, and Telegram Mini Apps. Focus areas: complex workflows, RBAC, long forms, typed API contracts, GraphQL/REST, WebSocket, and design systems.
 
-Other work and case studies — in the Projects section on the site. Backend integration: Django REST, Nest.js, PostgreSQL, SQL. Sochi, remote. Available ASAP.
+I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production. Sochi, remote. Available ASAP.
 
 ## Work experience
 
 ### POTALONU LLC — Frontend engineer
 
-Sep 2025 – present | Remote
+Sep 2025 – Jun 2026 | Remote
 
 **sendonate.com**: React product for streamers: Mini App, dashboard, OBS overlay
 
-Role: Designed and built the sendonate.com frontend: three React + Vite + TypeScript clients — streamer dashboard, Telegram Mini App, and OBS overlay. Typed REST client via Orval/OpenAPI, real-time event delivery over WebSocket, and GitHub Actions CI/CD for lint/build/deploy of all clients from one repository.
+Role: Designed the sendonate.com frontend: three React + Vite + TypeScript clients — streamer dashboard, Telegram Mini App, and OBS overlay. Evolved donation widget designs and dashboard flows, added a typed REST client via Orval/OpenAPI, real-time event delivery over WebSocket, and CI/CD for all clients from one repository.
 
 Outcome:
 
-- End-to-end donation flow in production: Mini App → backend → OBS overlay alert without manual stream refresh
-- Orval generates DTOs and API methods from OpenAPI contracts — frontend/backend drift caught at build time
-- Unified delivery pipeline for three clients: automated checks, build, and deploy without manual release steps
+- End-to-end donation flow shipped to production: Mini App, backend, streamer dashboard, and OBS overlay work as one product flow
+- WebSocket overlay handles sequential donation events with alert queueing and reconnect without manual stream refresh
+- Orval and one delivery pipeline reduce drift between clients and backend when API contracts change
 
-Stack: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, GitHub Actions
+Stack: React, TypeScript, Vite, REST API, Orval, WebSocket, Django REST, GitHub Actions, Sentry
 
 **POTALONU / PREEGLOS**: Ticket storefront and hall layout editor
 
-Role: Built PREEGLOS web storefront on Next.js with checkout, Auth.js, PostgreSQL/Drizzle, and typed REST client via Orval. Canvas/SVG hall layout editor and embeddable seat picker for partner sites; GitLab CI/CD and Docker Compose delivery.
+Role: Built PREEGLOS web storefront on Next.js with checkout, Auth.js, PostgreSQL/Drizzle, and typed REST client via Orval. Built the hall layout service: editor, seat data model, and embeddable seat picker for partner sites; GitLab CI/CD and Docker Compose delivery.
 
 Outcome:
 
-- Ticket purchase in web and Telegram Mini App on shared data model and API contracts
-- Partners embed seat picker without forking: hall layout and seat selection in one frontend surface
-- Production delivery: Docker Compose environment and GitLab pipeline build and deploy without manual server builds
+- Organizers can create venue layouts and sell seats through an embedded widget without custom drawing per event
+- Ticket purchase in web and Telegram Mini App runs on one data model and API contracts
+- Docker Compose and GitLab pipeline reduce manual work during production delivery
 
-Stack: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI
+Stack: Next.js, React, TypeScript, PostgreSQL, SQL, Orval, Docker, GitLab CI, Auth.js
 
 ### X5 Tech — Frontend engineer
 
@@ -48,15 +48,15 @@ Apr 2024 – Jul 2025 | Remote
 
 **NKZ 3.0 — procurement approval**: Enterprise React module: RBAC, statuses, long forms
 
-Role: Developed enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in code review and split heavy flows into separate chunks via Vite code splitting.
+Role: Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in task decomposition, code review, and split heavy flows into chunks via Vite code splitting.
 
 Outcome:
 
 - Frontend covers the full procurement cycle: roles, statuses, forms, and stage transitions
-- OpenAPI/Orval made API contracts verifiable at build time instead of manual type updates
-- Vite code splitting split heavy approval flows into independent chunks and reduced regression risk
+- OpenAPI/Orval made API contracts verifiable at build time and reduced manual type updates
+- Code review, UI Kit, and shared form patterns kept complex flows consistent across tasks
 
-Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git
+Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git, react-hook-form
 
 ### BI.ZONE — Frontend engineer
 
@@ -64,12 +64,12 @@ Jun 2023 – Mar 2024 | Remote
 
 **Threat Intelligence**: React + GraphQL analytics for SOC
 
-Role: Extended SOC analytics interface on React + TypeScript: GraphQL/Apollo for core data model, MobX/React Query for state and queries, D3.js relationship graph, list virtualization, and Jest regression checks. Participated in code review and UX improvements for complex analytical flows.
+Role: Extended SOC analytics interface on React + TypeScript: GraphQL/Apollo for core data model, MobX/React Query for state and queries, D3.js relationship graph, list virtualization, and Jest regression checks. Participated in code review, UX improvements for complex analytical flows, and optimization of heavy screens.
 
 Outcome:
 
 - Relationship graph, filters, and reports unified on one analyst workspace
-- Single GraphQL data layer for analytics and reports — fewer mismatches between screen and exports
+- Single GraphQL/Apollo data layer for analytics and reports — fewer mismatches between screen and exports
 - Virtualization keeps the interface responsive on large entity lists
 
 Stack: React, TypeScript, GraphQL, REST API, D3.js, Jest, Git
@@ -85,7 +85,7 @@ Role: Built production SPA for cast iron release registration on React + TypeScr
 Outcome:
 
 - Core shift operations moved from Excel to a web interface with auth and role-based permissions
-- Tables and filters handle production-scale data volumes
+- Tables, filters, and server state support production data volumes and shift-based workflows
 - Sentry provides production visibility: errors tied to releases and stack traces without on-site reproduction
 
 Stack: React, TypeScript, TanStack Table, TanStack Query, REST API, Keycloak, GitLab CI, Sentry
@@ -102,18 +102,18 @@ Outcome:
 
 - Catalog SEO preserved on Next.js migration: indexable pages and URL-synced filter state
 - Retail/wholesale flows via URL-synced filters, sort, and pagination
-- Shared npm packages in yarn workspaces reduced duplication across catalog pages
+- Shared npm packages in yarn workspaces helped reuse logic between catalog and homepage
 
 Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 
 ## Skills
 
 - **Languages:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
-- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Tailwind CSS, jQuery, responsive layout
+- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Feature-Sliced Design, Tailwind CSS, CSS-in-JS / Emotion, jQuery, responsive layout
 - **CMS:** Contentful, Strapi, WordPress, 1C-Bitrix, headless CMS, CMS integrations with Next.js/Node.js
 - **Build & Git:** Git, Webpack, Vite, yarn workspaces, monorepos, npm packages, code splitting, GitLab CI, GitHub Actions, Docker, CI/CD
 - **API & backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PHP, Symfony, MySQL, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, Bitrix components & templates, Keycloak, Auth.js
-- **Quality & process:** Jest, Vitest, Playwright, Sentry, code review, Scrum, Agile
+- **Quality & process:** Jest, Vitest, Playwright, Storybook, Sentry, code review, Scrum, Agile
 - **UI & product:** e-commerce, design systems, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 
 ## Languages

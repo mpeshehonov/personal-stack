@@ -30,7 +30,9 @@ export const skillGroupsRu: SkillGroup[] = [
       "React Hook Form",
       "Zod",
       "react-router",
+      "Feature-Sliced Design",
       "Tailwind CSS",
+      "CSS-in-JS / Emotion",
       "jQuery",
       "адаптивная вёрстка",
     ],
@@ -84,7 +86,7 @@ export const skillGroupsRu: SkillGroup[] = [
   },
   {
     title: "Качество и процессы",
-    skills: ["Jest", "Vitest", "Playwright", "Sentry", "code review", "Scrum", "Agile"],
+    skills: ["Jest", "Vitest", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
   },
   {
     title: "UI & продукт",
@@ -127,7 +129,9 @@ export const skillGroupsEn: SkillGroup[] = [
       "React Hook Form",
       "Zod",
       "react-router",
+      "Feature-Sliced Design",
       "Tailwind CSS",
+      "CSS-in-JS / Emotion",
       "jQuery",
       "responsive layout",
     ],
@@ -181,7 +185,7 @@ export const skillGroupsEn: SkillGroup[] = [
   },
   {
     title: "Quality & process",
-    skills: ["Jest", "Vitest", "Playwright", "Sentry", "code review", "Scrum", "Agile"],
+    skills: ["Jest", "Vitest", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
   },
   {
     title: "UI & product",
@@ -214,7 +218,10 @@ export const highlightSkills = [
   "TanStack Query",
   "React Hook Form",
   "GraphQL",
+  "WebSocket",
   "Keycloak",
+  "FSD",
+  "Material UI",
   "CI/CD",
   "Sentry",
   "e-commerce",
