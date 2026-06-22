@@ -20,6 +20,7 @@ const ORDER = [
   "marketplace-nda",
   "in2view",
   "rostelecom-yaga",
+  "sbertech-knowledge-base",
   "sbertech-opensearch",
   "smartfish-kkm",
   "smartfish-backend",

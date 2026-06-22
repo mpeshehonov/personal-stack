@@ -610,10 +610,60 @@
     "order": 12
   },
   {
-    "slug": "sbertech-opensearch",
+    "slug": "sbertech-knowledge-base",
     "title": {
       "ru": "СберТех — корпоративная база знаний",
       "en": "SberTech — corporate knowledge base"
+    },
+    "company": {
+      "ru": "СберТех",
+      "en": "SberTech"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Confluence-like продукт: микрофронты, UI Kit и автотесты",
+      "en": "Confluence-like product: micro frontends, UI Kit, and automated tests"
+    },
+    "problem": {
+      "ru": "Внутренней корпоративной базе знаний нужны независимые разделы, общий UI Kit и стабильные пользовательские сценарии для команд, которые ведут документацию и рабочие материалы.",
+      "en": "An internal corporate knowledge base needed independent sections, a shared UI Kit, and stable user flows for teams maintaining documentation and work materials."
+    },
+    "contribution": {
+      "ru": "Разрабатывал новый функционал на React, дорабатывал компоненты UI Kit и интегрировал части приложения в микрофронтовую архитектуру через Module Federation. Писал автотесты для пользовательских сценариев, включая Playwright e2e-тесты.",
+      "en": "Built new React features, improved UI Kit components, and integrated application parts into a micro frontend architecture via Module Federation. Wrote automated tests for user flows, including Playwright e2e tests."
+    },
+    "stack": [
+      "React",
+      "TypeScript",
+      "Module Federation",
+      "Webpack",
+      "UI Kit",
+      "Playwright",
+      "Jest"
+    ],
+    "outcomes": {
+      "ru": [
+        "Новый функционал встраивался в общий Confluence-like продукт без отдельного приложения",
+        "UI Kit помогал держать единый интерфейс между разделами корпоративной базы знаний",
+        "Playwright-тесты закрывали ключевые пользовательские сценарии и снижали риск регрессий"
+      ],
+      "en": [
+        "New functionality shipped inside one Confluence-like product without a separate app",
+        "UI Kit kept the interface consistent across knowledge-base sections",
+        "Playwright tests covered key user flows and reduced regression risk"
+      ]
+    },
+    "featured": false,
+    "order": 13
+  },
+  {
+    "slug": "sbertech-opensearch",
+    "title": {
+      "ru": "OpenSearch Dashboards + Vault",
+      "en": "OpenSearch Dashboards + Vault"
     },
     "company": {
       "ru": "СберТех",
@@ -624,40 +674,39 @@
       "en": "Frontend / Node.js"
     },
     "tagline": {
-      "ru": "Confluence-like продукт на микрофронтах через Module Federation",
-      "en": "Confluence-like product with Module Federation micro frontends"
+      "ru": "Автоматизация сертификатов и визуализация логов",
+      "en": "Certificate automation and log visualization"
     },
     "problem": {
-      "ru": "Внутреннему продукту уровня корпоративной базы знаний нужны независимые frontend-модули, которые встраиваются в единую платформу без развала общих зависимостей и пользовательских сценариев.",
-      "en": "A corporate knowledge-base product needed independent frontend modules integrated into one platform without breaking shared dependencies or user flows."
+      "ru": "OpenSearch Dashboards нужно безопасно подключить к Vault и обновлять TLS-сертификаты без ручных операций.",
+      "en": "OpenSearch Dashboards had to integrate with Vault and rotate TLS certificates without manual ops."
     },
     "contribution": {
-      "ru": "Работал с React-частью микрофронтов: интеграция модулей через Module Federation, границы между частями приложения, shared dependencies и пользовательские сценарии внутри общей платформы. Отдельно участвовал в Node.js-интеграциях и CI-задачах вокруг корпоративного контура.",
-      "en": "Worked on the React side of the micro frontends: module integration via Module Federation, boundaries between application parts, shared dependencies, and user flows inside the common platform. Also contributed to Node.js integrations and CI tasks around the corporate environment."
+      "ru": "Небольшие доработки вокруг интеграции Dashboards с Vault на Node.js, GitLab CI для ротации сертификатов и Jest-тестов на pipeline.",
+      "en": "Small improvements around Dashboards–Vault integration in Node.js, GitLab CI certificate rotation, and Jest tests in pipeline."
     },
     "stack": [
-      "React",
-      "TypeScript",
-      "Module Federation",
-      "Webpack",
       "Node.js",
+      "OpenSearch Dashboards",
+      "Vault",
       "GitLab CI",
-      "Jest"
+      "Jest",
+      "Kibana"
     ],
     "outcomes": {
       "ru": [
-        "Модули встраивались в общий Confluence-like интерфейс без копирования функциональности между частями продукта",
-        "Shared dependencies и границы модулей держались явно, чтобы микрофронты не ломали общий runtime",
-        "CI и тесты страховали интеграционные изменения в корпоративном контуре"
+        "Сертификаты обновляются через CI без ручных операций",
+        "Jest покрывает критичные шаги интеграции",
+        "Модуль визуализации подключён к корпоративному контуру"
       ],
       "en": [
-        "Modules were integrated into one Confluence-like interface without duplicating functionality across product parts",
-        "Shared dependencies and module boundaries stayed explicit so micro frontends did not break the common runtime",
-        "CI and tests guarded integration changes in the corporate environment"
+        "Certificates rotate via CI without manual steps",
+        "Jest covers critical integration steps",
+        "Visualization module wired into corporate environment"
       ]
     },
     "featured": false,
-    "order": 13
+    "order": 14
   },
   {
     "slug": "smartfish-kkm",
@@ -707,7 +756,7 @@
       ]
     },
     "featured": false,
-    "order": 14
+    "order": 15
   },
   {
     "slug": "smartfish-backend",
@@ -756,7 +805,7 @@
       ]
     },
     "featured": false,
-    "order": 15
+    "order": 16
   },
   {
     "slug": "smartfish-landing",
@@ -805,7 +854,7 @@
       ]
     },
     "featured": false,
-    "order": 16
+    "order": 17
   },
   {
     "slug": "smartfish-bots",
@@ -853,7 +902,7 @@
       ]
     },
     "featured": false,
-    "order": 17
+    "order": 18
   },
   {
     "slug": "stratwise",
@@ -902,7 +951,7 @@
       ]
     },
     "featured": false,
-    "order": 18
+    "order": 19
   },
   {
     "slug": "quan2um",
@@ -951,7 +1000,7 @@
       ]
     },
     "featured": false,
-    "order": 19
+    "order": 20
   },
   {
     "slug": "beauty-shop",
@@ -1004,7 +1053,7 @@
       ]
     },
     "featured": false,
-    "order": 20
+    "order": 21
   },
   {
     "slug": "fitomarket",
@@ -1053,7 +1102,7 @@
       ]
     },
     "featured": false,
-    "order": 21
+    "order": 22
   },
   {
     "slug": "energosoft",
@@ -1102,7 +1151,7 @@
       ]
     },
     "featured": false,
-    "order": 22
+    "order": 23
   },
   {
     "slug": "baucenter",
@@ -1151,7 +1200,7 @@
       ]
     },
     "featured": false,
-    "order": 23
+    "order": 24
   },
   {
     "slug": "specdep",
@@ -1200,7 +1249,7 @@
       ]
     },
     "featured": false,
-    "order": 24
+    "order": 25
   },
   {
     "slug": "energoshop-workshop",
@@ -1249,7 +1298,7 @@
       ]
     },
     "featured": false,
-    "order": 25
+    "order": 26
   },
   {
     "slug": "zenit-tickets",
@@ -1293,7 +1342,7 @@
       ]
     },
     "featured": false,
-    "order": 26
+    "order": 27
   },
   {
     "slug": "aurumline-webview",
@@ -1337,7 +1386,7 @@
       ]
     },
     "featured": false,
-    "order": 27
+    "order": 28
   },
   {
     "slug": "duckmaster",
@@ -1386,7 +1435,7 @@
       ]
     },
     "featured": false,
-    "order": 28
+    "order": 29
   },
   {
     "slug": "handstars",
@@ -1436,7 +1485,7 @@
       ]
     },
     "featured": false,
-    "order": 29
+    "order": 30
   },
   {
     "slug": "it-simulator",
@@ -1484,6 +1533,6 @@
       ]
     },
     "featured": false,
-    "order": 30
+    "order": 31
   }
 ]
