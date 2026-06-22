@@ -31,7 +31,12 @@
     "blogDesc": "Notes on engineering, infrastructure, and tooling.",
     "latestBlog": "From the blog",
     "latestBlogDesc": "Notes on infrastructure, agent stack, and autonomous finance lanes.",
-    "allPosts": "All posts"
+    "allPosts": "All posts",
+    "productTeaser": "Product",
+    "productTitle": "Personal Stack Agent Starter",
+    "productTeaserDesc": "Self-hosted AI agent harness: orchestrator, Telegram bot, finance scan, and deploy pipeline — no SaaS lock-in. Coming to Gumroad.",
+    "productTeaserCta": "Read on the blog",
+    "productTeaserEarlyAccess": "Early access"
   },
   "cta": {
     "telegram": "Message on Telegram",

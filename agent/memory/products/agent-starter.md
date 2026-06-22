@@ -1,6 +1,6 @@
 # Personal Stack Agent Starter — Gumroad Listing Draft
 
-> Status: **draft v0.1** — not published. Lane A4 (M1 digital product).
+> Status: **publish-ready v0.2** — Gumroad listing pending user account. Lane A4 (M1 digital product).
 
 ## Product name
 
@@ -91,6 +91,7 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 ## Gumroad settings checklist
 
 - [ ] Category: Software → Developer tools
+- [x] Buyer bootstrap doc: `agent/memory/products/delivery-readme.md`
 - [ ] File delivery: private GitHub repo invite OR encrypted zip
 - [ ] Custom URL: `personal-stack-agent-starter`
 - [ ] Email receipt: link to bootstrap docs
@@ -100,10 +101,11 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 
 ## Launch notes (agent-maintained)
 
-- Cross-link from blog post «Self-hosted agent stack»
-- Add `/products` CTA on site footer when live
-- Track sales in `finance_log` as lane A4
-- v0.2: strip secrets paths, add video walkthrough
+- [x] Cross-link from blog post «Self-hosted agent stack»
+- [x] ProductTeaser CTA on homepage (pre-launch → Telegram early access)
+- [ ] Add Gumroad URL to ProductTeaser when live
+- [ ] Track sales in `finance_log` as lane A4
+- v0.3: strip secrets paths in bundle script, add video walkthrough
 
 ## Internal refs
 

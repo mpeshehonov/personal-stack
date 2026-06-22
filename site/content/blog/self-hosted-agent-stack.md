@@ -80,6 +80,14 @@ Telegram (/ask, /task, /bounty)
 - Job hunt autopilot с HH API
 - [CEX grid trading на Bybit](/blog/cex-grid-trading-bybit) — primary finance lane после Azuro NO-GO
 
+## Agent Starter (шаблон)
+
+Готовлю **Personal Stack Agent Starter** — Gumroad-шаблон с orchestrator, Telegram-ботом, finance harness и deploy pipeline. Это тот же стек, что описан выше, без секретов и с bootstrap-документацией.
+
+- **Цена:** $19 intro → $29 regular
+- **Статус:** pre-launch — [ранний доступ в Telegram](https://t.me/makusimu_san)
+- **Включено:** daily cycle, risk engine, paper trading, bounty draft pipeline, Next.js site
+
 ---
 
 *Связаться: [Telegram](https://t.me/makusimu_san) · [GitHub](https://github.com/mpeshehonov) · [Сайт](https://mpeshekhonov.ru)*

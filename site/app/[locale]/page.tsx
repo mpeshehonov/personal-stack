@@ -8,6 +8,7 @@ import { Hero } from "@/components/Hero";
 import { SkillGrid } from "@/components/SkillGrid";
 import { SelectedWork } from "@/components/SelectedWork";
 import { BlogPreview } from "@/components/BlogPreview";
+import { ProductTeaser } from "@/components/ProductTeaser";
 import { ExperiencePreview } from "@/components/ExperiencePreview";
 import { FadeIn } from "@/components/FadeIn";
 import { getDictionary } from "@/lib/i18n";
@@ -43,6 +44,7 @@ export default async function HomePage({
         experiences={previewExperiences}
       />
       <BlogPreview locale={locale} dict={dict} posts={latestPosts} />
+      <ProductTeaser locale={locale} dict={dict} />
       <FadeIn className="section">
         <p className="section-label">{dict.sections.skills}</p>
         <h2 className="section-title mb-3">{dict.sections.skills}</h2>
