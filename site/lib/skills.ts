@@ -31,6 +31,7 @@ export const skillGroupsRu: SkillGroup[] = [
       "Zod",
       "react-router",
       "Feature-Sliced Design",
+      "Module Federation",
       "Tailwind CSS",
       "CSS-in-JS / Emotion",
       "jQuery",
@@ -86,7 +87,7 @@ export const skillGroupsRu: SkillGroup[] = [
   },
   {
     title: "Качество и процессы",
-    skills: ["Jest", "Vitest", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
+    skills: ["Jest", "Vitest", "React Testing Library", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
   },
   {
     title: "UI & продукт",
@@ -130,6 +131,7 @@ export const skillGroupsEn: SkillGroup[] = [
       "Zod",
       "react-router",
       "Feature-Sliced Design",
+      "Module Federation",
       "Tailwind CSS",
       "CSS-in-JS / Emotion",
       "jQuery",
@@ -185,7 +187,7 @@ export const skillGroupsEn: SkillGroup[] = [
   },
   {
     title: "Quality & process",
-    skills: ["Jest", "Vitest", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
+    skills: ["Jest", "Vitest", "React Testing Library", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
   },
   {
     title: "UI & product",
@@ -221,6 +223,7 @@ export const highlightSkills = [
   "WebSocket",
   "Keycloak",
   "FSD",
+  "Module Federation",
   "Material UI",
   "CI/CD",
   "Sentry",

@@ -48,15 +48,15 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 
 **НКЗ 3.0 — согласование закупок**: Enterprise React-модуль: RBAC, статусы, длинные формы
 
-Роль: Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в декомпозиции задач, code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.
+Роль: Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Делал задачу перехода сборки на Vite, участвовал в декомпозиции, code review и выносил тяжёлые сценарии в отдельные chunks.
 
 Результат:
 
 - Frontend закрывает полный цикл закупочного согласования: роли, статусы, формы и переходы между этапами
 - OpenAPI/Orval сделал API-контракты проверяемыми на сборке и снизил зависимость от ручного обновления типов
-- Code review, UI Kit и единые паттерны форм помогали держать сложные сценарии согласованными между задачами
+- Переход на Vite, code splitting и миграция тестового контура с React Testing Library на Vitest помогли ускорить разработку и проверки
 
-Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git, react-hook-form
+Стек: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git, react-hook-form, React Testing Library
 
 ### BI.ZONE — Frontend-разработчик
 
@@ -109,11 +109,11 @@ Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js д
 ## Навыки
 
 - **Языки:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
-- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Feature-Sliced Design, Tailwind CSS, CSS-in-JS / Emotion, jQuery, адаптивная вёрстка
+- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Feature-Sliced Design, Module Federation, Tailwind CSS, CSS-in-JS / Emotion, jQuery, адаптивная вёрстка
 - **CMS:** Contentful, Strapi, WordPress, 1C-Bitrix, headless CMS, интеграции CMS с Next.js/Node.js
 - **Сборка и Git:** Git, Webpack, Vite, yarn workspaces, монорепозитории, npm-пакеты, code splitting, GitLab CI, GitHub Actions, Docker, CI/CD
 - **API и backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PHP, Symfony, MySQL, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, компоненты и шаблоны Bitrix, Keycloak, Auth.js
-- **Качество и процессы:** Jest, Vitest, Playwright, Storybook, Sentry, code review, Scrum, Agile
+- **Качество и процессы:** Jest, Vitest, React Testing Library, Playwright, Storybook, Sentry, code review, Scrum, Agile
 - **UI & продукт:** e-commerce, дизайн-системы, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 
 ## Иностранные языки

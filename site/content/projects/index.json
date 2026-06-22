@@ -22,8 +22,8 @@
       "en": "The procurement approval module outgrew the legacy frontend: teams needed one interface for roles, statuses, drafts, and long approval flows."
     },
     "contribution": {
-      "ru": "Собрал UI-слой модуля: матрица RBAC, переходы состояний, формы с валидацией, история изменений. Keycloak SSO, Orval по OpenAPI, Vite code splitting.",
-      "en": "Built the module UI: RBAC matrix, state transitions, validated forms, change history. Keycloak SSO, Orval from OpenAPI, Vite code splitting."
+      "ru": "Собрал UI-слой модуля: матрица RBAC, переходы состояний, формы с валидацией, история изменений. Делал задачу перехода сборки на Vite, подключал code splitting, Keycloak SSO и Orval по OpenAPI.",
+      "en": "Built the module UI: RBAC matrix, state transitions, validated forms, change history. Owned the migration to Vite, added code splitting, Keycloak SSO, and Orval from OpenAPI."
     },
     "stack": [
       "React",
@@ -33,18 +33,19 @@
       "OpenAPI",
       "Vite",
       "TanStack Query",
-      "react-hook-form"
+      "react-hook-form",
+      "React Testing Library"
     ],
     "outcomes": {
       "ru": [
         "Модуль закрывает полный цикл согласования закупок в одном интерфейсе",
-        "Orval убрал ручную синхронизацию типов при смене OpenAPI",
-        "Vite code splitting ускорил первую загрузку на длинных сценариях"
+        "Переход на Vite и code splitting ускорили работу с длинными сценариями",
+        "Orval убрал ручную синхронизацию типов при смене OpenAPI"
       ],
       "en": [
         "Consolidated procurement approval into one predictable interface",
-        "Orval removed manual type updates when backend contracts changed",
-        "Vite code splitting improved first load on long approval flows"
+        "Migration to Vite and code splitting improved long-flow performance",
+        "Orval removed manual type updates when backend contracts changed"
       ]
     },
     "featured": true,
@@ -611,8 +612,8 @@
   {
     "slug": "sbertech-opensearch",
     "title": {
-      "ru": "OpenSearch Dashboards + Vault",
-      "en": "OpenSearch Dashboards + Vault"
+      "ru": "СберТех — корпоративная база знаний",
+      "en": "SberTech — corporate knowledge base"
     },
     "company": {
       "ru": "СберТех",
@@ -623,35 +624,36 @@
       "en": "Frontend / Node.js"
     },
     "tagline": {
-      "ru": "Автоматизация сертификатов и визуализация логов",
-      "en": "Certificate automation and log visualization"
+      "ru": "Confluence-like продукт на микрофронтах через Module Federation",
+      "en": "Confluence-like product with Module Federation micro frontends"
     },
     "problem": {
-      "ru": "OpenSearch Dashboards нужно безопасно подключить к Vault и обновлять TLS-сертификаты без ручных операций.",
-      "en": "OpenSearch Dashboards had to integrate with Vault and rotate TLS certificates without manual ops."
+      "ru": "Внутреннему продукту уровня корпоративной базы знаний нужны независимые frontend-модули, которые встраиваются в единую платформу без развала общих зависимостей и пользовательских сценариев.",
+      "en": "A corporate knowledge-base product needed independent frontend modules integrated into one platform without breaking shared dependencies or user flows."
     },
     "contribution": {
-      "ru": "Интеграция Dashboards с Vault на Node.js, GitLab CI для ротации сертификатов, Jest-тесты на pipeline.",
-      "en": "Dashboards–Vault integration in Node.js, GitLab CI certificate rotation, Jest tests in pipeline."
+      "ru": "Работал с React-частью микрофронтов: интеграция модулей через Module Federation, границы между частями приложения, shared dependencies и пользовательские сценарии внутри общей платформы. Отдельно участвовал в Node.js-интеграциях и CI-задачах вокруг корпоративного контура.",
+      "en": "Worked on the React side of the micro frontends: module integration via Module Federation, boundaries between application parts, shared dependencies, and user flows inside the common platform. Also contributed to Node.js integrations and CI tasks around the corporate environment."
     },
     "stack": [
+      "React",
+      "TypeScript",
+      "Module Federation",
+      "Webpack",
       "Node.js",
-      "OpenSearch Dashboards",
-      "Vault",
       "GitLab CI",
-      "Jest",
-      "Kibana"
+      "Jest"
     ],
     "outcomes": {
       "ru": [
-        "Сертификаты обновляются через CI без простоя дашбордов",
-        "Jest покрывает критичные шаги интеграции",
-        "Модуль визуализации подключён к корпоративному контуру"
+        "Модули встраивались в общий Confluence-like интерфейс без копирования функциональности между частями продукта",
+        "Shared dependencies и границы модулей держались явно, чтобы микрофронты не ломали общий runtime",
+        "CI и тесты страховали интеграционные изменения в корпоративном контуре"
       ],
       "en": [
-        "Certificates rotate via CI without dashboard downtime",
-        "Jest covers critical integration steps",
-        "Visualization module wired into corporate environment"
+        "Modules were integrated into one Confluence-like interface without duplicating functionality across product parts",
+        "Shared dependencies and module boundaries stayed explicit so micro frontends did not break the common runtime",
+        "CI and tests guarded integration changes in the corporate environment"
       ]
     },
     "featured": false,

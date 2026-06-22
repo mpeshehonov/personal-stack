@@ -48,15 +48,15 @@ Apr 2024 – Jul 2025 | Remote
 
 **NKZ 3.0 — procurement approval**: Enterprise React module: RBAC, statuses, long forms
 
-Role: Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in task decomposition, code review, and split heavy flows into chunks via Vite code splitting.
+Role: Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Owned the migration to Vite, participated in task decomposition and code review, and split heavy flows into chunks.
 
 Outcome:
 
 - Frontend covers the full procurement cycle: roles, statuses, forms, and stage transitions
 - OpenAPI/Orval made API contracts verifiable at build time and reduced manual type updates
-- Code review, UI Kit, and shared form patterns kept complex flows consistent across tasks
+- Migration to Vite, code splitting, and moving tests from React Testing Library to Vitest helped speed up development and checks
 
-Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git, react-hook-form
+Stack: React, TypeScript, JavaScript, Vite, REST API, Orval, Keycloak, Git, react-hook-form, React Testing Library
 
 ### BI.ZONE — Frontend engineer
 
@@ -109,11 +109,11 @@ Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest, Git
 ## Skills
 
 - **Languages:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
-- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Feature-Sliced Design, Tailwind CSS, CSS-in-JS / Emotion, jQuery, responsive layout
+- **Frontend:** React, Next.js (SSR/SSG), Gatsby, Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, react-router, Feature-Sliced Design, Module Federation, Tailwind CSS, CSS-in-JS / Emotion, jQuery, responsive layout
 - **CMS:** Contentful, Strapi, WordPress, 1C-Bitrix, headless CMS, CMS integrations with Next.js/Node.js
 - **Build & Git:** Git, Webpack, Vite, yarn workspaces, monorepos, npm packages, code splitting, GitLab CI, GitHub Actions, Docker, CI/CD
 - **API & backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PHP, Symfony, MySQL, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, Bitrix components & templates, Keycloak, Auth.js
-- **Quality & process:** Jest, Vitest, Playwright, Storybook, Sentry, code review, Scrum, Agile
+- **Quality & process:** Jest, Vitest, React Testing Library, Playwright, Storybook, Sentry, code review, Scrum, Agile
 - **UI & product:** e-commerce, design systems, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 
 ## Languages

@@ -74,12 +74,12 @@ const experiencesRu: Experience[] = [
         problem:
           "Внутренний сервис закупок требовал единого UI для ролей, статусов, черновиков и многошагового согласования заявок.",
         contribution:
-          "Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Участвовал в декомпозиции задач, code review и выносил тяжёлые сценарии в отдельные chunks через Vite code splitting.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form"],
+          "Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Делал задачу перехода сборки на Vite, участвовал в декомпозиции, code review и выносил тяжёлые сценарии в отдельные chunks.",
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form", "React Testing Library"],
         outcomes: [
           "Frontend закрывает полный цикл закупочного согласования: роли, статусы, формы и переходы между этапами",
           "OpenAPI/Orval сделал API-контракты проверяемыми на сборке и снизил зависимость от ручного обновления типов",
-          "Code review, UI Kit и единые паттерны форм помогали держать сложные сценарии согласованными между задачами",
+          "Переход на Vite, code splitting и миграция тестового контура с React Testing Library на Vitest помогли ускорить разработку и проверки",
         ],
       },
     ],
@@ -201,12 +201,12 @@ const experiencesEn: Experience[] = [
         problem:
           "Internal procurement needed one UI for roles, statuses, and multi-step approval flows.",
         contribution:
-          "Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Participated in task decomposition, code review, and split heavy flows into chunks via Vite code splitting.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form"],
+          "Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Owned the migration to Vite, participated in task decomposition and code review, and split heavy flows into chunks.",
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form", "React Testing Library"],
         outcomes: [
           "Frontend covers the full procurement cycle: roles, statuses, forms, and stage transitions",
           "OpenAPI/Orval made API contracts verifiable at build time and reduced manual type updates",
-          "Code review, UI Kit, and shared form patterns kept complex flows consistent across tasks",
+          "Migration to Vite, code splitting, and moving tests from React Testing Library to Vitest helped speed up development and checks",
         ],
       },
     ],
