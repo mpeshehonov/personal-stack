@@ -93,6 +93,7 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 - [ ] Category: Software → Developer tools
 - [x] Buyer bootstrap doc: `agent/memory/products/delivery-readme.md`
 - [x] File delivery: `scripts/bundle-agent-starter.sh` → `dist/personal-stack-agent-starter-v0.3.tar.gz` (or `.zip` if `zip` installed)
+- [x] Pre-flight: `scripts/verify-agent-starter-bundle.sh` (no secrets leak)
 - [ ] Custom URL: `personal-stack-agent-starter`
 - [ ] Email receipt: link to bootstrap docs
 - [ ] VAT: Gumroad handles EU if enabled
@@ -104,7 +105,7 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 - [x] Cross-link from blog post «Self-hosted agent stack»
 - [x] ProductTeaser CTA on homepage (pre-launch → Telegram early access)
 - [ ] Add Gumroad URL to ProductTeaser when live
-- [ ] Track sales in `finance_log` as lane A4
+- [x] Track sales in `finance_log` as lane A4 — `python3 -m finance.a4_sales --net-usd 17.10 --order-id GUM-xxx`
 - [x] v0.3: `bundle-agent-starter.sh` strips secrets/state/VPN creds
 - v0.4: video walkthrough, Gumroad URL in site CTA
 

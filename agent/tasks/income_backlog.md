@@ -24,6 +24,7 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 - [x] **IB-12** A5: publish affiliate blog post (`cex-grid-trading-bybit.md`, `draft: false`, plain links until ref IDs in secrets)
 - [x] **IB-13** A4: publish-ready Gumroad bundle (`delivery-readme.md`) + site ProductTeaser CTA
 - [x] **IB-14** A4: Gumroad delivery zip script (`scripts/bundle-agent-starter.sh`) — strips secrets/state/VPN creds
+- [x] **IB-15** A4: Gumroad sale logger (`finance/a4_sales.py`) + bundle pre-flight (`scripts/verify-agent-starter-bundle.sh`)
 
 ## Rules
 
