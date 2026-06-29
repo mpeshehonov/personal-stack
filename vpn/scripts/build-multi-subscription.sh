@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Build Happ subscription: Hy2 only (8443 mobile-first, 36712 backup).
+# Build Happ subscription: Hy2 only (36712 Wi-Fi first, 8443 mobile backup).
 set -euo pipefail
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 HY2_DIR="$STACK_DIR/vpn/hysteria2"
 SUB_FILE="$HY2_DIR/subscription/sub.txt"
+SUB_PLAIN="$HY2_DIR/subscription/sub-plain.txt"
 ROUTING_LINK="${ROUTING_LINK:-http://89.124.70.216:8888/routing/happ-ru-direct.link}"
 
 export STACK_DIR ROUTING_LINK
@@ -16,6 +17,7 @@ from urllib.parse import quote
 stack = Path(os.environ["STACK_DIR"])
 hy2_dir = stack / "vpn/hysteria2"
 sub_file = hy2_dir / "subscription" / "sub.txt"
+sub_plain = hy2_dir / "subscription" / "sub-plain.txt"
 routing_link = os.environ.get("ROUTING_LINK", "http://89.124.70.216:8888/routing/happ-ru-direct.link")
 host = "89.124.70.216"
 sni = "yandex.ru"
@@ -45,32 +47,41 @@ def hy2_uri(config_name: str, label: str) -> str:
     return f"hysteria2://{pwd}@{host}:{port}/?sni={sni}{pin_q}{obfs_q}#{quote(label)}"
 
 
-lines = [
-    "# Happ: re-import after deploy — Hy2 only (8443 mobile, 36712 backup)",
-    "include-all-networks-enable: true",
-    "exclude-local-networks-enable: true",
-    "exclude-apns-enable: true",
-    "subscription-ping-onopen-enabled: true",
-    f"routing-ru-direct: {routing_link}",
-    "routing-ru-direct-json: http://89.124.70.216:8888/routing/happ-ru-direct.json",
-    "",
-]
-
-# 8443 first — usually works on mobile whitelist; 36712 backup
+nodes: list[str] = []
 for cfg, label in (
-    ("config-8443.yaml", "Yandex-HY2-8443"),
     ("config-36712.yaml", "Yandex-HY2-36712"),
+    ("config-8443.yaml", "Yandex-HY2-8443"),
 ):
     uri = hy2_uri(cfg, label)
     if uri:
-        lines.append(uri)
+        nodes.append(uri)
 
-if len(lines) <= 8:
-    raise SystemExit("No Hy2 nodes found in config-8443.yaml / config-36712.yaml")
+if not nodes:
+    raise SystemExit("No Hy2 nodes found in config-36712.yaml / config-8443.yaml")
+
+common_headers = [
+    "# Happ: delete old sub, import fresh. Wi-Fi: 36712. Mobile: 8443.",
+    "include-all-networks-enable: true",
+    "exclude-local-networks-enable: true",
+    "exclude-apns-enable: true",
+    "subscription-ping-onopen-enabled: false",
+]
+
+with_routing = common_headers + [
+    f"routing-ru-direct: {routing_link}",
+    "routing-ru-direct-json: http://89.124.70.216:8888/routing/happ-ru-direct.json",
+    "",
+] + nodes
+
+plain = common_headers + [
+    "# No routing — use if internet dead after connect (debug)",
+    "",
+] + nodes
 
 sub_file.parent.mkdir(parents=True, exist_ok=True)
-sub_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-print(f"Wrote {sub_file} ({len(lines)} lines, hy2={len(lines) - 8})")
+sub_file.write_text("\n".join(with_routing) + "\n", encoding="utf-8")
+sub_plain.write_text("\n".join(plain) + "\n", encoding="utf-8")
+print(f"Wrote {sub_file} and {sub_plain} ({len(nodes)} nodes)")
 PY
 
 echo "==> Reload subscription nginx"
