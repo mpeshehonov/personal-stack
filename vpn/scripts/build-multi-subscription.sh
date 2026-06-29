@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# Build Happ subscription: Hy2 (36712, 8443) + VLESS Reality (TCP) for whitelist / UDP-blocked networks.
+# Build Happ subscription: Hy2 only (8443 mobile-first, 36712 backup).
 set -euo pipefail
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 HY2_DIR="$STACK_DIR/vpn/hysteria2"
-XRAY_DIR="$STACK_DIR/vpn/xray-reality"
 SUB_FILE="$HY2_DIR/subscription/sub.txt"
 ROUTING_LINK="${ROUTING_LINK:-http://89.124.70.216:8888/routing/happ-ru-direct.link}"
 
@@ -16,7 +15,6 @@ from urllib.parse import quote
 
 stack = Path(os.environ["STACK_DIR"])
 hy2_dir = stack / "vpn/hysteria2"
-xray_dir = stack / "vpn/xray-reality"
 sub_file = hy2_dir / "subscription" / "sub.txt"
 routing_link = os.environ.get("ROUTING_LINK", "http://89.124.70.216:8888/routing/happ-ru-direct.link")
 host = "89.124.70.216"
@@ -47,20 +45,8 @@ def hy2_uri(config_name: str, label: str) -> str:
     return f"hysteria2://{pwd}@{host}:{port}/?sni={sni}{pin_q}{obfs_q}#{quote(label)}"
 
 
-def vless_uris_from_working() -> list[str]:
-    working = xray_dir / "WORKING.txt"
-    if not working.exists():
-        return []
-    uris: list[str] = []
-    for line in working.read_text().splitlines():
-        line = line.strip()
-        if line.startswith("vless://"):
-            uris.append(line)
-    return uris
-
-
 lines = [
-    "# Happ: re-import after deploy — whitelist mode: try VLESS Reality (TCP) first",
+    "# Happ: re-import after deploy — Hy2 only (8443 mobile, 36712 backup)",
     "include-all-networks-enable: true",
     "exclude-local-networks-enable: true",
     "exclude-apns-enable: true",
@@ -70,23 +56,21 @@ lines = [
     "",
 ]
 
-# TCP first — best when mobile carrier blocks UDP / non-whitelist
-for vless in vless_uris_from_working():
-    lines.append(vless)
-
-lines.append("")
-# Hy2 backup ports
+# 8443 first — usually works on mobile whitelist; 36712 backup
 for cfg, label in (
-    ("config-36712.yaml", "Yandex-HY2-36712"),
     ("config-8443.yaml", "Yandex-HY2-8443"),
+    ("config-36712.yaml", "Yandex-HY2-36712"),
 ):
     uri = hy2_uri(cfg, label)
     if uri:
         lines.append(uri)
 
+if len(lines) <= 8:
+    raise SystemExit("No Hy2 nodes found in config-8443.yaml / config-36712.yaml")
+
 sub_file.parent.mkdir(parents=True, exist_ok=True)
 sub_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-print(f"Wrote {sub_file} ({len(lines)} lines, vless={len(vless_uris_from_working())})")
+print(f"Wrote {sub_file} ({len(lines)} lines, hy2={len(lines) - 8})")
 PY
 
 echo "==> Reload subscription nginx"

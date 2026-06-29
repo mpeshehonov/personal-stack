@@ -5,6 +5,7 @@ set -euo pipefail
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 
 VPN_CONTAINERS=(
+  hysteria2-nl-8443
   hysteria2-nl-36712
   hy2-subscription
 )

@@ -29,4 +29,4 @@ Full plan: `agent/memory/income_plan.md`
 ## Operations
 - [ ] Keep site uptime > 99%
 - [ ] Daily memory writeback every run
-- [ ] Keep Xray VLESS Reality VPN stable for RU access
+- [ ] Keep Hysteria2 VPN (8443 + 36712) stable for RU access via Happ
