@@ -73,3 +73,35 @@ def tg_channel_names() -> list[str]:
 
 def tg_match_keywords() -> tuple[str, ...]:
     return tuple(k.strip().lower() for k in JOBHUNT_TG_KEYWORDS.split(",") if k.strip())
+
+
+# --- Resume sync (HH / Habr / LinkedIn) ---
+
+JOBHUNT_RESUME_SYNC_ENABLED = os.environ.get(
+    "JOBHUNT_RESUME_SYNC_ENABLED", "false"
+).lower() in ("true", "1", "yes")
+JOBHUNT_RESUME_AUTO_SYNC = os.environ.get(
+    "JOBHUNT_RESUME_AUTO_SYNC", "false"
+).lower() in ("true", "1", "yes")
+
+HH_CLIENT_ID = os.environ.get("HH_CLIENT_ID", "").strip()  # deprecated — applicant API closed 2025-12-15
+HH_CLIENT_SECRET = os.environ.get("HH_CLIENT_SECRET", "").strip()
+HH_ACCESS_TOKEN = os.environ.get("HH_ACCESS_TOKEN", "").strip()
+HH_REFRESH_TOKEN = os.environ.get("HH_REFRESH_TOKEN", "").strip()
+HH_RESUME_ID = os.environ.get("HH_RESUME_ID", "").strip()
+HH_PUBLISH_AFTER_SYNC = os.environ.get("HH_PUBLISH_AFTER_SYNC", "false").lower() in (
+    "true",
+    "1",
+    "yes",
+)
+
+HABR_SESSION_COOKIE = os.environ.get("HABR_SESSION_COOKIE", "").strip()
+HABR_PROFILE_SLUG = os.environ.get("HABR_PROFILE_SLUG", "").strip()
+
+LINKEDIN_LI_AT = os.environ.get("LINKEDIN_LI_AT", "").strip()
+LINKEDIN_JSESSIONID = os.environ.get("LINKEDIN_JSESSIONID", "").strip()
+LINKEDIN_SYNC_ENABLED = os.environ.get("LINKEDIN_SYNC_ENABLED", "false").lower() in (
+    "true",
+    "1",
+    "yes",
+)

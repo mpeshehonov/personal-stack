@@ -1,11 +1,13 @@
 ---
 name: bounty-harness
-description: Semi-auto bug bounty — multi-phase research, submit-ready drafts only, no GHSA/CVE spam. Use when reviewing bounty daily summary, not for running hunt (orchestrator owns hunt).
+description: Semi-auto white-hat pentest — multi-phase research, submit-ready drafts, crypto payout platforms. Orchestrator owns hunt; daily extends catalog.
 ---
 
 # Bounty Harness
 
-Daily agent: **do not** run deep hunt — `bounty/scanner.py` owns that.
+**Primary income lane** until crypto wallet is funded (2026-06-23 pivot).
+
+Daily agent: **do not** run deep hunt — `bounty/scanner.py` owns that. Pick tasks from `agent/tasks/bounty_backlog.md`.
 
 ## Pipeline (orchestrator)
 
@@ -15,7 +17,14 @@ purge → scope → recon → hunt → report → validate → reviewer → pend
 
 Cache: `agent/bounty/research_cache/<team>/`
 
-Shopify with dev stores: load `agent/skills/bounty-shopify/SKILL.md`; credentials from `secrets/.env.bounty` (`SHOPIFY_SHOP*_DOMAIN`, `SHOPIFY_SHOP*_ADMIN_TOKEN`).
+## Platform strategy
+
+- Catalog: `agent/memory/bounty_platforms.md` — **extend weekly**
+- Curated rotation: `agent/bounty/programs.py`
+- **Prefer crypto payout:** Immunefi, HackenProof, HackerOne (if crypto enabled on account)
+- **Avoid:** GHSA/CVE template spam (purge queue)
+
+Shopify dev stores: `agent/skills/bounty-shopify/SKILL.md`; credentials from `secrets/.env.bounty`.
 
 ## User gates
 
@@ -24,6 +33,11 @@ Shopify with dev stores: load `agent/skills/bounty-shopify/SKILL.md`; credential
 
 ## Daily agent role
 
-- Summarize bounty cycle outcome in `## Баг-баунти` (1–3 sentences)
-- If pending drafts exist, remind user to review
-- Do not duplicate research or purge queue
+- ≤1 item from `bounty_backlog.md` (add programs, payout docs, submit stubs)
+- Summarize orchestrator outcome in `## Баг-баунти` (1–3 sentences)
+- Remind user if pending drafts exist
+- Do **not** duplicate research or purge queue
+
+## Payout → wallet
+
+When bounty pays out, log in `finance_log` (BB-05 / manual note in daily until CLI exists). Target: same wallet as `YOUR_WALLET_ADDRESS` in finance env.

@@ -14,17 +14,29 @@ Pick **at most 1 job-hunt task per day** (after site health).
 
 ## Phase 1 — Draft + approve
 
-- [ ] **JH-07** `job_hunt/drafter.py` — cover letter template (RU, no hallucinations)
+- [x] **JH-07** `job_hunt/drafter.py` — cover letter template (RU, no hallucinations)
 - [ ] **JH-08** `/approve apply <id>` and `/reject apply <id>` handlers
 - [ ] **JH-09** Notify top-3 matches in daily Rich report
 
-## Phase 2 — Semi-auto apply (user OAuth)
+## Phase 2 — Resume sync
 
-- [ ] **JH-10** HH OAuth token storage in secrets (optional)
+- [x] **JH-12** `resume_source.py` + `resume_sync.py` + digest (`hh_digest.py`)
+- [x] **JH-13** Telegram `/jobs auth`, `/jobs sync`, `/jobs hh-digest`
+- [x] **JH-13b** `docs/JOB-HUNT-AUTH-SETUP.md` + `scripts/check-job-hunt-auth.py`
+- [x] **JH-13c** Document HH applicant API closure (`lessons/hh_applicant_api_closed.md`)
+- [ ] **JH-14** Habr Career profile push (Playwright + session cookie)
+- [ ] **JH-16** HH.ru browser RPA — apply + resume (Playwright; see `agent/memory/research/job_automation_rpa_2026.md`)
+- [ ] **JH-17** HH resume edit + «поднять» via browser (or @hh_rabota_bot lift)
+- [ ] **JH-18** RU IP / CDP to user desktop browser (anti-detect)
+- [ ] **JH-19** Spike: official @hh_rabota_bot for resume lift only
+- [ ] **JH-15** HH experience blocks in digest (full export from resume-data.ts)
 - [ ] **JH-11** Application status tracking + weekly summary
+- [x] ~~**JH-10** HH OAuth~~ — **cancelled** (API closed 2025-12-15)
 
 ## Rules
 
 1. Never submit application without explicit `/approve apply`
-2. Never invent experience not in resume.json
-3. Job hunt does not override site down or security fixes
+2. Never push resume without `/approve resume` (unless `JOBHUNT_RESUME_AUTO_SYNC=true`)
+3. **Do not configure HH OAuth** — applicant API closed
+4. Never invent experience not in resume.json / resume-data.ts
+5. Job hunt does not override site down or security fixes

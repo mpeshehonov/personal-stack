@@ -1,44 +1,41 @@
 ---
 name: income-harness
-description: Autonomous income lanes for personal-stack — Azuro paper/live rules, CEX scan, signals, digital product, milestone M1. Use during daily finance section or income_backlog tasks.
+description: Income lanes for personal-stack — bounty-first (crypto payout), A4 crypto product, deferred trading. Use during daily finance/income section.
 ---
 
 # Income Harness
 
-Load when working on `agent/tasks/income_backlog.md` or finance proposals.
+Load when working on `agent/tasks/income_backlog.md`, `agent/tasks/bounty_backlog.md`, or finance section.
+
+## North star
+
+**Realized profit → operational crypto wallet (USDT/USDC).**  
+RU constraints: `agent/memory/lessons/payout_ru_crypto_first.md` — **no Gumroad/Lemon/PayPal/Stripe**.
 
 ## M1 goal
 
-**$1,000 net autonomous by 2026-09-30** — see `agent/memory/income_plan.md`.
-
-Counts toward M1: Azuro/CEX API loops, digital product sales.
-Does **not** count: manual bounty submit, freelance, salary, Telegram signal channel (cancelled).
+**$1,000 net to wallet by 2026-09-30** — see `agent/memory/income_plan.md` (2026-06-23 pivot).
 
 ## Active lanes (priority)
 
-1. **A1 Azuro** — paper 7 days first; rules in `agent/memory/lessons/azuro_paper_rules.md`
-2. **A2** — CEX grid / scan (secondary)
-3. **A4/A5** — digital product + affiliate blog (background)
+1. **A7 Bug bounty** — orchestrator hunt; user `/approve bounty`; expand `bounty_platforms.md`
+2. **A4 Digital product** — bundle ready; **IB-16 crypto checkout** (not Gumroad)
+3. **A5 Affiliate** — background blog posts
+4. **A1/A2 Trading** — **deferred** until wallet funded; paper optional, no live proposals
 
-## Paper-trade rules (Azuro)
+## Does NOT count / blocked
 
-- Min edge vs model: document in daily log
-- Skip if liquidity below floor or odds drift > threshold
-- Log: count, USD exposure, by venue — 7 consecutive days before live go/no-go
-
-## Finance JSON (parser expects English)
-
-```json
-{"market_id": "...", "side": "buy", "size_usd": 25, "reason": "..."}
-```
-
-## Kill criteria
-
-- Paper expectancy ≤ 0 after 7 days → pivot to A4 + A2
-- Never enable live without user Telegram approval
+- Gumroad/Lemon MoR listings
+- `FINANCE_LIVE` without capital + user approve
+- Manual salary (A8) for autonomy metrics
 
 ## Validation
 
-- Append stats to `## Финансы` in daily log
-- Update income_backlog `[x]` when task complete
-- Propose capital change only in `## Итог`, not in code
+- Append stats to `## Финансы` and `## Баг-баунти` in daily log
+- Update backlog `[x]` when task complete
+- Log sales: `python3 -m finance.a4_sales`; bounty payouts → BB-05 when implemented
+
+## Kill criteria
+
+- Do not spend daily cycles on Azuro/CEX backlog while BB-* items open
+- Never enable live without user Telegram approval **and** wallet balance

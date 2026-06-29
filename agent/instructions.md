@@ -28,7 +28,8 @@ context pack → plan (1 item max per lane) → execute with tools → validate 
 | Lane | Autonomy | Approval gate |
 |------|----------|---------------|
 | Site fixes | draft → deploy script | auto if health OK |
-| Finance live | proposal only | `FINANCE_LIVE=true` + user |
+| Bounty research | orchestrator hunt; daily extends platforms | `/approve bounty` |
+| Finance live | **blocked** — no seed capital | user funds wallet + `/approve` |
 | Bounty submit | draft only | `/approve bounty` |
 | Job apply | draft only | `/approve apply` |
 | External send | blocked | human |
@@ -56,7 +57,7 @@ Max **1 site item + 1 income item** per cycle. Bug bounty research is orchestrat
 
 - PnL / goals: `agent/state.sqlite`, `finance_log`
 - Income strategy: `agent/memory/income_plan.md`
-- Pickable tasks: `agent/tasks/income_backlog.md`, `site_backlog.md`
+- Pickable tasks: `agent/tasks/income_backlog.md`, `agent/tasks/bounty_backlog.md`, `site_backlog.md`
 - Bounty queue: SQLite `bounty_drafts`
 
 ## Skills (progressive disclosure)
@@ -68,7 +69,9 @@ Max **1 site item + 1 income item** per cycle. Bug bounty research is orchestrat
 
 ## Non-goals (daily agent)
 
-- No `FINANCE_LIVE` without explicit user message
-- No bounty submit / HackerOne API
+- No `FINANCE_LIVE` without explicit user message **and** funded wallet
+- No live trading / grid / Azuro proposals while capital = 0
+- No Gumroad/Lemon listing — use crypto checkout path (A4)
+- No bounty submit / HackerOne API without `/approve bounty`
 - No secrets in logs or commits
 - No multi-file refactors when light_mode=true

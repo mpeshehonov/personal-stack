@@ -32,6 +32,9 @@ def build_context_pack(health: HealthSnapshot) -> str:
     goals = _read(MEMORY_DIR / "goals.md", 2000)
     income_plan = _read(MEMORY_DIR / "income_plan.md", 3500)
     income_backlog = _read(TASKS_DIR / "income_backlog.md", 2500)
+    bounty_backlog = _read(TASKS_DIR / "bounty_backlog.md", 2000)
+    payout_lesson = _read(MEMORY_DIR / "lessons" / "payout_ru_crypto_first.md", 1500)
+    bounty_platforms = _read(MEMORY_DIR / "bounty_platforms.md", 2000)
     instructions = _read(MEMORY_DIR.parent / "instructions.md", 2000)
     backlog = _read(TASKS_DIR / "site_backlog.md", 2000)
     daily = _recent_daily_logs(3)
@@ -59,6 +62,15 @@ def build_context_pack(health: HealthSnapshot) -> str:
 
 ## Income backlog
 {income_backlog}
+
+## Bounty backlog
+{bounty_backlog}
+
+## Payout constraints (RU)
+{payout_lesson}
+
+## Bounty platforms
+{bounty_platforms}
 
 ## Бэклог сайта
 {backlog}

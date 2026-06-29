@@ -1,6 +1,6 @@
-# Personal Stack Agent Starter — Gumroad Listing Draft
+# Personal Stack Agent Starter — Product Listing Draft
 
-> Status: **publish-ready v0.3** — Gumroad listing pending user account. Lane A4 (M1 digital product).
+> Status: **publish-ready v0.3** — delivery via **crypto checkout (USDT)** or manual TG; **not Gumroad** (RU, no PayPal/Stripe). Lane A4.
 
 ## Product name
 
@@ -90,7 +90,9 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 
 ## Gumroad settings checklist
 
-- [ ] Category: Software → Developer tools
+> **Deprecated for RU seller.** Use crypto checkout (IB-16) or Telegram manual delivery.
+
+- [ ] ~~Category: Software → Developer tools~~
 - [x] Buyer bootstrap doc: `agent/memory/products/delivery-readme.md`
 - [x] File delivery: `scripts/bundle-agent-starter.sh` → `dist/personal-stack-agent-starter-v0.3.tar.gz` (or `.zip` if `zip` installed)
 - [x] Pre-flight: `scripts/verify-agent-starter-bundle.sh` (no secrets leak)

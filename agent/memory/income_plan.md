@@ -20,49 +20,52 @@ Scoring: **Autonomy** = % of earning loop runnable without you after one-time se
 
 | # | Lane | Autonomy | Capital | M1 fit | Stack leverage | Notes |
 |---|------|----------|---------|--------|----------------|-------|
-| **A1** | **Azuro rule-based value** | 85% | $200–400 USDC | **High** | `azuro_client.py`, risk engine, Polygon wallet | Closest Polymarket substitute from NL. Needs **7+ days paper** + fixed rules (edge threshold, max odds drift), not LLM guesses. |
-| **A2** | **CEX grid / DCA (Bybit NL)** | 90% | $300–600 USDT | Medium | `cex_client.py`, API keys + KYC | Boring but fully API-driven. Small edge; fees eat profit on low capital. Good **parallel** lane while A1 validates. |
+| **A1** | **Azuro rule-based value** | 85% | $200–400 USDC | **Deferred** | `azuro_client.py`, risk engine, Polygon wallet | **No seed capital** — paper/log only until wallet funded from A7/A4. Do not propose live. |
+| **A2** | **CEX grid / DCA (Bybit NL)** | 90% | $300–600 USDT | **Deferred** | `cex_client.py`, API keys + KYC | Same — **no live grid** until user funds wallet and `/approve`. Paper scan optional in log. |
 | **A3** | ~~Cross-venue scan → auto Telegram signals~~ | — | — | **Cancelled** | — | Removed from plan 2026-06 — no public buy-signal channel. Code (`signal_post.py`) stays optional/no-op. |
-| **A4** | **Micro digital product (agent-maintained)** | 80% | $0 | Medium | Site, Cursor agent, deploy pipeline | Sell template: "personal-stack agent starter" / VPN config kit / odds scanner script on Gumroad/Lemon Squeezy. Agent updates README + changelog. One-time sales, slow but truly passive after listing. |
+| **A4** | **Micro digital product (agent-maintained)** | 75% | $0 | Medium | Site, bundle script, payment webhook | Sell "personal-stack agent starter" via **own site + crypto checkout** (USDT). **Not Gumroad/Lemon** — RU resident, no PayPal/Stripe. See `agent/memory/lessons/payout_ru_crypto_first.md`. |
 | **A5** | **Affiliate content loop** | 85% | $0 | Low | Site blog, agent daily writes | Posts with Bybit/Azuro/hosting affiliate links. $1k needs traffic; long tail. Background lane only. |
 | **A6** | **VPN subscription resale** | 70% | $0 | Low–Med | Existing Hysteria2 stack | Automate sub generation + payment webhook. Legal/ToS risk; not in core goals — **defer** unless explicit decision. |
-| **A7** | **Bug bounty (agent-assisted)** | 35% | $0 | Med for M2, **not M1** | `bounty/scanner.py`, curated programs | Scanner + drafts save time; **you** find/submit vulns. One $1k+ report skips M1 definition but hits M2 fast. |
+| **A7** | **Bug bounty (semi-auto pentest)** | 55% | $0 | **High (primary until wallet funded)** | `bounty/scanner.py`, `bounty_platforms.md` | Orchestrator: scope→recon→hunt→submit-ready draft. User: `/approve bounty`. **Payout → crypto wallet** (Immunefi/HackenProof/H1 crypto). Expand platforms — `agent/tasks/bounty_backlog.md`. |
 | **A8** | **Freelance / resume funnel** | 10% | $0 | **Not autonomous** | Site, PDF resume | Best $/hour but requires you. Counts toward M3 only. |
 | **A9** | **Job Hunt Autopilot** | 45% | $0 | M2/M3 (not M1) | `job_hunt/`, HH API, Telegram approve | Agent finds + scores vacancies, drafts cover letter; **you** `/approve apply`. See `docs/superpowers/specs/2026-06-13-job-hunt-autopilot-design.md`. |
 
 ---
 
-## Recommended Portfolio for M1 ($1k autonomous)
+## Recommended Portfolio (2026-06-23 pivot — RU, no seed capital)
 
-Prioritize **two active lanes + one background lane**:
+**North star:** realized profit lands on **operational crypto wallet** (auto/semi-auto). See `agent/memory/lessons/payout_ru_crypto_first.md`.
 
 ```
-Primary:   A1 Azuro (paper → live with risk caps)
-Secondary: A2 CEX grid (API-driven diversifier)
-Background: A4 digital product + A5 affiliate (1/week)
+Primary:    A7 Bug bounty (orchestrator hunt + user /approve → crypto payout)
+Secondary:  A4 digital product (crypto checkout on site — when IB-16 done)
+Background: A5 affiliate (1/week max)
+Deferred:   A1/A2 live trading — until wallet funded from A7/A4
 ```
 
-**Defer:** A6 VPN resale, A8 freelance-as-autonomy, Polymarket (geo-blocked from NL).
+**Defer:** A6 VPN resale, Gumroad/Lemon MoR, A8 as autonomy metric, Polymarket (geo-blocked from NL).
+
+**M1 note:** strict "≥70% autonomy" lanes (A1/A2 live) **paused** for lack of capital. **Practical M1 path:** first **$1k net to crypto wallet** from A7 (+ A4/A5), logged in `finance_log`, even if semi-auto bounty counts toward M2 in strict scoring.
 
 ---
 
 ## Phase Plan
 
-### Phase 0 — Validate (now → +7 days)
-- [ ] `FINANCE_VENUES=azuro,cex` in finance env
-- [ ] 7 days paper on Azuro: log win-rate, avg edge, rule violations
-- [ ] CEX: read-only scan running; no live until Azuro paper reviewed
-- [ ] Kill criteria: if paper expectancy ≤ 0 after 7 days, pivot primary to **A4** (digital product) + **A2** (CEX grid)
+### Phase 0 — Bounty + payout path (now)
+- [x] Azuro paper go/no-go documented (expectancy ≤ 0)
+- [ ] **A7 primary:** ≥3 programs/week in rotation; expand `bounty_platforms.md`
+- [ ] Verify crypto payout on HackerOne / register Immunefi or HackenProof
+- [ ] **No FINANCE_LIVE** — user has no trading capital
 
-### Phase 1 — M1 execution (+8 → +90 days)
-- [ ] Azuro live with `MAX_TRADE_USD≤50`, `DAILY_STOP_LOSS_USD≤75`
-- [ ] Deploy **A2** CEX grid read-only / paper params
-- [ ] List **A4** product v0.1 (even if $9 — proves autonomous sales loop)
-- [ ] Weekly: agent updates `agent/memory/daily/` with PnL vs M1
+### Phase 1 — Wallet seed (+0 → +90 days)
+- [ ] Submit-ready drafts → user `/approve bounty` → first payout to wallet
+- [ ] **A4:** crypto checkout webhook (IB-16) — USDT delivery of agent starter bundle
+- [ ] Log all external revenue in `finance_log` (bounty + A4)
+- [ ] Weekly: PnL vs $1k goal in daily log
 
-### Phase 2 — M2 (+91 → +150 days)
-- [ ] Add bounty lane: one niche program, agent drafts only
-- [ ] Scale what worked in Phase 1 (double capital only on positive expectancy)
+### Phase 2 — Reinvest (+after wallet ≥ $300)
+- [ ] User approves A2 CEX grid or A1 Azuro live with risk caps
+- [ ] Scale only on positive expectancy from logged trades
 
 ---
 
@@ -97,9 +100,9 @@ Removed from income plan — no Telegram channel for buy/trade signals. Helper c
 
 **Idea:** Package a subset of this repo (or standalone odds scanner) as paid ZIP + docs.
 
-**Autonomous loop:** agent fixes issues from Gumroad emails; deploy script updates listing version.
+**Autonomous loop:** bundle script → payment webhook → email/TG download link; agent logs sale via `a4_sales.py`.
 
-**Path to $1k:** 100 sales × $10 or 20 × $50 — needs marketing; combine with A5 content.
+**Path to $1k:** 50 × $20 USDT — combine with A5 content; **not** Gumroad (RU payout blocked).
 
 ### A5 — Affiliate content (background)
 
@@ -139,12 +142,16 @@ Progress: `/status` in Telegram shows annual goal + M1 milestone via `goal_track
 | 2026-06-12 | M1 = $1k autonomous by Sep 2026 | Realistic first proof before $15k annual |
 | 2026-06-12 | A1+A2 portfolio | NL-compatible; uses existing finance module |
 | 2026-06-17 | A3 signals cancelled | No TG buy-signal channel; focus A2+A4 |
-| 2026-06-12 | Bounty excluded from M1 | Not autonomous per stack rules |
+| 2026-06-12 | Bounty excluded from M1 (strict) | Not autonomous per stack rules |
+| 2026-06-23 | **Pivot: A7 primary, A1/A2 live deferred** | RU — no Gumroad/PayPal/Stripe; no crypto seed capital; north star = wallet top-up via bounty + crypto product sales |
 
 ---
 
 ## Related docs
 
+- `agent/memory/lessons/payout_ru_crypto_first.md` — RU payout constraints, crypto north star
+- `agent/memory/bounty_platforms.md` — platform catalog (agent-maintained)
+- `agent/tasks/bounty_backlog.md` — bounty pickable tasks
 - `agent/memory/trading_alternatives.md` — venue comparison (Azuro, CEX, Overtime)
 - `agent/memory/goals.md` — checklist milestones
 - `agent/tasks/income_backlog.md` — agent-pickable implementation tasks

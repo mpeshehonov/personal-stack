@@ -17,9 +17,15 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 - [x] **IB-08** A4 product: draft Gumroad listing copy in `agent/memory/products/agent-starter.md`
 - [x] **IB-09** A5 affiliate: one blog post skeleton under `site/content/blog/` (if dir missing, create minimal MD route)
 
-## Phase 2 — Scale (after M1 progress >30%)
+## Phase 2 — Bounty + crypto product (current)
 
 - [ ] **IB-10** Bounty: Shopify deep-dive with dev-store Admin API tokens (see `agent/skills/bounty-shopify/`)
+- [ ] **IB-16** A4: crypto checkout webhook on site (NOWPayments/Cryptomus) → USDT + auto delivery link; **not Gumroad**
+- [ ] **IB-17** A4: rename listing docs — platform-agnostic (`agent-starter.md` delivery via crypto)
+- [ ] **BB-01..BB-04** — see `agent/tasks/bounty_backlog.md` (platform expansion; orchestrator/daily split)
+
+## Phase 2 — Scale (after first wallet inflow)
+
 - [x] **IB-11** Review milestone progress; propose capital / venue reallocation in daily Summary
 - [x] **IB-12** A5: publish affiliate blog post (`cex-grid-trading-bybit.md`, `draft: false`, plain links until ref IDs in secrets)
 - [x] **IB-13** A4: publish-ready Gumroad bundle (`delivery-readme.md`) + site ProductTeaser CTA
@@ -28,6 +34,7 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 
 ## Rules
 
-1. Never enable `FINANCE_LIVE=true` without explicit user Telegram message
+1. Never enable `FINANCE_LIVE=true` without explicit user Telegram message **and** funded wallet
 2. Income tasks do not override site health or security fixes
-3. Mark completed items `[x]` in this file when done
+3. **Gumroad deprecated for A4** — RU payout blocked; use IB-16 crypto checkout
+4. Mark completed items `[x]` in this file when done

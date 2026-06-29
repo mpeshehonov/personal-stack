@@ -52,6 +52,7 @@ from bounty.scanner import manual_bounty_research, purge_bounty_queue
 from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
 from job_hunt.drafter import draft_cover_letter, format_draft_markdown
+from job_hunt.resume_sync import apply_sync, format_auth_markdown, format_sync_plan_markdown
 from job_hunt.scanner import scan_and_store_leads
 from telegram_bot.background import job_running, list_running_jobs, start_background_job
 from telegram_bot.rich_send import reply_rich, send_rich_markdown
@@ -231,9 +232,13 @@ def _help_text() -> str:
         "/bounty test — проверить HackerOne API\n"
         "/jobs — топ вакансий (job hunt)\n"
         "/jobs scan — поиск новых вакансий (фон)\n"
+        "/jobs auth — проверка Habr/LinkedIn для resume sync\n"
+        "/jobs sync — diff резюме site → площадки\n"
+        "/jobs hh-digest — текст для ручной вставки в HH (API закрыт)\n"
         "/cover <id> — сопровод для лида (HH, ≤500 символов)\n"
         "/cover <id> email — сопровод для email-отклика\n"
         "/approve bounty <id> — одобрить и отправить отчёт (HackerOne)\n"
+        "/approve resume habr|all — push на Habr (HH — только digest)\n"
         "/reject bounty <id> — отклонить черновик\n"
         "/memory — итог последнего daily-цикла\n"
         "/pause — приостановить автономию\n"
@@ -558,6 +563,8 @@ def _format_jobs_rich() -> str:
         [
             "",
             "`/jobs scan` — поиск новых вакансий",
+            "`/jobs hh-digest` — текст для HH (ручная вставка)",
+            "`/jobs sync` — diff resume → platforms",
             "`/cover <id>` — сопровод (отправляешь сам)",
         ]
     )
@@ -570,6 +577,23 @@ def _lead_row_to_dict(row) -> dict:
 
 async def cmd_jobs(update, context) -> None:
     if not _allowed_user(update.effective_user):
+        return
+
+    if context.args and context.args[0].lower() in ("hh-digest", "hhdigest"):
+        from job_hunt.hh_digest import format_hh_digest_markdown
+
+        md = await asyncio.to_thread(format_hh_digest_markdown)
+        await reply_rich(update, md)
+        return
+
+    if context.args and context.args[0].lower() == "auth":
+        md = await asyncio.to_thread(format_auth_markdown)
+        await reply_rich(update, md)
+        return
+
+    if context.args and context.args[0].lower() == "sync":
+        md = await asyncio.to_thread(format_sync_plan_markdown)
+        await reply_rich(update, md)
         return
 
     if context.args and context.args[0].lower() == "scan":
@@ -668,7 +692,60 @@ async def cmd_cover(update, context) -> None:
     await reply_rich(update, format_draft_markdown(draft, lead_id=lead_id))
 
 
-async def cmd_approve_bounty(update, context) -> None:
+async def cmd_approve(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    if not context.args:
+        await update.message.reply_text(
+            "Использование:\n"
+            "/approve bounty <id>\n"
+            "/approve resume hh|habr|all\n\n"
+            "Список bounty: /bounty · diff резюме: /jobs sync"
+        )
+        return
+
+    if context.args[0].lower() == "resume":
+        await _approve_resume(update, context)
+        return
+
+    await _approve_bounty(update, context)
+
+
+async def _approve_resume(update, context) -> None:
+    if len(context.args) < 2:
+        await update.message.reply_text(
+            "Использование: /approve resume hh|habr|linkedin|all\n\n"
+            "Сначала: /jobs auth и /jobs sync"
+        )
+        return
+
+    platform = context.args[1].lower()
+    if platform not in ("hh", "habr", "linkedin", "all"):
+        await update.message.reply_text("Платформа: hh, habr, linkedin, all")
+        return
+
+    result = await asyncio.to_thread(apply_sync, platform)
+    lines = [f"## Resume sync — {platform}", ""]
+    if not result.get("ok"):
+        lines.append("**Статус:** частично или ошибка")
+    else:
+        lines.append("**Статус:** OK")
+
+    for name, detail in (result.get("platforms") or {}).items():
+        mark = "✅" if detail.get("ok") else "❌"
+        lines.append(f"- {mark} **{name}:** {detail.get('message', '—')}")
+        if detail.get("digest"):
+            lines.append("")
+            lines.append(detail["digest"])
+            lines.append("")
+        fields = detail.get("fields")
+        if fields:
+            lines.append(f"  _fields: {', '.join(fields)}_")
+
+    await reply_rich(update, "\n".join(lines))
+
+
+async def _approve_bounty(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
     if not context.args:
@@ -835,7 +912,7 @@ def main() -> None:
     app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
     app.add_handler(CommandHandler("cover", cmd_cover, block=False))
-    app.add_handler(CommandHandler("approve", cmd_approve_bounty, block=False))
+    app.add_handler(CommandHandler("approve", cmd_approve, block=False))
     app.add_handler(CommandHandler("reject", cmd_reject_bounty, block=False))
     app.add_handler(CommandHandler("help", cmd_help, block=False))
     app.add_handler(CommandHandler("start", cmd_help, block=False))

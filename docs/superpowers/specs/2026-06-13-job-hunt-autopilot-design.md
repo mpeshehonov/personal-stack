@@ -64,6 +64,8 @@ Threshold for digest: **match_score ≥ 55**.
 - Rate limit: 1 req / 2s, User-Agent with contact email
 - Store `external_id` for dedup
 
+> **Update 2025-12-15:** Applicant API (OAuth, resume edit, apply) **closed**. Vacancy search may still work without token. Resume sync → `/jobs hh-digest` (manual) or JH-16 Playwright. See `agent/memory/lessons/hh_applicant_api_closed.md`.
+
 ## Telegram UX
 
 ```
@@ -79,7 +81,7 @@ Daily cycle appends **Job Hunt** section: N new, top 3 titles + scores.
 1. User `/approve apply 42`
 2. Agent prepares: cover letter MD, link to vacancy
 3. **Manual step v1:** bot sends deep link + copy-paste blocks (HH often needs captcha)
-4. **Phase 2:** HH OAuth if user provides token — then API apply where supported
+4. ~~**Phase 2:** HH OAuth~~ — cancelled (applicant API closed 2025-12-15)
 
 ## Env
 
