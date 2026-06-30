@@ -2,23 +2,20 @@
   "Name": "RU-direct (без VPN для .ru)",
   "GlobalProxy": "true",
   "RouteOrder": "block-proxy-direct",
-  "RemoteDNSType": "DoU",
+  "RemoteDNSType": "UDP",
   "RemoteDNSDomain": "",
   "RemoteDNSIP": "1.1.1.1",
-  "DomesticDNSType": "DoU",
+  "DomesticDNSType": "UDP",
   "DomesticDNSDomain": "",
   "DomesticDNSIP": "77.88.8.8",
-  "Geoipurl": "https://cdn.jsdelivr.net/gh/GrimbirdUsers/ru-routing-dat@main/geoip.dat",
-  "Geositeurl": "https://cdn.jsdelivr.net/gh/GrimbirdUsers/ru-routing-dat@main/geosite.dat",
-  "DnsHosts": {
-    "common.dot.dns.yandex.net": "77.88.8.8"
-  },
+  "DnsHosts": {},
   "DirectSites": [
-    "geosite:category-ru-all",
     "domain:ru",
     "domain:su",
     "domain:xn--p1ai",
     "domain:moscow",
+    "domain:by",
+    "domain:kz",
     "domain:vk.com",
     "domain:vk.ru",
     "domain:ok.ru",
@@ -66,8 +63,6 @@
     "domain:premier.one"
   ],
   "DirectIp": [
-    "geoip:ru",
-    "geoip:private",
     "10.0.0.0/8",
     "172.16.0.0/12",
     "192.168.0.0/16",
@@ -79,7 +74,7 @@
   "ProxyIp": [],
   "BlockSites": [],
   "BlockIp": [],
-  "DomainStrategy": "IPIfNonMatch",
+  "DomainStrategy": "AsIs",
   "FakeDNS": "false",
-  "UseChunkFiles": "true"
+  "UseChunkFiles": "false"
 }

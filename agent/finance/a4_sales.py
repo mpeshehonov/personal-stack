@@ -1,4 +1,4 @@
-"""Log A4 (Gumroad) product sales into finance_log for M1 goal tracking."""
+"""Log A4 digital product sales into finance_log for M1 goal tracking."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ ACTION = "a4_sale"
 DEFAULT_PRODUCT = "personal-stack-agent-starter"
 
 
-def log_gumroad_sale(
+def log_a4_sale(
     *,
     net_usd: float,
     order_id: str = "",
@@ -20,7 +20,7 @@ def log_gumroad_sale(
     lane: str = "A4",
     notes: str = "",
 ) -> dict[str, Any]:
-    """Record realized net revenue from a Gumroad sale (after platform fees)."""
+    """Record realized net revenue from an A4 sale (after payment fees)."""
     payload: dict[str, Any] = {
         "lane": lane,
         "product": product,
@@ -30,6 +30,11 @@ def log_gumroad_sale(
     }
     log_finance(ACTION, payload, pnl_usd=net_usd)
     return payload
+
+
+def log_gumroad_sale(*args: Any, **kwargs: Any) -> dict[str, Any]:
+    """Deprecated alias — use log_a4_sale()."""
+    return log_a4_sale(*args, **kwargs)
 
 
 def a4_sale_stats(year: int | None = None) -> dict[str, Any]:
@@ -90,15 +95,15 @@ def format_a4_sales() -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Log a Gumroad sale (lane A4) into finance_log"
+        description="Log an A4 product sale (crypto checkout) into finance_log"
     )
     parser.add_argument(
         "--net-usd",
         type=float,
         required=True,
-        help="Net USD after Gumroad/payment fees (counts toward M1 PnL)",
+        help="Net USD after payment fees (counts toward M1 PnL)",
     )
-    parser.add_argument("--order-id", default="", help="Gumroad order or sale ID")
+    parser.add_argument("--order-id", default="", help="Payment order ID (e.g. CRYPTO-xxx)")
     parser.add_argument("--product", default=DEFAULT_PRODUCT)
     parser.add_argument("--notes", default="")
     parser.add_argument(
@@ -122,7 +127,7 @@ def main() -> None:
         print(json.dumps({"action": ACTION, "payload": payload, "pnl_usd": args.net_usd}, indent=2))
         return
 
-    log_gumroad_sale(
+    log_a4_sale(
         net_usd=args.net_usd,
         order_id=args.order_id,
         product=args.product,

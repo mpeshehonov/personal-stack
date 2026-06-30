@@ -1,6 +1,6 @@
 # Personal Stack Agent Starter — Buyer Bootstrap Guide
 
-> Delivered with Gumroad purchase. Version: **0.2** (2026-06-22).
+> Delivered after crypto checkout (USDT) or manual Telegram payment. Version: **0.4** (2026-06-30).
 
 ## What you get
 
@@ -100,13 +100,13 @@ Read `agent/instructions.md` for the autonomy matrix and approval gates.
 
 - Changelog in repo root
 - Pull latest: `git pull && ./scripts/deploy-from-git.sh`
-- Breaking changes announced in Gumroad email
+- Breaking changes announced via email or Telegram
 
 ## Support
 
 - Email: [your support email]
 - Telegram community: [optional link]
-- No SLA on intro price ($19 launch)
+- No SLA on intro price ($19 USDT launch)
 
 ## License
 
