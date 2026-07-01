@@ -97,7 +97,7 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 - [x] Buyer bootstrap doc: `agent/memory/products/delivery-readme.md`
 - [x] File delivery: `scripts/bundle-agent-starter.sh` → `dist/personal-stack-agent-starter-v0.3.tar.gz`
 - [x] Pre-flight: `scripts/verify-agent-starter-bundle.sh` (no secrets leak)
-- [ ] **IB-16:** Crypto checkout webhook on site → auto delivery link after USDT payment
+- [x] **IB-16:** Crypto checkout webhook scaffold — `/api/checkout/ipn`, `/api/checkout/delivery`, `checkout_sync.py`; setup: `agent/memory/products/checkout-setup.md`
 - [ ] Product page CTA: crypto checkout URL (replace Telegram early-access)
 - [ ] Email receipt: link to bootstrap docs + download
 
@@ -116,7 +116,7 @@ A: Email + Telegram community link (optional). No SLA on intro price.
 - [ ] Add crypto checkout URL to ProductTeaser when IB-16 live
 - [x] Track sales in `finance_log` as lane A4 — `python3 -m finance.a4_sales --net-usd 17.10 --order-id CRYPTO-xxx`
 - [x] v0.3: `bundle-agent-starter.sh` strips secrets/state/VPN creds
-- v0.4: platform-agnostic listing docs (IB-17); v0.5: crypto checkout webhook (IB-16)
+- v0.4: platform-agnostic listing docs (IB-17); v0.5: crypto checkout webhook scaffold (IB-16, 2026-07-01)
 
 ## Internal refs
 
