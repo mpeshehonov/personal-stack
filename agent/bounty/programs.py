@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-Platform = Literal["hackerone", "bugcrowd", "intigriti"]
+Platform = Literal["hackerone", "bugcrowd", "intigriti", "immunefi", "hackenproof"]
 
 
 @dataclass(frozen=True)
@@ -99,6 +99,30 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         team_handle="ikea",
         focus="Retail web apps, APIs, mobile backends",
         notes="Public Intigriti program with web scope.",
+    ),
+    BountyProgram(
+        name="0x / Matcha",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/0x/",
+        team_handle="0x",
+        focus="Matcha website, swap API, gasless API, DEX meta-aggregator",
+        notes="Payout: USDC on-chain (Immunefi). Web & App tier — IDOR, auth, API abuse. Verify scope before testing.",
+    ),
+    BountyProgram(
+        name="edgeX",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/edgex/",
+        team_handle="edgex",
+        focus="Perp/spot trading web UI, REST + WebSocket quote APIs",
+        notes="Payout: USDC/USDT via Immunefi. Web & App assets: pro.edgex.exchange, quote/spot APIs. No live fund theft.",
+    ),
+    BountyProgram(
+        name="Backpack",
+        platform="hackenproof",
+        url="https://hackenproof.com/programs/backpack",
+        team_handle="backpack",
+        focus="Exchange web client, REST/WebSocket APIs, wallet flows",
+        notes="Payout: USDC (Base) via HackenProof balance → crypto wallet. Web & API scope; triaged by HackenProof.",
     ),
 )
 

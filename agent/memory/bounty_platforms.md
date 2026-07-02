@@ -45,7 +45,7 @@ When adding a program:
 
 ## Weekly agent task (orchestrator + daily)
 
-- [ ] Add ≥1 new program from P0/P1 with crypto or confirmed payout path
+- [x] Add ≥1 new program from P0/P1 with crypto or confirmed payout path (2026-07-02: 0x, edgeX, Backpack)
 - [ ] Mark dead programs (out of scope, duplicate, zero response) in `## Dead programs` below
 - [ ] Summarize in daily `## Баг-баунти`: programs tried, drafts pending, payout blockers
 
@@ -57,4 +57,5 @@ _(none yet)_
 
 | Date | Note |
 |------|------|
+| 2026-07-02 | BB-01: +3 programs in `programs.py` — 0x/Matcha, edgeX (Immunefi, USDC); Backpack (HackenProof, USDC Base) |
 | 2026-06-23 | User: no PayPal/Stripe; focus bounty until wallet funded; expand beyond HackerOne-only |
