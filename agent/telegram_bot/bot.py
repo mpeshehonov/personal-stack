@@ -799,6 +799,18 @@ async def _approve_bounty(update, context) -> None:
                     f"**Ссылка:** {submit_result.report_url or '—'}",
                 ]
             )
+        elif submit_result.export_path:
+            meta.update({"export_path": submit_result.export_path})
+            update_bounty_draft_meta(draft_id, meta)
+            lines.extend(
+                [
+                    "",
+                    f"**Экспорт:** `{submit_result.export_path}`",
+                    f"**Дальше:** {submit_result.message}",
+                    f"**Программа:** {submit_result.report_url or finding.program_url}",
+                    "_Статус «approved» — отправь вручную на платформе, затем отметь payout в finance_log._",
+                ]
+            )
         else:
             update_bounty_status(draft_id, "submit_failed")
             lines.extend(

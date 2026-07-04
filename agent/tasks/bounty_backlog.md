@@ -7,7 +7,7 @@ Aligned with `agent/memory/bounty_platforms.md` and `agent/skills/bounty-harness
 
 - [x] **BB-01** Add 2+ Immunefi/HackenProof programs to `agent/bounty/programs.py` (web/API scope, crypto payout noted)
 - [x] **BB-02** Document payout rails per platform in `agent/memory/bounty_platforms.md` (after account checks)
-- [ ] **BB-03** Extend `Platform` type + `submit.py` stub for one non-HackerOne platform (Immunefi or HackenProof report export)
+- [x] **BB-03** Extend `Platform` type + `submit.py` stub for one non-HackerOne platform (Immunefi or HackenProof report export)
 - [ ] **BB-04** Shopify playbook refresh — verify HackerOne scope still matches dev-store flow (`agent/tasks/bounty_shopify_playbook.md`)
 
 ## Phase 1 — Quality & throughput

@@ -17,6 +17,7 @@ vpn/xray-reality/WORKING.txt
 # Runtime / local state
 agent/state.sqlite
 agent/bounty/research_cache/
+agent/bounty/exports/
 *.sqlite
 *.sqlite-journal
 state.sqlite
