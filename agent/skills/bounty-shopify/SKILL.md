@@ -23,9 +23,9 @@ Optional: static `SHOPIFY_SHOP1_ADMIN_TOKEN=shpat_...` if you still have a legac
 
 ## Setup checklist
 
-1. Partner + dev store (bug bounty signup, `@wearehackerone.com` alias)
+1. Partner + **two** dev stores ([bug bounty signup](https://partners.shopify.com/signup/bugbounty), `@wearehackerone.com` alias on H1)
 2. **dev.shopify.com** → create app → configure **Admin API scopes** on app version
-3. **Install app on the dev store** (Dev Dashboard → app → install / test on store)
+3. **Install app on both dev stores** (Dev Dashboard → app → install / test on store)
 4. Env on server + verify:
 
 ```bash
@@ -33,7 +33,9 @@ cd /opt/personal-stack/agent
 python3 -m bounty.shopify_token --shop 1
 ```
 
-Should print an access token (not an error). Orchestrator caches it in `secrets/.shopify_token_cache.json`.
+Should print an access token (not an error). Repeat for `--shop 2`. Orchestrator caches tokens in `secrets/.shopify_token_cache.json`.
+
+**Scope sync:** playbook refreshed in BB-04 (2026-07-05) — own stores only, Jan 2025 bounty calculator, Dev Dashboard client_credentials. Re-read `agent/tasks/bounty_shopify_playbook.md` before hunt.
 
 Manual exchange:
 
