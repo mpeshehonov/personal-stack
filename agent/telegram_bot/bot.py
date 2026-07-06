@@ -808,7 +808,7 @@ async def _approve_bounty(update, context) -> None:
                     f"**Экспорт:** `{submit_result.export_path}`",
                     f"**Дальше:** {submit_result.message}",
                     f"**Программа:** {submit_result.report_url or finding.program_url}",
-                    "_Статус «approved» — отправь вручную на платформе, затем отметь payout в finance_log._",
+                    "_Статус «approved» — отправь вручную на платформе, затем: `python3 -m finance.bounty_payout --net-usd <net> --platform <platform> --report-id <id>`._",
                 ]
             )
         else:

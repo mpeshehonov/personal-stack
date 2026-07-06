@@ -40,4 +40,4 @@ Shopify dev stores: `agent/skills/bounty-shopify/SKILL.md`; credentials from `se
 
 ## Payout → wallet
 
-When bounty pays out, log in `finance_log` (BB-05 / manual note in daily until CLI exists). Target: same wallet as `YOUR_WALLET_ADDRESS` in finance env.
+When bounty pays out, log via `python3 -m finance.bounty_payout --net-usd <net> --platform <platform> --report-id <id>`. Target: same wallet as `YOUR_WALLET_ADDRESS` in finance env.

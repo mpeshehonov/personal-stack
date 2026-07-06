@@ -26,7 +26,7 @@
 1. **Не предлагать** Gumroad/Lemon как блокер A4 — предлагать **crypto checkout** или Telegram/manual USDT.
 2. **Не предлагать** `FINANCE_LIVE=true` и деплой капитала в grid/Azuro, пока user явно не пополнил кошелёк и не дал approve.
 3. **Paper scan** (Azuro/CEX) — опционально в логе, **не тратить daily cycle** на finance backlog, если есть открытые bounty tasks.
-4. Логировать bounty payouts в `finance_log` (action `bounty_payout` — когда появится) или вручную через расширение `a4_sales`-паттерна.
+4. Логировать bounty payouts: `python3 -m finance.bounty_payout --net-usd <net> --platform immunefi --report-id <id>`.
 5. Искать **новые площадки** с crypto payout и web/JS scope — каталог: `agent/memory/bounty_platforms.md`, backlog: `agent/tasks/bounty_backlog.md`.
 
 ## Related
