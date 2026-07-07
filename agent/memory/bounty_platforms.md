@@ -82,7 +82,18 @@ When adding a program:
 
 ## Dead programs
 
-_(none yet)_
+| Vector / program | Reason | Since |
+|------------------|--------|-------|
+| **GHSA/CVE advisory mining** | 30 rejected drafts — template spam, no submit path; purge queue | 2026-07-07 |
+
+## Deprioritized (low-response / poor RU payout)
+
+| Program | Platform | Reason |
+|---------|----------|--------|
+| **IKEA** | Intigriti | Bank (SEPA/EUR) — poor RU payout; background only |
+| **Mozilla** | Bugcrowd | Bank/PayPal typical — deprioritize until crypto wallet funded via A7 |
+
+**Weekly rotation:** `python3 -m bounty.program_suggestion` (BB-06). Scanner index in `kv.bounty_program_index`; `BOUNTY_SHOPIFY_FOCUS=true` keeps Shopify as primary hunt target.
 
 ## Decision log
 

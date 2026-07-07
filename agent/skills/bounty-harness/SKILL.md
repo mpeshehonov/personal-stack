@@ -34,6 +34,7 @@ Shopify dev stores: `agent/skills/bounty-shopify/SKILL.md`; credentials from `se
 ## Daily agent role
 
 - ≤1 item from `bounty_backlog.md` (add programs, payout docs, submit stubs)
+- Weekly (BB-06): `python3 -m bounty.program_suggestion` → paste summary in `## Баг-баунти`
 - Summarize orchestrator outcome in `## Баг-баунти` (1–3 sentences)
 - Remind user if pending drafts exist
 - Do **not** duplicate research or purge queue
