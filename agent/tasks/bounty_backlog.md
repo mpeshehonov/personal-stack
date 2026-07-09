@@ -14,7 +14,7 @@ Aligned with `agent/memory/bounty_platforms.md` and `agent/skills/bounty-harness
 
 - [x] **BB-05** `finance/bounty_payout.py` — log accepted bounty rewards to `finance_log` (mirror `a4_sales.py`)
 - [x] **BB-06** Weekly program suggestion in daily log: rotate away from low-response programs
-- [ ] **BB-07** Leads pipeline: tag `[Lead]` drafts with `payout_rail: crypto|bank|unknown`
+- [x] **BB-07** Leads pipeline: tag `[Lead]` drafts with `payout_rail: crypto|bank|unknown`
 
 ## Rules
 

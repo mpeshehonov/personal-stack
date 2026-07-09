@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from bounty.config import BOUNTY_SHOPIFY_FOCUS, KV_PROGRAM_INDEX
+from bounty.payout_rail import PLATFORM_RAILS
 from bounty.programs import WEB_JS_PROGRAMS, BountyProgram, program_by_index
 from orchestrator.state import (
     get_conn,
@@ -15,14 +16,6 @@ from orchestrator.state import (
     kv_get,
     set_last_program_suggestion,
 )
-
-PLATFORM_RAILS: dict[str, str] = {
-    "immunefi": "crypto",
-    "hackenproof": "crypto",
-    "hackerone": "unknown",
-    "bugcrowd": "bank",
-    "intigriti": "bank",
-}
 
 DEPRIORITIZED_HANDLES = frozenset({"ikea", "mozilla"})
 CRYPTO_PRIORITY_HANDLES = frozenset({"0x", "edgex", "backpack"})

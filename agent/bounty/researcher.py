@@ -16,6 +16,7 @@ from bounty.config import (
 )
 from bounty.models import BountyFinding
 from bounty.programs import BountyProgram
+from bounty.payout_rail import tag_lead_meta
 from bounty.report_parser import format_draft_body, parse_agent_finding, parse_research_lead
 from bounty.reviewer import review_finding
 from bounty.validator import validate_finding
@@ -161,14 +162,18 @@ def _save_lead_draft(program: BountyProgram, raw: str, phase_log: list[str]) -> 
             lead.get("notes", raw[-2000:]),
         ]
     )
-    meta = {
-        "kind": "lead",
-        "program_name": program.name,
-        "platform": program.platform,
-        "team_handle": program.team_handle,
-        "program_url": program.url,
-        **{k: v for k, v in lead.items() if k not in ("kind",)},
-    }
+    meta = tag_lead_meta(
+        {
+            "kind": "lead",
+            "program_name": program.name,
+            "platform": program.platform,
+            "team_handle": program.team_handle,
+            "program_url": program.url,
+            **{k: v for k, v in lead.items() if k not in ("kind",)},
+        },
+        program.platform,
+        team_handle=program.team_handle,
+    )
     return add_bounty_draft(title, body, meta)
 
 

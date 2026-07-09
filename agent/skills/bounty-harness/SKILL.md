@@ -29,7 +29,7 @@ Shopify dev stores: `agent/skills/bounty-shopify/SKILL.md`; credentials from `se
 ## User gates
 
 - Submit-ready draft → `/approve bounty <id>` or `/reject bounty <id>`
-- Leads (`[Lead]`) — research notes, not auto-submit
+- Leads (`[Lead]`) — research notes, not auto-submit; meta includes `payout_rail` (`crypto|bank|unknown`) via `bounty/payout_rail.py`
 
 ## Daily agent role
 
