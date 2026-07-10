@@ -27,7 +27,7 @@ services:
       - VISIT_COUNTER_PATH=/app/data/visits.json
       - CHECKOUT_DATA_DIR=/app/data/checkout
       - CHECKOUT_ORDERS_PATH=/app/data/checkout/orders.json
-      - A4_BUNDLE_PATH=/app/delivery/personal-stack-agent-starter-v0.3.zip
+      - A4_BUNDLE_PATH=/app/delivery/personal-stack-agent-starter-v0.3.tar.gz
     volumes:
       - site_data:/app/data
       - ./data/checkout:/app/data/checkout

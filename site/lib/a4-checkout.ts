@@ -31,7 +31,7 @@ const NOWPAYMENTS_IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET || "";
 const CRYPTOMUS_API_KEY = process.env.CRYPTOMUS_API_KEY || "";
 const BUNDLE_PATH =
   process.env.A4_BUNDLE_PATH ||
-  "/app/delivery/personal-stack-agent-starter-v0.3.zip";
+  "/app/delivery/personal-stack-agent-starter-v0.3.tar.gz";
 const INTRO_PRICE_USD = Number(process.env.A4_INTRO_PRICE_USD || "19");
 const REGULAR_PRICE_USD = Number(process.env.A4_REGULAR_PRICE_USD || "29");
 const DELIVERY_TTL_DAYS = Number(process.env.CHECKOUT_DELIVERY_TTL_DAYS || "7");

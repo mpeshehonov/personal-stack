@@ -32,7 +32,7 @@ Fill provider credentials (at least one):
 ./scripts/verify-agent-starter-bundle.sh
 ```
 
-Ensure `dist/personal-stack-agent-starter-v0.3.zip` exists before deploy.
+Ensure `dist/personal-stack-agent-starter-v0.3.tar.gz` exists before deploy (zip fallback if `zip` CLI available).
 
 ## 3. Deploy
 
@@ -44,6 +44,7 @@ Ensure `dist/personal-stack-agent-starter-v0.3.zip` exists before deploy.
 
 ```bash
 ./scripts/redeploy-site.sh
+./scripts/verify-checkout-readiness.sh
 curl -s https://mpeshekhonov.ru/api/checkout/ipn | jq .
 # → {"configured": true, ...} when secrets are set
 ```
@@ -78,6 +79,7 @@ When live: add checkout link to homepage or blog post — **not** autonomous dai
 
 - [ ] `secrets/.env.checkout` filled
 - [ ] Bundle in `dist/`
+- [ ] `./scripts/verify-checkout-readiness.sh` passes
 - [ ] IPN test from provider sandbox → `data/checkout/orders.json`
 - [ ] Delivery download works with token
 - [ ] `checkout_sync` logs to `finance_log`
