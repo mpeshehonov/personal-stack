@@ -49,13 +49,26 @@ curl -s https://mpeshekhonov.ru/api/checkout/ipn | jq .
 # → {"configured": true, ...} when secrets are set
 ```
 
-## 4. Create payment (manual until invoice API)
+## 4. Sandbox E2E test (before live sales)
+
+After secrets + redeploy (`configured: true`):
+
+```bash
+./scripts/simulate-checkout-ipn.sh              # default $19 intro price
+./scripts/simulate-checkout-ipn.sh my-test-id 29
+cd agent && PYTHONPATH=. python3 -m finance.checkout_sync --dry-run
+cd agent && PYTHONPATH=. python3 -m finance.checkout_sync   # logs to finance_log
+```
+
+Verify: `data/checkout/orders.json` has `fulfilled` order; delivery GET returns bundle.
+
+## 5. Create payment (manual until invoice API)
 
 1. NOWPayments dashboard → create payment link for **$19 USDT** (intro) or **$29**
 2. Share link on site / Telegram
 3. On `finished` IPN, response JSON includes `delivery_url`
 
-## 5. Log sale to M1
+## 6. Log sale to M1
 
 After IPN fulfillment:
 
@@ -71,7 +84,7 @@ Manual fallback:
 python3 -m finance.a4_sales --net-usd 17.1 --order-id NP-<payment_id>
 ```
 
-## 6. Homepage CTA (manual)
+## 7. Homepage CTA (manual)
 
 When live: add checkout link to homepage or blog post — **not** autonomous daily change.
 

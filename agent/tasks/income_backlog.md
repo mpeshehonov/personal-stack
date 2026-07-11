@@ -20,9 +20,9 @@ Tasks aligned with `agent/memory/income_plan.md`. Pick **at most 1 income task p
 ## Phase 2 — Bounty + crypto product (current)
 
 - [ ] **IB-10** Bounty: Shopify deep-dive with dev-store Admin API tokens (see `agent/skills/bounty-shopify/`)
-- [ ] **IB-16** A4: crypto checkout webhook on site (NOWPayments/Cryptomus) → USDT + auto delivery link; **not Gumroad** — scaffold shipped 2026-07-01; needs `secrets/.env.checkout` + deploy
+- [ ] **IB-16** A4: crypto checkout webhook on site (NOWPayments/Cryptomus) → USDT + auto delivery link; **not Gumroad** — routes deployed 2026-07-10; needs `secrets/.env.checkout` + sandbox IPN test + `checkout_sync`
 - [x] **IB-17** A4: rename listing docs — platform-agnostic (`agent-starter.md` delivery via crypto)
-- [ ] **BB-01..BB-04** — see `agent/tasks/bounty_backlog.md` (platform expansion; orchestrator/daily split)
+- [x] **BB-01..BB-04** — see `agent/tasks/bounty_backlog.md` (platform expansion; closed 2026-07-09)
 
 ## Phase 2 — Scale (after first wallet inflow)
 
