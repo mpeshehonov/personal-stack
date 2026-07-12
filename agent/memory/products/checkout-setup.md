@@ -54,8 +54,15 @@ curl -s https://mpeshekhonov.ru/api/checkout/ipn | jq .
 After secrets + redeploy (`configured: true`):
 
 ```bash
-./scripts/simulate-checkout-ipn.sh              # default $19 intro price
+# One-command E2E (auto-detects NOWPayments or Cryptomus from secrets)
+./scripts/run-checkout-e2e.sh
+
+# Or per-provider simulate:
+./scripts/simulate-checkout-ipn.sh              # NOWPayments, default $19 intro price
 ./scripts/simulate-checkout-ipn.sh my-test-id 29
+./scripts/simulate-checkout-cryptomus.sh        # Cryptomus, random uuid
+./scripts/simulate-checkout-cryptomus.sh my-uuid 29
+
 cd agent && PYTHONPATH=. python3 -m finance.checkout_sync --dry-run
 cd agent && PYTHONPATH=. python3 -m finance.checkout_sync   # logs to finance_log
 ```
