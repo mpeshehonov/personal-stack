@@ -13,9 +13,9 @@ Buyer pays USDT → IPN webhook (/api/checkout/ipn) → HMAC delivery token
 ## 1. Secrets
 
 ```bash
-cp secrets/.env.checkout.template secrets/.env.checkout
-chmod 600 secrets/.env.checkout
-openssl rand -hex 32   # → CHECKOUT_DELIVERY_SECRET
+./scripts/init-checkout-env.sh   # copies template, generates CHECKOUT_DELIVERY_SECRET
+# Or manually:
+# cp secrets/.env.checkout.template secrets/.env.checkout && chmod 600 secrets/.env.checkout
 ```
 
 Fill provider credentials (at least one):
