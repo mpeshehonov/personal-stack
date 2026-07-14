@@ -45,6 +45,7 @@ echo "1/4 verify-checkout-readiness"
 echo ""
 
 echo "2/4 simulate IPN ($PROVIDER)"
+"$STACK_DIR/scripts/checkout-fix-perms.sh"
 case "$PROVIDER" in
   nowpayments)
     "$STACK_DIR/scripts/simulate-checkout-ipn.sh" "$PAYMENT_ID" "$PRICE_USD"
@@ -60,6 +61,7 @@ esac
 echo ""
 
 echo "3/4 checkout_sync --dry-run"
+"$STACK_DIR/scripts/checkout-fix-perms.sh"
 SYNC_DRY="$(cd "$STACK_DIR/agent" && PYTHONPATH=. python3 -m finance.checkout_sync --dry-run)"
 echo "$SYNC_DRY"
 echo "$SYNC_DRY" | python3 -c "import json,sys; d=json.load(sys.stdin); exit(0 if d.get('synced') else 1)" \
@@ -67,6 +69,7 @@ echo "$SYNC_DRY" | python3 -c "import json,sys; d=json.load(sys.stdin); exit(0 i
 echo ""
 
 echo "4/4 checkout_sync (finance_log)"
+"$STACK_DIR/scripts/checkout-fix-perms.sh"
 SYNC_LIVE="$(cd "$STACK_DIR/agent" && PYTHONPATH=. python3 -m finance.checkout_sync)"
 echo "$SYNC_LIVE"
 echo ""

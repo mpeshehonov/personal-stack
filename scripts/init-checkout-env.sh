@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
 # IB-16: bootstrap secrets/.env.checkout from template (safe, idempotent).
 # Generates CHECKOUT_DELIVERY_SECRET if missing; never overwrites provider API keys.
+# Usage:
+#   ./scripts/init-checkout-env.sh              # delivery secret only
+#   ./scripts/init-checkout-env.sh --sandbox-ipn  # + sandbox NOWPAYMENTS_IPN_SECRET for E2E
 set -euo pipefail
+
+SANDBOX_IPN=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --sandbox-ipn) SANDBOX_IPN=1; shift ;;
+    -h|--help)
+      echo "Usage: $0 [--sandbox-ipn]"
+      echo "  --sandbox-ipn  generate sandbox NOWPAYMENTS_IPN_SECRET when no provider set (E2E only)"
+      exit 0
+      ;;
+    *) echo "Unknown option: $1 (try --help)" >&2; exit 1 ;;
+  esac
+done
 
 STACK_DIR="${STACK_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
 TEMPLATE="$STACK_DIR/secrets/.env.checkout.template"
@@ -42,6 +58,17 @@ has_cryptomus=0
 grep -qE '^NOWPAYMENTS_IPN_SECRET=.+$' "$ENV_FILE" && has_nowpayments=1 || true
 grep -qE '^CRYPTOMUS_API_KEY=.+$' "$ENV_FILE" && has_cryptomus=1 || true
 
+if [[ "$SANDBOX_IPN" -eq 1 && "$has_nowpayments" -eq 0 && "$has_cryptomus" -eq 0 ]]; then
+  sandbox_secret="sandbox-$(openssl rand -hex 24)"
+  if grep -q '^NOWPAYMENTS_IPN_SECRET=' "$ENV_FILE"; then
+    sed -i "s/^NOWPAYMENTS_IPN_SECRET=.*/NOWPAYMENTS_IPN_SECRET=$sandbox_secret/" "$ENV_FILE"
+  else
+    echo "NOWPAYMENTS_IPN_SECRET=$sandbox_secret" >>"$ENV_FILE"
+  fi
+  has_nowpayments=1
+  echo "OK: generated sandbox NOWPAYMENTS_IPN_SECRET (E2E only — replace before live sales)"
+fi
+
 echo ""
 echo "== IB-16 checkout bootstrap =="
 echo "File: $ENV_FILE"
@@ -56,8 +83,9 @@ fi
 
 echo "Then:"
 echo "  1. ./scripts/redeploy-site.sh"
-echo "  2. ./scripts/verify-checkout-readiness.sh   # expect configured:true"
-echo "  3. ./scripts/run-checkout-e2e.sh            # sandbox IPN → delivery → checkout_sync"
+echo "  2. ./scripts/checkout-status.sh              # gap report (no secrets printed)"
+echo "  3. ./scripts/verify-checkout-readiness.sh   # expect configured:true"
+echo "  4. ./scripts/run-checkout-e2e.sh            # sandbox IPN → delivery → checkout_sync"
 echo ""
 echo "Docs: agent/memory/products/checkout-setup.md"
 

@@ -78,3 +78,5 @@ else
   echo "WARN: no delivery_url in response — check configured secrets and redeploy" >&2
   exit 1
 fi
+
+"$STACK_DIR/scripts/checkout-fix-perms.sh"

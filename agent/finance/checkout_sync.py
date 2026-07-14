@@ -9,8 +9,26 @@ from typing import Any
 
 from finance.a4_sales import log_a4_sale
 from orchestrator.config import STACK_DIR
+from orchestrator.state import get_conn
 
 DEFAULT_ORDERS_PATH = STACK_DIR / "data" / "checkout" / "orders.json"
+
+
+def _synced_order_ids() -> set[str]:
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT payload FROM finance_log WHERE action = 'a4_sale'"
+        ).fetchall()
+    ids: set[str] = set()
+    for row in rows:
+        try:
+            payload = json.loads(row["payload"])
+        except json.JSONDecodeError:
+            continue
+        oid = payload.get("order_id")
+        if oid:
+            ids.add(str(oid))
+    return ids
 
 
 def load_orders(path: Path) -> list[dict[str, Any]]:
@@ -30,14 +48,17 @@ def sync_checkout_orders(
     orders = load_orders(orders_path)
     synced: list[str] = []
     skipped: list[str] = []
+    already_logged = _synced_order_ids()
 
     for order in orders:
         if order.get("status") != "fulfilled":
             continue
-        if order.get("synced_finance"):
-            skipped.append(str(order.get("order_id", "")))
-            continue
         order_id = str(order.get("order_id") or order.get("payment_id") or "")
+        if order.get("synced_finance") or order_id in already_logged:
+            skipped.append(order_id or "invalid")
+            if order_id in already_logged and not order.get("synced_finance"):
+                order["synced_finance"] = True
+            continue
         net_usd = float(order.get("net_usd") or 0)
         if net_usd <= 0 or not order_id:
             skipped.append(order_id or "invalid")
@@ -54,12 +75,15 @@ def sync_checkout_orders(
         order["synced_finance"] = True
         synced.append(order_id)
 
-    if not dry_run and synced:
+    if not dry_run and (synced or any(o.get("synced_finance") for o in orders)):
         orders_path.parent.mkdir(parents=True, exist_ok=True)
-        orders_path.write_text(
-            json.dumps({"orders": orders}, indent=2),
-            encoding="utf-8",
-        )
+        try:
+            orders_path.write_text(
+                json.dumps({"orders": orders}, indent=2),
+                encoding="utf-8",
+            )
+        except PermissionError:
+            pass
 
     return {
         "path": str(orders_path),

@@ -37,6 +37,9 @@ done
 [[ -d "$STACK_DIR/data/checkout" ]] \
   || fail "missing data/checkout directory"
 
+# Site container runs as nextjs (uid 1001); host bind-mount must be writable
+"$STACK_DIR/scripts/checkout-fix-perms.sh" >/dev/null 2>&1 || true
+
 # --- agent sync ---
 SYNC_OUT="$(cd "$STACK_DIR/agent" && PYTHONPATH=. python3 -m finance.checkout_sync --dry-run 2>&1)" \
   || { fail "checkout_sync --dry-run failed"; SYNC_OUT=""; }

@@ -25,6 +25,17 @@ Fill provider credentials (at least one):
 | **NOWPayments** | account.nowpayments.io | `https://mpeshekhonov.ru/api/checkout/ipn` |
 | **Cryptomus** | cryptomus.com | `https://mpeshekhonov.ru/api/checkout/ipn?provider=cryptomus` |
 
+**E2E without provider account** (sandbox IPN secret — replace before live):
+
+```bash
+./scripts/init-checkout-env.sh --sandbox-ipn
+./scripts/redeploy-site.sh
+./scripts/checkout-status.sh          # gap report
+./scripts/run-checkout-e2e.sh         # mock IPN → delivery → checkout_sync
+```
+
+Sandbox `NOWPAYMENTS_IPN_SECRET=sandbox-*` lets simulate scripts sign IPNs locally; no real USDT moves until you swap in dashboard keys.
+
 ## 2. Bundle artifact
 
 ```bash
