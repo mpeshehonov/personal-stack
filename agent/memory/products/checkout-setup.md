@@ -108,9 +108,11 @@ When live: add checkout link to homepage or blog post — **not** autonomous dai
 
 ## Checklist
 
-- [ ] `secrets/.env.checkout` filled
-- [ ] Bundle in `dist/`
-- [ ] `./scripts/verify-checkout-readiness.sh` passes
-- [ ] IPN test from provider sandbox → `data/checkout/orders.json`
-- [ ] Delivery download works with token
-- [ ] `checkout_sync` logs to `finance_log`
+- [x] `secrets/.env.checkout` filled (sandbox IPN for E2E; replace keys before live)
+- [x] Bundle in `dist/`
+- [x] `./scripts/verify-checkout-readiness.sh` passes
+- [x] IPN test (sandbox simulate) → `data/checkout/orders.json`
+- [x] Delivery download works with token
+- [x] `checkout_sync` logs to `finance_log`
+- [ ] Live NOWPayments/Cryptomus dashboard keys + payment link (user)
+- [ ] Homepage CTA with checkout link (manual with user)
