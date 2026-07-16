@@ -16,6 +16,10 @@ Aligned with `agent/memory/bounty_platforms.md` and `agent/skills/bounty-harness
 - [x] **BB-06** Weekly program suggestion in daily log: rotate away from low-response programs
 - [x] **BB-07** Leads pipeline: tag `[Lead]` drafts with `payout_rail: crypto|bank|unknown`
 
+## Phase 2 — Crypto rotation (ongoing)
+
+- [x] **BB-08** Add ≥1 Immunefi web/API program with USDC/USDT payout to `programs.py` + note in `bounty_platforms.md` (2026-07-16: GMX)
+
 ## Rules
 
 1. **No live exploit** against production without scope — dev stores / staging only where allowed

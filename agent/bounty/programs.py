@@ -124,6 +124,14 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         focus="Exchange web client, REST/WebSocket APIs, wallet flows",
         notes="Payout: USDC (Base) via HackenProof balance → crypto wallet. Web & API scope; triaged by HackenProof.",
     ),
+    BountyProgram(
+        name="GMX",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/gmx/",
+        team_handle="gmx",
+        focus="Perp DEX web UI (app.gmx.io), marketing site, trading/API flows",
+        notes="Payout: ETH or USDC via Immunefi (max $5M). Websites & Applications: gmx.io, app.gmx.io. No KYC flag on program; verify scope before testing. Added 2026-07-16 (BB-08).",
+    ),
 )
 
 

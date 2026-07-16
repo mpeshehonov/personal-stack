@@ -18,7 +18,7 @@ from orchestrator.state import (
 )
 
 DEPRIORITIZED_HANDLES = frozenset({"ikea", "mozilla"})
-CRYPTO_PRIORITY_HANDLES = frozenset({"0x", "edgex", "backpack"})
+CRYPTO_PRIORITY_HANDLES = frozenset({"0x", "edgex", "backpack", "gmx"})
 
 
 @dataclass(frozen=True)
