@@ -19,6 +19,7 @@ Aligned with `agent/memory/bounty_platforms.md` and `agent/skills/bounty-harness
 ## Phase 2 — Crypto rotation (ongoing)
 
 - [x] **BB-08** Add ≥1 Immunefi web/API program with USDC/USDT payout to `programs.py` + note in `bounty_platforms.md` (2026-07-16: GMX)
+- [x] **BB-09** Add ≥1 Immunefi dedicated web program with USDC payout to `programs.py` + note in `bounty_platforms.md` (2026-07-17: 1inch Web)
 
 ## Rules
 

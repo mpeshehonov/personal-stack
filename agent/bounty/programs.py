@@ -132,6 +132,14 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         focus="Perp DEX web UI (app.gmx.io), marketing site, trading/API flows",
         notes="Payout: ETH or USDC via Immunefi (max $5M). Websites & Applications: gmx.io, app.gmx.io. No KYC flag on program; verify scope before testing. Added 2026-07-16 (BB-08).",
     ),
+    BountyProgram(
+        name="1inch Web",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/1inch-web/",
+        team_handle="1inch-web",
+        focus="1inch marketing/web surface (1inch.com) — Websites & Applications only",
+        notes="Payout: USDC on Ethereum via Immunefi (max $50k web). Dedicated web program (not smart-contract lanes). KYC required for payout. Only listed assets in scope — verify table before testing. Added 2026-07-17 (BB-09).",
+    ),
 )
 
 

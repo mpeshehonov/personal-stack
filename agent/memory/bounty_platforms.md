@@ -76,7 +76,7 @@ When adding a program:
 
 ## Weekly agent task (orchestrator + daily)
 
-- [x] Add ≥1 new program from P0/P1 with crypto or confirmed payout path (2026-07-02: 0x, edgeX, Backpack; **2026-07-16 BB-08: GMX**)
+- [x] Add ≥1 new program from P0/P1 with crypto or confirmed payout path (2026-07-02: 0x, edgeX, Backpack; 2026-07-16 BB-08: GMX; **2026-07-17 BB-09: 1inch Web**)
 - [ ] Mark dead programs (out of scope, duplicate, zero response) in `## Dead programs` below
 - [ ] Summarize in daily `## Баг-баунти`: programs tried, drafts pending, payout blockers
 
@@ -99,6 +99,7 @@ When adding a program:
 
 | Date | Note |
 |------|------|
+| 2026-07-17 | BB-09: +1inch Web (Immunefi) — dedicated web lane `1inch.com`; payout USDC on Ethereum (max $50k); KYC for payout |
 | 2026-07-16 | BB-08: +GMX (Immunefi) — web UI `app.gmx.io` / `gmx.io`; payout ETH or USDC; complements edgeX/Backpack trading lane |
 | 2026-07-03 | BB-02: payout rails table + wallet alignment + account checklist (Immunefi/HackenProof public docs) |
 | 2026-07-02 | BB-01: +3 programs in `programs.py` — 0x/Matcha, edgeX (Immunefi, USDC); Backpack (HackenProof, USDC Base) |
