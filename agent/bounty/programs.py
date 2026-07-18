@@ -140,6 +140,14 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         focus="1inch marketing/web surface (1inch.com) — Websites & Applications only",
         notes="Payout: USDC on Ethereum via Immunefi (max $50k web). Dedicated web program (not smart-contract lanes). KYC required for payout. Only listed assets in scope — verify table before testing. Added 2026-07-17 (BB-09).",
     ),
+    BountyProgram(
+        name="ENS",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/ens/",
+        team_handle="ens",
+        focus="ENS Web & App (NextJS): app.ens.domains, ens.domains, metadata.ens.domains + public repos",
+        notes="Payout: USDC on Ethereum via Immunefi (web Critical flat $25k; High $5–20k). Track B Websites & Applications; NextJS stack fit. KYC generally not required. ens.dev OOS; no mainnet SC testing without local fork. Verify scope table before testing. Added 2026-07-18 (BB-10).",
+    ),
 )
 
 
