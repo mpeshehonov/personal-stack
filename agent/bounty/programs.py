@@ -148,6 +148,14 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         focus="ENS Web & App (NextJS): app.ens.domains, ens.domains, metadata.ens.domains + public repos",
         notes="Payout: USDC on Ethereum via Immunefi (web Critical flat $25k; High $5–20k). Track B Websites & Applications; NextJS stack fit. KYC generally not required. ens.dev OOS; no mainnet SC testing without local fork. Verify scope table before testing. Added 2026-07-18 (BB-10).",
     ),
+    BountyProgram(
+        name="Lido",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/lido/",
+        team_handle="lido",
+        focus="Lido Web & App: stake.lido.fi, lido.fi, operators.lido.fi, csm.lido.fi, dao.lido.fi + auxiliary services",
+        notes="Payout: USDC/USDS/DAI/USDT on Ethereum via Immunefi (web Critical $50–100k; High $5–50k). KYC not required. PoC required for all web severities. Domains not listed paid at discretion; no mainnet SC testing without local fork. Verify scope table before testing. Added 2026-07-19 (BB-11).",
+    ),
 )
 
 
