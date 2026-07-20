@@ -7,7 +7,8 @@ from pathlib import Path
 
 from orchestrator.config import MEMORY_DIR
 
-_REQUIRED_SECTIONS = ("План", "Итог", "Сайт", "Финансы", "Баг-баунти", "Уроки")
+_REQUIRED_SECTIONS = ("План", "Итог", "Сайт", "Поиск работы", "Уроки")
+_OPTIONAL_SECTIONS = ("Источники",)
 _SECTION_MARKER = re.compile(r"^## (.+)$", re.MULTILINE)
 _MIN_CONTENT_CHARS = 40
 
@@ -38,7 +39,11 @@ def validate_daily_log(path: Path | None = None) -> tuple[bool, list[str]]:
         if len(block.strip()) < _MIN_CONTENT_CHARS:
             warnings.append(f"section ## {section} too short (< {_MIN_CONTENT_CHARS} chars)")
 
-    ok = len(warnings) == 0
+    for section in _OPTIONAL_SECTIONS:
+        if section not in found:
+            warnings.append(f"optional missing: ## {section}")
+
+    ok = not any(w.startswith("missing section:") for w in warnings)
     return ok, warnings
 
 

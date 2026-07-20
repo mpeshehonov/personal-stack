@@ -8,11 +8,18 @@ from orchestrator.config import load_env_file
 
 load_env_file(".env.jobhunt")
 
-JOBHUNT_ENABLED = os.environ.get("JOBHUNT_ENABLED", "false").lower() in ("true", "1", "yes")
-JOBHUNT_HH_TEXT = os.environ.get("JOBHUNT_HH_TEXT", "frontend react typescript")
-JOBHUNT_HH_QUERIES = os.environ.get("JOBHUNT_HH_QUERIES", "").strip()
-JOBHUNT_MIN_MATCH = int(os.environ.get("JOBHUNT_MIN_MATCH", "55"))
-JOBHUNT_MIN_SALARY_RUB = int(os.environ.get("JOBHUNT_MIN_SALARY_RUB", "250000"))
+JOBHUNT_ENABLED = os.environ.get("JOBHUNT_ENABLED", "true").lower() in ("true", "1", "yes")
+JOBHUNT_HH_TEXT = os.environ.get(
+    "JOBHUNT_HH_TEXT",
+    "senior frontend react typescript",
+)
+JOBHUNT_HH_QUERIES = os.environ.get(
+    "JOBHUNT_HH_QUERIES",
+    "senior frontend react typescript,senior product engineer react,next.js frontend remote,lead frontend react",
+).strip()
+JOBHUNT_MIN_MATCH = int(os.environ.get("JOBHUNT_MIN_MATCH", "70"))
+JOBHUNT_MIN_SALARY_RUB = int(os.environ.get("JOBHUNT_MIN_SALARY_RUB", "200000"))
+JOBHUNT_MIN_SALARY_USD = int(os.environ.get("JOBHUNT_MIN_SALARY_USD", "3000"))
 JOBHUNT_USER_AGENT = os.environ.get(
     "JOBHUNT_USER_AGENT",
     "personal-stack-agent/1.0 (kassady71@gmail.com)",

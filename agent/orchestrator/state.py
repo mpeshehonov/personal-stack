@@ -86,6 +86,26 @@ def init_db() -> None:
                 notes TEXT NOT NULL DEFAULT '',
                 FOREIGN KEY (lead_id) REFERENCES job_leads(id)
             );
+            CREATE TABLE IF NOT EXISTS job_sources (
+                source_key TEXT PRIMARY KEY,
+                kind TEXT NOT NULL DEFAULT 'board',
+                weight REAL NOT NULL DEFAULT 1.0,
+                enabled INTEGER NOT NULL DEFAULT 1,
+                status TEXT NOT NULL DEFAULT 'active',
+                stats_json TEXT NOT NULL DEFAULT '{}',
+                last_success_at TEXT,
+                notes TEXT NOT NULL DEFAULT '',
+                updated_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS job_feedback (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                lead_id INTEGER NOT NULL,
+                source_key TEXT NOT NULL DEFAULT '',
+                action TEXT NOT NULL,
+                note TEXT NOT NULL DEFAULT '',
+                ts TEXT NOT NULL,
+                FOREIGN KEY (lead_id) REFERENCES job_leads(id)
+            );
             """
         )
         _migrate_schema(conn)
@@ -97,6 +117,35 @@ def _migrate_schema(conn: sqlite3.Connection) -> None:
         conn.execute(
             "ALTER TABLE bounty_drafts ADD COLUMN meta_json TEXT NOT NULL DEFAULT '{}'"
         )
+    # Ensure career-hunter tables exist on older DBs that already ran init
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS job_sources (
+            source_key TEXT PRIMARY KEY,
+            kind TEXT NOT NULL DEFAULT 'board',
+            weight REAL NOT NULL DEFAULT 1.0,
+            enabled INTEGER NOT NULL DEFAULT 1,
+            status TEXT NOT NULL DEFAULT 'active',
+            stats_json TEXT NOT NULL DEFAULT '{}',
+            last_success_at TEXT,
+            notes TEXT NOT NULL DEFAULT '',
+            updated_at TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS job_feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            lead_id INTEGER NOT NULL,
+            source_key TEXT NOT NULL DEFAULT '',
+            action TEXT NOT NULL,
+            note TEXT NOT NULL DEFAULT '',
+            ts TEXT NOT NULL,
+            FOREIGN KEY (lead_id) REFERENCES job_leads(id)
+        )
+        """
+    )
 
 
 @contextmanager
@@ -456,6 +505,177 @@ def update_job_lead_status(lead_id: int, status: str) -> None:
             "UPDATE job_leads SET status = ? WHERE id = ?",
             (status, lead_id),
         )
+
+
+def get_job_source(source_key: str) -> sqlite3.Row | None:
+    with get_conn() as conn:
+        return conn.execute(
+            "SELECT * FROM job_sources WHERE source_key = ?",
+            (source_key,),
+        ).fetchone()
+
+
+def list_job_sources(kind: str | None = None) -> list[sqlite3.Row]:
+    with get_conn() as conn:
+        if kind:
+            return conn.execute(
+                """
+                SELECT * FROM job_sources
+                WHERE kind = ?
+                ORDER BY weight DESC, source_key ASC
+                """,
+                (kind,),
+            ).fetchall()
+        return conn.execute(
+            "SELECT * FROM job_sources ORDER BY weight DESC, source_key ASC"
+        ).fetchall()
+
+
+def set_job_source(
+    source_key: str,
+    *,
+    kind: str = "board",
+    weight: float = 1.0,
+    enabled: bool = True,
+    status: str = "active",
+    notes: str = "",
+    stats_json: str | None = None,
+) -> None:
+    with get_conn() as conn:
+        existing = conn.execute(
+            "SELECT stats_json FROM job_sources WHERE source_key = ?",
+            (source_key,),
+        ).fetchone()
+        stats = stats_json if stats_json is not None else (
+            existing["stats_json"] if existing else "{}"
+        )
+        conn.execute(
+            """
+            INSERT INTO job_sources(
+                source_key, kind, weight, enabled, status, stats_json,
+                last_success_at, notes, updated_at
+            ) VALUES(?, ?, ?, ?, ?, ?, NULL, ?, ?)
+            ON CONFLICT(source_key) DO UPDATE SET
+                kind=excluded.kind,
+                weight=excluded.weight,
+                enabled=excluded.enabled,
+                status=excluded.status,
+                stats_json=excluded.stats_json,
+                notes=excluded.notes,
+                updated_at=excluded.updated_at
+            """,
+            (
+                source_key,
+                kind,
+                weight,
+                1 if enabled else 0,
+                status,
+                stats,
+                notes,
+                _utcnow(),
+            ),
+        )
+
+
+def update_source_weight(
+    source_key: str,
+    weight: float,
+    *,
+    enabled: bool | None = None,
+) -> None:
+    with get_conn() as conn:
+        if enabled is None:
+            conn.execute(
+                """
+                UPDATE job_sources
+                SET weight = ?, updated_at = ?
+                WHERE source_key = ?
+                """,
+                (weight, _utcnow(), source_key),
+            )
+        else:
+            conn.execute(
+                """
+                UPDATE job_sources
+                SET weight = ?, enabled = ?, updated_at = ?
+                WHERE source_key = ?
+                """,
+                (weight, 1 if enabled else 0, _utcnow(), source_key),
+            )
+
+
+def record_source_stats(
+    source_key: str,
+    *,
+    fetched: int = 0,
+    success: bool = True,
+) -> None:
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT stats_json, kind FROM job_sources WHERE source_key = ?",
+            (source_key,),
+        ).fetchone()
+        if row is None:
+            kind = "telegram" if source_key.startswith("tg:") else "board"
+            stats: dict[str, Any] = {"fetches": 0, "items": 0}
+            conn.execute(
+                """
+                INSERT INTO job_sources(
+                    source_key, kind, weight, enabled, status, stats_json,
+                    last_success_at, notes, updated_at
+                ) VALUES(?, ?, 1.0, 1, 'active', ?, ?, '', ?)
+                """,
+                (
+                    source_key,
+                    kind,
+                    json.dumps(stats),
+                    _utcnow() if success else None,
+                    _utcnow(),
+                ),
+            )
+            row = conn.execute(
+                "SELECT stats_json FROM job_sources WHERE source_key = ?",
+                (source_key,),
+            ).fetchone()
+        try:
+            stats = json.loads(row["stats_json"] or "{}")
+        except json.JSONDecodeError:
+            stats = {}
+        stats["fetches"] = int(stats.get("fetches") or 0) + 1
+        stats["items"] = int(stats.get("items") or 0) + int(fetched)
+        conn.execute(
+            """
+            UPDATE job_sources
+            SET stats_json = ?, last_success_at = CASE WHEN ? THEN ? ELSE last_success_at END,
+                updated_at = ?
+            WHERE source_key = ?
+            """,
+            (
+                json.dumps(stats, ensure_ascii=False),
+                1 if success else 0,
+                _utcnow(),
+                _utcnow(),
+                source_key,
+            ),
+        )
+
+
+def add_job_feedback(
+    lead_id: int,
+    *,
+    action: str,
+    note: str = "",
+    source_key: str = "",
+) -> int:
+    with get_conn() as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO job_feedback(lead_id, source_key, action, note, ts)
+            VALUES(?, ?, ?, ?, ?)
+            """,
+            (lead_id, source_key, action, note, _utcnow()),
+        )
+        return int(cur.lastrowid)
 
 
 def add_job_application(

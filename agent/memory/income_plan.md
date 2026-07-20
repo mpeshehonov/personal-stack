@@ -1,4 +1,12 @@
-# Income Plan — Milestones & Autonomous Lanes
+# Income Plan — ARCHIVED / PAUSED (2026-07-20)
+
+> **Status:** paused. Autonomous earning (bounty, trading, A4 crypto product) did not deliver ROI.
+> North star is now **career hunter** — see `agent/memory/goals.md`, `docs/career-growth-system.md`.
+> Do not pick tasks from this plan in daily cycles. Code in `agent/finance/` and `agent/bounty/` remains offline (`FINANCE_DAILY_SCAN=false`, `BOUNTY_DAILY_SCAN=false`).
+
+---
+
+# (Historical) Income Plan — Milestones & Autonomous Lanes
 
 Context: previous assessment — stack is strong **ops infrastructure**, not a money printer yet. Polymarket blocked from NL VPS; annual **$15k by 2026-12-31** needs a phased plan with a **first autonomous milestone**.
 

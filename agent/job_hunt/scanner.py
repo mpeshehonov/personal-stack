@@ -1,4 +1,4 @@
-"""Fetch HH.ru vacancies, score matches, store new leads (read-only — no apply)."""
+"""Fetch vacancies, score matches, store new leads (read-only — no apply)."""
 
 from __future__ import annotations
 
@@ -11,16 +11,11 @@ import httpx
 
 from job_hunt.config import (
     JOBHUNT_ENABLED,
-    JOBHUNT_HABR_ENABLED,
     JOBHUNT_HH_AREA,
-    JOBHUNT_HH_ENABLED,
     JOBHUNT_HH_MAX_PAGES,
     JOBHUNT_HH_PER_PAGE,
     JOBHUNT_HH_TEXT,
-    JOBHUNT_HIREHI_ENABLED,
-    JOBHUNT_HIRIFY_ENABLED,
     JOBHUNT_MIN_MATCH,
-    JOBHUNT_TG_ENABLED,
     JOBHUNT_USER_AGENT,
     hh_search_queries,
 )
@@ -29,6 +24,14 @@ from job_hunt.habr import fetch_habr_vacancies
 from job_hunt.hirehi import fetch_all_hirehi_vacancies
 from job_hunt.hirify import fetch_all_hirify_vacancies
 from job_hunt.matcher import load_resume_skills, score_vacancy
+from job_hunt.sources import (
+    board_enabled,
+    enabled_tg_channels,
+    ensure_default_sources,
+    mark_fetch_success,
+    source_key_for_vacancy,
+    sources_report_snippet,
+)
 from job_hunt.telegram_channels import fetch_all_tg_vacancies
 from orchestrator.state import add_job_lead, job_lead_exists, job_lead_url_exists
 
@@ -106,12 +109,13 @@ def _empty_source_counts() -> dict[str, int]:
 
 
 def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
-    """Fetch from enabled sources. Dedup across sources by URL + title/company."""
+    """Fetch from enabled weighted sources. Dedup across sources by URL + title/company."""
+    ensure_default_sources()
     vacancies: list[dict[str, Any]] = []
     counts = _empty_source_counts()
     seen_hh: set[str] = set()
 
-    if JOBHUNT_HH_ENABLED:
+    if board_enabled("hh"):
         for query in hh_search_queries():
             for item in fetch_hh_vacancies(text=query):
                 vid = str(item.get("id", ""))
@@ -121,26 +125,37 @@ def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
                 item["_source"] = "hh"
                 vacancies.append(item)
         counts["hh"] = len(seen_hh)
+        mark_fetch_success("hh", len(seen_hh))
 
-    if JOBHUNT_HABR_ENABLED:
+    if board_enabled("habr"):
         habr = fetch_habr_vacancies()
         counts["habr"] = len(habr)
         vacancies.extend(habr)
+        mark_fetch_success("habr", len(habr))
 
-    if JOBHUNT_HIRIFY_ENABLED:
+    if board_enabled("hirify"):
         hirify = fetch_all_hirify_vacancies()
         counts["hirify"] = len(hirify)
         vacancies.extend(hirify)
+        mark_fetch_success("hirify", len(hirify))
 
-    if JOBHUNT_HIREHI_ENABLED:
+    if board_enabled("hirehi"):
         hirehi = fetch_all_hirehi_vacancies()
         counts["hirehi"] = len(hirehi)
         vacancies.extend(hirehi)
+        mark_fetch_success("hirehi", len(hirehi))
 
-    if JOBHUNT_TG_ENABLED:
-        tg = fetch_all_tg_vacancies()
+    channels = enabled_tg_channels()
+    if channels:
+        tg = fetch_all_tg_vacancies(channels=channels)
         counts["telegram"] = len(tg)
         vacancies.extend(tg)
+        by_ch: dict[str, int] = {}
+        for item in tg:
+            key = source_key_for_vacancy(item)
+            by_ch[key] = by_ch.get(key, 0) + 1
+        for key, n in by_ch.items():
+            mark_fetch_success(key, n)
 
     deduped, skipped = dedupe_vacancies(vacancies)
     if skipped:
@@ -168,7 +183,7 @@ def _vacancy_to_lead_fields(
     if salary:
         salary_raw = json.dumps(salary, ensure_ascii=False)
 
-    source = vacancy.get("_source") or "hh"
+    source = source_key_for_vacancy(vacancy)
 
     return {
         "source": source,
@@ -205,11 +220,15 @@ def scan_and_store_leads(
     seen_fingerprints: set[str] = set()
 
     for vacancy in vacancies:
-        source = vacancy.get("_source") or "hh"
+        source = source_key_for_vacancy(vacancy)
         external_id = str(vacancy.get("id", ""))
         if not external_id:
             continue
         if job_lead_exists(source, external_id):
+            skipped_existing += 1
+            continue
+        # Legacy rows may use source=telegram
+        if source.startswith("tg:") and job_lead_exists("telegram", external_id):
             skipped_existing += 1
             continue
 
@@ -244,11 +263,12 @@ def scan_and_store_leads(
         "skipped_duplicates": skipped_duplicates,
         "below_threshold": below_threshold,
         "top_leads": top_leads,
+        "sources_snippet": sources_report_snippet(),
     }
 
 
 def list_job_leads_for_summary(new_ids: list[int]) -> list[dict[str, Any]]:
-    """Build top-3 summary from freshly inserted IDs (fallback: query DB)."""
+    """Build top-5 summary from freshly inserted IDs (fallback: query DB)."""
     from orchestrator.state import get_job_lead, list_job_leads
 
     leads: list[dict[str, Any]] = []
@@ -262,13 +282,14 @@ def list_job_leads_for_summary(new_ids: list[int]) -> list[dict[str, Any]]:
                     "company": row["company"],
                     "score": row["match_score"],
                     "url": row["url"],
+                    "source": row["source"],
                 }
             )
     leads.sort(key=lambda x: x["score"], reverse=True)
-    if len(leads) >= 3:
-        return leads[:3]
+    if len(leads) >= 5:
+        return leads[:5]
 
-    for row in list_job_leads(status="new", limit=3, min_score=JOBHUNT_MIN_MATCH):
+    for row in list_job_leads(status="new", limit=5, min_score=JOBHUNT_MIN_MATCH):
         if any(x["id"] == row["id"] for x in leads):
             continue
         leads.append(
@@ -278,11 +299,12 @@ def list_job_leads_for_summary(new_ids: list[int]) -> list[dict[str, Any]]:
                 "company": row["company"],
                 "score": row["match_score"],
                 "url": row["url"],
+                "source": row["source"],
             }
         )
-        if len(leads) >= 3:
+        if len(leads) >= 5:
             break
-    return leads[:3]
+    return leads[:5]
 
 
 def daily_job_scan() -> dict[str, Any]:

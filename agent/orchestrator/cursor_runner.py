@@ -178,9 +178,10 @@ def run_daily_agent(context: str, light_mode: bool) -> str:
     from orchestrator.config import TASKS_DIR
 
     mode_note = (
-        "ОБЛЕГЧЁННЫЙ РЕЖИМ: без finance-сделок и тяжёлых PDF. Только health и критичные правки сайта."
+        "ОБЛЕГЧЁННЫЙ РЕЖИМ: только health и критичные правки сайта. Job scan делает orchestrator."
         if light_mode
-        else "ПОЛНЫЙ РЕЖИМ: bounty backlog / income (crypto A4), без live trading и Gumroad."
+        else "ПОЛНЫЙ РЕЖИМ: career hunter — разбор лидов, предложения источников, memory. "
+        "Не дублируй полный vacancy scan. Income/bounty paused."
     )
     harness = (TASKS_DIR / "daily_prompt.md").read_text(encoding="utf-8")
     prompt = f"""Ты автономный агент для /opt/personal-stack.

@@ -1,10 +1,10 @@
 # Career Growth System — Strategy & Architecture
 
-**Status:** plan (no implementation yet)  
+**Status:** iteration-1 in progress (career hunter runtime)  
 **Date:** 2026-07-20  
 **Owner:** Максим Пешехонов  
-**Income goals:** ≥ ₽500k/mo within 6 months · ≥ ₽1M/mo within 12 months  
-**Primary lanes:** international remote employment · high-ticket freelance/contract · product (only if validated by market demand)
+**Income goals:** autonomous crypto/bounty lanes **cancelled** — focus employment/contract deal flow  
+**Primary lanes:** international remote employment · high-ticket freelance/contract · product (only if validated)
 
 ---
 
