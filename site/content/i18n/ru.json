@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "Максим Пешехонов",
-    "description": "Frontend / Fullstack разработчик с 2018 года, уровень Senior. Next.js, React, TypeScript, сложные интерфейсы и продакшен."
+    "description": "Senior Product Engineer (frontend-leaning). React, TypeScript, Next.js — сложные продуктовые интерфейсы и production delivery."
   },
   "nav": {
     "home": "Главная",
@@ -12,7 +12,7 @@
     "close": "Закрыть"
   },
   "hero": {
-    "eyebrow": "Senior Frontend · Fullstack",
+    "eyebrow": "Senior Product Engineer",
     "ctaResume": "Смотреть резюме",
     "ctaPdf": "Скачать PDF",
     "skillsLabel": "Ключевые технологии"

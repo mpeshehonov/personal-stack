@@ -21,7 +21,6 @@ masquerade:
 
 ignoreClientBandwidth: true
 
-# Keep NAT mappings alive on mobile (Hysteria2 + QUIC best practice)
 ping: 5s
 
 quic:

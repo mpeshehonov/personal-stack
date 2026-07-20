@@ -17,8 +17,24 @@ export function ExperienceCard({ exp, compact = false, locale = "ru" }: Props) {
     <article className="card transition hover:shadow-lift">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h3 className="text-lg font-semibold text-ink">{exp.company}</h3>
+          <h3 className="text-lg font-semibold text-ink">
+            {exp.companyUrl ? (
+              <a
+                href={exp.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent"
+              >
+                {exp.company}
+              </a>
+            ) : (
+              exp.company
+            )}
+          </h3>
           <p className="text-sm font-medium text-accent">{exp.role}</p>
+          {exp.companyBlurb ? (
+            <p className="mt-1 text-xs text-ink-faint">{exp.companyBlurb}</p>
+          ) : null}
         </div>
         <div className="text-right text-sm text-ink-faint">
           <p>{exp.period}</p>

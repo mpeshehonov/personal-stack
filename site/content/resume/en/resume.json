@@ -1,10 +1,10 @@
 {
   "name": "Maksim Peshekhonov",
-  "title": "Senior Frontend Engineer",
+  "title": "Senior Product Engineer | Senior Frontend Engineer",
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Remote, Russia",
-  "summary": "Senior Frontend engineer, 7+ years: React, TypeScript, Next.js for enterprise systems, e-commerce, real-time interfaces, and Telegram Mini Apps. Complex UI, design systems, typed API contracts, REST/GraphQL, WebSocket, CI/CD, code review. Experience: X5 Tech, BI.ZONE, NLMK, Citilink, POTALONU.",
+  "summary": "Goal: remote Senior Product / Frontend Engineer (React, TypeScript). 7 years, ownership to production. X5, BI.ZONE, NLMK, Citilink, POTALONU. RF employment / self-employed / USDT. ASAP.",
   "skills": [
     "React",
     "TypeScript",
@@ -27,10 +27,9 @@
     "Vitest",
     "React Testing Library",
     "Git",
-    "Webpack",
     "CI/CD",
     "Docker",
-    "Nest.js",
+    "PostgreSQL",
     "Sentry",
     "e-commerce"
   ],
