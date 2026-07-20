@@ -19,7 +19,7 @@ from orchestrator.state import (
 
 DEPRIORITIZED_HANDLES = frozenset({"ikea", "mozilla"})
 CRYPTO_PRIORITY_HANDLES = frozenset(
-    {"0x", "edgex", "backpack", "gmx", "1inch-web", "ens", "lido"}
+    {"0x", "edgex", "backpack", "gmx", "1inch-web", "ens", "lido", "sky"}
 )
 
 

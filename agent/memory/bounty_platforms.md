@@ -76,7 +76,7 @@ When adding a program:
 
 ## Weekly agent task (orchestrator + daily)
 
-- [x] Add ≥1 new program from P0/P1 with crypto or confirmed payout path (2026-07-02: 0x, edgeX, Backpack; 2026-07-16 BB-08: GMX; 2026-07-17 BB-09: 1inch Web; 2026-07-18 BB-10: ENS; **2026-07-19 BB-11: Lido**)
+- [x] Add ≥1 new program from P0/P1 with crypto or confirmed payout path (2026-07-02: 0x, edgeX, Backpack; 2026-07-16 BB-08: GMX; 2026-07-17 BB-09: 1inch Web; 2026-07-18 BB-10: ENS; 2026-07-19 BB-11: Lido; **2026-07-20 BB-12: Sky**)
 - [ ] Mark dead programs (out of scope, duplicate, zero response) in `## Dead programs` below
 - [ ] Summarize in daily `## Баг-баунти`: programs tried, drafts pending, payout blockers
 
@@ -99,6 +99,7 @@ When adding a program:
 
 | Date | Note |
 |------|------|
+| 2026-07-20 | BB-12: +Sky (Immunefi) — Web & App: `app.sky.money`, `sky.money`, `vote.sky.money`, `chainlog.sky.money`; payout DAI/USDS (web Critical up to $100k); KYC not required |
 | 2026-07-19 | BB-11: +Lido (Immunefi) — Web & App: `stake.lido.fi`, `lido.fi`, `operators.lido.fi`, `csm.lido.fi`, `dao.lido.fi`; payout USDC/USDT/DAI/USDS on Ethereum (web Critical $50–100k); KYC not required |
 | 2026-07-18 | BB-10: +ENS (Immunefi) — Web & App Track B: `app.ens.domains`, `ens.domains`, `metadata.ens.domains`; NextJS; payout USDC on Ethereum (web Critical $25k); KYC generally not required |
 | 2026-07-17 | BB-09: +1inch Web (Immunefi) — dedicated web lane `1inch.com`; payout USDC on Ethereum (max $50k); KYC for payout |

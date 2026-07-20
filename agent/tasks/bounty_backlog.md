@@ -22,6 +22,7 @@ Aligned with `agent/memory/bounty_platforms.md` and `agent/skills/bounty-harness
 - [x] **BB-09** Add ≥1 Immunefi dedicated web program with USDC payout to `programs.py` + note in `bounty_platforms.md` (2026-07-17: 1inch Web)
 - [x] **BB-10** Add ≥1 Immunefi Web & App program with USDC payout + NextJS/web stack fit to `programs.py` + note in `bounty_platforms.md` (2026-07-18: ENS)
 - [x] **BB-11** Add ≥1 Immunefi Web & App program with USDC/USDT payout + no KYC to `programs.py` + note in `bounty_platforms.md` (2026-07-19: Lido)
+- [x] **BB-12** Add ≥1 Immunefi Web & App program with crypto-stable payout (DAI/USDS) + no KYC to `programs.py` + note in `bounty_platforms.md` (2026-07-20: Sky)
 
 ## Rules
 

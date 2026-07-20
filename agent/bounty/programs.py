@@ -156,6 +156,14 @@ WEB_JS_PROGRAMS: tuple[BountyProgram, ...] = (
         focus="Lido Web & App: stake.lido.fi, lido.fi, operators.lido.fi, csm.lido.fi, dao.lido.fi + auxiliary services",
         notes="Payout: USDC/USDS/DAI/USDT on Ethereum via Immunefi (web Critical $50–100k; High $5–50k). KYC not required. PoC required for all web severities. Domains not listed paid at discretion; no mainnet SC testing without local fork. Verify scope table before testing. Added 2026-07-19 (BB-11).",
     ),
+    BountyProgram(
+        name="Sky",
+        platform="immunefi",
+        url="https://immunefi.com/bug-bounty/sky/",
+        team_handle="sky",
+        focus="Sky (MakerDAO) Web & App: app.sky.money, sky.money, vote.sky.money, chainlog.sky.money",
+        notes="Payout: DAI or USDS via Immunefi/governance spell (web Critical up to $100k; High $5k). KYC not required. PoC required. vote.makerdao.com Critical-only; chainlog DoS OOS. No mainnet SC testing without local fork. Verify scope table before testing. Added 2026-07-20 (BB-12).",
+    ),
 )
 
 
