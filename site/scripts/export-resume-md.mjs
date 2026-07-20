@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+/**
+ * Export site/lib/resume-data.ts → content/resume/*.md for PDF build.
+ * Keep in sync with resume-copy skill: no em dashes, no DOB, goal line not ASAP dump.
+ */
 import { writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -23,7 +27,10 @@ console.log(JSON.stringify({
 );
 
 function build(locale) {
-  const json = execSync(`npx --yes tsx "${runner}" ${locale}`, { cwd: root, encoding: "utf8" });
+  const json = execSync(`npx --yes tsx "${runner}" ${locale}`, {
+    cwd: root,
+    encoding: "utf8",
+  });
   return JSON.parse(json);
 }
 
@@ -32,28 +39,30 @@ function render(locale, data) {
   const header = isRu
     ? `# Максим Пешехонов
 
-Senior Frontend-разработчик
+Senior Product Engineer | Senior Frontend Engineer
 
-Удалённо, РФ · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov) · Дата рождения: 28.05.1996
+Удалённо, РФ · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov)
 
-**Готов к выходу ASAP.**`
+**Цель:** remote Senior Product / Frontend Engineer (React, TypeScript) в продуктовой команде.`
     : `# Maksim Peshekhonov
 
-Senior Frontend Engineer
+Senior Product Engineer | Senior Frontend Engineer
 
-Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov) · Date of birth: 28.05.1996
+Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov)
 
-**Available to start ASAP.**`;
+**Goal:** remote Senior Product / Frontend Engineer (React, TypeScript) on a product team.`;
 
   let md = `${header}\n\n## ${isRu ? "О себе" : "About"}\n\n${data.about.join("\n\n")}\n\n## ${isRu ? "Опыт работы" : "Work experience"}\n\n`;
 
   for (const exp of data.exps) {
-    md += `### ${exp.company} — ${exp.role}\n\n${exp.period} | ${exp.location}\n\n`;
+    const link = exp.companyUrl
+      ? ` · [${exp.companyUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}](${exp.companyUrl})`
+      : "";
+    const blurb = exp.companyBlurb ? `*${exp.companyBlurb}*${link}\n` : "";
+    md += `### ${exp.company} - ${exp.role}\n\n${blurb}${exp.period} | ${exp.location}\n\n`;
     for (const b of exp.blocks) {
-      md += `**${b.title}**: ${b.tagline}\n\n`;
-      md += `${isRu ? "Роль" : "Role"}: ${b.contribution}\n\n`;
-      md += `${isRu ? "Результат" : "Outcome"}:\n\n`;
-      for (const o of b.outcomes) md += `- ${o}\n`;
+      md += `**${b.title}** - ${b.tagline}\n\n`;
+      for (const o of b.outcomes || []) md += `- ${o}\n`;
       md += `\n${isRu ? "Стек" : "Stack"}: ${b.stack.join(", ")}\n\n`;
     }
   }
@@ -61,24 +70,27 @@ Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mp
   md += renderSkillSection(locale, data.skillGroups);
 
   md += isRu
-    ? `## Иностранные языки
+    ? `## Языки
 
-- Английский — B1
+- Английский - B1
+- Русский - родной
 
 ## Образование и сообщество
 
 `
     : `## Languages
 
-- English — B1
-- Russian — native
+- English - B1
+- Russian - native
 
 ## Education & community
 
 `;
 
-  for (const e of data.edu) md += `### ${e.school}\n\n${e.field} · ${e.period} | ${e.location}\n\n`;
-  md += data.ach + "\n";
+  for (const e of data.edu) {
+    md += `${e.school} - ${e.field} (${e.period})\n`;
+  }
+  md += `\n${data.ach}\n`;
   return md;
 }
 
