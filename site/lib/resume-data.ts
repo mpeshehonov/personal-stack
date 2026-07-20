@@ -19,15 +19,15 @@ export type Experience = {
 };
 
 const aboutParagraphsRu = [
-  "Цель: remote Senior Product / Frontend Engineer (React, TypeScript) в продуктовой команде — международная или сильный RF product; ТК РФ, самозанятый или USDT. Готов ASAP.",
   "Senior Product Engineer (frontend-leaning), 7 лет: React, TypeScript, Next.js. Довожу сложные продуктовые UI до production: RBAC, длинные формы, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.",
-  "Ownership end-to-end: контракт с backend, модули, code review, деплой, прод. Enterprise (X5, BI.ZONE, НЛМК, Citilink) и свои продукты (Mini Apps, seat maps, monetization стримеров). Ищу роль с product ownership, не «вёрстка по макету».",
+  "Ownership end-to-end: контракт с backend, модули, code review, деплой, прод. Enterprise (X5, BI.ZONE, НЛМК, Citilink) и свои продукты (Mini Apps, seat maps, инструменты для стримеров).",
+  "Ищу remote Senior Product / Frontend Engineer в продуктовой команде — роль с ownership, не «вёрстка по макету».",
 ];
 
 const aboutParagraphsEn = [
-  "Goal: remote Senior Product / Frontend Engineer (React, TypeScript) on a product team — international or strong RF product; RF employment, self-employed, or USDT. Available ASAP.",
   "Senior Product Engineer (frontend-leaning), 7 years: React, TypeScript, Next.js. I ship complex product UIs to production: RBAC, long forms, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.",
-  "End-to-end ownership: API contracts, modules, review, deploy, production. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product work (Mini Apps, seat maps, streamer monetization). Looking for product ownership — not pixel-pushing.",
+  "End-to-end ownership: API contracts, modules, review, deploy, production. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product work (Mini Apps, seat maps, streamer tools).",
+  "Looking for a remote Senior Product / Frontend Engineer role with product ownership — not pixel-pushing.",
 ];
 
 const experiencesRu: Experience[] = [
@@ -92,18 +92,18 @@ const experiencesRu: Experience[] = [
     role: "Senior Frontend Engineer",
     period: "06.2023 – 03.2024",
     location: "Удалённо",
-    companyBlurb: "Кибербезопасность, продукты для SOC",
+    companyBlurb: "Кибербезопасность, продукты Threat Intelligence",
     companyUrl: "https://bi.zone",
     blocks: [
       {
         title: "Threat Intelligence",
-        tagline: "SOC-аналитика, FE-команда 3 человека",
-        problem: "Категории угроз, детальная карточка и связи в одном интерфейсе для SOC.",
+        tagline: "Аналитика киберугроз, FE-команда 3 человека",
+        problem: "Категории угроз, детальная карточка и связи в одном интерфейсе для аналитиков.",
         contribution:
           "Категории киберугроз и детальная форма для построения связей (GraphQL/Apollo); частично граф D3; виртуализация, Jest.",
         stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Категории + детальная форма стали рабочим контуром связей в SOC",
+          "Категории и детальная форма стали основным способом связывать угрозы в продукте",
           "Виртуализация держала отзывчивость на больших списках",
         ],
       },
@@ -126,7 +126,7 @@ const experiencesRu: Experience[] = [
         stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
         outcomes: [
           "Цех перешёл на web как основной процесс (десятки пользователей на сменах)",
-          "Sentry дал видимость ошибок в проде без выезда на место",
+          "Sentry ускорил поиск и исправление ошибок в проде",
         ],
       },
     ],
@@ -148,7 +148,7 @@ const experiencesRu: Experience[] = [
         stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
         outcomes: [
           "SEO сохранён: индексируемые страницы и фильтры в URL",
-          "Retail/wholesale через синхронизацию фильтров и пагинации с URL",
+          "Фильтры и пагинация в URL работают и для розницы, и для оптового каталога",
         ],
       },
     ],
@@ -217,18 +217,18 @@ const experiencesEn: Experience[] = [
     role: "Senior Frontend Engineer",
     period: "Jun 2023 – Mar 2024",
     location: "Remote",
-    companyBlurb: "Cybersecurity products for SOC",
+    companyBlurb: "Cybersecurity — Threat Intelligence products",
     companyUrl: "https://bi.zone",
     blocks: [
       {
         title: "Threat Intelligence",
-        tagline: "SOC analytics, FE team of 3",
-        problem: "Threat categories, detail cards, and relationships in one SOC workspace.",
+        tagline: "Cyber threat analytics, FE team of 3",
+        problem: "Threat categories, detail cards, and relationships in one workspace for analysts.",
         contribution:
           "Threat-category sections and detail form for relationships (GraphQL/Apollo); partial D3 graph; virtualization, Jest.",
         stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Categories + detail form became the working relationship path in SOC",
+          "Categories and detail form became the main way to link threats in the product",
           "Virtualization kept large entity lists responsive",
         ],
       },
@@ -239,19 +239,19 @@ const experiencesEn: Experience[] = [
     role: "Senior Frontend Engineer",
     period: "May 2022 – Jun 2023",
     location: "Remote",
-    companyBlurb: "Steel: digital tools on the shop floor",
+    companyBlurb: "Steel industry: digital tools for plant production",
     companyUrl: "https://nlmk.com",
     blocks: [
       {
         title: "Cast iron release registration",
         tagline: "Production SPA replacing Excel",
-        problem: "Shop floor tracked releases in Excel: data loss and slow shift filtering.",
+        problem: "Plant teams tracked releases in Excel: data loss and slow shift filtering.",
         contribution:
-          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. On-site plant visit to observe real usage.",
+          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Plant visit to observe real shift usage.",
         stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
         outcomes: [
-          "Shop floor moved to web as primary process (dozens of shift users)",
-          "Sentry gave production error visibility without on-site reproduction",
+          "Plant teams moved to web as the primary process (dozens of shift users)",
+          "Sentry sped up finding and fixing production errors",
         ],
       },
     ],
@@ -273,7 +273,7 @@ const experiencesEn: Experience[] = [
         stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
         outcomes: [
           "SEO preserved: indexable pages and filters in the URL",
-          "Retail/wholesale via URL-synced filters and pagination",
+          "URL-synced filters and pagination for both retail and B2B catalog views",
         ],
       },
     ],

@@ -34,4 +34,5 @@
 - Resume source: site/content/resume/resume.json + resume.md + site/lib/resume-data.ts
 - Resume sync: `docs/JOB-HUNT-AUTH-SETUP.md` — HH digest + RPA research `agent/memory/research/job_automation_rpa_2026.md`
 - Resume packaging lesson: `agent/memory/lessons/resume_sells_in_15_seconds.md` (@money_career, 15s sell)
+- Resume HR red flags: `agent/memory/lessons/resume_no_hr_red_flags.md` (no SOC/FSD-клиент/USDT in hero)
 - Career strategy: `docs/career-growth-system.md` + backlog

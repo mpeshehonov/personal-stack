@@ -4,13 +4,13 @@ Senior Product Engineer | Senior Frontend Engineer
 
 Удалённо, РФ · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov)
 
-**Цель:** remote Senior Product / Frontend Engineer (React, TypeScript) в продуктовой команде — международная или сильный RF product; ТК РФ, самозанятый или USDT. Готов к выходу ASAP.
+**Цель:** remote Senior Product / Frontend Engineer (React, TypeScript) в продуктовой команде.
 
 ## О себе
 
 Senior Product Engineer (frontend-leaning), 7 лет: React, TypeScript, Next.js. Довожу сложные продуктовые UI до production: RBAC, длинные формы, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.
 
-Ownership end-to-end: контракт с backend, модули, code review, деплой, прод. Enterprise (X5, BI.ZONE, НЛМК, Citilink) и свои продукты (Mini Apps, seat maps, monetization стримеров).
+Ownership end-to-end: контракт с backend, модули, code review, деплой, прод. Enterprise (X5, BI.ZONE, НЛМК, Citilink) и свои продукты (Mini Apps, seat maps, инструменты для стримеров).
 
 Ищу роль, где нужен сильный FE с product ownership, а не «вёрстка по макету».
 
@@ -52,14 +52,14 @@ Ownership end-to-end: контракт с backend, модули, code review, д
 
 ### BI.ZONE — Senior Frontend Engineer
 
-*Кибербезопасность, продукты для SOC* · [bi.zone](https://bi.zone)  
+*Кибербезопасность, продукты Threat Intelligence* · [bi.zone](https://bi.zone)  
 06.2023 – 03.2024 | Удалённо
 
 **Threat Intelligence** — FE-команда 3 человека
 
 - Разделы категорий киберугроз и детальная форма угрозы для построения связей (GraphQL/Apollo)
 - Частично граф на D3.js; виртуализация списков, Jest, code review
-- Категории + детальная форма стали рабочим контуром связей в SOC
+- Категории и детальная форма стали основным способом связывать угрозы в продукте
 
 Стек: React, TypeScript, GraphQL, Apollo, D3.js, Jest
 
@@ -73,6 +73,7 @@ Ownership end-to-end: контракт с backend, модули, code review, д
 - React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry
 - Командировка на цех: смотрел, как смена реально работает с инструментом
 - Цех перешёл на web как основной процесс (десятки пользователей на сменах)
+- Sentry ускорил поиск и исправление ошибок в проде
 
 Стек: React, TypeScript, TanStack Table, TanStack Query, Keycloak, GitLab CI, Sentry
 
@@ -85,6 +86,7 @@ Ownership end-to-end: контракт с backend, модули, code review, д
 
 - Зона каталога: фильтры, сортировка, пагинация, URL-state, microservice REST API
 - Сохранил SEO: индексируемые страницы и фильтры в URL
+- Фильтры и пагинация в URL работают и для розницы, и для оптового каталога
 - Yarn workspaces, Jest, code review
 
 Стек: Next.js, React, TypeScript, REST API, Redux, Jest

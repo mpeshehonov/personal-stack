@@ -4,13 +4,13 @@ Senior Product Engineer | Senior Frontend Engineer
 
 Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov)
 
-**Goal:** remote Senior Product / Frontend Engineer (React, TypeScript) on a product team — international or strong RF product; RF employment, self-employed, or USDT. Available ASAP.
+**Goal:** remote Senior Product / Frontend Engineer (React, TypeScript) on a product team.
 
 ## About
 
 Senior Product Engineer (frontend-leaning), 7 years: React, TypeScript, Next.js. I ship complex product UIs to production: RBAC, long forms, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.
 
-End-to-end ownership: API contracts, modules, review, deploy, production. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product work (Mini Apps, seat maps, streamer monetization).
+End-to-end ownership: API contracts, modules, review, deploy, production. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product work (Mini Apps, seat maps, streamer tools).
 
 Looking for a role that needs strong FE with product ownership — not pixel-pushing.
 
@@ -52,27 +52,28 @@ Stack: React, TypeScript, Vite, REST API, Orval, Keycloak, react-hook-form, Vite
 
 ### BI.ZONE — Senior Frontend Engineer
 
-*Cybersecurity products for SOC* · [bi.zone](https://bi.zone)  
+*Cybersecurity — Threat Intelligence products* · [bi.zone](https://bi.zone)  
 Jun 2023 – Mar 2024 | Remote
 
 **Threat Intelligence** — FE team of 3
 
 - Threat-category sections and detail form for relationship building (GraphQL/Apollo)
 - Partial D3 graph work; list virtualization, Jest, code review
-- Categories + detail form became the working relationship path in SOC
+- Categories and detail form became the main way to link threats in the product
 
 Stack: React, TypeScript, GraphQL, Apollo, D3.js, Jest
 
 ### NLMK — Senior Frontend Engineer
 
-*Steel: digital tools on the shop floor* · [nlmk.com](https://nlmk.com)  
+*Steel industry: digital tools for plant production* · [nlmk.com](https://nlmk.com)  
 May 2022 – Jun 2023 | Remote
 
 **Cast iron release registration** — SPA replacing Excel
 
 - React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry
-- On-site plant visit to observe real shift usage
-- Shop floor moved to web as primary process (dozens of shift users)
+- Plant visit to observe how shifts actually use the tool
+- Plant teams moved to web as the primary process (dozens of shift users)
+- Sentry sped up finding and fixing production errors
 
 Stack: React, TypeScript, TanStack Table, TanStack Query, Keycloak, GitLab CI, Sentry
 
@@ -85,6 +86,7 @@ Apr 2021 – Apr 2022 | Remote
 
 - Catalog scope: filters, sort, pagination, URL state, microservice REST API
 - Preserved SEO: indexable pages and filters in the URL
+- URL-synced filters and pagination for both retail and B2B catalog views
 - Yarn workspaces, Jest, code review
 
 Stack: Next.js, React, TypeScript, REST API, Redux, Jest

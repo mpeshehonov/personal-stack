@@ -5,8 +5,9 @@ Use for project pages, cover letters, resume bullets. Do not invent metrics beyo
 ## Positioning (locked 2026-07-20)
 
 - Title: **Senior Product Engineer (frontend-leaning)**
-- Comp target: $3–4k USD/mo (self-employed RF / TK RF / USDT)
-- Priority: job ASAP
+- Comp target: $3–4k USD/mo (self-employed RF / TK RF / USDT) — **private / negotiation only**
+- Priority: job ASAP — badge OK; **do not** dump TK/USDT/ASAP into hero summary
+- Public copy: plain language for HR — see `lessons/resume_no_hr_red_flags.md`
 
 ## Confirmed facts (user, 2026-07-20)
 
