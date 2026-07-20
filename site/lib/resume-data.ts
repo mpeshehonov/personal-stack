@@ -19,48 +19,52 @@ export type Experience = {
 };
 
 const aboutParagraphsRu = [
-  "Senior Product Engineer (frontend-leaning), 7 лет: React, TypeScript, Next.js. Довожу сложные продуктовые UI до production: RBAC, длинные формы, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.",
-  "Ownership end-to-end: контракт с backend, модули, code review, деплой, прод. Enterprise (X5, BI.ZONE, НЛМК, Citilink) и свои продукты (Mini Apps, seat maps, инструменты для стримеров).",
-  "Ищу remote Senior Product / Frontend Engineer в продуктовой команде — роль с ownership, не «вёрстка по макету».",
+  "Senior Product / Frontend Engineer, 7 лет. React, TypeScript, Next.js. Довожу сложные интерфейсы до production: роли и доступы, длинные формы, REST и GraphQL, WebSocket, CI/CD.",
+  "Беру задачу от контракта с backend до деплоя и поддержки в проде. Крупный enterprise (X5, BI.ZONE, НЛМК, Citilink) и продуктовая студия (Mini Apps, схемы залов, инструменты для стримеров).",
+  "Ищу remote-роль, где нужен сильный frontend с ответственностью за модуль, а не только вёрстка по макету.",
 ];
 
 const aboutParagraphsEn = [
-  "Senior Product Engineer (frontend-leaning), 7 years: React, TypeScript, Next.js. I ship complex product UIs to production: RBAC, long forms, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.",
-  "End-to-end ownership: API contracts, modules, review, deploy, production. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product work (Mini Apps, seat maps, streamer tools).",
-  "Looking for a remote Senior Product / Frontend Engineer role with product ownership — not pixel-pushing.",
+  "Senior Product / Frontend Engineer, 7 years. React, TypeScript, Next.js. I ship complex product UIs to production: roles and access, long forms, REST and GraphQL, WebSocket, CI/CD.",
+  "I take work from backend contract through deploy and production support. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product studio work (Mini Apps, hall layouts, streamer tools).",
+  "Looking for a remote role that needs strong frontend with module ownership, not layout-only work.",
 ];
 
 const experiencesRu: Experience[] = [
   {
     company: "POTALONU LLC",
     role: "Senior Product Engineer",
-    period: "09.2025 – 06.2026",
+    period: "09.2025 - 06.2026",
     location: "Удалённо",
-    companyBlurb: "Product studio: ticketing и инструменты для стримеров",
+    companyBlurb: "Продуктовая студия: билеты и инструменты для стримеров",
     companyUrl: "https://potalonu.com",
     blocks: [
       {
         title: "sendonate.com",
-        tagline: "Единственный FE: Mini App, кабинет, OBS overlay",
+        tagline: "Единственный frontend: Mini App, кабинет, OBS-оверлей",
         problem: "Три клиента (кабинет, Mini App, OBS) должны жить на одном backend без рассинхрона.",
         contribution:
-          "Единственный FE: собрал 3 React + Vite + TypeScript клиента, Orval/OpenAPI, WebSocket-алерты, GitHub Actions, Sentry.",
+          "Единственный frontend: собрал 3 клиента на React, Vite и TypeScript, Orval по OpenAPI, WebSocket-алерты, GitHub Actions, Sentry.",
         stack: ["React", "TypeScript", "Vite", "Orval", "WebSocket", "GitHub Actions", "Sentry"],
         outcomes: [
-          "End-to-end донат в production: Mini App → backend → кабинет → alert в OBS",
-          "Три клиента на общих API-контрактах без рассинхрона FE/backend",
+          "Собрал 3 клиента на React, Vite и TypeScript и довёл поток доната до production",
+          "Подключил typed API из OpenAPI (Orval) и WebSocket-алерты с очередью и reconnect",
+          "Настроил GitHub Actions и Sentry: три клиента на одном контракте без рассинхрона с backend",
+          "Закрыл полный сценарий: Mini App, backend, кабинет, алерт в OBS",
         ],
       },
       {
         title: "PREEGLOS",
-        tagline: "Витрина билетов + seats.io-like редактор залов",
+        tagline: "Витрина билетов и редактор схем залов",
         problem: "Нужны checkout и свой редактор схем залов вместо seats.io.",
         contribution:
-          "Next.js-витрина (Auth.js, PostgreSQL/Drizzle, Orval) + сервис залов и embed-виджет; GitLab CI, Docker Compose.",
+          "Next.js-витрина (Auth.js, PostgreSQL/Drizzle, Orval) плюс сервис залов и embed-виджет; GitLab CI, Docker Compose.",
         stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Orval", "Docker", "GitLab CI"],
         outcomes: [
-          "Замена seats.io в проде: десятки залов/событий, продажа мест через виджет",
-          "Веб и Mini App на одной модели данных и API",
+          "Собрал Next.js checkout: Auth.js, PostgreSQL/Drizzle, Orval по OpenAPI",
+          "Сделал сервис схем залов и embed-виджет выбора мест вместо seats.io",
+          "В проде: десятки залов и событий, продажа мест без ручной отрисовки схем",
+          "Настроил GitLab CI и Docker Compose для выкладки",
         ],
       },
     ],
@@ -68,21 +72,23 @@ const experiencesRu: Experience[] = [
   {
     company: "X5 Tech",
     role: "Senior Frontend Engineer",
-    period: "04.2024 – 07.2025",
+    period: "04.2024 - 07.2025",
     location: "Удалённо",
     companyBlurb: "IT X5 Group, крупнейший продуктовый ритейлер РФ",
     companyUrl: "https://www.x5.ru",
     blocks: [
       {
-        title: "НКЗ 3.0 — согласование закупок",
-        tagline: "Enterprise-модуль для сотен (до тысяч) пользователей",
+        title: "НКЗ 3.0 - согласование закупок",
+        tagline: "Модуль для сотен (до тысяч) внутренних пользователей",
         problem: "Роли, статусы и многошаговое согласование в одном UI для внутренних пользователей.",
         contribution:
-          "Один из 2 FE: Keycloak RBAC, react-hook-form, Orval/OpenAPI, UI Kit; сам перевёл модуль на Vite + code splitting.",
+          "Один из 2 frontend: Keycloak, react-hook-form, Orval по OpenAPI, UI Kit; сам перевёл модуль на Vite с code splitting.",
         stack: ["React", "TypeScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
         outcomes: [
-          "Полный цикл UI согласования: роли, статусы, формы, переходы этапов",
-          "Самостоятельная миграция на Vite ускорила разработку и проверки",
+          "Один из 2 frontend: роли через Keycloak, многошаговые формы, Orval по OpenAPI, UI Kit",
+          "Сам перевёл модуль на Vite с code splitting на длинных сценариях",
+          "Закрыл UI полного цикла согласования: роли, статусы, формы, переходы этапов",
+          "Вёл code review и декомпозицию модулей вместе с backend",
         ],
       },
     ],
@@ -90,21 +96,23 @@ const experiencesRu: Experience[] = [
   {
     company: "BI.ZONE",
     role: "Senior Frontend Engineer",
-    period: "06.2023 – 03.2024",
+    period: "06.2023 - 03.2024",
     location: "Удалённо",
     companyBlurb: "Кибербезопасность, продукты Threat Intelligence",
     companyUrl: "https://bi.zone",
     blocks: [
       {
         title: "Threat Intelligence",
-        tagline: "Аналитика киберугроз, FE-команда 3 человека",
+        tagline: "Аналитика киберугроз, frontend-команда из 3 человек",
         problem: "Категории угроз, детальная карточка и связи в одном интерфейсе для аналитиков.",
         contribution:
-          "Категории киберугроз и детальная форма для построения связей (GraphQL/Apollo); частично граф D3; виртуализация, Jest.",
+          "Разделы категорий угроз и детальная форма связей на GraphQL/Apollo; граф на D3; виртуализация, Jest.",
         stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Категории и детальная форма стали основным способом связывать угрозы в продукте",
-          "Виртуализация держала отзывчивость на больших списках",
+          "Собрал разделы категорий угроз и детальную форму связей на GraphQL и Apollo",
+          "Добавил виртуализацию длинных списков; покрыл Jest; вёл code review",
+          "Категории и форма стали основным способом связывать угрозы в продукте",
+          "Участвовал в графе связей сущностей на D3.js",
         ],
       },
     ],
@@ -112,21 +120,23 @@ const experiencesRu: Experience[] = [
   {
     company: "НЛМК",
     role: "Senior Frontend Engineer",
-    period: "05.2022 – 06.2023",
+    period: "05.2022 - 06.2023",
     location: "Удалённо",
     companyBlurb: "Металлургия: digital на производстве",
     companyUrl: "https://nlmk.com",
     blocks: [
       {
         title: "Регистрация выпусков чугуна",
-        tagline: "Production SPA вместо Excel",
+        tagline: "SPA вместо Excel",
         problem: "Цех вёл выпуски в Excel: потери данных и медленная фильтрация по сменам.",
         contribution:
-          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Командировка на цех смотреть реальное использование.",
+          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Командировка на цех под реальный сценарий смены.",
         stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
         outcomes: [
+          "Заменил Excel на React SPA: TanStack Table, React Query, Keycloak",
+          "Съездил на цех, посмотрел реальный сценарий смены и учёл его в UI",
           "Цех перешёл на web как основной процесс (десятки пользователей на сменах)",
-          "Sentry ускорил поиск и исправление ошибок в проде",
+          "Подключил Sentry и GitLab CI: быстрее находил и чинил ошибки в проде",
         ],
       },
     ],
@@ -134,21 +144,23 @@ const experiencesRu: Experience[] = [
   {
     company: "Citilink",
     role: "Frontend Engineer",
-    period: "04.2021 – 04.2022",
+    period: "04.2021 - 04.2022",
     location: "Удалённо",
     companyBlurb: "Крупный e-commerce электроники",
     companyUrl: "https://www.citilink.ru",
     blocks: [
       {
-        title: "citilink.ru — каталог",
-        tagline: "Миграция PHP/Symfony → Next.js",
+        title: "citilink.ru - каталог",
+        tagline: "Миграция с PHP/Symfony на Next.js",
         problem: "Перенос каталога на Next.js с фильтрами, SEO и REST к микросервисам.",
         contribution:
-          "Зона каталога: фильтры, сортировка, пагинация, URL-state, microservice REST API; yarn workspaces, Jest.",
+          "Зона каталога: фильтры, сортировка, пагинация, состояние в URL, REST к микросервисам; yarn workspaces, Jest.",
         stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
         outcomes: [
-          "SEO сохранён: индексируемые страницы и фильтры в URL",
-          "Фильтры и пагинация в URL работают и для розницы, и для оптового каталога",
+          "Перенёс зону каталога: фильтры, сортировка, пагинация, состояние в URL, REST к микросервисам",
+          "Сохранил SEO: страницы и фильтры индексируются через URL",
+          "Одно URL-состояние фильтров работает и для розницы, и для оптового каталога",
+          "Yarn workspaces, Jest, code review",
         ],
       },
     ],
@@ -159,33 +171,37 @@ const experiencesEn: Experience[] = [
   {
     company: "POTALONU LLC",
     role: "Senior Product Engineer",
-    period: "Sep 2025 – Jun 2026",
+    period: "Sep 2025 - Jun 2026",
     location: "Remote",
     companyBlurb: "Product studio: ticketing and streamer tools",
     companyUrl: "https://potalonu.com",
     blocks: [
       {
         title: "sendonate.com",
-        tagline: "Sole FE: Mini App, dashboard, OBS overlay",
+        tagline: "Sole frontend: Mini App, dashboard, OBS overlay",
         problem: "Three clients (dashboard, Mini App, OBS) must stay in sync with one backend.",
         contribution:
-          "Sole FE: built 3 React + Vite + TypeScript clients, Orval/OpenAPI, WebSocket alerts, GitHub Actions, Sentry.",
+          "Sole frontend: built 3 React, Vite, and TypeScript clients, Orval from OpenAPI, WebSocket alerts, GitHub Actions, Sentry.",
         stack: ["React", "TypeScript", "Vite", "Orval", "WebSocket", "GitHub Actions", "Sentry"],
         outcomes: [
-          "End-to-end tip flow in production: Mini App → backend → dashboard → OBS alert",
-          "Three clients on shared API contracts without FE/backend drift",
+          "Built 3 React, Vite, and TypeScript clients and shipped the tip flow to production",
+          "Wired typed API from OpenAPI (Orval) and WebSocket alerts with queue and reconnect",
+          "Set up GitHub Actions and Sentry: three clients on one contract without FE/backend drift",
+          "Closed the full path: Mini App, backend, dashboard, alert in OBS",
         ],
       },
       {
         title: "PREEGLOS",
-        tagline: "Ticket storefront + seats.io-like hall editor",
+        tagline: "Ticket storefront and hall layout editor",
         problem: "Needed checkout and an in-house hall editor instead of seats.io.",
         contribution:
-          "Next.js storefront (Auth.js, PostgreSQL/Drizzle, Orval) + hall service and embed widget; GitLab CI, Docker Compose.",
+          "Next.js storefront (Auth.js, PostgreSQL/Drizzle, Orval) plus hall service and embed widget; GitLab CI, Docker Compose.",
         stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Orval", "Docker", "GitLab CI"],
         outcomes: [
-          "Production seats.io alternative: dozens of halls/events via embed widget",
-          "Web and Mini App on one data model and API",
+          "Built Next.js checkout: Auth.js, PostgreSQL/Drizzle, Orval from OpenAPI",
+          "Built hall layout service and embed seat picker instead of seats.io",
+          "In production: dozens of halls and events, seat sales without hand-drawn layouts",
+          "Set up GitLab CI and Docker Compose for delivery",
         ],
       },
     ],
@@ -193,21 +209,23 @@ const experiencesEn: Experience[] = [
   {
     company: "X5 Tech",
     role: "Senior Frontend Engineer",
-    period: "Apr 2024 – Jul 2025",
+    period: "Apr 2024 - Jul 2025",
     location: "Remote",
-    companyBlurb: "IT for X5 Group, Russia’s largest grocery retailer",
+    companyBlurb: "IT for X5 Group, Russia's largest grocery retailer",
     companyUrl: "https://www.x5.ru",
     blocks: [
       {
-        title: "NKZ 3.0 — procurement approval",
-        tagline: "Enterprise module for hundreds (up to thousands) of users",
+        title: "NKZ 3.0 - procurement approval",
+        tagline: "Module for hundreds (up to thousands) of internal users",
         problem: "Roles, statuses, and multi-step approval in one UI for internal users.",
         contribution:
-          "One of 2 FE: Keycloak RBAC, react-hook-form, Orval/OpenAPI, UI Kit; owned full Vite migration + code splitting.",
+          "One of 2 frontend engineers: Keycloak, react-hook-form, Orval from OpenAPI, UI Kit; owned the Vite migration with code splitting.",
         stack: ["React", "TypeScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
         outcomes: [
-          "Full approval UI cycle: roles, statuses, forms, stage transitions",
-          "Solo Vite migration sped up development and checks",
+          "One of 2 frontend engineers: Keycloak roles, multi-step forms, Orval from OpenAPI, UI Kit",
+          "Owned the Vite migration with code splitting on long flows",
+          "Covered the full approval UI cycle: roles, statuses, forms, stage transitions",
+          "Ran code review and module breakdown with backend",
         ],
       },
     ],
@@ -215,21 +233,23 @@ const experiencesEn: Experience[] = [
   {
     company: "BI.ZONE",
     role: "Senior Frontend Engineer",
-    period: "Jun 2023 – Mar 2024",
+    period: "Jun 2023 - Mar 2024",
     location: "Remote",
-    companyBlurb: "Cybersecurity — Threat Intelligence products",
+    companyBlurb: "Cybersecurity - Threat Intelligence products",
     companyUrl: "https://bi.zone",
     blocks: [
       {
         title: "Threat Intelligence",
-        tagline: "Cyber threat analytics, FE team of 3",
+        tagline: "Cyber threat analytics, frontend team of 3",
         problem: "Threat categories, detail cards, and relationships in one workspace for analysts.",
         contribution:
-          "Threat-category sections and detail form for relationships (GraphQL/Apollo); partial D3 graph; virtualization, Jest.",
+          "Threat-category sections and detail form for relationships on GraphQL/Apollo; D3 graph; virtualization, Jest.",
         stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Categories and detail form became the main way to link threats in the product",
-          "Virtualization kept large entity lists responsive",
+          "Built threat-category sections and a detail form for relationships on GraphQL and Apollo",
+          "Added list virtualization; covered with Jest; ran code review",
+          "Categories and the detail form became the main way to link threats in the product",
+          "Contributed to the entity relationship graph on D3.js",
         ],
       },
     ],
@@ -237,21 +257,23 @@ const experiencesEn: Experience[] = [
   {
     company: "NLMK",
     role: "Senior Frontend Engineer",
-    period: "May 2022 – Jun 2023",
+    period: "May 2022 - Jun 2023",
     location: "Remote",
     companyBlurb: "Steel industry: digital tools for plant production",
     companyUrl: "https://nlmk.com",
     blocks: [
       {
         title: "Cast iron release registration",
-        tagline: "Production SPA replacing Excel",
+        tagline: "SPA replacing Excel",
         problem: "Plant teams tracked releases in Excel: data loss and slow shift filtering.",
         contribution:
-          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Plant visit to observe real shift usage.",
+          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Plant visit under the real shift scenario.",
         stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
         outcomes: [
+          "Replaced Excel with a React SPA: TanStack Table, React Query, Keycloak",
+          "Visited the plant, watched the real shift flow, and reflected it in the UI",
           "Plant teams moved to web as the primary process (dozens of shift users)",
-          "Sentry sped up finding and fixing production errors",
+          "Wired Sentry and GitLab CI: faster to find and fix production errors",
         ],
       },
     ],
@@ -259,21 +281,23 @@ const experiencesEn: Experience[] = [
   {
     company: "Citilink",
     role: "Frontend Engineer",
-    period: "Apr 2021 – Apr 2022",
+    period: "Apr 2021 - Apr 2022",
     location: "Remote",
     companyBlurb: "Large electronics e-commerce",
     companyUrl: "https://www.citilink.ru",
     blocks: [
       {
-        title: "citilink.ru — catalog",
-        tagline: "Migration PHP/Symfony → Next.js",
+        title: "citilink.ru - catalog",
+        tagline: "Migration from PHP/Symfony to Next.js",
         problem: "Move catalog to Next.js with filters, SEO, and microservice REST.",
         contribution:
-          "Catalog scope: filters, sort, pagination, URL state, microservice REST API; yarn workspaces, Jest.",
+          "Catalog scope: filters, sort, pagination, URL state, REST to microservices; yarn workspaces, Jest.",
         stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
         outcomes: [
-          "SEO preserved: indexable pages and filters in the URL",
-          "URL-synced filters and pagination for both retail and B2B catalog views",
+          "Moved the catalog zone: filters, sort, pagination, URL state, REST to microservices",
+          "Kept SEO: pages and filters stay indexable via the URL",
+          "One URL filter state works for both retail and wholesale catalog views",
+          "Yarn workspaces, Jest, code review",
         ],
       },
     ],
@@ -286,7 +310,7 @@ export const education = [
     schoolEn: "Tula State Communal Construction College",
     field: "Земельно-имущественные отношения",
     fieldEn: "Land and property relations",
-    period: "2015 – 2018",
+    period: "2015 - 2018",
     location: "Тула, Россия",
     locationEn: "Tula, Russia",
   },

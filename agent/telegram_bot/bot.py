@@ -77,17 +77,18 @@ def _chat_lock(chat_id: int) -> asyncio.Lock:
     return _chat_locks[chat_id]
 
 BOT_COMMANDS = [
-    ("start", "Начало и список команд"),
-    ("help", "Справка по командам"),
+    ("start", "Меню и карточки вакансий"),
+    ("menu", "Кнопки навигации"),
+    ("help", "Справка"),
     ("status", "Состояние сервера"),
-    ("ask", "Вопрос агенту (только ответ, без правок)"),
-    ("task", "Задача: правки + commit + deploy"),
-    ("jobs", "Вакансии и feedback"),
-    ("sources", "Веса источников вакансий"),
-    ("cover", "Сопровод к вакансии"),
-    ("memory", "Итог последнего daily-цикла"),
-    ("pause", "Приостановить автономию"),
-    ("resume", "Возобновить автономию"),
+    ("ask", "Вопрос агенту"),
+    ("task", "Задача: правки + deploy"),
+    ("jobs", "Карточки вакансий"),
+    ("sources", "Источники"),
+    ("cover", "Сопровод"),
+    ("memory", "Итог daily"),
+    ("pause", "Пауза автономии"),
+    ("resume", "Снять паузу"),
 ]
 
 
@@ -221,25 +222,15 @@ def _format_memory_rich() -> str:
 def _help_text() -> str:
     return (
         "Команды бота:\n\n"
-        "/status — сервер и health\n"
-        "/ask — вопрос агенту (без правок)\n"
-        "/task — задача: правки + commit + deploy\n"
-        "/jobs — топ вакансий (career hunter)\n"
-        "/jobs scan — поиск новых вакансий (фон)\n"
-        "/jobs like <id> — хороший лид (учит источник)\n"
-        "/jobs dislike <id> [причина] — плохой лид\n"
-        "/jobs hh-digest — текст для ручной вставки в HH\n"
-        "/jobs auth — проверка Habr/LinkedIn\n"
-        "/jobs sync — diff резюме site → площадки\n"
-        "/sources — веса и статусы источников\n"
-        "/cover <id> — сопровод для лида\n"
-        "/approve source <key> — включить seed-источник\n"
-        "/reject source <key> — отклонить источник\n"
-        "/approve resume hh|habr|all — sync резюме\n"
-        "/memory — итог daily\n"
-        "/pause /resume — автономия\n"
-        "/help — эта справка\n\n"
-        "Income/bounty paused. Фокус: сильные вакансии и проекты."
+        "/menu - кнопки внизу экрана\n"
+        "/jobs - карточки вакансий (Ок / Мимо / Сопровод)\n"
+        "/jobs scan - поиск новых\n"
+        "/sources - веса источников\n"
+        "/cover <id> - сопровод (или кнопка на карточке)\n"
+        "/status /ask /task /memory\n"
+        "/pause /resume\n\n"
+        "На карточке вакансии жми Ок или Мимо - id вводить не нужно.\n"
+        "Income/bounty на паузе. Фокус: сильные вакансии."
     )
 
 
@@ -578,6 +569,65 @@ def _lead_row_to_dict(row) -> dict:
     return {k: row[k] for k in row.keys()}
 
 
+async def _send_job_cards(bot, chat_id: int, *, liked: bool = False) -> None:
+    from telegram_bot.jobs_ui import (
+        jobs_intro,
+        lead_card_text,
+        lead_keyboard,
+        list_liked_leads,
+        list_new_leads,
+    )
+
+    leads = list_liked_leads(10) if liked else list_new_leads(5)
+    if not liked:
+        await bot.send_message(chat_id=chat_id, text=jobs_intro(len(leads)))
+    if not leads:
+        if liked:
+            await bot.send_message(chat_id=chat_id, text="Пока нет отмеченных «Ок».")
+        return
+    for row in leads:
+        await bot.send_message(
+            chat_id=chat_id,
+            text=lead_card_text(row),
+            reply_markup=lead_keyboard(int(row["id"]), row["url"] or ""),
+            disable_web_page_preview=True,
+        )
+
+
+async def _start_job_scan(bot, chat_id: int, reply_func) -> None:
+    if not JOBHUNT_ENABLED:
+        await reply_func(
+            "Job hunt отключён. Скопируй secrets/.env.jobhunt.template → secrets/.env.jobhunt"
+        )
+        return
+    if job_running("job_scan"):
+        await reply_func("Скан уже идёт. Подожди результат.")
+        return
+
+    async def _run_scan() -> None:
+        summary = await asyncio.to_thread(scan_and_store_leads)
+        by_source = summary.get("by_source") or {}
+        source_line = ", ".join(
+            f"{src} {count}" for src, count in by_source.items() if count
+        ) or "-"
+        parts = [
+            f"Просмотрено: {summary.get('fetched', 0)} ({source_line})",
+            f"Новых: {summary.get('new_count', 0)}",
+            f"Ниже порога: {summary.get('below_threshold', 0)}, "
+            f"в базе: {summary.get('skipped_existing', 0)}, "
+            f"дубли: {summary.get('skipped_duplicates', 0)}",
+        ]
+        await send_rich_markdown(
+            bot,
+            chat_id=chat_id,
+            markdown="## Скан готов\n\n" + "\n".join(parts),
+        )
+        await _send_job_cards(bot, chat_id)
+
+    ok, msg = start_background_job("job_scan", chat_id, _run_scan)
+    await reply_func(f"{msg}\nПорог score ≥ {JOBHUNT_MIN_MATCH}. Карточки придут сюда.")
+
+
 async def cmd_jobs(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
@@ -602,12 +652,14 @@ async def cmd_jobs(update, context) -> None:
     if context.args and context.args[0].lower() in ("like", "dislike"):
         action = context.args[0].lower()
         if len(context.args) < 2:
-            await update.message.reply_text(f"Использование: /jobs {action} <id>")
+            await update.message.reply_text(
+                "Проще нажать Ок / Мимо на карточке. Или: /jobs like 12"
+            )
             return
         try:
             lead_id = int(context.args[1])
         except ValueError:
-            await update.message.reply_text("Неверный id. Пример: /jobs like 12")
+            await update.message.reply_text("Неверный id. Лучше кнопки на карточке.")
             return
         note = " ".join(context.args[2:]) if len(context.args) > 2 else ""
         from job_hunt.sources import apply_feedback
@@ -622,8 +674,8 @@ async def cmd_jobs(update, context) -> None:
             return
 
         lines = [
-            f"{action} по #{result['lead_id']}: {result['company']} — {result['title'][:60]}",
-            f"Источник {result['source_key']}: вес {result['weight_before']} → {result['weight_after']}",
+            f"{action} #{result['lead_id']}: {result['company']} - {result['title'][:60]}",
+            f"Источник {result['source_key']}: {result['weight_before']} -> {result['weight_after']}",
         ]
         if result.get("disabled"):
             lines.append("Источник отключён из-за низкого веса.")
@@ -631,69 +683,131 @@ async def cmd_jobs(update, context) -> None:
         return
 
     if context.args and context.args[0].lower() == "scan":
-        if not JOBHUNT_ENABLED:
-            await update.message.reply_text(
-                "Job hunt отключён. Скопируй secrets/.env.jobhunt.template → secrets/.env.jobhunt"
-            )
-            return
-        if job_running("job_scan"):
-            await update.message.reply_text(
-                "Скан вакансий уже идёт. /status — фоновые задачи."
-            )
-            return
-
-        chat_id = update.effective_chat.id
-        bot = context.bot
-
-        async def _run_scan() -> None:
-            summary = await asyncio.to_thread(scan_and_store_leads)
-            by_source = summary.get("by_source") or {}
-            source_line = ", ".join(
-                f"{src} {count}" for src, count in by_source.items() if count
-            ) or "—"
-            parts = [
-                f"Просмотрено: {summary.get('fetched', 0)} ({source_line})",
-                f"Новых лидов: {summary.get('new_count', 0)}",
-                f"Ниже порога: {summary.get('below_threshold', 0)}, "
-                f"уже в базе: {summary.get('skipped_existing', 0)}, "
-                f"дубли: {summary.get('skipped_duplicates', 0)}",
-            ]
-            top = summary.get("top_leads") or []
-            if top:
-                parts.append("")
-                parts.append("Топ новых:")
-                for lead in top[:5]:
-                    parts.append(
-                        f"- #{lead['id']} ({lead['score']}) {lead['company']}: {lead['title'][:50]}"
-                    )
-            snippet = summary.get("sources_snippet")
-            if snippet and snippet != "—":
-                parts.append("")
-                parts.append(snippet)
-            parts.append("")
-            parts.append("Список: /jobs. Feedback: /jobs like <id>")
-            await send_rich_markdown(
-                bot,
-                chat_id=chat_id,
-                markdown="## Job hunt — скан готов\n\n" + "\n".join(parts),
-            )
-
-        ok, msg = start_background_job("job_scan", chat_id, _run_scan)
-        await update.message.reply_text(
-            f"{msg}\n\nПорог score ≥ {JOBHUNT_MIN_MATCH}. Результат придёт сюда."
+        await _start_job_scan(
+            context.bot,
+            update.effective_chat.id,
+            update.message.reply_text,
         )
         return
 
-    await reply_rich(update, _format_jobs_rich())
+    await _send_job_cards(context.bot, update.effective_chat.id)
 
 
 async def cmd_sources(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
     from job_hunt.sources import format_sources_plain
+    from telegram_bot.jobs_ui import sources_keyboard
 
     text = await asyncio.to_thread(format_sources_plain)
-    await update.message.reply_text(text)
+    await update.message.reply_text(text, reply_markup=sources_keyboard())
+
+
+async def cmd_menu(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    from telegram_bot.jobs_ui import MENU_KEYBOARD
+
+    await update.message.reply_text(
+        "Меню внизу. «Вакансии» - карточки с кнопками Ок / Мимо / Сопровод.",
+        reply_markup=MENU_KEYBOARD,
+    )
+
+
+async def on_menu_text(update, context) -> None:
+    if not update.message or not update.message.text:
+        return
+    if not _allowed_user(update.effective_user):
+        return
+    from telegram_bot.jobs_ui import parse_menu_text
+
+    action = parse_menu_text(update.message.text)
+    if not action:
+        return
+    if action == "jobs":
+        await _send_job_cards(context.bot, update.effective_chat.id)
+    elif action == "liked":
+        await _send_job_cards(context.bot, update.effective_chat.id, liked=True)
+    elif action == "scan":
+        await _start_job_scan(
+            context.bot, update.effective_chat.id, update.message.reply_text
+        )
+    elif action == "sources":
+        await cmd_sources(update, context)
+    elif action == "help":
+        await cmd_help(update, context)
+    elif action == "menu":
+        await cmd_menu(update, context)
+
+
+async def on_job_callback(update, context) -> None:
+    query = update.callback_query
+    if not query or not _allowed_user(query.from_user):
+        return
+    await query.answer()
+    from telegram_bot.jobs_ui import parse_job_callback
+
+    action, lead_id = parse_job_callback(query.data or "")
+    chat_id = query.message.chat_id if query.message else query.from_user.id
+
+    if action == "more":
+        await _send_job_cards(context.bot, chat_id)
+        return
+    if action == "scan":
+        await _start_job_scan(context.bot, chat_id, query.message.reply_text)
+        return
+    if lead_id is None:
+        return
+
+    if action == "like":
+        from job_hunt.sources import apply_feedback
+
+        try:
+            result = await asyncio.to_thread(apply_feedback, lead_id, "like")
+        except KeyError:
+            await query.edit_message_text(f"Лид #{lead_id} не найден.")
+            return
+        await query.edit_message_text(
+            f"Ок #{result['lead_id']}: {result['company']}\n"
+            f"{result['title'][:80]}\n"
+            f"Источник {result['source_key']}: {result['weight_before']} -> {result['weight_after']}"
+        )
+        return
+
+    if action == "pass":
+        from job_hunt.sources import apply_feedback
+
+        try:
+            result = await asyncio.to_thread(apply_feedback, lead_id, "dislike")
+        except KeyError:
+            await query.edit_message_text(f"Лид #{lead_id} не найден.")
+            return
+        extra = ""
+        if result.get("disabled"):
+            extra = "\nИсточник отключён."
+        await query.edit_message_text(
+            f"Мимо #{result['lead_id']}: {result['company']}\n"
+            f"{result['title'][:80]}\n"
+            f"Источник {result['source_key']}: {result['weight_before']} -> {result['weight_after']}"
+            f"{extra}"
+        )
+        return
+
+    if action == "cover":
+        lead = get_job_lead(lead_id)
+        if not lead:
+            await query.message.reply_text(f"Лид #{lead_id} не найден.")
+            return
+        draft = await asyncio.to_thread(
+            draft_cover_letter, _lead_row_to_dict(lead), channel="hh"
+        )
+        add_job_application(lead_id, cover_letter=draft["body"], status="draft")
+        await send_rich_markdown(
+            context.bot,
+            chat_id=chat_id,
+            markdown=format_draft_markdown(draft, lead_id=lead_id),
+        )
+        return
 
 
 async def cmd_cover(update, context) -> None:
@@ -973,7 +1087,7 @@ def main() -> None:
 
     cleanup_stale_bridges_on_startup()
 
-    from telegram.ext import Application, CommandHandler
+    from telegram.ext import Application, CallbackQueryHandler, CommandHandler, MessageHandler, filters
 
     app = (
         Application.builder()
@@ -991,14 +1105,19 @@ def main() -> None:
     app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
     app.add_handler(CommandHandler("sources", cmd_sources, block=False))
+    app.add_handler(CommandHandler("menu", cmd_menu, block=False))
     app.add_handler(CommandHandler("cover", cmd_cover, block=False))
     app.add_handler(CommandHandler("approve", cmd_approve, block=False))
     app.add_handler(CommandHandler("reject", cmd_reject_bounty, block=False))
     app.add_handler(CommandHandler("help", cmd_help, block=False))
-    app.add_handler(CommandHandler("start", cmd_help, block=False))
+    app.add_handler(CommandHandler("start", cmd_menu, block=False))
+    app.add_handler(CallbackQueryHandler(on_job_callback, pattern=r"^j:", block=False))
+    app.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, on_menu_text, block=False)
+    )
 
     logger.info("Telegram-бот запускается")
-    app.run_polling(allowed_updates=["message"])
+    app.run_polling(allowed_updates=["message", "callback_query"])
 
 
 if __name__ == "__main__":
