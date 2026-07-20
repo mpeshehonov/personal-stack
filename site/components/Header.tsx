@@ -18,7 +18,6 @@ type Props = {
 const navKeys = [
   { href: "/", key: "home" as const },
   { href: "/projects", key: "projects" as const },
-  { href: "/blog", key: "blog" as const },
   { href: "/resume", key: "resume" as const },
 ];
 

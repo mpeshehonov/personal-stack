@@ -74,6 +74,13 @@ Regenerate PDF: copy md to `~/personal/cv/`, `make resume-main`, copy to `site/p
 - Repeated opener every bullet
 - «Единый интерфейс» without saying for whom
 - Fake metrics from old CV templates
+- Vague words: значительно, много, successfully, proven track record, team player
+
+## 15-second sell checklist
+
+Full lesson: `agent/memory/lessons/resume_sells_in_15_seconds.md` (@money_career).
+
+Quick: market title (+ aliases) → **goal line** (что ищу) → about who/can/seek/unique → company scale one-liner → 1-line achievement bullets → skills at bottom. No DOB. Recruiter first scans titles, dates, location — then stack.
 
 ## Multi-vacancy soft targeting (RF market)
 

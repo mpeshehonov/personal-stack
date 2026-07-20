@@ -1,15 +1,32 @@
 # Career Copy Notes
 
-Use these facts later for project pages, cover letters, resume bullets, and frontend/fullstack blog topics. Do not publish them directly without rewriting and checking facts with the user.
+Use for project pages, cover letters, resume bullets. Do not invent metrics beyond what is listed here.
 
-## Recent project facts
+## Positioning (locked 2026-07-20)
 
-- `akvaprom.kg`: built an online store for aquaculture/fish-farm products. Recent proof points: bonus system, promo codes, and SEO result where the site reached the first page of Yandex.
-- `sendonate.com`: shipped many streamer-cabinet updates, donation widget designs, and broader streamer functionality around donations, alerts, and cabinet workflows.
-- `potalonu.com`: built a custom seats.io-like service for events: create venue halls, embed a seat selection widget into event sites, and support seat selection/purchase flows.
+- Title: **Senior Product Engineer (frontend-leaning)**
+- Comp target: $3–4k USD/mo (self-employed RF / TK RF / USDT)
+- Priority: job ASAP
+
+## Confirmed facts (user, 2026-07-20)
+
+- Commercial experience: **7 years**
+- English: **B1** (keep on resume)
+- **sendonate:** sole FE; 3 clients (cabinet, Mini App, OBS)
+- **seat-map / PREEGLOS:** production seats.io replacement; **dozens** of halls/events
+- **X5 NKZ:** one of **two** FE; Vite migration **fully owned**; users **hundreds, possibly thousands**
+- **BI.ZONE:** FE team of **3**; main work = threat **categories** + **detail form** for relationships; graph = partial
+- **NLMK:** shop floor **really moved** to web; on-site plant visit; **dozens** of users
+- **Citilink:** catalog zone — filters, microservice API, URL state (memory fuzzy on details)
+
+## Safe scoped language (no fake %)
+
+- "единственный FE", "один из двух FE", "команда FE из 3"
+- "довёл до production", "цех перешёл на web как основной процесс"
+- "сотни (до тысяч) внутренних пользователей" only for X5 with that wording
 
 ## Future content angles
 
-- Case study: "How I built a seats.io-like hall editor and embeddable seat picker for events."
-- Case study: "E-commerce on Next.js with bonuses, promo codes, and SEO growth for akvaprom.kg."
-- Case study: "Streamer monetization UI: donation widgets, OBS overlay, Telegram Mini App, and cabinet workflows."
+- Case study: seats.io-like hall editor and embeddable seat picker
+- Case study: streamer monetization UI (Mini App + OBS + cabinet)
+- Case study: Excel → production SPA at a steel plant (NLMK)

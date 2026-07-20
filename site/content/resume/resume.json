@@ -1,10 +1,10 @@
 {
   "name": "Максим Пешехонов",
-  "title": "Senior Frontend-разработчик",
+  "title": "Senior Product Engineer | Senior Frontend Engineer",
   "email": "kassady71@gmail.com",
   "phone": "+79509196786",
   "location": "Удалённо, РФ",
-  "summary": "Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для enterprise-сервисов, e-commerce, real-time интерфейсов и Telegram Mini Apps. Сложные UI, дизайн-системы, typed API-контракты, REST/GraphQL, WebSocket, CI/CD, code review. Опыт: X5 Tech, BI.ZONE, НЛМК, Citilink, POTALONU.",
+  "summary": "Цель: remote Senior Product / Frontend Engineer (React, TypeScript). 7 лет, ownership до production. X5, BI.ZONE, НЛМК, Citilink, POTALONU. ТК РФ / самозанятый / USDT. ASAP.",
   "skills": [
     "React",
     "TypeScript",
@@ -27,10 +27,9 @@
     "Vitest",
     "React Testing Library",
     "Git",
-    "Webpack",
     "CI/CD",
     "Docker",
-    "Nest.js",
+    "PostgreSQL",
     "Sentry",
     "e-commerce"
   ],

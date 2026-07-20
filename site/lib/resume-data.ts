@@ -12,140 +12,143 @@ export type Experience = {
   role: string;
   period: string;
   location: string;
+  /** Short scale/prestige line for recruiters (15s scan) */
+  companyBlurb?: string;
+  companyUrl?: string;
   blocks: WorkBlock[];
 };
 
 const aboutParagraphsRu = [
-  "Senior Frontend-разработчик, 7+ лет: React, TypeScript, Next.js для enterprise-сервисов, e-commerce, real-time интерфейсов и Telegram Mini Apps. Специализируюсь на сложных пользовательских сценариях: роли и права, длинные формы, typed API-контракты, GraphQL/REST, WebSocket и дизайн-системы.",
-  "Сильнее всего полезен там, где frontend — не набор экранов, а часть продуктовой архитектуры: нужно договориться об API, разложить фичу на понятные модули, пройти code review и довести до production.",
+  "Цель: remote Senior Product / Frontend Engineer (React, TypeScript) в продуктовой команде — международная или сильный RF product; ТК РФ, самозанятый или USDT. Готов ASAP.",
+  "Senior Product Engineer (frontend-leaning), 7 лет: React, TypeScript, Next.js. Довожу сложные продуктовые UI до production: RBAC, длинные формы, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.",
+  "Ownership end-to-end: контракт с backend, модули, code review, деплой, прод. Enterprise (X5, BI.ZONE, НЛМК, Citilink) и свои продукты (Mini Apps, seat maps, monetization стримеров). Ищу роль с product ownership, не «вёрстка по макету».",
 ];
 
 const aboutParagraphsEn = [
-  "Senior Frontend engineer with 7+ years building React, TypeScript, and Next.js interfaces for enterprise systems, e-commerce, real-time products, and Telegram Mini Apps. Focus areas: complex workflows, RBAC, long forms, typed API contracts, GraphQL/REST, WebSocket, and design systems.",
-  "I am strongest where frontend is part of product architecture: shaping API contracts, splitting features into maintainable modules, reviewing code, and shipping to production.",
+  "Goal: remote Senior Product / Frontend Engineer (React, TypeScript) on a product team — international or strong RF product; RF employment, self-employed, or USDT. Available ASAP.",
+  "Senior Product Engineer (frontend-leaning), 7 years: React, TypeScript, Next.js. I ship complex product UIs to production: RBAC, long forms, OpenAPI/Orval, GraphQL/REST, WebSocket, CI/CD.",
+  "End-to-end ownership: API contracts, modules, review, deploy, production. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product work (Mini Apps, seat maps, streamer monetization). Looking for product ownership — not pixel-pushing.",
 ];
 
 const experiencesRu: Experience[] = [
   {
     company: "POTALONU LLC",
-    role: "Frontend-разработчик",
+    role: "Senior Product Engineer",
     period: "09.2025 – 06.2026",
     location: "Удалённо",
+    companyBlurb: "Product studio: ticketing и инструменты для стримеров",
+    companyUrl: "https://potalonu.com",
     blocks: [
       {
         title: "sendonate.com",
-        tagline: "React-продукт для стримеров: Mini App, кабинет, OBS overlay",
-        problem:
-          "Стример принимает донаты в Telegram, настраивает виджеты в кабинете и показывает алерты в OBS: три клиента должны работать с одним backend без рассинхрона.",
+        tagline: "Единственный FE: Mini App, кабинет, OBS overlay",
+        problem: "Три клиента (кабинет, Mini App, OBS) должны жить на одном backend без рассинхрона.",
         contribution:
-          "Спроектировал frontend-контур sendonate.com из трёх React + Vite + TypeScript клиентов: кабинет стримера, Telegram Mini App и OBS overlay. Развивал дизайн виджетов донатов и сценарии кабинета, завёл типизированный REST-клиент через Orval/OpenAPI, real-time доставку событий по WebSocket и CI/CD для lint/build/deploy всех клиентов из одного репозитория.",
-        stack: ["React", "TypeScript", "Vite", "REST API", "Orval", "WebSocket", "Django REST", "GitHub Actions", "Sentry"],
+          "Единственный FE: собрал 3 React + Vite + TypeScript клиента, Orval/OpenAPI, WebSocket-алерты, GitHub Actions, Sentry.",
+        stack: ["React", "TypeScript", "Vite", "Orval", "WebSocket", "GitHub Actions", "Sentry"],
         outcomes: [
-          "End-to-end сценарий доната доведён до production: Mini App, backend, кабинет стримера и alert в OBS overlay работают как один продуктовый флоу",
-          "WebSocket-оверлей обрабатывает последовательные донаты через очередь алертов и reconnect без ручного обновления эфира",
-          "Orval и общий delivery pipeline уменьшают рассинхрон между клиентами и backend при изменении API-контрактов",
+          "End-to-end донат в production: Mini App → backend → кабинет → alert в OBS",
+          "Три клиента на общих API-контрактах без рассинхрона FE/backend",
         ],
       },
       {
-        title: "POTALONU / PREEGLOS",
-        tagline: "Интернет-витрина билетов и редактор схем залов",
-        problem:
-          "Билетному сервису нужны витрина с checkout, Telegram Mini App и собственный seats.io-like редактор залов без зависимости от внешнего SaaS.",
+        title: "PREEGLOS",
+        tagline: "Витрина билетов + seats.io-like редактор залов",
+        problem: "Нужны checkout и свой редактор схем залов вместо seats.io.",
         contribution:
-          "Реализовал web-витрину PREEGLOS на Next.js с checkout-сценарием, Auth.js, PostgreSQL/Drizzle и типизированным REST-клиентом через Orval. Отдельно собрал сервис для схем залов: редактор, хранение структуры мест и embeddable seat picker для партнёрских сайтов; настроил GitLab CI/CD и Docker Compose delivery.",
-        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "SQL", "Orval", "Docker", "GitLab CI", "Auth.js"],
+          "Next.js-витрина (Auth.js, PostgreSQL/Drizzle, Orval) + сервис залов и embed-виджет; GitLab CI, Docker Compose.",
+        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Orval", "Docker", "GitLab CI"],
         outcomes: [
-          "Организаторы могут заводить залы и продавать места через виджет без ручной отрисовки схем под каждое событие",
-          "Покупка билета в вебе и Telegram Mini App работает на общей модели данных и API-контрактах",
-          "Production delivery через Docker Compose и GitLab pipeline снижает количество ручных операций при выкладке",
+          "Замена seats.io в проде: десятки залов/событий, продажа мест через виджет",
+          "Веб и Mini App на одной модели данных и API",
         ],
       },
     ],
   },
   {
     company: "X5 Tech",
-    role: "Frontend-разработчик",
+    role: "Senior Frontend Engineer",
     period: "04.2024 – 07.2025",
     location: "Удалённо",
+    companyBlurb: "IT X5 Group, крупнейший продуктовый ритейлер РФ",
+    companyUrl: "https://www.x5.ru",
     blocks: [
       {
         title: "НКЗ 3.0 — согласование закупок",
-        tagline: "Enterprise React-модуль: RBAC, статусы, длинные формы",
-        problem:
-          "Внутренний сервис закупок требовал единого UI для ролей, статусов, черновиков и многошагового согласования заявок.",
+        tagline: "Enterprise-модуль для сотен (до тысяч) пользователей",
+        problem: "Роли, статусы и многошаговое согласование в одном UI для внутренних пользователей.",
         contribution:
-          "Развивал enterprise-модуль согласования закупок на React + TypeScript: ролевой доступ через Keycloak SSO, многошаговые формы на react-hook-form, типизированный API-слой через Orval/OpenAPI и компоненты из внутреннего npm UI Kit. Делал задачу перехода сборки на Vite, участвовал в декомпозиции, code review и выносил тяжёлые сценарии в отдельные chunks.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form", "React Testing Library"],
+          "Один из 2 FE: Keycloak RBAC, react-hook-form, Orval/OpenAPI, UI Kit; сам перевёл модуль на Vite + code splitting.",
+        stack: ["React", "TypeScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
         outcomes: [
-          "Frontend закрывает полный цикл закупочного согласования: роли, статусы, формы и переходы между этапами",
-          "OpenAPI/Orval сделал API-контракты проверяемыми на сборке и снизил зависимость от ручного обновления типов",
-          "Переход на Vite, code splitting и миграция тестового контура с React Testing Library на Vitest помогли ускорить разработку и проверки",
+          "Полный цикл UI согласования: роли, статусы, формы, переходы этапов",
+          "Самостоятельная миграция на Vite ускорила разработку и проверки",
         ],
       },
     ],
   },
   {
     company: "BI.ZONE",
-    role: "Frontend-разработчик",
+    role: "Senior Frontend Engineer",
     period: "06.2023 – 03.2024",
     location: "Удалённо",
+    companyBlurb: "Кибербезопасность, продукты для SOC",
+    companyUrl: "https://bi.zone",
     blocks: [
       {
         title: "Threat Intelligence",
-        tagline: "React + GraphQL: аналитика связей для SOC",
-        problem:
-          "Аналитикам нужны граф связей, фильтры и отчёты в одном интерфейсе без переключения между инструментами.",
+        tagline: "SOC-аналитика, FE-команда 3 человека",
+        problem: "Категории угроз, детальная карточка и связи в одном интерфейсе для SOC.",
         contribution:
-          "Развивал аналитический интерфейс для SOC на React + TypeScript: GraphQL/Apollo для основной модели данных, MobX/React Query для состояния и запросов, D3.js для графа связей, виртуализация для больших списков и Jest для регрессионных проверок. Участвовал в code review, доработке UX сложных аналитических сценариев и оптимизации тяжёлых экранов.",
-        stack: ["React", "TypeScript", "GraphQL", "REST API", "D3.js", "Jest", "Git"],
+          "Категории киберугроз и детальная форма для построения связей (GraphQL/Apollo); частично граф D3; виртуализация, Jest.",
+        stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Граф связей, фильтры и отчёты объединены в одном рабочем экране аналитика",
-          "Единый GraphQL/Apollo data layer для аналитики и отчётов — меньше расхождений между экраном и выгрузками",
-          "Виртуализация сохраняет отзывчивость интерфейса на больших списках сущностей",
+          "Категории + детальная форма стали рабочим контуром связей в SOC",
+          "Виртуализация держала отзывчивость на больших списках",
         ],
       },
     ],
   },
   {
     company: "НЛМК",
-    role: "Frontend-разработчик",
+    role: "Senior Frontend Engineer",
     period: "05.2022 – 06.2023",
     location: "Удалённо",
+    companyBlurb: "Металлургия: digital на производстве",
+    companyUrl: "https://nlmk.com",
     blocks: [
       {
         title: "Регистрация выпусков чугуна",
-        tagline: "React SPA вместо Excel для производственных данных",
-        problem:
-          "Цех фиксировал выпуски в Excel и разрозненных формах: данные терялись, фильтрация по сменам занимала время.",
+        tagline: "Production SPA вместо Excel",
+        problem: "Цех вёл выпуски в Excel: потери данных и медленная фильтрация по сменам.",
         contribution:
-          "Разработал production SPA для регистрации выпусков чугуна на React + TypeScript: таблицы и фильтры на TanStack Table, серверное состояние через React Query, Keycloak SSO/RBAC для доступа по ролям. Подключил GitLab CI checks на merge request и Sentry для диагностики production-ошибок.",
-        stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "REST API", "Keycloak", "GitLab CI", "Sentry"],
+          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Командировка на цех смотреть реальное использование.",
+        stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
         outcomes: [
-          "Ключевые операции смены переведены из Excel в web-интерфейс с авторизацией и ролевыми правами",
-          "Таблицы, фильтры и серверное состояние рассчитаны на производственные объёмы данных и работу по сменам",
-          "Sentry даёт production visibility: ошибки привязаны к релизам и стек-трейсам без воспроизведения на рабочем месте",
+          "Цех перешёл на web как основной процесс (десятки пользователей на сменах)",
+          "Sentry дал видимость ошибок в проде без выезда на место",
         ],
       },
     ],
   },
   {
     company: "Citilink",
-    role: "Frontend-разработчик",
+    role: "Frontend Engineer",
     period: "04.2021 – 04.2022",
     location: "Удалённо",
+    companyBlurb: "Крупный e-commerce электроники",
+    companyUrl: "https://www.citilink.ru",
     blocks: [
       {
-        title: "citilink.ru — каталог интернет-магазина",
-        tagline: "Миграция e-commerce с PHP/Symfony на Next.js + React",
-        problem:
-          "Крупный интернет-магазин переносил каталог и главную с PHP/Symfony на Next.js: нужны фильтры, SEO и REST без регрессий.",
+        title: "citilink.ru — каталог",
+        tagline: "Миграция PHP/Symfony → Next.js",
+        problem: "Перенос каталога на Next.js с фильтрами, SEO и REST к микросервисам.",
         contribution:
-          "Участвовал в миграции e-commerce каталога и главной citilink.ru с PHP/Symfony на React + Next.js: фильтрация, сортировка, пагинация и URL-состояние для SEO и шаринга. Интегрировал REST API backend/микросервисов, работал в yarn workspaces монорепо, покрывал критичную логику Jest-тестами и проходил code review.",
-        stack: ["Next.js", "React", "TypeScript", "JavaScript", "REST API", "Redux", "Jest", "Git"],
+          "Зона каталога: фильтры, сортировка, пагинация, URL-state, microservice REST API; yarn workspaces, Jest.",
+        stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
         outcomes: [
-          "SEO-контур каталога сохранён при миграции на Next.js: индексируемые страницы и URL-состояние фильтров",
-          "Retail/wholesale сценарии через синхронизацию фильтров, сортировки и пагинации с URL",
-          "Shared npm-пакеты в yarn workspaces помогали переиспользовать логику между страницами каталога и главной",
+          "SEO сохранён: индексируемые страницы и фильтры в URL",
+          "Retail/wholesale через синхронизацию фильтров и пагинации с URL",
         ],
       },
     ],
@@ -155,124 +158,122 @@ const experiencesRu: Experience[] = [
 const experiencesEn: Experience[] = [
   {
     company: "POTALONU LLC",
-    role: "Frontend engineer",
+    role: "Senior Product Engineer",
     period: "Sep 2025 – Jun 2026",
     location: "Remote",
+    companyBlurb: "Product studio: ticketing and streamer tools",
+    companyUrl: "https://potalonu.com",
     blocks: [
       {
         title: "sendonate.com",
-        tagline: "React product for streamers: Mini App, dashboard, OBS overlay",
-        problem:
-          "Streamers accept tips in Telegram, configure donation widgets in the dashboard, and show OBS alerts: three clients must stay in sync with one backend.",
+        tagline: "Sole FE: Mini App, dashboard, OBS overlay",
+        problem: "Three clients (dashboard, Mini App, OBS) must stay in sync with one backend.",
         contribution:
-          "Designed the sendonate.com frontend: three React + Vite + TypeScript clients — streamer dashboard, Telegram Mini App, and OBS overlay. Evolved donation widget designs and dashboard flows, added a typed REST client via Orval/OpenAPI, real-time event delivery over WebSocket, and CI/CD for all clients from one repository.",
-        stack: ["React", "TypeScript", "Vite", "REST API", "Orval", "WebSocket", "Django REST", "GitHub Actions", "Sentry"],
+          "Sole FE: built 3 React + Vite + TypeScript clients, Orval/OpenAPI, WebSocket alerts, GitHub Actions, Sentry.",
+        stack: ["React", "TypeScript", "Vite", "Orval", "WebSocket", "GitHub Actions", "Sentry"],
         outcomes: [
-          "End-to-end donation flow shipped to production: Mini App, backend, streamer dashboard, and OBS overlay work as one product flow",
-          "WebSocket overlay handles sequential donation events with alert queueing and reconnect without manual stream refresh",
-          "Orval and one delivery pipeline reduce drift between clients and backend when API contracts change",
+          "End-to-end tip flow in production: Mini App → backend → dashboard → OBS alert",
+          "Three clients on shared API contracts without FE/backend drift",
         ],
       },
       {
-        title: "POTALONU / PREEGLOS",
-        tagline: "Ticket storefront and hall layout editor",
-        problem:
-          "The ticketing service needed a checkout storefront, Telegram Mini App, and a seats.io-like hall editor without external SaaS lock-in.",
+        title: "PREEGLOS",
+        tagline: "Ticket storefront + seats.io-like hall editor",
+        problem: "Needed checkout and an in-house hall editor instead of seats.io.",
         contribution:
-          "Built PREEGLOS web storefront on Next.js with checkout, Auth.js, PostgreSQL/Drizzle, and typed REST client via Orval. Built the hall layout service: editor, seat data model, and embeddable seat picker for partner sites; GitLab CI/CD and Docker Compose delivery.",
-        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "SQL", "Orval", "Docker", "GitLab CI", "Auth.js"],
+          "Next.js storefront (Auth.js, PostgreSQL/Drizzle, Orval) + hall service and embed widget; GitLab CI, Docker Compose.",
+        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Orval", "Docker", "GitLab CI"],
         outcomes: [
-          "Organizers can create venue layouts and sell seats through an embedded widget without custom drawing per event",
-          "Ticket purchase in web and Telegram Mini App runs on one data model and API contracts",
-          "Docker Compose and GitLab pipeline reduce manual work during production delivery",
+          "Production seats.io alternative: dozens of halls/events via embed widget",
+          "Web and Mini App on one data model and API",
         ],
       },
     ],
   },
   {
     company: "X5 Tech",
-    role: "Frontend engineer",
+    role: "Senior Frontend Engineer",
     period: "Apr 2024 – Jul 2025",
     location: "Remote",
+    companyBlurb: "IT for X5 Group, Russia’s largest grocery retailer",
+    companyUrl: "https://www.x5.ru",
     blocks: [
       {
         title: "NKZ 3.0 — procurement approval",
-        tagline: "Enterprise React module: RBAC, statuses, long forms",
-        problem:
-          "Internal procurement needed one UI for roles, statuses, and multi-step approval flows.",
+        tagline: "Enterprise module for hundreds (up to thousands) of users",
+        problem: "Roles, statuses, and multi-step approval in one UI for internal users.",
         contribution:
-          "Developed an enterprise procurement approval module on React + TypeScript: role-based access via Keycloak SSO, multi-step forms with react-hook-form, typed API layer via Orval/OpenAPI, and internal npm UI Kit components. Owned the migration to Vite, participated in task decomposition and code review, and split heavy flows into chunks.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "REST API", "Orval", "Keycloak", "Git", "react-hook-form", "React Testing Library"],
+          "One of 2 FE: Keycloak RBAC, react-hook-form, Orval/OpenAPI, UI Kit; owned full Vite migration + code splitting.",
+        stack: ["React", "TypeScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
         outcomes: [
-          "Frontend covers the full procurement cycle: roles, statuses, forms, and stage transitions",
-          "OpenAPI/Orval made API contracts verifiable at build time and reduced manual type updates",
-          "Migration to Vite, code splitting, and moving tests from React Testing Library to Vitest helped speed up development and checks",
+          "Full approval UI cycle: roles, statuses, forms, stage transitions",
+          "Solo Vite migration sped up development and checks",
         ],
       },
     ],
   },
   {
     company: "BI.ZONE",
-    role: "Frontend engineer",
+    role: "Senior Frontend Engineer",
     period: "Jun 2023 – Mar 2024",
     location: "Remote",
+    companyBlurb: "Cybersecurity products for SOC",
+    companyUrl: "https://bi.zone",
     blocks: [
       {
         title: "Threat Intelligence",
-        tagline: "React + GraphQL analytics for SOC",
-        problem:
-          "Analysts needed relationship graphs, filters, and reports on one screen without switching tools.",
+        tagline: "SOC analytics, FE team of 3",
+        problem: "Threat categories, detail cards, and relationships in one SOC workspace.",
         contribution:
-          "Extended SOC analytics interface on React + TypeScript: GraphQL/Apollo for core data model, MobX/React Query for state and queries, D3.js relationship graph, list virtualization, and Jest regression checks. Participated in code review, UX improvements for complex analytical flows, and optimization of heavy screens.",
-        stack: ["React", "TypeScript", "GraphQL", "REST API", "D3.js", "Jest", "Git"],
+          "Threat-category sections and detail form for relationships (GraphQL/Apollo); partial D3 graph; virtualization, Jest.",
+        stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Relationship graph, filters, and reports unified on one analyst workspace",
-          "Single GraphQL/Apollo data layer for analytics and reports — fewer mismatches between screen and exports",
-          "Virtualization keeps the interface responsive on large entity lists",
+          "Categories + detail form became the working relationship path in SOC",
+          "Virtualization kept large entity lists responsive",
         ],
       },
     ],
   },
   {
     company: "NLMK",
-    role: "Frontend engineer",
+    role: "Senior Frontend Engineer",
     period: "May 2022 – Jun 2023",
     location: "Remote",
+    companyBlurb: "Steel: digital tools on the shop floor",
+    companyUrl: "https://nlmk.com",
     blocks: [
       {
         title: "Cast iron release registration",
-        tagline: "React SPA replacing Excel for production data",
-        problem:
-          "The shop floor tracked releases in Excel: data was lost and shift filtering was slow.",
+        tagline: "Production SPA replacing Excel",
+        problem: "Shop floor tracked releases in Excel: data loss and slow shift filtering.",
         contribution:
-          "Built production SPA for cast iron release registration on React + TypeScript: TanStack Table filters, React Query server state, Keycloak SSO/RBAC for role-based access. GitLab CI checks on merge requests and Sentry for production error diagnosis.",
-        stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "REST API", "Keycloak", "GitLab CI", "Sentry"],
+          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. On-site plant visit to observe real usage.",
+        stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
         outcomes: [
-          "Core shift operations moved from Excel to a web interface with auth and role-based permissions",
-          "Tables, filters, and server state support production data volumes and shift-based workflows",
-          "Sentry provides production visibility: errors tied to releases and stack traces without on-site reproduction",
+          "Shop floor moved to web as primary process (dozens of shift users)",
+          "Sentry gave production error visibility without on-site reproduction",
         ],
       },
     ],
   },
   {
     company: "Citilink",
-    role: "Frontend engineer",
+    role: "Frontend Engineer",
     period: "Apr 2021 – Apr 2022",
     location: "Remote",
+    companyBlurb: "Large electronics e-commerce",
+    companyUrl: "https://www.citilink.ru",
     blocks: [
       {
-        title: "citilink.ru — online store catalog",
-        tagline: "E-commerce migration from PHP/Symfony to Next.js + React",
-        problem:
-          "A major online store migrated catalog and homepage from PHP/Symfony to Next.js with filters, SEO, and REST intact.",
+        title: "citilink.ru — catalog",
+        tagline: "Migration PHP/Symfony → Next.js",
+        problem: "Move catalog to Next.js with filters, SEO, and microservice REST.",
         contribution:
-          "Contributed to citilink.ru e-commerce catalog and homepage migration from PHP/Symfony to React + Next.js: filters, sort, pagination, and URL state for SEO and sharing. Integrated REST API with backend and microservices, worked in yarn workspaces monorepo, covered critical logic with Jest tests, and participated in code review.",
-        stack: ["Next.js", "React", "TypeScript", "JavaScript", "REST API", "Redux", "Jest", "Git"],
+          "Catalog scope: filters, sort, pagination, URL state, microservice REST API; yarn workspaces, Jest.",
+        stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
         outcomes: [
-          "Catalog SEO preserved on Next.js migration: indexable pages and URL-synced filter state",
-          "Retail/wholesale flows via URL-synced filters, sort, and pagination",
-          "Shared npm packages in yarn workspaces helped reuse logic between catalog and homepage",
+          "SEO preserved: indexable pages and filters in the URL",
+          "Retail/wholesale via URL-synced filters and pagination",
         ],
       },
     ],
