@@ -269,16 +269,16 @@
       "en": "Frontend engineer"
     },
     "tagline": {
-      "ru": "FSD-клиент для рыбоводных хозяйств: участки, цехи, склады, сотрудники",
-      "en": "FSD client for fish farms: sites, workshops, warehouses, staff"
+      "ru": "Сервис управления рыбоводными хозяйствами: участки, цехи, склады, сотрудники",
+      "en": "Fish-farm management UI: sites, workshops, warehouses, staff"
     },
     "problem": {
       "ru": "В производственном сервисе десятки сущностей, ролей и API-контрактов: операторам нужен один предсказуемый интерфейс вместо разрозненных экранов.",
       "en": "The production service has dozens of entities, roles, and API contracts: operators need one predictable interface instead of scattered screens."
     },
     "contribution": {
-      "ru": "Развиваю smartfish-frontend на React + TypeScript + FSD: участки, бассейны, склады, цехи, сотрудники, RBAC, карты Yandex Maps и аналитика. Kubb/Orval генерируют клиент и типы по OpenAPI specs (sites, pools, warehouses, analytics и др.).",
-      "en": "Develop smartfish-frontend on React + TypeScript + FSD: sites, pools, warehouses, workshops, staff, RBAC, Yandex Maps, and analytics. Kubb/Orval generate clients and types from OpenAPI specs (sites, pools, warehouses, analytics, etc.)."
+      "ru": "Развиваю smartfish-frontend на React + TypeScript: участки, бассейны, склады, цехи, сотрудники, RBAC, карты Yandex Maps и аналитика. Kubb/Orval генерируют клиент и типы по OpenAPI.",
+      "en": "Build smartfish-frontend on React + TypeScript: sites, pools, warehouses, workshops, staff, RBAC, Yandex Maps, and analytics. Kubb/Orval generate clients and types from OpenAPI."
     },
     "stack": [
       "React",
@@ -294,14 +294,14 @@
     ],
     "outcomes": {
       "ru": [
-        "FSD-разбиение удерживает производственные модули в понятных границах вместо роста одного большого SPA",
+        "Модульная структура удерживает производственные экраны в понятных границах вместо одного большого SPA",
         "RBAC, карты, склады и аналитика живут в одном интерфейсе для операционных ролей",
         "Codegen по OpenAPI снижает ручную синхронизацию типов между frontend и backend"
       ],
       "en": [
-        "FSD boundaries keep production modules understandable instead of growing one large SPA",
-        "RBAC, maps, warehouses, and analytics live in one interface for operational roles",
-        "OpenAPI codegen reduces manual type synchronization between frontend and backend"
+        "Modular structure keeps production screens in clear boundaries instead of one large SPA",
+        "RBAC, maps, warehouses, and analytics live in one UI for operational roles",
+        "OpenAPI codegen cuts manual type sync between frontend and backend"
       ]
     },
     "featured": true,

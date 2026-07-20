@@ -76,6 +76,19 @@ Regenerate PDF: copy md to `~/personal/cv/`, `make resume-main`, copy to `site/p
 - Fake metrics from old CV templates
 - Vague words: значительно, много, successfully, proven track record, team player
 
+## HR / recruiter red-flag pass (mandatory before ship)
+
+Read every public line as a non-engineer recruiter with 6 seconds. Cut or rewrite if it fails:
+
+1. **Insider jargon without audience** — `SOC`, `FSD-клиент`, `shop floor`, acronyms HR won’t expand. Prefer plain domain words (`аналитики киберугроз`, `сервис для ферм`, `цех` / `plant teams`). Architecture names (`FSD`) stay in **stack tags**, not taglines/outcomes.
+2. **Calque / Engrish in RU** — `Retail/wholesale`, random EN nouns in RU bullets. Write Russian (розница / опт / B2B) or clear EN in EN locale only.
+3. **Weird defensive phrases** — `без выезда на место`, `without on-site reproduction`. Say the outcome (`Sentry ускорил поиск ошибок в проде`), not the logistics joke.
+4. **Negotiation / rails in the hero** — `ТК РФ`, `самозанятый`, `USDT`, salary, contract form. Keep for Telegram/negotiation notes; **not** summary, goal line, or first viewport. Urgency (`ASAP`) only via badge if needed — not stuffed into the about dump.
+5. **Explain-yourself tone** — phrases that sound like excuses or over-justification.
+6. **Test:** would this line look odd on a strong HH/LinkedIn profile of a senior hire? If yes → rewrite.
+
+Lesson: `agent/memory/lessons/resume_no_hr_red_flags.md`.
+
 ## 15-second sell checklist
 
 Full lesson: `agent/memory/lessons/resume_sells_in_15_seconds.md` (@money_career).

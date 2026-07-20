@@ -69,7 +69,7 @@ CV Wolf, JobScan, SkillSyncer, Cultivated Culture, Resume Worded — paste resum
 | Guide rule | Our status | Next surgical tweak |
 |------------|------------|---------------------|
 | Market title + aliases | Partial — Product Engineer OK | Add `Senior Product Engineer \| Senior Frontend Engineer` for HH |
-| Explicit **goal** line | Missing | Add: remote Senior Product/FE; intl or RF TK/USDT; complex product UI |
+| Explicit **goal** line | Missing | Add: remote Senior Product/FE on a product team (role only — no TK/USDT/ASAP dump) |
 | About = who/can/seek/unique | Strong on who/can; weak on **seek** | One sentence: что ищу |
 | Company scale one-liner | Weak | X5 / Citilink / BI.ZONE / НЛМК — short prestige line + link |
 | 1-line bullets only | Mixed (some long) | Tighten for PDF/HH |
