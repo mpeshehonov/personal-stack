@@ -13,10 +13,7 @@ from pathlib import Path
 AGENT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AGENT_ROOT))
 
-from bounty.scanner import daily_bounty_scan
 from job_hunt.scanner import daily_job_scan
-from finance.executor import FinanceExecutor
-from finance.proposal_parser import extract_trade_proposals
 from orchestrator.cursor_runner import run_ask, run_daily_agent, run_task
 from orchestrator.git_deploy import apply_daily_commit, apply_task_deploy, pull_latest
 from orchestrator.daily_report import format_daily_report_rich
@@ -42,6 +39,16 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 POLL_INTERVAL = int(os.environ.get("ORCHESTRATOR_POLL_SEC", "30"))
+FINANCE_DAILY_SCAN = os.environ.get("FINANCE_DAILY_SCAN", "false").lower() in (
+    "true",
+    "1",
+    "yes",
+)
+BOUNTY_DAILY_SCAN = os.environ.get("BOUNTY_DAILY_SCAN", "false").lower() in (
+    "true",
+    "1",
+    "yes",
+)
 
 
 async def process_task(row) -> None:
@@ -62,22 +69,9 @@ async def process_task(row) -> None:
             return
         result = await asyncio.to_thread(run_task, text)
         deploy_report = await asyncio.to_thread(apply_task_deploy, result)
-        finance = FinanceExecutor()
-        proposals = extract_trade_proposals(result)
-        if proposals:
-            outcomes = await asyncio.to_thread(
-                finance.process_agent_proposals, proposals
-            )
-            approved = sum(1 for o in outcomes if o.get("approved"))
-            await notify_allowed_users(
-                f"# Задача выполнена\n\n"
-                f"Finance proposals: {approved}/{len(outcomes)}\n\n"
-                f"{result}\n\n## Deploy\n\n{deploy_report}"
-            )
-        else:
-            await notify_allowed_users(
-                f"# Задача выполнена\n\n{result}\n\n## Deploy\n\n{deploy_report}"
-            )
+        await notify_allowed_users(
+            f"# Задача выполнена\n\n{result}\n\n## Deploy\n\n{deploy_report}"
+        )
     mark_task_done(row["id"])
 
 
@@ -89,9 +83,9 @@ async def run_daily_cycle() -> None:
 
     summary = ""
     health = collect_health()
-    fin_summary: dict = {}
+    fin_summary: dict = {"skipped": True, "reason": "FINANCE_DAILY_SCAN=false"}
     draft_ids: list[int] = []
-    bounty_summary: dict = {}
+    bounty_summary: dict = {"skipped_reason": "disabled"}
     job_summary: dict | None = None
     status = "finished"
     try:
@@ -116,19 +110,36 @@ async def run_daily_cycle() -> None:
             logger.info("Daily log validation: %s", "; ".join(log_warnings[:5]))
             summary = summary + "\n\n[Validator] " + "; ".join(log_warnings[:3])
 
-        finance = FinanceExecutor()
-        agent_proposals = extract_trade_proposals(summary)
-        proposal_outcomes: list[dict] = []
-        if agent_proposals:
-            proposal_outcomes = await asyncio.to_thread(
-                finance.process_agent_proposals, agent_proposals
-            )
-        fin_summary = await asyncio.to_thread(finance.daily_analysis)
-        if proposal_outcomes:
-            fin_summary["agent_proposals"] = proposal_outcomes
-        bounty_result = await asyncio.to_thread(daily_bounty_scan)
-        bounty_summary = bounty_result.to_dict()
-        draft_ids = bounty_summary.get("draft_ids") or []
+        if FINANCE_DAILY_SCAN:
+            from finance.executor import FinanceExecutor
+            from finance.proposal_parser import extract_trade_proposals
+
+            finance = FinanceExecutor()
+            agent_proposals = extract_trade_proposals(summary)
+            proposal_outcomes: list[dict] = []
+            if agent_proposals:
+                proposal_outcomes = await asyncio.to_thread(
+                    finance.process_agent_proposals, agent_proposals
+                )
+            fin_summary = await asyncio.to_thread(finance.daily_analysis)
+            if proposal_outcomes:
+                fin_summary["agent_proposals"] = proposal_outcomes
+        else:
+            logger.info("Finance daily scan skipped (FINANCE_DAILY_SCAN=false)")
+
+        if BOUNTY_DAILY_SCAN:
+            from bounty.scanner import daily_bounty_scan
+
+            bounty_result = await asyncio.to_thread(daily_bounty_scan)
+            bounty_summary = bounty_result.to_dict()
+            draft_ids = bounty_summary.get("draft_ids") or []
+        else:
+            logger.info("Bounty daily scan skipped (BOUNTY_DAILY_SCAN=false)")
+            bounty_summary = {
+                "skipped_reason": "disabled",
+                "message": "Career hunter mode — bounty paused",
+            }
+
         job_summary = await asyncio.to_thread(daily_job_scan)
 
         log_run("daily", "finished", summary[:12000])
@@ -164,7 +175,7 @@ async def worker_loop() -> None:
     from orchestrator.cursor_session import cleanup_stale_bridges_on_startup
 
     cleanup_stale_bridges_on_startup()
-    logger.info("Orchestrator started")
+    logger.info("Orchestrator started (career hunter mode)")
     while True:
         if kv_get("daily_trigger") == "true":
             kv_set("daily_trigger", "false")

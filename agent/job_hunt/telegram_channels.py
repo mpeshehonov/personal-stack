@@ -144,11 +144,11 @@ def fetch_tg_channel_vacancies(channel: str) -> list[dict[str, Any]]:
     return results
 
 
-def fetch_all_tg_vacancies() -> list[dict[str, Any]]:
+def fetch_all_tg_vacancies(channels: list[str] | None = None) -> list[dict[str, Any]]:
     seen: set[str] = set()
     merged: list[dict[str, Any]] = []
-    channels = tg_channel_names()
-    for idx, channel in enumerate(channels):
+    names = channels if channels is not None else tg_channel_names()
+    for idx, channel in enumerate(names):
         if idx > 0:
             time.sleep(RATE_LIMIT_SEC)
         for item in fetch_tg_channel_vacancies(channel):

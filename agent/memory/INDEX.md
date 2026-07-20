@@ -3,11 +3,12 @@
 ## Harness
 - Map: `agent/instructions.md`
 - Daily: `agent/tasks/daily_prompt.md` + `agent/orchestrator/daily_validator.py`
-- Skills: `agent/skills/income-harness/`, `agent/skills/bounty-harness/`
+- Skills: `agent/skills/resume-copy/`, `cover-letter/`, `resume-review-*`
 
 ## Active Agent
 - cursor_agent_id: stored in state.sqlite kv table
 - model: auto
+- **Mode: career hunter** (income/bounty paused 2026-07-20)
 
 ## Stack Paths
 - Site: /opt/personal-stack/site
@@ -15,24 +16,20 @@
 - Secrets: /opt/personal-stack/secrets (never commit)
 
 ## Rules
-1. Bug bounty: orchestrator создаёт **только submit-ready отчёты**; submit **только** после `/approve bounty <id>` (авто на HackerOne если настроено). **Primary income focus** — см. `agent/memory/bounty_platforms.md`, `agent/tasks/bounty_backlog.md`
-2. **Payout (RU):** Gumroad/Lemon/Paddle **не использовать** — цель = **crypto wallet**; см. `agent/memory/lessons/payout_ru_crypto_first.md`
-3. **No FINANCE_LIVE / no live trading proposals** пока user не пополнил кошелёк и не дал approve
-4. Never bypass Risk Engine for finance
-5. Сайт не улучшать автономно: copy/design/feature изменения только вручную с пользователем; daily может делать только health/redeploy если сайт лежит
-6. Use scripts/redeploy-site.sh to restart site
-7. Income plan: M1 $1,000 → wallet by 2026-09-30 → M3 $15,000 by 2026-12-31 — see `agent/memory/income_plan.md`
-8. **Git workflow:** все правки только через git — перед `/task` бот делает `git pull`; после задачи auto commit+push+deploy. Не оставлять правки только на сервере. Локальная разработка → push → deploy-from-git.sh
+1. **North star:** сильные вакансии/проекты + самообучение источников (`job_hunt/`, `/jobs`, `/sources`)
+2. Income/bounty/trading: **paused** — не предлагать hunt/live finance/Gumroad
+3. Сайт не улучшать автономно: copy/design/feature только с пользователем; daily — health/redeploy если лежит
+4. Use scripts/redeploy-site.sh to restart site
+5. **Git workflow:** правки через git — bot `git pull` перед `/task`; после — commit+push+deploy
+6. Resume public copy: HR red-flag pass — `lessons/resume_no_hr_red_flags.md`
 
 ## VPN
 - Primary: Hysteria2 UDP **443** (mobile) + 8443 + 36712 — `vpn/hysteria2/WORKING.txt`
-- Subscription: http://89.124.70.216:8888/sub.txt (rebuild: `vpn/scripts/build-hy2-subscription.sh`)
-- **Split routing (RU direct):** http://89.124.70.216:8888/routing/happ-ru-direct.link
+- Subscription: http://89.124.70.216:8888/sub.txt
 - Site: HTTPS on 443/TCP (Caddy); Hy2 uses 443/UDP
 
 ## Links
-- Resume source: site/content/resume/resume.json + resume.md + site/lib/resume-data.ts
-- Resume sync: `docs/JOB-HUNT-AUTH-SETUP.md` — HH digest + RPA research `agent/memory/research/job_automation_rpa_2026.md`
-- Resume packaging lesson: `agent/memory/lessons/resume_sells_in_15_seconds.md` (@money_career, 15s sell)
-- Resume HR red flags: `agent/memory/lessons/resume_no_hr_red_flags.md` (no SOC/FSD-клиент/USDT in hero)
-- Career strategy: `docs/career-growth-system.md` + backlog
+- Resume: site/content/resume/ + site/lib/resume-data.ts
+- Job hunt: `agent/tasks/job_hunt_backlog.md`, `docs/JOB-HUNT-AUTH-SETUP.md`
+- Career strategy: `docs/career-growth-system.md` + backlog + schema
+- Lessons: `resume_sells_in_15_seconds.md`, `resume_no_hr_red_flags.md`

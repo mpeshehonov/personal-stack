@@ -1,25 +1,24 @@
-# Bounty Backlog — Agent-Pickable Tasks
+# Bounty Backlog — PAUSED (2026-07-20)
 
-Aligned with `agent/memory/bounty_platforms.md` and `agent/skills/bounty-harness/SKILL.md`.  
-**Orchestrator** runs hunt (`bounty/scanner.py`); **daily agent** picks **≤1 item** here when no income_backlog item is higher priority.
+> Career hunter pivot. Do not pick BB-* in daily cycles. `BOUNTY_DAILY_SCAN=false`.
 
-## Phase 0 — Platform expansion (current)
+Aligned with `agent/memory/bounty_platforms.md` (historical).
 
-- [ ] **BB-01** Add 2+ Immunefi/HackenProof programs to `agent/bounty/programs.py` (web/API scope, crypto payout noted)
-- [ ] **BB-02** Document payout rails per platform in `agent/memory/bounty_platforms.md` (after account checks)
-- [ ] **BB-03** Extend `Platform` type + `submit.py` stub for one non-HackerOne platform (Immunefi or HackenProof report export)
-- [ ] **BB-04** Shopify playbook refresh — verify HackerOne scope still matches dev-store flow (`agent/tasks/bounty_shopify_playbook.md`)
+## Phase 0 — Platform expansion
+
+- [ ] ~~**BB-01**~~ cancelled — career pivot
+- [ ] ~~**BB-02**~~ cancelled
+- [ ] ~~**BB-03**~~ cancelled
+- [ ] ~~**BB-04**~~ cancelled
 
 ## Phase 1 — Quality & throughput
 
-- [ ] **BB-05** `finance/bounty_payout.py` — log accepted bounty rewards to `finance_log` (mirror `a4_sales.py`)
-- [ ] **BB-06** Weekly program suggestion in daily log: rotate away from low-response programs
-- [ ] **BB-07** Leads pipeline: tag `[Lead]` drafts with `payout_rail: crypto|bank|unknown`
+- [ ] ~~**BB-05**~~ cancelled
+- [ ] ~~**BB-06**~~ cancelled
+- [ ] ~~**BB-07**~~ cancelled
 
-## Rules
+## Rules (if re-enabled later)
 
-1. **No live exploit** against production without scope — dev stores / staging only where allowed
-2. Submit only after user `/approve bounty <id>`
-3. Do not duplicate orchestrator hunt in daily cycle
-4. GHSA/CVE template spam → purge, not submit
-5. Prefer programs with **crypto payout** for RU-resident user
+1. No live exploit against production without scope
+2. Submit only after `/approve bounty <id>`
+3. Prefer crypto payout programs for RU-resident user

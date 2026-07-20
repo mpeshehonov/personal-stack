@@ -29,18 +29,19 @@ def _recent_daily_logs(limit: int = 3) -> str:
 
 def build_context_pack(health: HealthSnapshot) -> str:
     index = _read(MEMORY_DIR / "INDEX.md", 3000)
-    goals = _read(MEMORY_DIR / "goals.md", 2000)
-    income_plan = _read(MEMORY_DIR / "income_plan.md", 3500)
-    income_backlog = _read(TASKS_DIR / "income_backlog.md", 2500)
-    bounty_backlog = _read(TASKS_DIR / "bounty_backlog.md", 2000)
-    payout_lesson = _read(MEMORY_DIR / "lessons" / "payout_ru_crypto_first.md", 1500)
-    bounty_platforms = _read(MEMORY_DIR / "bounty_platforms.md", 2000)
+    goals = _read(MEMORY_DIR / "goals.md", 2500)
+    career_notes = _read(MEMORY_DIR / "career-copy-notes.md", 2500)
+    job_backlog = _read(TASKS_DIR / "job_hunt_backlog.md", 3000)
+    career_system = _read(
+        MEMORY_DIR.parent.parent / "docs" / "career-growth-system.md", 2500
+    )
     instructions = _read(MEMORY_DIR.parent / "instructions.md", 2000)
-    backlog = _read(TASKS_DIR / "site_backlog.md", 2000)
+    backlog = _read(TASKS_DIR / "site_backlog.md", 1500)
     daily = _recent_daily_logs(3)
     template = _read(TASKS_DIR / "daily_prompt.md", 5000)
+    hr_flags = _read(MEMORY_DIR / "lessons" / "resume_no_hr_red_flags.md", 1500)
 
-    return f"""# Контекст daily-агента
+    return f"""# Контекст daily-агента (career hunter)
 
 ## Здоровье сервера
 - CPU: {health.cpu_percent}%
@@ -57,22 +58,19 @@ def build_context_pack(health: HealthSnapshot) -> str:
 ## Цели
 {goals}
 
-## Income plan (M1 / lanes)
-{income_plan}
+## Career copy notes
+{career_notes}
 
-## Income backlog
-{income_backlog}
+## Job hunt backlog
+{job_backlog}
 
-## Bounty backlog
-{bounty_backlog}
+## Career strategy (excerpt)
+{career_system}
 
-## Payout constraints (RU)
-{payout_lesson}
+## HR red flags (resume)
+{hr_flags}
 
-## Bounty platforms
-{bounty_platforms}
-
-## Бэклог сайта
+## Бэклог сайта (только emergency)
 {backlog}
 
 ## Недавние daily-логи
@@ -90,7 +88,9 @@ def ensure_daily_log() -> Path:
     path = daily_dir / f"{today}.md"
     if not path.exists():
         path.write_text(
-            f"# Daily Log {today}\n\n## План\n\n## Итог\n\n## Сайт\n\n## Финансы\n\n## Баг-баунти\n\n## Уроки\n\n",
+            f"# Daily Log {today}\n\n"
+            "## План\n\n## Итог\n\n## Сайт\n\n"
+            "## Поиск работы\n\n## Источники\n\n## Уроки\n\n",
             encoding="utf-8",
         )
     return path

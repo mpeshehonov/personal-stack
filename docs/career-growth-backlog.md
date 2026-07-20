@@ -15,7 +15,8 @@ Complexity: **S** ≤0.5d · **M** 1–3d · **L** 1–2w · **XL** >2w
 - **Result:** `daily_prompt.md`, `goals.md`, `INDEX.md`, context pack prioritize career; bounty/finance background.  
 - **Complexity:** S  
 - **Depends on:** —  
-- **KPI:** career tasks completed / week; Cursor hours on career ≥70%
+- **KPI:** career tasks completed / week; Cursor hours on career ≥70%  
+- **Status:** DONE 2026-07-20 — `FINANCE_DAILY_SCAN=false`, `BOUNTY_DAILY_SCAN=false`, career hunter matcher + source learning shipped
 
 ### CG-02 — Lock positioning copy v1
 - **Why:** Without a sharp profile, outreach and site contradict.  

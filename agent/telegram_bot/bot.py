@@ -80,11 +80,10 @@ BOT_COMMANDS = [
     ("start", "Начало и список команд"),
     ("help", "Справка по командам"),
     ("status", "Состояние сервера"),
-    ("finance", "Финансы и paper-торговля"),
     ("ask", "Вопрос агенту (только ответ, без правок)"),
     ("task", "Задача: правки + commit + deploy"),
-    ("bounty", "Черновики bug bounty"),
-    ("jobs", "Вакансии job hunt"),
+    ("jobs", "Вакансии и feedback"),
+    ("sources", "Веса источников вакансий"),
     ("cover", "Сопровод к вакансии"),
     ("memory", "Итог последнего daily-цикла"),
     ("pause", "Приостановить автономию"),
@@ -222,28 +221,25 @@ def _format_memory_rich() -> str:
 def _help_text() -> str:
     return (
         "Команды бота:\n\n"
-        "/status — состояние сервера и сервисов\n"
-        "/finance — geoblock, paper-сделки, цель $15k\n"
-        "/ask <вопрос> — ответ без изменений на сервере\n"
-        "/task <текст> — git pull, правки, commit, push, deploy\n"
-        "/bounty — готовые отчёты bug bounty (semi-auto)\n"
-        "/bounty hunt — deep research (до 3 программ)\n"
-        "/bounty purge — отсеять не-submit pending\n"
-        "/bounty test — проверить HackerOne API\n"
-        "/jobs — топ вакансий (job hunt)\n"
+        "/status — сервер и health\n"
+        "/ask — вопрос агенту (без правок)\n"
+        "/task — задача: правки + commit + deploy\n"
+        "/jobs — топ вакансий (career hunter)\n"
         "/jobs scan — поиск новых вакансий (фон)\n"
-        "/jobs auth — проверка Habr/LinkedIn для resume sync\n"
+        "/jobs like <id> — хороший лид (учит источник)\n"
+        "/jobs dislike <id> [причина] — плохой лид\n"
+        "/jobs hh-digest — текст для ручной вставки в HH\n"
+        "/jobs auth — проверка Habr/LinkedIn\n"
         "/jobs sync — diff резюме site → площадки\n"
-        "/jobs hh-digest — текст для ручной вставки в HH (API закрыт)\n"
-        "/cover <id> — сопровод для лида (HH, ≤500 символов)\n"
-        "/cover <id> email — сопровод для email-отклика\n"
-        "/approve bounty <id> — одобрить и отправить отчёт (HackerOne)\n"
-        "/approve resume habr|all — push на Habr (HH — только digest)\n"
-        "/reject bounty <id> — отклонить черновик\n"
-        "/memory — итог последнего daily-цикла\n"
-        "/pause — приостановить автономию\n"
-        "/resume — возобновить автономию\n"
-        "/help — эта справка"
+        "/sources — веса и статусы источников\n"
+        "/cover <id> — сопровод для лида\n"
+        "/approve source <key> — включить seed-источник\n"
+        "/reject source <key> — отклонить источник\n"
+        "/approve resume hh|habr|all — sync резюме\n"
+        "/memory — итог daily\n"
+        "/pause /resume — автономия\n"
+        "/help — эта справка\n\n"
+        "Income/bounty paused. Фокус: сильные вакансии и проекты."
     )
 
 
@@ -530,42 +526,49 @@ def _format_jobs_rich() -> str:
     if not JOBHUNT_ENABLED:
         return (
             "## Job hunt\n\n"
-            "Модуль отключён (`JOBHUNT_ENABLED=false`).\n\n"
-            "Скопируй `secrets/.env.jobhunt.template` → `secrets/.env.jobhunt`."
+            "Модуль отключён (JOBHUNT_ENABLED=false).\n\n"
+            "Скопируй secrets/.env.jobhunt.template → secrets/.env.jobhunt."
         )
 
     leads = list_job_leads(status="new", limit=10, min_score=JOBHUNT_MIN_MATCH)
-    if not leads:
+    liked = list_job_leads(status="liked", limit=5, min_score=0)
+    if not leads and not liked:
         return (
             "## Job hunt\n\n"
             f"Нет новых лидов с score ≥ {JOBHUNT_MIN_MATCH}.\n\n"
-            "Ежедневный скан запускается в daily-цикле. Только просмотр — без авто-откликов."
+            "Скан: /jobs scan. Feedback: /jobs like <id> или /jobs dislike <id>."
         )
 
     lines = [
         "# Job hunt",
         "",
-        f"**Новые лиды** (score ≥ {JOBHUNT_MIN_MATCH}):",
+        f"Новые лиды (score ≥ {JOBHUNT_MIN_MATCH}):",
         "",
-        "| # | Score | Компания | Вакансия |",
-        "|:--|------:|:---------|:---------|",
     ]
     for row in leads:
         title = row["title"]
-        if len(title) > 42:
-            title = title[:39] + "..."
+        if len(title) > 60:
+            title = title[:57] + "..."
         company = row["company"] or "—"
-        if len(company) > 24:
-            company = company[:21] + "..."
-        lines.append(f"| {row['id']} | {row['match_score']} | {company} | [{title}]({row['url']}) |")
+        lines.append(
+            f"- #{row['id']} ({row['match_score']}) {company}: {title}"
+        )
+        if row["url"]:
+            lines.append(f"  {row['url']}")
+
+    if liked:
+        lines.extend(["", "Понравившиеся:"])
+        for row in liked:
+            lines.append(f"- #{row['id']} {row['company']}: {row['title'][:50]}")
 
     lines.extend(
         [
             "",
-            "`/jobs scan` — поиск новых вакансий",
-            "`/jobs hh-digest` — текст для HH (ручная вставка)",
-            "`/jobs sync` — diff resume → platforms",
-            "`/cover <id>` — сопровод (отправляешь сам)",
+            "/jobs scan — новый поиск",
+            "/jobs like <id> — хороший лид",
+            "/jobs dislike <id> — плохой лид",
+            "/cover <id> — сопровод",
+            "/sources — веса источников",
         ]
     )
     return "\n".join(lines)
@@ -596,6 +599,37 @@ async def cmd_jobs(update, context) -> None:
         await reply_rich(update, md)
         return
 
+    if context.args and context.args[0].lower() in ("like", "dislike"):
+        action = context.args[0].lower()
+        if len(context.args) < 2:
+            await update.message.reply_text(f"Использование: /jobs {action} <id>")
+            return
+        try:
+            lead_id = int(context.args[1])
+        except ValueError:
+            await update.message.reply_text("Неверный id. Пример: /jobs like 12")
+            return
+        note = " ".join(context.args[2:]) if len(context.args) > 2 else ""
+        from job_hunt.sources import apply_feedback
+
+        try:
+            result = await asyncio.to_thread(apply_feedback, lead_id, action, note=note)
+        except KeyError:
+            await update.message.reply_text(f"Лид #{lead_id} не найден.")
+            return
+        except ValueError as e:
+            await update.message.reply_text(str(e))
+            return
+
+        lines = [
+            f"{action} по #{result['lead_id']}: {result['company']} — {result['title'][:60]}",
+            f"Источник {result['source_key']}: вес {result['weight_before']} → {result['weight_after']}",
+        ]
+        if result.get("disabled"):
+            lines.append("Источник отключён из-за низкого веса.")
+        await update.message.reply_text("\n".join(lines))
+        return
+
     if context.args and context.args[0].lower() == "scan":
         if not JOBHUNT_ENABLED:
             await update.message.reply_text(
@@ -614,36 +648,30 @@ async def cmd_jobs(update, context) -> None:
         async def _run_scan() -> None:
             summary = await asyncio.to_thread(scan_and_store_leads)
             by_source = summary.get("by_source") or {}
-            source_labels = {
-                "hh": "HH",
-                "habr": "Habr",
-                "hirify": "Hirify",
-                "hirehi": "HireHi",
-                "telegram": "TG",
-            }
             source_line = ", ".join(
-                f"{source_labels.get(src, src)} {count}"
-                for src, count in by_source.items()
-                if count
+                f"{src} {count}" for src, count in by_source.items() if count
             ) or "—"
             parts = [
-                f"Просмотрено: **{summary.get('fetched', 0)}** ({source_line})",
-                f"Новых лидов: **{summary.get('new_count', 0)}**",
-                f"Ниже порога: {summary.get('below_threshold', 0)} · "
-                f"уже в базе: {summary.get('skipped_existing', 0)} · "
+                f"Просмотрено: {summary.get('fetched', 0)} ({source_line})",
+                f"Новых лидов: {summary.get('new_count', 0)}",
+                f"Ниже порога: {summary.get('below_threshold', 0)}, "
+                f"уже в базе: {summary.get('skipped_existing', 0)}, "
                 f"дубли: {summary.get('skipped_duplicates', 0)}",
             ]
             top = summary.get("top_leads") or []
             if top:
                 parts.append("")
-                parts.append("**Топ новых:**")
+                parts.append("Топ новых:")
                 for lead in top[:5]:
                     parts.append(
-                        f"- #{lead['id']} ({lead['score']}) {lead['company']}: "
-                        f"[{lead['title'][:50]}]({lead['url']})"
+                        f"- #{lead['id']} ({lead['score']}) {lead['company']}: {lead['title'][:50]}"
                     )
+            snippet = summary.get("sources_snippet")
+            if snippet and snippet != "—":
+                parts.append("")
+                parts.append(snippet)
             parts.append("")
-            parts.append("Список: `/jobs` · сопровод: `/cover <id>`")
+            parts.append("Список: /jobs. Feedback: /jobs like <id>")
             await send_rich_markdown(
                 bot,
                 chat_id=chat_id,
@@ -652,11 +680,20 @@ async def cmd_jobs(update, context) -> None:
 
         ok, msg = start_background_job("job_scan", chat_id, _run_scan)
         await update.message.reply_text(
-            f"{msg}\n\nHH + Habr + Hirify + HireHi + TG, score ≥ {JOBHUNT_MIN_MATCH}. Результат придёт сюда."
+            f"{msg}\n\nПорог score ≥ {JOBHUNT_MIN_MATCH}. Результат придёт сюда."
         )
         return
 
     await reply_rich(update, _format_jobs_rich())
+
+
+async def cmd_sources(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    from job_hunt.sources import format_sources_plain
+
+    text = await asyncio.to_thread(format_sources_plain)
+    await update.message.reply_text(text)
 
 
 async def cmd_cover(update, context) -> None:
@@ -698,9 +735,9 @@ async def cmd_approve(update, context) -> None:
     if not context.args:
         await update.message.reply_text(
             "Использование:\n"
-            "/approve bounty <id>\n"
+            "/approve source <key>\n"
             "/approve resume hh|habr|all\n\n"
-            "Список bounty: /bounty · diff резюме: /jobs sync"
+            "Источники: /sources · diff резюме: /jobs sync"
         )
         return
 
@@ -708,7 +745,27 @@ async def cmd_approve(update, context) -> None:
         await _approve_resume(update, context)
         return
 
-    await _approve_bounty(update, context)
+    if context.args[0].lower() == "source":
+        if len(context.args) < 2:
+            await update.message.reply_text("Использование: /approve source <key>")
+            return
+        key = context.args[1].strip()
+        from job_hunt.sources import approve_source
+
+        ok = await asyncio.to_thread(approve_source, key)
+        if ok:
+            await update.message.reply_text(f"Источник {key} включён (active).")
+        else:
+            await update.message.reply_text(f"Источник {key} не найден. См. /sources")
+        return
+
+    if context.args[0].lower() == "bounty":
+        await _approve_bounty(update, context)
+        return
+
+    await update.message.reply_text(
+        "Неизвестная цель approve. Используй: source | resume"
+    )
 
 
 async def _approve_resume(update, context) -> None:
@@ -830,7 +887,29 @@ async def cmd_reject_bounty(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
     if not context.args:
-        await update.message.reply_text("Использование: /reject bounty <id>")
+        await update.message.reply_text(
+            "Использование:\n"
+            "/reject source <key>\n"
+            "/reject bounty <id> (paused lane)"
+        )
+        return
+
+    if context.args[0].lower() == "source":
+        if len(context.args) < 2:
+            await update.message.reply_text("Использование: /reject source <key>")
+            return
+        key = context.args[1].strip()
+        from job_hunt.sources import reject_source
+
+        ok = await asyncio.to_thread(reject_source, key)
+        if ok:
+            await update.message.reply_text(f"Источник {key} отклонён.")
+        else:
+            await update.message.reply_text(f"Источник {key} не найден.")
+        return
+
+    if context.args[0].lower() != "bounty":
+        await update.message.reply_text("Использование: /reject source <key>")
         return
     try:
         draft_id = _parse_bounty_draft_id(context.args)
@@ -867,10 +946,10 @@ async def post_init(app) -> None:
     await app.bot.set_my_commands(commands)
     try:
         await app.bot.set_my_description(
-            "Персональный агент: сервер, финансы, bug bounty, задачи Cursor."
+            "Career hunter: поиск сильных вакансий и проектов, feedback источников."
         )
         await app.bot.set_my_short_description(
-            "Автономный агент на VPS. /ask — вопрос со стримингом."
+            "Вакансии /jobs, источники /sources, задачи Cursor."
         )
     except Exception as e:
         logger.info("setMyDescription skipped: %s", e)
@@ -911,6 +990,7 @@ def main() -> None:
     app.add_handler(CommandHandler("memory", cmd_memory, block=False))
     app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
+    app.add_handler(CommandHandler("sources", cmd_sources, block=False))
     app.add_handler(CommandHandler("cover", cmd_cover, block=False))
     app.add_handler(CommandHandler("approve", cmd_approve, block=False))
     app.add_handler(CommandHandler("reject", cmd_reject_bounty, block=False))
