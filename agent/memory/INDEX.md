@@ -32,4 +32,4 @@
 - Resume: site/content/resume/ + site/lib/resume-data.ts
 - Job hunt: `agent/tasks/job_hunt_backlog.md`, `docs/JOB-HUNT-AUTH-SETUP.md`
 - Career strategy: `docs/career-growth-system.md` + backlog + schema
-- Lessons: `resume_sells_in_15_seconds.md`, `resume_no_hr_red_flags.md`
+- Lessons: `resume_sells_in_15_seconds.md`, `resume_no_hr_red_flags.md`, `job_match_false_positives.md`
