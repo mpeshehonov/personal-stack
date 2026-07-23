@@ -10,15 +10,15 @@ Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mp
 
 Senior Frontend Engineer, 7 years. Stack: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.
 
-I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, CI/CD, production debugging.
+I build complex UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, CI/CD, production debugging.
 
-Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release.
+Worked at X5, BI.ZONE, NLMK, Citilink. At POTALONU I was the sole frontend: streamer donations and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release.
 
 ## Work experience
 
 ### POTALONU LLC - Senior Frontend Engineer
 
-*Product studio: ticketing and streamer tools* · [potalonu.com](https://potalonu.com)
+*Ticketing and streamer tools* · [potalonu.com](https://potalonu.com)
 Sep 2025 - Jun 2026 | Remote
 
 **sendonate.com** - Sole frontend: Mini App, streamer dashboard, overlay

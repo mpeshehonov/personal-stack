@@ -20,14 +20,14 @@ export type Experience = {
 
 const aboutParagraphsRu = [
   "Senior Frontend Engineer, 7 лет. Стек: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.",
-  "Делаю сложные продуктовые интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, CI/CD, разбор ошибок в проде.",
-  "Enterprise: X5, BI.ZONE, НЛМК, Citilink. В студии - единственный frontend на Mini App, кабинете и редакторе схем залов (Canvas). Ищу remote Senior Frontend роль с ответственностью за модуль от API до релиза.",
+  "Делаю сложные интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, CI/CD, разбор ошибок в проде.",
+  "Работал в X5, BI.ZONE, НЛМК, Citilink. В POTALONU был единственным frontend: донаты для стримеров и редактор схем залов на Canvas. Ищу remote Senior Frontend с ответственностью за модуль от API до релиза.",
 ];
 
 const aboutParagraphsEn = [
   "Senior Frontend Engineer, 7 years. Stack: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.",
-  "I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, CI/CD, production debugging.",
-  "Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release.",
+  "I build complex UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, CI/CD, production debugging.",
+  "Worked at X5, BI.ZONE, NLMK, Citilink. At POTALONU I was the sole frontend: streamer donations and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release.",
 ];
 
 const experiencesRu: Experience[] = [
@@ -36,7 +36,7 @@ const experiencesRu: Experience[] = [
     role: "Senior Frontend Engineer",
     period: "09.2025 - 06.2026",
     location: "Удалённо",
-    companyBlurb: "Продуктовая студия: билеты и инструменты для стримеров",
+    companyBlurb: "Билеты и инструменты для стримеров",
     companyUrl: "https://potalonu.com",
     blocks: [
       {
@@ -173,7 +173,7 @@ const experiencesEn: Experience[] = [
     role: "Senior Frontend Engineer",
     period: "Sep 2025 - Jun 2026",
     location: "Remote",
-    companyBlurb: "Product studio: ticketing and streamer tools",
+    companyBlurb: "Ticketing and streamer tools",
     companyUrl: "https://potalonu.com",
     blocks: [
       {

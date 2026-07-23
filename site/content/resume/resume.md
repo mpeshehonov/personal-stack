@@ -10,15 +10,15 @@ Senior Frontend Engineer
 
 Senior Frontend Engineer, 7 лет. Стек: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.
 
-Делаю сложные продуктовые интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, CI/CD, разбор ошибок в проде.
+Делаю сложные интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, CI/CD, разбор ошибок в проде.
 
-Enterprise: X5, BI.ZONE, НЛМК, Citilink. В студии - единственный frontend на Mini App, кабинете и редакторе схем залов (Canvas). Ищу remote Senior Frontend роль с ответственностью за модуль от API до релиза.
+Работал в X5, BI.ZONE, НЛМК, Citilink. В POTALONU был единственным frontend: донаты для стримеров и редактор схем залов на Canvas. Ищу remote Senior Frontend с ответственностью за модуль от API до релиза.
 
 ## Опыт работы
 
 ### POTALONU LLC - Senior Frontend Engineer
 
-*Продуктовая студия: билеты и инструменты для стримеров* · [potalonu.com](https://potalonu.com)
+*Билеты и инструменты для стримеров* · [potalonu.com](https://potalonu.com)
 09.2025 - 06.2026 | Удалённо
 
 **sendonate.com** - Единственный frontend: мини-приложение, кабинет, оверлей

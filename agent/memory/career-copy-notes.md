@@ -9,6 +9,7 @@ Use for project pages, cover letters, resume bullets. Do not invent metrics beyo
 - Comp target: $3–4k USD/mo — **private / negotiation only**
 - Priority: job ASAP — badge OK; **do not** dump TK/USDT/ASAP into hero summary
 - Public copy: plain language for HR — see `lessons/resume_no_hr_red_flags.md`
+- Do **not** call POTALONU a «студия» / «product studio» — say company name + what you built
 - Consultant pass F: clear goals/actions, ATS keywords in first screen, senior signals (sole FE / 1 of 2 / scale / owned migration)
 - **Operating system:** `agent/memory/career-ops.md` — weekly cycle, RED protocol, 5 channels, freeze after platform sync
 
