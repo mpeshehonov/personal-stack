@@ -38,6 +38,7 @@ Use for project pages, cover letters, resume bullets. Do not invent metrics beyo
 ## Portfolio-only (not on resume / HH)
 
 - **smartprice-web** — SmartPrice «Умный прайс» (Next.js): прайсы, техкарты, финмодель
+- **smartfish-kkm** — React Native / Expo tablet POS (kkm-frontend); featured on homepage
 - **zodiaclab-user-bot** — TG bot clients/specialists (Nest.js)
 - **zodiaclab-admin-bot** — TG bot admins/moderators (Nest.js)
 - **zodiaclab-crm-bot** — CRM bot + Mini App (Express, Grammy)

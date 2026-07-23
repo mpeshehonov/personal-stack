@@ -503,7 +503,7 @@
       ]
     },
     "featured": true,
-    "order": 10
+    "order": 11
   },
   {
     "slug": "citilink-migration",
@@ -554,7 +554,7 @@
       ]
     },
     "featured": false,
-    "order": 11
+    "order": 12
   },
   {
     "slug": "bizone-thread-intelligence",
@@ -606,7 +606,7 @@
       ]
     },
     "featured": false,
-    "order": 12
+    "order": 13
   },
   {
     "slug": "potalonu-tickets",
@@ -655,7 +655,7 @@
       ]
     },
     "featured": false,
-    "order": 13
+    "order": 14
   },
   {
     "slug": "marketplace-nda",
@@ -708,7 +708,7 @@
       ]
     },
     "featured": false,
-    "order": 14
+    "order": 15
   },
   {
     "slug": "in2view",
@@ -757,7 +757,7 @@
       ]
     },
     "featured": false,
-    "order": 15
+    "order": 16
   },
   {
     "slug": "rostelecom-yaga",
@@ -805,7 +805,7 @@
       ]
     },
     "featured": false,
-    "order": 16
+    "order": 17
   },
   {
     "slug": "sbertech-knowledge-base",
@@ -855,7 +855,7 @@
       ]
     },
     "featured": false,
-    "order": 17
+    "order": 18
   },
   {
     "slug": "sbertech-opensearch",
@@ -904,56 +904,58 @@
       ]
     },
     "featured": false,
-    "order": 18
+    "order": 19
   },
   {
     "slug": "smartfish-kkm",
     "title": {
-      "ru": "SmartFish KKM — кассовый модуль",
-      "en": "SmartFish KKM — point of sale"
+      "ru": "SmartFish KKM — касса на планшете",
+      "en": "SmartFish KKM — tablet POS"
     },
     "company": {
       "ru": "SmartFish",
       "en": "SmartFish"
     },
     "role": {
-      "ru": "Fullstack",
-      "en": "Fullstack"
+      "ru": "Mobile / Frontend",
+      "en": "Mobile / Frontend"
     },
     "tagline": {
-      "ru": "Касса в smartfish-frontend + NestJS backend для смен и фискализации",
-      "en": "POS in smartfish-frontend + NestJS backend for shifts and fiscal"
+      "ru": "React Native (Expo) касса: смены, продажи, оплаты и POS-терминал",
+      "en": "React Native (Expo) POS: shifts, sales, payments, and card terminal"
     },
     "problem": {
-      "ru": "Рознице нужны смены, оплаты и фискальные чеки — отдельный backend и UI-модуль в основном клиенте.",
-      "en": "Retail needed shifts, payments, and fiscal receipts — a dedicated backend and UI module in the main client."
+      "ru": "Рознице SmartFish нужна касса на планшете: открытие смены, корзина, нал и безнал, работа с POS-терминалом в магазине.",
+      "en": "SmartFish retail needed a tablet POS: open a shift, build a cart, take cash and card, and talk to the in-store POS terminal."
     },
     "contribution": {
-      "ru": "Backend кассы на NestJS: смены, товары, оплаты, фискализация. На фронте - модуль кассы с typed API из OpenAPI (Orval).",
-      "en": "POS backend on NestJS: shifts, products, payments, fiscalization. Frontend POS module with typed API from OpenAPI (Orval)."
+      "ru": "Собрал мобильное приложение на React Native и Expo (Expo Router, NativeWind, Zustand): авторизация кассира, смены, каталог, корзина, оплаты (нал / карта / QR на терминале), роли кассир и админ/менеджер, сборки через EAS.",
+      "en": "Built a React Native and Expo app (Expo Router, NativeWind, Zustand): cashier auth, shifts, catalog, cart, payments (cash / card / QR on terminal), cashier vs admin/manager roles, EAS builds."
     },
     "stack": [
-      "NestJS",
-      "TypeORM",
-      "PostgreSQL",
-      "Swagger",
-      "React",
-      "Orval"
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Expo Router",
+      "NativeWind",
+      "Zustand",
+      "EAS",
+      "REST API"
     ],
     "outcomes": {
       "ru": [
-        "POS API описан в OpenAPI - фронт генерирует клиент без ручного копирования DTO",
-        "Модуль кассы встроен в основной frontend SmartFish",
-        "Фискализация и оплаты вынесены в отдельные Nest-модули"
+        "Кассир ведёт смену и продажи с планшета в магазине",
+        "Безнал уходит на POS-терминал по локальной сети с печатью чека",
+        "Разные роли: продавец на смене, админ/менеджер в режиме просмотра без открытия смены"
       ],
       "en": [
-        "POS API is described in OpenAPI - the frontend generates the client without hand-copied DTOs",
-        "POS module lives inside the main SmartFish frontend",
-        "Fiscalization and payments sit in separate Nest modules"
+        "Cashiers run shifts and sales from a tablet in the store",
+        "Card payments go to the POS terminal over LAN with receipt printing",
+        "Role split: cashier on a shift, admin/manager in view mode without opening a shift"
       ]
     },
-    "featured": false,
-    "order": 19
+    "featured": true,
+    "order": 10
   },
   {
     "slug": "smartfish-backend",
@@ -1002,7 +1004,7 @@
       ]
     },
     "featured": false,
-    "order": 20
+    "order": 21
   },
   {
     "slug": "smartfish-landing",
@@ -1051,7 +1053,7 @@
       ]
     },
     "featured": false,
-    "order": 21
+    "order": 22
   },
   {
     "slug": "smartfish-bots",
@@ -1099,7 +1101,7 @@
       ]
     },
     "featured": false,
-    "order": 22
+    "order": 23
   },
   {
     "slug": "stratwise",
@@ -1148,7 +1150,7 @@
       ]
     },
     "featured": false,
-    "order": 23
+    "order": 24
   },
   {
     "slug": "quan2um",
@@ -1197,7 +1199,7 @@
       ]
     },
     "featured": false,
-    "order": 24
+    "order": 25
   },
   {
     "slug": "beauty-shop",
@@ -1250,7 +1252,7 @@
       ]
     },
     "featured": false,
-    "order": 25
+    "order": 26
   },
   {
     "slug": "fitomarket",
@@ -1299,7 +1301,7 @@
       ]
     },
     "featured": false,
-    "order": 26
+    "order": 27
   },
   {
     "slug": "energosoft",
@@ -1348,7 +1350,7 @@
       ]
     },
     "featured": false,
-    "order": 27
+    "order": 28
   },
   {
     "slug": "baucenter",
@@ -1397,7 +1399,7 @@
       ]
     },
     "featured": false,
-    "order": 28
+    "order": 29
   },
   {
     "slug": "specdep",
@@ -1446,7 +1448,7 @@
       ]
     },
     "featured": false,
-    "order": 29
+    "order": 30
   },
   {
     "slug": "energoshop-workshop",
@@ -1495,7 +1497,7 @@
       ]
     },
     "featured": false,
-    "order": 30
+    "order": 31
   },
   {
     "slug": "zenit-tickets",
@@ -1539,7 +1541,7 @@
       ]
     },
     "featured": false,
-    "order": 31
+    "order": 32
   },
   {
     "slug": "aurumline-webview",
@@ -1583,7 +1585,7 @@
       ]
     },
     "featured": false,
-    "order": 32
+    "order": 33
   },
   {
     "slug": "duckmaster",
@@ -1632,7 +1634,7 @@
       ]
     },
     "featured": false,
-    "order": 33
+    "order": 34
   },
   {
     "slug": "handstars",
@@ -1682,7 +1684,7 @@
       ]
     },
     "featured": false,
-    "order": 34
+    "order": 35
   },
   {
     "slug": "it-simulator",
@@ -1730,6 +1732,6 @@
       ]
     },
     "featured": false,
-    "order": 35
+    "order": 36
   }
 ]

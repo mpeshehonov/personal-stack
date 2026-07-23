@@ -48,6 +48,8 @@ const FEATURED = new Set([
   "zodiaclab",
   "nlmk-iron-registration",
   "smartfish-management",
+  "smartfish-kkm",
+  "smartprice-web",
 ]);
 
 const projects = JSON.parse(fs.readFileSync(indexPath, "utf8"));

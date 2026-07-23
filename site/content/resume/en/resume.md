@@ -98,7 +98,7 @@ Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest
 ## Skills
 
 - **Languages:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
-- **Frontend:** React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, Canvas, Framer Motion, Rive, Lottie, Feature-Sliced Design, Module Federation, Tailwind CSS, CSS-in-JS / Emotion
+- **Frontend:** React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, Canvas, Framer Motion, Rive, Lottie, React Native, Expo, Feature-Sliced Design, Module Federation, Tailwind CSS, CSS-in-JS / Emotion
 - **Build & CI/CD:** Git, Webpack, Vite, yarn workspaces, monorepos, code splitting, CI/CD, GitLab CI, GitHub Actions, Docker
 - **API & backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, Keycloak, Auth.js
 - **Web3:** Web3, web3.js, TonConnect
