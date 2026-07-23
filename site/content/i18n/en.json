@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "Maksim Peshekhonov",
-    "description": "Senior Product Engineer (frontend-leaning). React, TypeScript, Next.js — complex product UIs and production delivery."
+    "description": "Senior Frontend Engineer. React, TypeScript, JavaScript, Next.js - complex product UIs shipped to production."
   },
   "nav": {
     "home": "Home",
@@ -12,7 +12,7 @@
     "close": "Close"
   },
   "hero": {
-    "eyebrow": "Senior Product Engineer",
+    "eyebrow": "Senior Frontend Engineer",
     "ctaResume": "View resume",
     "ctaPdf": "Download PDF",
     "skillsLabel": "Core technologies"

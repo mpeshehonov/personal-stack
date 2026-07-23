@@ -20,6 +20,7 @@ export const skillGroupsRu: SkillGroup[] = [
       "TanStack Table",
       "React Hook Form",
       "Zod",
+      "Canvas",
       "Feature-Sliced Design",
       "Module Federation",
       "Tailwind CSS",
@@ -27,7 +28,7 @@ export const skillGroupsRu: SkillGroup[] = [
     ],
   },
   {
-    title: "Сборка и Git",
+    title: "Сборка и CI/CD",
     skills: [
       "Git",
       "Webpack",
@@ -35,10 +36,10 @@ export const skillGroupsRu: SkillGroup[] = [
       "yarn workspaces",
       "монорепозитории",
       "code splitting",
+      "CI/CD",
       "GitLab CI",
       "GitHub Actions",
       "Docker",
-      "CI/CD",
     ],
   },
   {
@@ -92,6 +93,7 @@ export const skillGroupsEn: SkillGroup[] = [
       "TanStack Table",
       "React Hook Form",
       "Zod",
+      "Canvas",
       "Feature-Sliced Design",
       "Module Federation",
       "Tailwind CSS",
@@ -99,7 +101,7 @@ export const skillGroupsEn: SkillGroup[] = [
     ],
   },
   {
-    title: "Build & Git",
+    title: "Build & CI/CD",
     skills: [
       "Git",
       "Webpack",
@@ -107,10 +109,10 @@ export const skillGroupsEn: SkillGroup[] = [
       "yarn workspaces",
       "monorepos",
       "code splitting",
+      "CI/CD",
       "GitLab CI",
       "GitHub Actions",
       "Docker",
-      "CI/CD",
     ],
   },
   {

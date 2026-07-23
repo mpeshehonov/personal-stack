@@ -6,11 +6,11 @@
   "period": "09.2025 – н.в.",
   "tagline": "Аналог seats.io: визуальный выбор мест для билетного сервиса",
   "problem": "Билетному сервису PREEGLOS нужен редактор схем залов и виджет выбора мест для покупателей — без внешнего SaaS.",
-  "contribution": "Сделал редактор залов на Canvas/SVG и виджет выбора мест. Fullstack на Next.js 16 с PostgreSQL, Drizzle ORM и Auth.js. Self-hosted: Docker Compose и GitLab CI/CD.",
-  "stack": ["Next.js 16", "React 19", "PostgreSQL", "Drizzle ORM", "Auth.js", "Docker", "GitLab CI/CD", "Telegram Mini App"],
+  "contribution": "Сделал редактор залов на Canvas и встраиваемый виджет выбора мест. Fullstack на Next.js с PostgreSQL, Drizzle ORM и Auth.js. Self-hosted: Docker Compose и CI/CD (GitLab CI).",
+  "stack": ["Next.js 16", "React 19", "Canvas", "PostgreSQL", "Drizzle ORM", "Auth.js", "Docker", "CI/CD", "GitLab CI", "Telegram Mini App"],
   "outcomes": [
     "Организаторы создают схемы залов без привлечения разработчиков",
-    "Embed-виджет интегрируется в витрину и Telegram Mini App",
+    "Встраиваемый виджет выбора мест работает на витрине и в Telegram Mini App",
     "Self-hosted деплой: полный контроль над данными и инфраструктурой"
   ],
   "featured": true,

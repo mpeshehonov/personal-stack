@@ -39,18 +39,18 @@ function render(locale, data) {
   const header = isRu
     ? `# Максим Пешехонов
 
-Senior Product Engineer | Senior Frontend Engineer
+Senior Frontend Engineer
 
 Удалённо, РФ · Email: kassady71@gmail.com · Телефон: +79509196786 · Сайт: [mpeshekhonov.ru](https://mpeshekhonov.ru/ru) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov)
 
-**Цель:** remote Senior Product / Frontend Engineer (React, TypeScript) в продуктовой команде.`
+**Цель:** удалённый Senior Frontend Engineer (React, TypeScript, Next.js) в продуктовой команде.`
     : `# Maksim Peshekhonov
 
-Senior Product Engineer | Senior Frontend Engineer
+Senior Frontend Engineer
 
 Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: \`@makusimu_san\`](https://t.me/makusimu_san) · [LinkedIn: \`makusimu\`](https://www.linkedin.com/in/makusimu) · [GitHub: \`mpeshehonov\`](https://github.com/mpeshehonov)
 
-**Goal:** remote Senior Product / Frontend Engineer (React, TypeScript) on a product team.`;
+**Goal:** remote Senior Frontend Engineer (React, TypeScript, Next.js) on a product team.`;
 
   let md = `${header}\n\n## ${isRu ? "О себе" : "About"}\n\n${data.about.join("\n\n")}\n\n## ${isRu ? "Опыт работы" : "Work experience"}\n\n`;
 

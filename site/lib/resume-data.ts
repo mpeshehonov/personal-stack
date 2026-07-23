@@ -19,21 +19,21 @@ export type Experience = {
 };
 
 const aboutParagraphsRu = [
-  "Senior Product / Frontend Engineer, 7 лет. React, TypeScript, Next.js. Довожу сложные интерфейсы до production: роли и доступы, длинные формы, REST и GraphQL, WebSocket, CI/CD.",
-  "Беру задачу от контракта с backend до деплоя и поддержки в проде. Крупный enterprise (X5, BI.ZONE, НЛМК, Citilink) и продуктовая студия (Mini Apps, схемы залов, инструменты для стримеров).",
-  "Ищу remote-роль, где нужен сильный frontend с ответственностью за модуль, а не только вёрстка по макету.",
+  "Senior Frontend Engineer, 7 лет. Стек: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.",
+  "Делаю сложные продуктовые интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, автовыкладка (CI/CD), разбор ошибок в проде.",
+  "Enterprise: X5, BI.ZONE, НЛМК, Citilink. В студии - единственный frontend на Mini App, кабинете и редакторе схем залов (Canvas). Ищу remote Senior Frontend роль с ответственностью за модуль от API до релиза, не только вёрстка по макету.",
 ];
 
 const aboutParagraphsEn = [
-  "Senior Product / Frontend Engineer, 7 years. React, TypeScript, Next.js. I ship complex product UIs to production: roles and access, long forms, REST and GraphQL, WebSocket, CI/CD.",
-  "I take work from backend contract through deploy and production support. Enterprise (X5, BI.ZONE, NLMK, Citilink) and product studio work (Mini Apps, hall layouts, streamer tools).",
-  "Looking for a remote role that needs strong frontend with module ownership, not layout-only work.",
+  "Senior Frontend Engineer, 7 years. Stack: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.",
+  "I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, automated delivery (CI/CD), production debugging.",
+  "Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release, not layout-only work.",
 ];
 
 const experiencesRu: Experience[] = [
   {
     company: "POTALONU LLC",
-    role: "Senior Product Engineer",
+    role: "Senior Product Engineer (frontend)",
     period: "09.2025 - 06.2026",
     location: "Удалённо",
     companyBlurb: "Продуктовая студия: билеты и инструменты для стримеров",
@@ -45,12 +45,12 @@ const experiencesRu: Experience[] = [
         problem: "Три клиента (кабинет, Mini App, OBS) должны жить на одном backend без рассинхрона.",
         contribution:
           "Единственный frontend: собрал 3 клиента на React, Vite и TypeScript, Orval по OpenAPI, WebSocket-алерты, GitHub Actions, Sentry.",
-        stack: ["React", "TypeScript", "Vite", "Orval", "WebSocket", "GitHub Actions", "Sentry"],
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "Orval", "WebSocket", "CI/CD", "GitHub Actions", "Sentry"],
         outcomes: [
-          "Собрал 3 клиента на React, Vite и TypeScript и довёл поток доната до production",
-          "Подключил typed API из OpenAPI (Orval) и WebSocket-алерты с очередью и reconnect",
-          "Настроил GitHub Actions и Sentry: три клиента на одном контракте без рассинхрона с backend",
-          "Закрыл полный сценарий: Mini App, backend, кабинет, алерт в OBS",
+          "Собрал 3 клиента на React, TypeScript и Vite (Mini App, кабинет, OBS) и довёл донаты до production",
+          "Подключил REST API из OpenAPI (Orval) и live-алерты по WebSocket (очередь, reconnect)",
+          "Настроил CI/CD (GitHub Actions) и Sentry: три клиента на одном API без рассинхрона с backend",
+          "Закрыл полный сценарий: оплата в Mini App, кабинет стримера, алерт на эфире в OBS",
         ],
       },
       {
@@ -58,13 +58,13 @@ const experiencesRu: Experience[] = [
         tagline: "Витрина билетов и редактор схем залов",
         problem: "Нужны checkout и свой редактор схем залов вместо seats.io.",
         contribution:
-          "Next.js-витрина (Auth.js, PostgreSQL/Drizzle, Orval) плюс сервис залов и embed-виджет; GitLab CI, Docker Compose.",
-        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Orval", "Docker", "GitLab CI"],
+          "Next.js-витрина (Auth.js, PostgreSQL, Orval) плюс редактор залов на Canvas и встраиваемый виджет выбора мест; CI/CD (GitLab CI), Docker Compose.",
+        stack: ["Next.js", "React", "TypeScript", "JavaScript", "Canvas", "PostgreSQL", "CI/CD", "GitLab CI"],
         outcomes: [
-          "Собрал Next.js checkout: Auth.js, PostgreSQL/Drizzle, Orval по OpenAPI",
-          "Сделал сервис схем залов и embed-виджет выбора мест вместо seats.io",
-          "В проде: десятки залов и событий, продажа мест без ручной отрисовки схем",
-          "Настроил GitLab CI и Docker Compose для выкладки",
+          "Собрал витрину и checkout на Next.js: Auth.js, PostgreSQL, REST API по OpenAPI",
+          "Сделал редактор схем залов на Canvas и встраиваемый виджет выбора мест вместо seats.io",
+          "В production: десятки залов и событий - организаторы рисуют схему сами, покупатели выбирают места на сайте",
+          "Настроил CI/CD (GitLab CI) и выкладку через Docker Compose",
         ],
       },
     ],
@@ -83,12 +83,12 @@ const experiencesRu: Experience[] = [
         problem: "Роли, статусы и многошаговое согласование в одном UI для внутренних пользователей.",
         contribution:
           "Один из 2 frontend: Keycloak, react-hook-form, Orval по OpenAPI, UI Kit; сам перевёл модуль на Vite с code splitting.",
-        stack: ["React", "TypeScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
         outcomes: [
-          "Один из 2 frontend: роли через Keycloak, многошаговые формы, Orval по OpenAPI, UI Kit",
-          "Сам перевёл модуль на Vite с code splitting на длинных сценариях",
+          "Один из 2 frontend: React, TypeScript, роли (Keycloak), длинные формы, REST API (Orval), UI Kit",
+          "Сам перевёл модуль на Vite с разделением кода (code splitting) на длинных сценариях",
           "Закрыл UI полного цикла согласования: роли, статусы, формы, переходы этапов",
-          "Вёл code review и декомпозицию модулей вместе с backend",
+          "Вёл code review и декомпозицию frontend-модулей вместе с backend",
         ],
       },
     ],
@@ -107,12 +107,12 @@ const experiencesRu: Experience[] = [
         problem: "Категории угроз, детальная карточка и связи в одном интерфейсе для аналитиков.",
         contribution:
           "Разделы категорий угроз и детальная форма связей на GraphQL/Apollo; граф на D3; виртуализация, Jest.",
-        stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
+        stack: ["React", "TypeScript", "JavaScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Собрал разделы категорий угроз и детальную форму связей на GraphQL и Apollo",
-          "Добавил виртуализацию длинных списков; покрыл Jest; вёл code review",
+          "Собрал разделы категорий угроз и детальную форму связей на GraphQL (Apollo)",
+          "Добавил виртуализацию длинных списков; покрыл тестами (Jest); вёл code review",
           "Категории и форма стали основным способом связывать угрозы в продукте",
-          "Участвовал в графе связей сущностей на D3.js",
+          "Собрал часть графа связей сущностей на D3.js для аналитиков",
         ],
       },
     ],
@@ -130,13 +130,13 @@ const experiencesRu: Experience[] = [
         tagline: "SPA вместо Excel",
         problem: "Цех вёл выпуски в Excel: потери данных и медленная фильтрация по сменам.",
         contribution:
-          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Командировка на цех под реальный сценарий смены.",
-        stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
+          "React SPA: TanStack Table, React Query, Keycloak; CI/CD (GitLab CI), Sentry. Командировка на цех.",
+        stack: ["React", "TypeScript", "JavaScript", "TanStack Table", "TanStack Query", "Keycloak", "CI/CD", "Sentry"],
         outcomes: [
-          "Заменил Excel на React SPA: TanStack Table, React Query, Keycloak",
-          "Съездил на цех, посмотрел реальный сценарий смены и учёл его в UI",
+          "Заменил Excel на React SPA: таблицы (TanStack Table), React Query, Keycloak",
+          "Съездил на цех, посмотрел реальный сценарий смены и учёл его в интерфейсе",
           "Цех перешёл на web как основной процесс (десятки пользователей на сменах)",
-          "Подключил Sentry и GitLab CI: быстрее находил и чинил ошибки в проде",
+          "Подключил Sentry и CI/CD (GitLab CI): быстрее находил и чинил ошибки в проде",
         ],
       },
     ],
@@ -150,17 +150,17 @@ const experiencesRu: Experience[] = [
     companyUrl: "https://www.citilink.ru",
     blocks: [
       {
-        title: "citilink.ru - каталог",
+        title: "Каталог",
         tagline: "Миграция с PHP/Symfony на Next.js",
         problem: "Перенос каталога на Next.js с фильтрами, SEO и REST к микросервисам.",
         contribution:
-          "Зона каталога: фильтры, сортировка, пагинация, состояние в URL, REST к микросервисам; yarn workspaces, Jest.",
-        stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
+          "Зона каталога: фильтры, сортировка, пагинация, состояние в URL, REST API; code review в yarn workspaces.",
+        stack: ["Next.js", "React", "TypeScript", "JavaScript", "REST API", "Redux", "Jest"],
         outcomes: [
-          "Перенёс зону каталога: фильтры, сортировка, пагинация, состояние в URL, REST к микросервисам",
+          "Перенёс зону каталога на Next.js: фильтры, сортировка, пагинация, REST API, состояние в URL",
           "Сохранил SEO: страницы и фильтры индексируются через URL",
-          "Одно URL-состояние фильтров работает и для розницы, и для оптового каталога",
-          "Yarn workspaces, Jest, code review",
+          "Одно состояние фильтров в URL работает для розницы и оптового каталога",
+          "Вёл code review в монорепозитории (yarn workspaces)",
         ],
       },
     ],
@@ -170,7 +170,7 @@ const experiencesRu: Experience[] = [
 const experiencesEn: Experience[] = [
   {
     company: "POTALONU LLC",
-    role: "Senior Product Engineer",
+    role: "Senior Product Engineer (frontend)",
     period: "Sep 2025 - Jun 2026",
     location: "Remote",
     companyBlurb: "Product studio: ticketing and streamer tools",
@@ -182,12 +182,12 @@ const experiencesEn: Experience[] = [
         problem: "Three clients (dashboard, Mini App, OBS) must stay in sync with one backend.",
         contribution:
           "Sole frontend: built 3 React, Vite, and TypeScript clients, Orval from OpenAPI, WebSocket alerts, GitHub Actions, Sentry.",
-        stack: ["React", "TypeScript", "Vite", "Orval", "WebSocket", "GitHub Actions", "Sentry"],
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "Orval", "WebSocket", "CI/CD", "GitHub Actions", "Sentry"],
         outcomes: [
-          "Built 3 React, Vite, and TypeScript clients and shipped the tip flow to production",
-          "Wired typed API from OpenAPI (Orval) and WebSocket alerts with queue and reconnect",
-          "Set up GitHub Actions and Sentry: three clients on one contract without FE/backend drift",
-          "Closed the full path: Mini App, backend, dashboard, alert in OBS",
+          "Built 3 React, TypeScript, and Vite clients (Mini App, dashboard, OBS) and shipped tips to production",
+          "Wired REST API from OpenAPI (Orval) and live WebSocket alerts (queue, reconnect)",
+          "Set up CI/CD (GitHub Actions) and Sentry: three clients on one API without FE/backend drift",
+          "Closed the full path: pay in Mini App, streamer dashboard, live alert in OBS",
         ],
       },
       {
@@ -195,13 +195,13 @@ const experiencesEn: Experience[] = [
         tagline: "Ticket storefront and hall layout editor",
         problem: "Needed checkout and an in-house hall editor instead of seats.io.",
         contribution:
-          "Next.js storefront (Auth.js, PostgreSQL/Drizzle, Orval) plus hall service and embed widget; GitLab CI, Docker Compose.",
-        stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Orval", "Docker", "GitLab CI"],
+          "Next.js storefront (Auth.js, PostgreSQL, Orval) plus Canvas hall editor and embeddable seat picker; CI/CD (GitLab CI), Docker Compose.",
+        stack: ["Next.js", "React", "TypeScript", "JavaScript", "Canvas", "PostgreSQL", "CI/CD", "GitLab CI"],
         outcomes: [
-          "Built Next.js checkout: Auth.js, PostgreSQL/Drizzle, Orval from OpenAPI",
-          "Built hall layout service and embed seat picker instead of seats.io",
-          "In production: dozens of halls and events, seat sales without hand-drawn layouts",
-          "Set up GitLab CI and Docker Compose for delivery",
+          "Built the storefront and checkout on Next.js: Auth.js, PostgreSQL, REST API from OpenAPI",
+          "Built a Canvas hall-layout editor and an embeddable seat-picker widget instead of seats.io",
+          "In production: dozens of halls and events - organizers draw layouts themselves, buyers pick seats on the site",
+          "Set up CI/CD (GitLab CI) and delivery with Docker Compose",
         ],
       },
     ],
@@ -220,12 +220,12 @@ const experiencesEn: Experience[] = [
         problem: "Roles, statuses, and multi-step approval in one UI for internal users.",
         contribution:
           "One of 2 frontend engineers: Keycloak, react-hook-form, Orval from OpenAPI, UI Kit; owned the Vite migration with code splitting.",
-        stack: ["React", "TypeScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "Orval", "Keycloak", "react-hook-form"],
         outcomes: [
-          "One of 2 frontend engineers: Keycloak roles, multi-step forms, Orval from OpenAPI, UI Kit",
+          "One of 2 frontend engineers: React, TypeScript, Keycloak roles, long forms, REST API (Orval), UI Kit",
           "Owned the Vite migration with code splitting on long flows",
           "Covered the full approval UI cycle: roles, statuses, forms, stage transitions",
-          "Ran code review and module breakdown with backend",
+          "Ran code review and breakdown of frontend modules with backend",
         ],
       },
     ],
@@ -244,12 +244,12 @@ const experiencesEn: Experience[] = [
         problem: "Threat categories, detail cards, and relationships in one workspace for analysts.",
         contribution:
           "Threat-category sections and detail form for relationships on GraphQL/Apollo; D3 graph; virtualization, Jest.",
-        stack: ["React", "TypeScript", "GraphQL", "Apollo", "D3.js", "Jest"],
+        stack: ["React", "TypeScript", "JavaScript", "GraphQL", "Apollo", "D3.js", "Jest"],
         outcomes: [
-          "Built threat-category sections and a detail form for relationships on GraphQL and Apollo",
-          "Added list virtualization; covered with Jest; ran code review",
+          "Built threat-category sections and a detail form for relationships on GraphQL (Apollo)",
+          "Added list virtualization; covered with tests (Jest); ran code review",
           "Categories and the detail form became the main way to link threats in the product",
-          "Contributed to the entity relationship graph on D3.js",
+          "Built part of the entity relationship graph on D3.js for analysts",
         ],
       },
     ],
@@ -267,13 +267,13 @@ const experiencesEn: Experience[] = [
         tagline: "SPA replacing Excel",
         problem: "Plant teams tracked releases in Excel: data loss and slow shift filtering.",
         contribution:
-          "React SPA: TanStack Table, React Query, Keycloak; GitLab CI, Sentry. Plant visit under the real shift scenario.",
-        stack: ["React", "TypeScript", "TanStack Table", "TanStack Query", "Keycloak", "Sentry"],
+          "React SPA: TanStack Table, React Query, Keycloak; CI/CD (GitLab CI), Sentry. Plant visit under the real shift scenario.",
+        stack: ["React", "TypeScript", "JavaScript", "TanStack Table", "TanStack Query", "Keycloak", "CI/CD", "Sentry"],
         outcomes: [
-          "Replaced Excel with a React SPA: TanStack Table, React Query, Keycloak",
+          "Replaced Excel with a React SPA: tables (TanStack Table), React Query, Keycloak",
           "Visited the plant, watched the real shift flow, and reflected it in the UI",
           "Plant teams moved to web as the primary process (dozens of shift users)",
-          "Wired Sentry and GitLab CI: faster to find and fix production errors",
+          "Wired Sentry and CI/CD (GitLab CI): faster to find and fix production errors",
         ],
       },
     ],
@@ -287,17 +287,17 @@ const experiencesEn: Experience[] = [
     companyUrl: "https://www.citilink.ru",
     blocks: [
       {
-        title: "citilink.ru - catalog",
+        title: "Catalog",
         tagline: "Migration from PHP/Symfony to Next.js",
         problem: "Move catalog to Next.js with filters, SEO, and microservice REST.",
         contribution:
-          "Catalog scope: filters, sort, pagination, URL state, REST to microservices; yarn workspaces, Jest.",
-        stack: ["Next.js", "React", "TypeScript", "REST API", "Redux", "Jest"],
+          "Catalog scope: filters, sort, pagination, URL state, REST API; code review in yarn workspaces.",
+        stack: ["Next.js", "React", "TypeScript", "JavaScript", "REST API", "Redux", "Jest"],
         outcomes: [
-          "Moved the catalog zone: filters, sort, pagination, URL state, REST to microservices",
+          "Moved the catalog zone to Next.js: filters, sort, pagination, REST API, URL state",
           "Kept SEO: pages and filters stay indexable via the URL",
           "One URL filter state works for both retail and wholesale catalog views",
-          "Yarn workspaces, Jest, code review",
+          "Ran code review in a monorepo (yarn workspaces)",
         ],
       },
     ],

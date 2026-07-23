@@ -74,28 +74,30 @@
       "en": "The ticketing service needed its own seats.io-like venue editor and seat picker widget that could be embedded into event sites without external SaaS."
     },
     "contribution": {
-      "ru": "seatmap-studio: редактор залов, модель мест, виджет выбора мест, события и бронирования. potalonu-frontend: витрина, checkout и Mini App на тех же API-контрактах.",
-      "en": "seatmap-studio: hall editor, seat model, seat picker widget, events, and bookings. potalonu-frontend: storefront, checkout, and Mini App on the same API contracts."
+      "ru": "Редактор схем залов на Canvas, встраиваемый виджет выбора мест, события и бронирования. Витрина, checkout и Mini App на тех же API.",
+      "en": "Canvas hall-layout editor, embeddable seat picker, events and bookings. Storefront, checkout, and Mini App on the same API."
     },
     "stack": [
       "Next.js",
       "React",
+      "Canvas",
       "PostgreSQL",
       "Drizzle ORM",
       "Auth.js",
       "Docker",
-      "GitLab CI/CD",
+      "CI/CD",
+      "GitLab CI",
       "Telegram Mini App"
     ],
     "outcomes": {
       "ru": [
         "Организаторы заводят схемы залов и подключают выбор мест без отдельной разработки под каждую площадку",
-        "Виджет встраивается в витрину мероприятий и Telegram Mini App",
+        "Встраиваемый виджет выбора мест работает на витрине и в Telegram Mini App",
         "Данные о залах, местах и покупках остаются в инфраструктуре продукта"
       ],
       "en": [
         "Organizers create venue layouts and connect seat selection without custom work per venue",
-        "Widget embeds into the event storefront and Telegram Mini App",
+        "Embeddable seat-picker widget works on the storefront and in Telegram Mini App",
         "Hall, seat, and purchase data stay inside the product infrastructure"
       ]
     },
@@ -205,6 +207,203 @@
     "order": 4
   },
   {
+    "slug": "smartprice-web",
+    "title": {
+      "ru": "SmartPrice — Умный прайс",
+      "en": "SmartPrice — smart pricing"
+    },
+    "company": {
+      "ru": "SmartPrice",
+      "en": "SmartPrice"
+    },
+    "role": {
+      "ru": "Frontend-разработчик",
+      "en": "Frontend engineer"
+    },
+    "tagline": {
+      "ru": "Веб-система прайсов, техкарт и финансовой модели для производства",
+      "en": "Web system for price lists, tech cards, and financial model for production"
+    },
+    "problem": {
+      "ru": "Производству нужен единый интерфейс: свой прайс, техкарты, прайсы поставщиков и конкурентов, финмодель и учёт — вместо разрозненных таблиц.",
+      "en": "Production teams need one UI for own prices, tech cards, supplier and competitor prices, financial model and accounting — instead of scattered spreadsheets."
+    },
+    "contribution": {
+      "ru": "Собрал frontend на Next.js 16 и React 19: модули прайса, техкарт, финмодели, учёта, сотрудников. Zustand-сторы, REST через axios-сервисы, генерация клиента из OpenAPI (Orval), вёрстка по Figma.",
+      "en": "Built the frontend on Next.js 16 and React 19: price lists, tech cards, financial model, accounting, staff. Zustand stores, REST via axios services, OpenAPI client generation (Orval), UI from Figma."
+    },
+    "stack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Zustand",
+      "Orval",
+      "REST API",
+      "Axios"
+    ],
+    "outcomes": {
+      "ru": [
+        "Основной сценарий (мой прайс, техкарты, финмодель, учёт, сотрудники) работает с API в production-core",
+        "Типы и клиент API синхронизируются с backend через OpenAPI и Orval",
+        "Сложные таблицы и версии прайсов собраны под реальные экраны из Figma"
+      ],
+      "en": [
+        "Core flows (own prices, tech cards, financial model, accounting, staff) run against the API in production-core",
+        "API types and client stay in sync with the backend via OpenAPI and Orval",
+        "Complex tables and price versions match real Figma screens"
+      ]
+    },
+    "featured": true,
+    "order": 5
+  },
+  {
+    "slug": "zodiaclab-user-bot",
+    "title": {
+      "ru": "ZodiacLab — Telegram-бот клиентов и специалистов",
+      "en": "ZodiacLab — Telegram bot for clients and specialists"
+    },
+    "company": {
+      "ru": "ZodiacLab",
+      "en": "ZodiacLab"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "Хаб в Telegram: меню по роли, уведомления и ИИ-консультант",
+      "en": "Telegram hub: role menus, notifications, and AI consultant"
+    },
+    "problem": {
+      "ru": "Клиентам и специалистам нужны быстрые действия и напоминания в Telegram, без обязательного входа в веб-кабинет на каждое событие.",
+      "en": "Clients and specialists need quick actions and reminders in Telegram without opening the web cabinet for every event."
+    },
+    "contribution": {
+      "ru": "В zodiaclub-backend: polling-бот, привязка аккаунта к ЛК, меню по роли (клиент / специалист), push о консультациях, отзывах, заработке и просмотрах профиля. Хаб с кнопками и deep link на сайт.",
+      "en": "In zodiaclub-backend: polling bot, account link to the cabinet, role menus (client / specialist), pushes for consultations, reviews, earnings, and profile views. Button hub with deep links to the site."
+    },
+    "stack": [
+      "Nest.js",
+      "Telegram Bot API",
+      "TypeORM",
+      "PostgreSQL",
+      "node-cron",
+      "TypeScript"
+    ],
+    "outcomes": {
+      "ru": [
+        "Клиент и специалист получают напоминание за час до консультации",
+        "Специалист видит дайджесты: отзывы, заработок за неделю, просмотры профиля",
+        "Повторные push блокируются дедупом в PostgreSQL"
+      ],
+      "en": [
+        "Client and specialist get a reminder one hour before a consultation",
+        "Specialists get digests: reviews, weekly earnings, profile views",
+        "Duplicate pushes are blocked by dedup records in PostgreSQL"
+      ]
+    },
+    "featured": false,
+    "order": 6
+  },
+  {
+    "slug": "zodiaclab-admin-bot",
+    "title": {
+      "ru": "ZodiacLab — Telegram-бот админов и модераторов",
+      "en": "ZodiacLab — Telegram bot for admins and moderators"
+    },
+    "company": {
+      "ru": "ZodiacLab",
+      "en": "ZodiacLab"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "Оперативная модерация и уведомления staff без входа в веб-админку",
+      "en": "Staff moderation and alerts without opening the web admin panel"
+    },
+    "problem": {
+      "ru": "Админам и модераторам нужно быстро реагировать на заявки специалистов, тикеты поддержки и отзывы — не только из веб-админки.",
+      "en": "Admins and moderators need to react quickly to specialist applications, support tickets, and reviews — not only from the web admin panel."
+    },
+    "contribution": {
+      "ru": "Отдельный admin-бот в Nest.js: привязка ADMIN/MODERATOR, уведомления по правам, действия из чата (одобрить / отклонить / взять в работу / ответить), журнал действий, кнопка «Открыть в админке».",
+      "en": "Separate Nest.js admin bot: ADMIN/MODERATOR linking, permission-based alerts, in-chat actions (approve / reject / take ticket / reply), action audit log, Open in admin button."
+    },
+    "stack": [
+      "Nest.js",
+      "Telegram Bot API",
+      "TypeORM",
+      "PostgreSQL",
+      "TypeScript"
+    ],
+    "outcomes": {
+      "ru": [
+        "Staff получает push по ролям и правам, без смешения с user-ботом",
+        "Заявки, тикеты и модерацию отзывов можно закрыть прямо из Telegram",
+        "Каждое действие пишется в журнал для аудита"
+      ],
+      "en": [
+        "Staff get role- and permission-based pushes, separate from the user bot",
+        "Applications, tickets, and review moderation can be handled in Telegram",
+        "Every action is written to an audit log"
+      ]
+    },
+    "featured": false,
+    "order": 7
+  },
+  {
+    "slug": "zodiaclab-crm-bot",
+    "title": {
+      "ru": "ZodiacLab — CRM-бот и Mini App",
+      "en": "ZodiacLab — CRM bot and Mini App"
+    },
+    "company": {
+      "ru": "ZodiacLab",
+      "en": "ZodiacLab"
+    },
+    "role": {
+      "ru": "Fullstack",
+      "en": "Fullstack"
+    },
+    "tagline": {
+      "ru": "База специалистов, воронка и задачи прямо в Telegram",
+      "en": "Specialist database, pipeline, and tasks inside Telegram"
+    },
+    "problem": {
+      "ru": "Команде продаж нужна лёгкая CRM по специалистам: контакты, этапы воронки, задачи и статистика — без тяжёлой внешней системы.",
+      "en": "The sales team needed a light CRM for specialists: contacts, pipeline stages, tasks, and stats — without a heavy external system."
+    },
+    "contribution": {
+      "ru": "Self-hosted сервис на Express + Grammy + PostgreSQL: роли admin/manager/viewer, импорт базы специалистов, Telegram-бот и Mini App (задачи, статистика), напоминания по cron.",
+      "en": "Self-hosted Express + Grammy + PostgreSQL service: admin/manager/viewer roles, specialist DB import, Telegram bot and Mini App (tasks, stats), cron reminders."
+    },
+    "stack": [
+      "Node.js",
+      "Express",
+      "Grammy",
+      "PostgreSQL",
+      "Telegram Mini App",
+      "Docker"
+    ],
+    "outcomes": {
+      "ru": [
+        "База специалистов и воронка доступны из бота и Mini App",
+        "Задачи с напоминаниями утром по расписанию (MSK)",
+        "Деплой через Docker / Coolify на своей инфраструктуре"
+      ],
+      "en": [
+        "Specialist database and pipeline are available from the bot and Mini App",
+        "Tasks get morning reminders on an MSK schedule",
+        "Deployed via Docker / Coolify on own infrastructure"
+      ]
+    },
+    "featured": false,
+    "order": 8
+  },
+  {
     "slug": "nlmk-iron-registration",
     "title": {
       "ru": "Регистрация выпусков чугуна",
@@ -252,7 +451,7 @@
       ]
     },
     "featured": true,
-    "order": 5
+    "order": 9
   },
   {
     "slug": "smartfish-management",
@@ -305,7 +504,7 @@
       ]
     },
     "featured": true,
-    "order": 6
+    "order": 10
   },
   {
     "slug": "citilink-migration",
@@ -356,7 +555,7 @@
       ]
     },
     "featured": false,
-    "order": 7
+    "order": 11
   },
   {
     "slug": "bizone-thread-intelligence",
@@ -408,7 +607,7 @@
       ]
     },
     "featured": false,
-    "order": 8
+    "order": 12
   },
   {
     "slug": "potalonu-tickets",
@@ -457,7 +656,7 @@
       ]
     },
     "featured": false,
-    "order": 9
+    "order": 13
   },
   {
     "slug": "marketplace-nda",
@@ -510,7 +709,7 @@
       ]
     },
     "featured": false,
-    "order": 10
+    "order": 14
   },
   {
     "slug": "in2view",
@@ -559,7 +758,7 @@
       ]
     },
     "featured": false,
-    "order": 11
+    "order": 15
   },
   {
     "slug": "rostelecom-yaga",
@@ -607,7 +806,7 @@
       ]
     },
     "featured": false,
-    "order": 12
+    "order": 16
   },
   {
     "slug": "sbertech-knowledge-base",
@@ -657,7 +856,7 @@
       ]
     },
     "featured": false,
-    "order": 13
+    "order": 17
   },
   {
     "slug": "sbertech-opensearch",
@@ -706,7 +905,7 @@
       ]
     },
     "featured": false,
-    "order": 14
+    "order": 18
   },
   {
     "slug": "smartfish-kkm",
@@ -756,7 +955,7 @@
       ]
     },
     "featured": false,
-    "order": 15
+    "order": 19
   },
   {
     "slug": "smartfish-backend",
@@ -805,7 +1004,7 @@
       ]
     },
     "featured": false,
-    "order": 16
+    "order": 20
   },
   {
     "slug": "smartfish-landing",
@@ -854,7 +1053,7 @@
       ]
     },
     "featured": false,
-    "order": 17
+    "order": 21
   },
   {
     "slug": "smartfish-bots",
@@ -902,7 +1101,7 @@
       ]
     },
     "featured": false,
-    "order": 18
+    "order": 22
   },
   {
     "slug": "stratwise",
@@ -951,7 +1150,7 @@
       ]
     },
     "featured": false,
-    "order": 19
+    "order": 23
   },
   {
     "slug": "quan2um",
@@ -1000,7 +1199,7 @@
       ]
     },
     "featured": false,
-    "order": 20
+    "order": 24
   },
   {
     "slug": "beauty-shop",
@@ -1053,7 +1252,7 @@
       ]
     },
     "featured": false,
-    "order": 21
+    "order": 25
   },
   {
     "slug": "fitomarket",
@@ -1102,7 +1301,7 @@
       ]
     },
     "featured": false,
-    "order": 22
+    "order": 26
   },
   {
     "slug": "energosoft",
@@ -1151,7 +1350,7 @@
       ]
     },
     "featured": false,
-    "order": 23
+    "order": 27
   },
   {
     "slug": "baucenter",
@@ -1200,7 +1399,7 @@
       ]
     },
     "featured": false,
-    "order": 24
+    "order": 28
   },
   {
     "slug": "specdep",
@@ -1249,7 +1448,7 @@
       ]
     },
     "featured": false,
-    "order": 25
+    "order": 29
   },
   {
     "slug": "energoshop-workshop",
@@ -1298,7 +1497,7 @@
       ]
     },
     "featured": false,
-    "order": 26
+    "order": 30
   },
   {
     "slug": "zenit-tickets",
@@ -1342,7 +1541,7 @@
       ]
     },
     "featured": false,
-    "order": 27
+    "order": 31
   },
   {
     "slug": "aurumline-webview",
@@ -1386,7 +1585,7 @@
       ]
     },
     "featured": false,
-    "order": 28
+    "order": 32
   },
   {
     "slug": "duckmaster",
@@ -1435,7 +1634,7 @@
       ]
     },
     "featured": false,
-    "order": 29
+    "order": 33
   },
   {
     "slug": "handstars",
@@ -1485,7 +1684,7 @@
       ]
     },
     "featured": false,
-    "order": 30
+    "order": 34
   },
   {
     "slug": "it-simulator",
@@ -1533,6 +1732,6 @@
       ]
     },
     "featured": false,
-    "order": 31
+    "order": 35
   }
 ]
