@@ -20,14 +20,14 @@ export type Experience = {
 
 const aboutParagraphsRu = [
   "Senior Frontend Engineer, 7 лет. Стек: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.",
-  "Делаю сложные продуктовые интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, автовыкладка (CI/CD), разбор ошибок в проде.",
-  "Enterprise: X5, BI.ZONE, НЛМК, Citilink. В студии - единственный frontend на Mini App, кабинете и редакторе схем залов (Canvas). Ищу remote Senior Frontend роль с ответственностью за модуль от API до релиза, не только вёрстка по макету.",
+  "Делаю сложные продуктовые интерфейсы и довожу до production: роли и доступы, длинные формы, GraphQL, WebSocket, CI/CD, разбор ошибок в проде.",
+  "Enterprise: X5, BI.ZONE, НЛМК, Citilink. В студии - единственный frontend на Mini App, кабинете и редакторе схем залов (Canvas). Ищу remote Senior Frontend роль с ответственностью за модуль от API до релиза.",
 ];
 
 const aboutParagraphsEn = [
   "Senior Frontend Engineer, 7 years. Stack: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.",
-  "I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, automated delivery (CI/CD), production debugging.",
-  "Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release, not layout-only work.",
+  "I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, CI/CD, production debugging.",
+  "Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release.",
 ];
 
 const experiencesRu: Experience[] = [

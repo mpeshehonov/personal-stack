@@ -276,8 +276,8 @@
       "en": "Telegram hub: role menus, notifications, and AI consultant"
     },
     "problem": {
-      "ru": "Клиентам и специалистам нужны быстрые действия и напоминания в Telegram, без обязательного входа в веб-кабинет на каждое событие.",
-      "en": "Clients and specialists need quick actions and reminders in Telegram without opening the web cabinet for every event."
+      "ru": "Клиентам и специалистам нужны быстрые действия и напоминания в Telegram рядом с веб-кабинетом.",
+      "en": "Clients and specialists need quick actions and reminders in Telegram alongside the web cabinet."
     },
     "contribution": {
       "ru": "В zodiaclub-backend: polling-бот, привязка аккаунта к ЛК, меню по роли (клиент / специалист), push о консультациях, отзывах, заработке и просмотрах профиля. Хаб с кнопками и deep link на сайт.",
@@ -325,8 +325,8 @@
       "en": "Staff moderation and alerts without opening the web admin panel"
     },
     "problem": {
-      "ru": "Админам и модераторам нужно быстро реагировать на заявки специалистов, тикеты поддержки и отзывы — не только из веб-админки.",
-      "en": "Admins and moderators need to react quickly to specialist applications, support tickets, and reviews — not only from the web admin panel."
+      "ru": "Админам и модераторам нужно быстро реагировать на заявки специалистов, тикеты поддержки и отзывы прямо из Telegram.",
+      "en": "Admins and moderators need to react quickly to specialist applications, support tickets, and reviews from Telegram."
     },
     "contribution": {
       "ru": "Отдельный admin-бот в Nest.js: привязка ADMIN/MODERATOR, уведомления по правам, действия из чата (одобрить / отклонить / взять в работу / ответить), журнал действий, кнопка «Открыть в админке».",
@@ -476,8 +476,8 @@
       "en": "The production service has dozens of entities, roles, and API contracts: operators need one predictable interface instead of scattered screens."
     },
     "contribution": {
-      "ru": "Развиваю smartfish-frontend на React + TypeScript: участки, бассейны, склады, цехи, сотрудники, RBAC, карты Yandex Maps и аналитика. Kubb/Orval генерируют клиент и типы по OpenAPI.",
-      "en": "Build smartfish-frontend on React + TypeScript: sites, pools, warehouses, workshops, staff, RBAC, Yandex Maps, and analytics. Kubb/Orval generate clients and types from OpenAPI."
+      "ru": "Развиваю smartfish-frontend на React + TypeScript: участки, бассейны, склады, цехи, сотрудники, RBAC, карты Yandex Maps и аналитика. Клиент и типы генерируются из OpenAPI (Orval).",
+      "en": "Build smartfish-frontend on React + TypeScript: sites, pools, warehouses, workshops, staff, RBAC, Yandex Maps, and analytics. Client and types are generated from OpenAPI (Orval)."
     },
     "stack": [
       "React",
@@ -485,7 +485,6 @@
       "Vite",
       "Effector",
       "FSD",
-      "Kubb",
       "Orval",
       "Yandex Maps",
       "Recharts",
@@ -495,12 +494,12 @@
       "ru": [
         "Модульная структура удерживает производственные экраны в понятных границах вместо одного большого SPA",
         "RBAC, карты, склады и аналитика живут в одном интерфейсе для операционных ролей",
-        "Codegen по OpenAPI снижает ручную синхронизацию типов между frontend и backend"
+        "OpenAPI держит типы фронта и backend в синхроне"
       ],
       "en": [
         "Modular structure keeps production screens in clear boundaries instead of one large SPA",
         "RBAC, maps, warehouses, and analytics live in one UI for operational roles",
-        "OpenAPI codegen cuts manual type sync between frontend and backend"
+        "OpenAPI keeps frontend and backend types in sync"
       ]
     },
     "featured": true,
@@ -930,8 +929,8 @@
       "en": "Retail needed shifts, payments, and fiscal receipts — a dedicated backend and UI module in the main client."
     },
     "contribution": {
-      "ru": "smartfish-kkm-backend на NestJS: Shifts, Products, Payments, Fiscal, Shop. На фронте — KKM-слайс с Orval/Kubb по API_kkm.yaml.",
-      "en": "smartfish-kkm-backend on NestJS: Shifts, Products, Payments, Fiscal, Shop. Frontend KKM slice with Orval/Kubb from API_kkm.yaml."
+      "ru": "Backend кассы на NestJS: смены, товары, оплаты, фискализация. На фронте - модуль кассы с typed API из OpenAPI (Orval).",
+      "en": "POS backend on NestJS: shifts, products, payments, fiscalization. Frontend POS module with typed API from OpenAPI (Orval)."
     },
     "stack": [
       "NestJS",
@@ -939,19 +938,18 @@
       "PostgreSQL",
       "Swagger",
       "React",
-      "Kubb",
       "Orval"
     ],
     "outcomes": {
       "ru": [
-        "Swagger описывает POS API — фронт генерирует клиент, а не копирует DTO руками",
-        "Модуль KKM встроен в smartfish-frontend, без отдельного приложения",
+        "POS API описан в OpenAPI - фронт генерирует клиент без ручного копирования DTO",
+        "Модуль кассы встроен в основной frontend SmartFish",
         "Фискализация и оплаты вынесены в отдельные Nest-модули"
       ],
       "en": [
-        "Swagger documents POS API — frontend generates the client instead of copying DTOs",
-        "KKM module lives inside smartfish-frontend, no separate app",
-        "Fiscal and Payments split into dedicated Nest modules"
+        "POS API is described in OpenAPI - the frontend generates the client without hand-copied DTOs",
+        "POS module lives inside the main SmartFish frontend",
+        "Fiscalization and payments sit in separate Nest modules"
       ]
     },
     "featured": false,
@@ -1029,8 +1027,8 @@
       "en": "Marketing site and online shop on one domain (akvaprom.kg): catalog, checkout, profile, bonuses, and promocodes separate from the ERP client."
     },
     "contribution": {
-      "ru": "landing-smartfish на Next.js: главная с каруселями и категориями, shop/checkout/profile, бонусные сценарии, промокоды, Yandex Metrika, Framer Motion. Монорепо smartfish-landing — зеркало прод-сборки.",
-      "en": "landing-smartfish on Next.js: homepage with carousels and categories, shop/checkout/profile, bonus flows, promocodes, Yandex Metrika, Framer Motion. smartfish-landing monorepo mirrors production."
+      "ru": "Витрина на Next.js: главная с каруселями и категориями, shop, checkout, профиль, бонусы, промокоды, Yandex Metrika, Framer Motion.",
+      "en": "Storefront on Next.js: homepage with carousels and categories, shop, checkout, profile, bonuses, promocodes, Yandex Metrika, Framer Motion."
     },
     "stack": [
       "Next.js",

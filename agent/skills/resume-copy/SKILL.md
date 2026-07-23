@@ -31,9 +31,11 @@ Avoid: «Спроектировал и реализовал» in every bullet, �
 4. Quantify when defensible: bundle size, tables rows, teams, modules, deploy time. No invented percentages (e.g. 15% conversion) without source.
 5. Plain language — no paths (`/embed/...`), no internal codenames unless public product name.
 6. No long dashes (—) and no curly quotes in RU copy; use hyphen or comma.
-7. Pair tool names HR may not map: write `CI/CD (GitHub Actions)` / `CI/CD (GitLab CI)`, not only the tool.
+7. Pair tool names HR may not map: write `CI/CD (GitHub Actions)` / `CI/CD (GitLab CI)`, not only the tool. Do **not** paraphrase CI/CD as «автовыкладка».
 8. Plain RU for non-engineers: `встраиваемый виджет`, not `embed-виджет`; `редактор схем залов на Canvas`, not jargon-only.
 9. F-pattern scan: put verb + keyword in the first half of each bullet (React, TypeScript, REST API, CI/CD).
+10. No defensive negations in about/goal («не только вёрстка…»). State what you want positively.
+11. Portfolio copy: no internal filenames (`API_kkm.yaml`), package path dumps, or «зеркало прод-сборки» noise.
 
 ## Project / experience block structure (site)
 

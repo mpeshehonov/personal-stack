@@ -1,18 +1,18 @@
 # Maksim Peshekhonov
 
-Senior Product Engineer | Senior Frontend Engineer
+Senior Frontend Engineer
 
 Remote, Russia · Email: kassady71@gmail.com · Phone: +79509196786 · Site: [mpeshekhonov.ru](https://mpeshekhonov.ru/en) · [Telegram: `@makusimu_san`](https://t.me/makusimu_san) · [LinkedIn: `makusimu`](https://www.linkedin.com/in/makusimu) · [GitHub: `mpeshehonov`](https://github.com/mpeshehonov)
 
-**Goal:** remote Senior Product / Frontend Engineer (React, TypeScript) on a product team.
+**Goal:** remote Senior Frontend Engineer (React, TypeScript, Next.js) on a product team.
 
 ## About
 
 Senior Frontend Engineer, 7 years. Stack: React, TypeScript, JavaScript, Next.js, REST API, CI/CD.
 
-I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, automated delivery (CI/CD), production debugging.
+I build complex product UIs and ship them to production: roles and access, long forms, GraphQL, WebSocket, CI/CD, production debugging.
 
-Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release, not layout-only work.
+Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on Mini App, dashboard, and a Canvas hall-layout editor. Looking for a remote Senior Frontend role with ownership of a module from API to release.
 
 ## Work experience
 
@@ -98,9 +98,10 @@ Stack: Next.js, React, TypeScript, JavaScript, REST API, Redux, Jest
 ## Skills
 
 - **Languages:** TypeScript, JavaScript (ES6+), HTML5, CSS3, SCSS/SASS, Python, Node.js
-- **Frontend:** React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, Canvas, Feature-Sliced Design, Module Federation, Tailwind CSS, CSS-in-JS / Emotion
+- **Frontend:** React, Next.js (SSR/SSG), Redux Toolkit, MobX, TanStack Query, TanStack Table, React Hook Form, Zod, Canvas, Framer Motion, Rive, Lottie, Feature-Sliced Design, Module Federation, Tailwind CSS, CSS-in-JS / Emotion
 - **Build & CI/CD:** Git, Webpack, Vite, yarn workspaces, monorepos, code splitting, CI/CD, GitLab CI, GitHub Actions, Docker
 - **API & backend:** REST API, OpenAPI/Orval, GraphQL (Apollo Client), WebSocket, PostgreSQL, SQL, Drizzle ORM, Nest.js, Django REST, Keycloak, Auth.js
+- **Web3:** Web3, web3.js, TonConnect
 - **Quality & process:** Jest, Vitest, React Testing Library, Playwright, Storybook, Sentry, code review, Scrum, Agile
 - **UI & product:** e-commerce, design systems, UI Kit, Material UI, Figma, Telegram Mini Apps, i18next, next-intl
 

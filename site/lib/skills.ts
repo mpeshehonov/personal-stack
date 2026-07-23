@@ -21,6 +21,9 @@ export const skillGroupsRu: SkillGroup[] = [
       "React Hook Form",
       "Zod",
       "Canvas",
+      "Framer Motion",
+      "Rive",
+      "Lottie",
       "Feature-Sliced Design",
       "Module Federation",
       "Tailwind CSS",
@@ -59,6 +62,10 @@ export const skillGroupsRu: SkillGroup[] = [
     ],
   },
   {
+    title: "Web3",
+    skills: ["Web3", "web3.js", "TonConnect"],
+  },
+  {
     title: "Качество и процессы",
     skills: ["Jest", "Vitest", "React Testing Library", "Playwright", "Storybook", "Sentry", "code review", "Scrum", "Agile"],
   },
@@ -94,6 +101,9 @@ export const skillGroupsEn: SkillGroup[] = [
       "React Hook Form",
       "Zod",
       "Canvas",
+      "Framer Motion",
+      "Rive",
+      "Lottie",
       "Feature-Sliced Design",
       "Module Federation",
       "Tailwind CSS",
@@ -130,6 +140,10 @@ export const skillGroupsEn: SkillGroup[] = [
       "Keycloak",
       "Auth.js",
     ],
+  },
+  {
+    title: "Web3",
+    skills: ["Web3", "web3.js", "TonConnect"],
   },
   {
     title: "Quality & process",
