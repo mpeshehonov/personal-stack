@@ -5,7 +5,7 @@ Use for project pages, cover letters, resume bullets. Do not invent metrics beyo
 ## Positioning (locked 2026-07-23, RED last-pass)
 
 - Title: **Senior Frontend Engineer** (public / HH / Habr / LinkedIn)
-- Last role at POTALONU stays factual: Senior Product Engineer (frontend)
+- Last role at POTALONU: **Senior Frontend Engineer** (same positioning; no "Product Engineer" label)
 - Comp target: $3–4k USD/mo — **private / negotiation only**
 - Priority: job ASAP — badge OK; **do not** dump TK/USDT/ASAP into hero summary
 - Public copy: plain language for HR — see `lessons/resume_no_hr_red_flags.md`

@@ -33,7 +33,7 @@ const aboutParagraphsEn = [
 const experiencesRu: Experience[] = [
   {
     company: "POTALONU LLC",
-    role: "Senior Product Engineer (frontend)",
+    role: "Senior Frontend Engineer",
     period: "09.2025 - 06.2026",
     location: "Удалённо",
     companyBlurb: "Продуктовая студия: билеты и инструменты для стримеров",
@@ -41,14 +41,14 @@ const experiencesRu: Experience[] = [
     blocks: [
       {
         title: "sendonate.com",
-        tagline: "Единственный frontend: Mini App, кабинет, OBS-оверлей",
-        problem: "Три клиента (кабинет, Mini App, OBS) должны жить на одном backend без рассинхрона.",
+        tagline: "Единственный frontend: мини-приложение, кабинет, оверлей",
+        problem: "Нужны мини-приложение для донатов, кабинет стримера и оверлей на одном backend без рассинхрона.",
         contribution:
-          "Единственный frontend: собрал 3 клиента на React, Vite и TypeScript, Orval по OpenAPI, WebSocket-алерты, GitHub Actions, Sentry.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "Orval", "WebSocket", "CI/CD", "GitHub Actions", "Sentry"],
+          "Единственный frontend: React, Vite, TypeScript; REST API, WebSocket-алерты, GitHub Actions, Sentry.",
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "WebSocket", "CI/CD", "GitHub Actions", "Sentry"],
         outcomes: [
-          "Собрал 3 клиента на React, TypeScript и Vite (Mini App, кабинет, OBS) и довёл донаты до production",
-          "Подключил REST API из OpenAPI (Orval) и live-алерты по WebSocket (очередь, reconnect)",
+          "Собрал на React мини-приложение для донатов, кабинет стримера и оверлей с алертами и прогрессбаром; довёл до production",
+          "Подключил REST API и live-алерты по WebSocket",
           "Настроил CI/CD (GitHub Actions) и Sentry: три клиента на одном API без рассинхрона с backend",
           "Закрыл полный сценарий: оплата в Mini App, кабинет стримера, алерт на эфире в OBS",
         ],
@@ -170,7 +170,7 @@ const experiencesRu: Experience[] = [
 const experiencesEn: Experience[] = [
   {
     company: "POTALONU LLC",
-    role: "Senior Product Engineer (frontend)",
+    role: "Senior Frontend Engineer",
     period: "Sep 2025 - Jun 2026",
     location: "Remote",
     companyBlurb: "Product studio: ticketing and streamer tools",
@@ -178,14 +178,14 @@ const experiencesEn: Experience[] = [
     blocks: [
       {
         title: "sendonate.com",
-        tagline: "Sole frontend: Mini App, dashboard, OBS overlay",
-        problem: "Three clients (dashboard, Mini App, OBS) must stay in sync with one backend.",
+        tagline: "Sole frontend: Mini App, streamer dashboard, overlay",
+        problem: "Needed a donation Mini App, streamer dashboard, and overlay on one backend without drift.",
         contribution:
-          "Sole frontend: built 3 React, Vite, and TypeScript clients, Orval from OpenAPI, WebSocket alerts, GitHub Actions, Sentry.",
-        stack: ["React", "TypeScript", "JavaScript", "Vite", "Orval", "WebSocket", "CI/CD", "GitHub Actions", "Sentry"],
+          "Sole frontend: React, Vite, TypeScript; REST API, WebSocket alerts, GitHub Actions, Sentry.",
+        stack: ["React", "TypeScript", "JavaScript", "Vite", "WebSocket", "CI/CD", "GitHub Actions", "Sentry"],
         outcomes: [
-          "Built 3 React, TypeScript, and Vite clients (Mini App, dashboard, OBS) and shipped tips to production",
-          "Wired REST API from OpenAPI (Orval) and live WebSocket alerts (queue, reconnect)",
+          "Built on React a donation Mini App, streamer dashboard, and overlay with alerts and progress bar; shipped to production",
+          "Connected REST API and live WebSocket alerts",
           "Set up CI/CD (GitHub Actions) and Sentry: three clients on one API without FE/backend drift",
           "Closed the full path: pay in Mini App, streamer dashboard, live alert in OBS",
         ],

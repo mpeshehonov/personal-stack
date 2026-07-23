@@ -16,19 +16,19 @@ Enterprise: X5, BI.ZONE, NLMK, Citilink. In a product studio - sole frontend on 
 
 ## Work experience
 
-### POTALONU LLC - Senior Product Engineer (frontend)
+### POTALONU LLC - Senior Frontend Engineer
 
 *Product studio: ticketing and streamer tools* · [potalonu.com](https://potalonu.com)
 Sep 2025 - Jun 2026 | Remote
 
-**sendonate.com** - Sole frontend: Mini App, dashboard, OBS overlay
+**sendonate.com** - Sole frontend: Mini App, streamer dashboard, overlay
 
-- Built 3 React, TypeScript, and Vite clients (Mini App, dashboard, OBS) and shipped tips to production
-- Wired REST API from OpenAPI (Orval) and live WebSocket alerts (queue, reconnect)
+- Built on React a donation Mini App, streamer dashboard, and overlay with alerts and progress bar; shipped to production
+- Connected REST API and live WebSocket alerts
 - Set up CI/CD (GitHub Actions) and Sentry: three clients on one API without FE/backend drift
 - Closed the full path: pay in Mini App, streamer dashboard, live alert in OBS
 
-Stack: React, TypeScript, JavaScript, Vite, Orval, WebSocket, CI/CD, GitHub Actions, Sentry
+Stack: React, TypeScript, JavaScript, Vite, WebSocket, CI/CD, GitHub Actions, Sentry
 
 **PREEGLOS** - Ticket storefront and hall layout editor
 

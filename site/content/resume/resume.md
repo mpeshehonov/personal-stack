@@ -16,19 +16,19 @@ Enterprise: X5, BI.ZONE, НЛМК, Citilink. В студии - единстве�
 
 ## Опыт работы
 
-### POTALONU LLC - Senior Product Engineer (frontend)
+### POTALONU LLC - Senior Frontend Engineer
 
 *Продуктовая студия: билеты и инструменты для стримеров* · [potalonu.com](https://potalonu.com)
 09.2025 - 06.2026 | Удалённо
 
-**sendonate.com** - Единственный frontend: Mini App, кабинет, OBS-оверлей
+**sendonate.com** - Единственный frontend: мини-приложение, кабинет, оверлей
 
-- Собрал 3 клиента на React, TypeScript и Vite (Mini App, кабинет, OBS) и довёл донаты до production
-- Подключил REST API из OpenAPI (Orval) и live-алерты по WebSocket (очередь, reconnect)
+- Собрал на React мини-приложение для донатов, кабинет стримера и оверлей с алертами и прогрессбаром; довёл до production
+- Подключил REST API и live-алерты по WebSocket
 - Настроил CI/CD (GitHub Actions) и Sentry: три клиента на одном API без рассинхрона с backend
 - Закрыл полный сценарий: оплата в Mini App, кабинет стримера, алерт на эфире в OBS
 
-Стек: React, TypeScript, JavaScript, Vite, Orval, WebSocket, CI/CD, GitHub Actions, Sentry
+Стек: React, TypeScript, JavaScript, Vite, WebSocket, CI/CD, GitHub Actions, Sentry
 
 **PREEGLOS** - Витрина билетов и редактор схем залов
 
