@@ -1,4 +1,4 @@
-# Job matcher: false positives (2026-07-21, updated 2026-07-23)
+# Job matcher: false positives (2026-07-21, updated 2026-07-24)
 
 После первого career-hunter scan: высокий `match_score` ≠ хороший shortlist.
 
@@ -16,7 +16,9 @@
 | Офис регион (Барнаул и т.п.) | Стек сильный, локация не remote | skip |
 | Proglib / feed «подборка» / дайджест | Title содержит Frontend → score 70+ | dislike; не одна вакансия |
 | Повтор employer после dislike на другой доске | BlueThrone disliked на hirify, снова на hirehi | skip / dislike снова |
+| Кросс-канал TG дубль (frontend_rabota ↔ job_react) | Один пост → два lead id; count растёт без нового сигнала | shortlist по компании+роли; дубль RN после dislike (#48→#60) = skip |
+| Senior + `#офис` Москва (МТС и т.п.) | Title senior (+20) держит score ≥70 при office | skip, если remote-only |
 
 ## Правило для агента
 
-В daily shortlist явно помечать **mismatch** (RN / middle / office-only / agency spam / digest), даже при score ≥90. Не предлагать «топ» только по числу.
+В daily shortlist явно помечать **mismatch** (RN / middle / office-only / agency spam / digest / cross-channel dupe), даже при score ≥90. Не предлагать «топ» только по числу.
