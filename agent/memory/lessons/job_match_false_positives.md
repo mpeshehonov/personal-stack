@@ -1,4 +1,4 @@
-# Job matcher: false positives (2026-07-21, updated 2026-07-25)
+# Job matcher: false positives (2026-07-21, updated 2026-07-26)
 
 После первого career-hunter scan: высокий `match_score` ≠ хороший shortlist.
 
@@ -20,6 +20,9 @@
 | Повторный репост того же поста в одном канале (#46/#58/#65 VK) | Новый id, тот же employer+роль | skip; не считать «новым» shortlist |
 | Senior + `#офис` Москва (МТС и т.п.) | Title senior (+20) держит score ≥70 при office | skip, если remote-only |
 | Один работодатель, разные роли (WB #44 платформа 72 vs #66 маркетплейс 100) | Низкий score без #senior ≠ отмена бренда | смотреть новую карточку отдельно |
+| Title «Frontend» + Angular (Т-Банк #69) | `frontend` в названии (+15) без React-стека | mismatch — не путать с React-ролью того же бренда (#45) |
+| Middle/Senior + `#офис` (ВкусВилл #68) | «Senior» в title (+20) держит score при office | skip, если remote-only |
+| Marketplace FE без `#senior` (OZON #67) | remote (+10) + Frontend title → ≥70 при «от 3 лет» | watch / низкий приоритет vs явный senior remote |
 
 ## Правило для агента
 
