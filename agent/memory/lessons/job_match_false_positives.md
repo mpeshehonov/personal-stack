@@ -1,4 +1,4 @@
-# Job matcher: false positives (2026-07-21, updated 2026-07-26)
+# Job matcher: false positives (2026-07-21, updated 2026-07-27)
 
 После первого career-hunter scan: высокий `match_score` ≠ хороший shortlist.
 
@@ -23,6 +23,7 @@
 | Title «Frontend» + Angular (Т-Банк #69) | `frontend` в названии (+15) без React-стека | mismatch — не путать с React-ролью того же бренда (#45) |
 | Middle/Senior + `#офис` (ВкусВилл #68) | «Senior» в title (+20) держит score при office | skip, если remote-only |
 | Marketplace FE без `#senior` (OZON #67) | remote (+10) + Frontend title → ≥70 при «от 3 лет» | watch / низкий приоритет vs явный senior remote |
+| Fullstack `.Net+React` / backend-primary (Альфа #70) | `React` в title (+15) + remote (+10) при основном .Net/backend | mismatch vs Senior FE target; не like автоматически |
 
 ## Правило для агента
 
