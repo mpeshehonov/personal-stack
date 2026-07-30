@@ -1,4 +1,4 @@
-# Job matcher: false positives (2026-07-21, updated 2026-07-29)
+# Job matcher: false positives (2026-07-21, updated 2026-07-30)
 
 После первого career-hunter scan: высокий `match_score` ≠ хороший shortlist.
 
@@ -27,6 +27,8 @@
 | «Ведущий» / Senior + `#офис` банк (АТБ #71 Цифровой рубль) | ведущ/senior (+20) + React держит ≥80 при office Москва | skip, если remote-only — тот же паттерн, что X5/ВкусВилл office |
 | Title Frontend + Vue/Nuxt (AGIMA #73 proglib) | `frontend` (+15) + TS/Vite/Git overlap (+15) + remote (+10) → 88 без React | mismatch — смотреть стек в snippet; Vue ≠ React shortlist |
 | Репост без #senior (Облако.ру #72 = #56/#62) | тот же employer+роль, «от 2 лет», score 82 | skip как дубль; не поднимать в like |
+| Батч-зеркало каналов (#74–78 = #64–68) | Оркестратор подтянул те же посты из второго TG-канала одним сканом | shortlist не менять; считать одним сигналом на employer+роль |
+| Senior FE + Vue 3 в snip (МТС NBA.Банк #74/#64) | Title Senior (+20) + TS overlap при стеке Vue + `#офис` | mismatch — Vue ≠ React; office skip |
 
 ## Правило для агента
 
