@@ -236,6 +236,8 @@ def _help_text() -> str:
         "/pause /resume\n\n"
         "Hirify: «Мимо» по умолчанию = paywall (источник не режем).\n"
         "Для плохого fit: /jobs dislike <id> bad_fit\n"
+        "Уже откликнулся снаружи: на карточке жми «Откликнулся», иначе воронка пустая.\n"
+        "Тишина 3+ дня: /brief покажет follow-up.\n"
         "Income/bounty на паузе. Фокус: сильные действия."
     )
 
@@ -780,10 +782,24 @@ async def on_job_callback(update, context) -> None:
             await query.edit_message_text(f"Лид #{lead_id} не найден.")
             return
         await query.edit_message_text(
-            f"Ок #{result['lead_id']}: {result['company']}\n"
+            f"В избранное #{result['lead_id']}: {result['company']}\n"
             f"{result['title'][:80]}\n"
-            f"Источник {result['source_key']}: {result['weight_before']} -> {result['weight_after']}"
-            + (f"\nNext: {result['next_action']}" if result.get("next_action") else "")
+            "Дальше: открой вакансию → откликнись → «Откликнулся»."
+        )
+        return
+
+    if action == "applied":
+        from job_hunt.sources import apply_feedback
+
+        try:
+            result = await asyncio.to_thread(apply_feedback, lead_id, "applied")
+        except KeyError:
+            await query.edit_message_text(f"Лид #{lead_id} не найден.")
+            return
+        await query.edit_message_text(
+            f"Отклик зафиксирован #{result['lead_id']}: {result['company']}\n"
+            f"{result['title'][:80]}\n"
+            "Если 3+ дня тишина — в следующем /brief будет follow-up."
         )
         return
 
@@ -828,22 +844,45 @@ async def on_job_callback(update, context) -> None:
 async def cmd_brief(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    from opportunity.brief import format_brief_digest_extra, format_opportunity_brief
+    from opportunity.brief import build_opportunity_brief
     from opportunity.migrate import ensure_migrated_on_startup
+    from telegram_bot.jobs_ui import brief_lead_keyboard, brief_nav_keyboard
 
-    def _build() -> str:
+    def _build() -> dict:
         ensure_migrated_on_startup()
-        text = format_opportunity_brief()
-        digest = format_brief_digest_extra()
-        if digest:
-            text = text + "\n\n" + digest
-        return text
+        return build_opportunity_brief()
 
-    text = await asyncio.to_thread(_build)
-    # Telegram hard limit 4096
-    if len(text) > 4000:
-        text = text[:3990] + "\n…"
-    await update.message.reply_text(text)
+    data = await asyncio.to_thread(_build)
+    header = data["header"]
+    if len(header) > 4000:
+        header = header[:3990] + "\n…"
+    await update.message.reply_text(header, reply_markup=brief_nav_keyboard())
+
+    for card in data.get("cards") or []:
+        lead_id = card.get("lead_id")
+        text = card.get("text") or ""
+        if len(text) > 3500:
+            text = text[:3490] + "\n…"
+        if not lead_id:
+            await update.message.reply_text(text)
+            continue
+        await update.message.reply_text(
+            text,
+            reply_markup=brief_lead_keyboard(int(lead_id), card.get("url") or ""),
+            disable_web_page_preview=True,
+        )
+
+    if data.get("followup_text"):
+        fu = data["followup_text"]
+        if len(fu) > 4000:
+            fu = fu[:3990] + "\n…"
+        await update.message.reply_text(fu, disable_web_page_preview=True)
+
+    if data.get("digest"):
+        digest = data["digest"]
+        if len(digest) > 4000:
+            digest = digest[:3990] + "\n…"
+        await update.message.reply_text(digest)
 
 
 async def cmd_profile(update, context) -> None:

@@ -82,10 +82,13 @@ def lead_keyboard(lead_id: int, url: str = "") -> InlineKeyboardMarkup:
             InlineKeyboardButton("Ок", callback_data=f"j:like:{lead_id}"),
             InlineKeyboardButton("Мимо", callback_data=f"j:pass:{lead_id}"),
             InlineKeyboardButton("Сопровод", callback_data=f"j:cover:{lead_id}"),
-        ]
+        ],
+        [
+            InlineKeyboardButton("Откликнулся", callback_data=f"j:applied:{lead_id}"),
+        ],
     ]
     if url:
-        rows.append([InlineKeyboardButton("Открыть вакансию", url=url)])
+        rows.insert(0, [InlineKeyboardButton("Открыть вакансию", url=url)])
     rows.append(
         [
             InlineKeyboardButton("Ещё вакансии", callback_data="j:more"),
@@ -93,6 +96,37 @@ def lead_keyboard(lead_id: int, url: str = "") -> InlineKeyboardMarkup:
         ]
     )
     return InlineKeyboardMarkup(rows)
+
+
+def brief_lead_keyboard(lead_id: int, url: str = "") -> InlineKeyboardMarkup:
+    """Compact keyboard under each brief card."""
+    rows: list[list[InlineKeyboardButton]] = []
+    if url:
+        rows.append([InlineKeyboardButton("Открыть", url=url)])
+    rows.append(
+        [
+            InlineKeyboardButton("Откликнулся", callback_data=f"j:applied:{lead_id}"),
+            InlineKeyboardButton("В избранное", callback_data=f"j:like:{lead_id}"),
+            InlineKeyboardButton("Мимо", callback_data=f"j:pass:{lead_id}"),
+        ]
+    )
+    rows.append(
+        [
+            InlineKeyboardButton("Сопровод", callback_data=f"j:cover:{lead_id}"),
+        ]
+    )
+    return InlineKeyboardMarkup(rows)
+
+
+def brief_nav_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Вакансии", callback_data="j:more"),
+                InlineKeyboardButton("Скан", callback_data="j:scan"),
+            ]
+        ]
+    )
 
 
 def sources_keyboard() -> InlineKeyboardMarkup:

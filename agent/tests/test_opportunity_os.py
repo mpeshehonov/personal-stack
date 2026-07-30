@@ -271,9 +271,13 @@ class OpportunityOSTest(unittest.TestCase):
         self.services.upsert_from_job_lead(
             lead_id=lead_id, vacancy=v, match_score=90, match_reasons=["senior"]
         )
+        data = self.brief.build_opportunity_brief(top_n=5, actions_n=3)
+        self.assertIn("Бриф возможностей", data["header"])
+        self.assertIn("Воронка", data["header"])
+        self.assertIn("Новые:", data["header"])
+        self.assertTrue(data["cards"])
         text = self.brief.format_opportunity_brief(top_n=5, actions_n=3)
-        self.assertIn("Opportunity Brief", text)
-        self.assertIn("Funnel", text)
+        self.assertIn("Бриф возможностей", text)
 
     def test_legacy_scan_compat_add_lead(self) -> None:
         """Old job_hunt storage path still works."""

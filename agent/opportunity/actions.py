@@ -62,13 +62,39 @@ def decide_next_action(
 def action_label_ru(action: str) -> str:
     return {
         NextAction.APPLY.value: "Откликнуться",
-        NextAction.REVIEW.value: "Просмотреть",
+        NextAction.REVIEW.value: "Открыть и решить",
         NextAction.WRITE_TO_CONTACT.value: "Написать контакту",
-        NextAction.FOLLOW_UP.value: "Follow-up",
-        NextAction.RESEARCH_COMPANY.value: "Найти компанию / контакты вне paywall",
+        NextAction.FOLLOW_UP.value: "Написать follow-up",
+        NextAction.RESEARCH_COMPANY.value: "Найти контакты мимо доски",
         NextAction.PREPARE_INTERVIEW.value: "Подготовиться к интервью",
         NextAction.EVALUATE_OFFER.value: "Оценить оффер",
-        NextAction.WAIT.value: "Ждать",
+        NextAction.WAIT.value: "Ждать ответа",
         NextAction.ARCHIVE.value: "В архив",
-        NextAction.CONSIDER_SWITCH.value: "Рассмотреть свитч / смежный трек",
+        NextAction.CONSIDER_SWITCH.value: "Смежный трек (не вместо FE)",
     }.get(action, action)
+
+
+def action_how_ru(action: str) -> str:
+    """One-line instruction for humans."""
+    return {
+        NextAction.APPLY.value: (
+            "Открой ссылку → откликнись на сайте → нажми «Откликнулся»"
+        ),
+        NextAction.REVIEW.value: (
+            "Открой ссылку → 30 сек глянь стек/формат → «Откликнулся» или «Мимо»"
+        ),
+        NextAction.WRITE_TO_CONTACT.value: "Найди рекрутера/EM и напиши коротко",
+        NextAction.FOLLOW_UP.value: (
+            "Тишина после отклика: пинг рекрутеру (HH/почта/TG). Не жди вечно"
+        ),
+        NextAction.RESEARCH_COMPANY.value: (
+            "На доске контактов нет: название компании → LinkedIn/HH → отклик там"
+        ),
+        NextAction.PREPARE_INTERVIEW.value: "Собери вопросы и кейсы под компанию",
+        NextAction.EVALUATE_OFFER.value: "Сравни вилку с минимумом из /profile",
+        NextAction.WAIT.value: "Жди ответа, новые пачки не раздувай",
+        NextAction.ARCHIVE.value: "Закрыто — не возвращайся",
+        NextAction.CONSIDER_SWITCH.value: (
+            "Не увольняй FE-поиск: 1 эксперимент в смежном треке на этой неделе"
+        ),
+    }.get(action, action_label_ru(action))

@@ -27,11 +27,15 @@ def build_strategic_ideas(profile: dict[str, Any] | None = None) -> list[dict[st
     ideas.append(
         {
             "key": "idea:stabilize-income-multi-channel",
-            "title": "Стабилизация дохода: 3 канала параллельно",
+            "title": "Не ставь всё только на отклики — часто тишина",
             "entity": "personal strategy",
             "why": [
-                "RED mode: один источник (вакансии) даёт высокий variance",
-                "Параллельно: HH/Habr apply + Hirify research company + 1 outreach/неделя",
+                "Если только жать «отклик» на досках, недели уходят в пустоту",
+            ],
+            "steps": [
+                "2–3 нормальных отклика по карточкам ниже (и жми «Откликнулся»)",
+                "1 сильную вакансию без контактов — найди компанию в LinkedIn/HH и напиши туда",
+                "1 сообщение человеку (бывший коллега / чат): «ищу remote Senior FE»",
             ],
             "next": "REVIEW",
             "overall": 88,
@@ -47,8 +51,10 @@ def build_strategic_ideas(profile: dict[str, Any] | None = None) -> list[dict[st
                 "entity": "specialization",
                 "why": [
                     "В резюме уже есть RN/Expo + кейс SmartFish KKM",
-                    "Можно брать mobile-adjacent роли без отказа от Senior FE web",
-                    "Искать: «React Native» + remote + не junior",
+                ],
+                "steps": [
+                    "На этой неделе откликнуться на 1 remote RN/Expo роль (не junior)",
+                    "В сопроводительном писать: основной трек web FE, RN — смежный опыт",
                 ],
                 "next": "CONSIDER_SWITCH",
                 "overall": 82,
@@ -91,11 +97,14 @@ def build_strategic_ideas(profile: dict[str, Any] | None = None) -> list[dict[st
     ideas.append(
         {
             "key": "idea:contract-bridge",
-            "title": "Контракт / retainer как мост к full-time",
+            "title": "Подработка/контракт, пока нет оффера",
             "entity": "work format",
             "why": [
-                "Profile: contract_ok",
-                "Быстрее закрывает кассовый разрыв, пока идёт senior FT поиск",
+                "Full-time может молчать неделями — короткий контракт закрывает кассовый разрыв",
+            ],
+            "steps": [
+                "Написать 1–2 знакомым: готов взять frontend на 2–4 недели",
+                "Не снимать основной поиск Senior FE",
             ],
             "next": "REVIEW",
             "overall": 80,
