@@ -109,6 +109,12 @@ def init_db() -> None:
             """
         )
         _migrate_schema(conn)
+        try:
+            from opportunity.repository import ensure_opportunity_schema
+
+            ensure_opportunity_schema(conn)
+        except Exception:
+            pass
 
 
 def _migrate_schema(conn: sqlite3.Connection) -> None:
@@ -146,6 +152,12 @@ def _migrate_schema(conn: sqlite3.Connection) -> None:
         )
         """
     )
+    try:
+        from opportunity.repository import ensure_opportunity_schema
+
+        ensure_opportunity_schema(conn)
+    except Exception:
+        pass
 
 
 @contextmanager

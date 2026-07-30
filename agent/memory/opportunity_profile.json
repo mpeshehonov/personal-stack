@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "updated_at": "2026-07-30T15:10:11.523708+00:00",
+  "target_income_usd_month": 3500,
+  "min_income_usd_month": 3000,
+  "min_income_rub_month": 200000,
+  "target_roles": [
+    "Senior Frontend Engineer",
+    "Senior React Engineer",
+    "Frontend Lead"
+  ],
+  "primary_stack": [
+    "React",
+    "TypeScript",
+    "Next.js",
+    "JavaScript",
+    "REST API",
+    "CI/CD"
+  ],
+  "adjacent_roles": [
+    "Fullstack (React-heavy)",
+    "React Native / Expo",
+    "Product Engineer (frontend)"
+  ],
+  "desired_company_types": [
+    "product",
+    "fintech",
+    "ecommerce",
+    "b2b saas",
+    "cybersecurity product"
+  ],
+  "geography": [
+    "remote",
+    "RF remote",
+    "CIS remote"
+  ],
+  "remote_preference": "remote_only",
+  "work_formats": [
+    "full-time",
+    "contract_ok"
+  ],
+  "career_goals": [
+    "Stabilize income ASAP",
+    "Own a frontend module from API to release",
+    "Keep senior React/Next positioning"
+  ],
+  "strategic_interests": [
+    "React Native / Expo POS & mobile",
+    "Canvas / complex editors",
+    "Web3 / TON wallets (portfolio signal)",
+    "Streamer / creator tooling",
+    "Seat-map / ticketing niche"
+  ],
+  "undesired": [
+    "junior",
+    "intern",
+    "office_only_moscow",
+    "pure_vue_without_react",
+    "angular_primary",
+    "bitrix",
+    "agency_mass_hiring",
+    "digest_aggregates"
+  ],
+  "resume_skills": [
+    "React",
+    "TypeScript",
+    "JavaScript",
+    "Next.js",
+    "Vite",
+    "Redux Toolkit",
+    "TanStack Query",
+    "React Hook Form",
+    "REST API",
+    "OpenAPI/Orval",
+    "GraphQL",
+    "Apollo Client",
+    "WebSocket",
+    "Canvas",
+    "Framer Motion",
+    "Rive",
+    "Lottie",
+    "React Native",
+    "Expo",
+    "Web3",
+    "web3.js",
+    "TonConnect",
+    "Keycloak",
+    "Feature-Sliced Design",
+    "Module Federation",
+    "Material UI",
+    "Storybook",
+    "Vitest",
+    "React Testing Library",
+    "Git",
+    "CI/CD",
+    "GitLab CI",
+    "GitHub Actions",
+    "Docker",
+    "PostgreSQL",
+    "Sentry",
+    "e-commerce"
+  ],
+  "score_weights": {
+    "fit": 0.3,
+    "income": 0.2,
+    "growth": 0.1,
+    "probability": 0.15,
+    "strategic": 0.15,
+    "urgency": 0.1
+  },
+  "preference_adjustments": {},
+  "notes": {
+    "hirify": "Hirify is high-relevance; many cards need Hirify Plus for contacts. Treat paywall skips as actionability, not source quality.",
+    "comp": "Public resume omits salary; rails are private negotiation."
+  }
+}

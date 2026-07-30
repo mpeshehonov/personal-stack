@@ -51,6 +51,11 @@ def hirify_to_vacancy_shape(item: dict[str, Any]) -> dict[str, Any]:
 
     regions = [r.get("name") for r in (item.get("regions") or []) if r.get("name")]
     slug = item.get("slug") or str(item.get("id", ""))
+    published = item.get("published_at") or item.get("created_at") or item.get("date")
+
+    # Public Hirify cards usually hide contacts behind Plus → low actionability
+    has_external = bool(item.get("source_url") or item.get("external_url") or item.get("apply_url"))
+    company_ok = bool(company)
 
     return {
         "id": str(item.get("id", "")),
@@ -68,7 +73,11 @@ def hirify_to_vacancy_shape(item: dict[str, Any]) -> dict[str, Any]:
             "responsibility": (item.get("tldr") or "")[:500],
         },
         "area": {"name": ", ".join(regions)},
+        "published_at": published,
         "_source": "hirify",
+        "_published_at": published,
+        "_paywall": not has_external,
+        "_actionable": bool(has_external and company_ok),
     }
 
 

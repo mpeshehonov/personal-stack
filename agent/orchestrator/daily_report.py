@@ -31,7 +31,7 @@ def _format_job_hunt_section(job_summary: dict[str, Any] | None) -> str:
     top = job_summary.get("top_leads") or []
     if top:
         lines.append("")
-        lines.append("Топ совпадения:")
+        lines.append("Топ совпадения (match_score):")
         for lead in top[:5]:
             title = lead.get("title", "—")
             if len(title) > 50:
@@ -50,8 +50,15 @@ def _format_job_hunt_section(job_summary: dict[str, Any] | None) -> str:
         lines.append("Источники:")
         lines.append(snippet)
 
+    ideas = (job_summary.get("opportunity") or {}).get("ideas") or []
+    if ideas:
+        lines.append("")
+        lines.append("Opportunity ideas:")
+        for title in ideas[:2]:
+            lines.append(f"- {title}")
+
     lines.append("")
-    lines.append("Команды: /jobs, /jobs like <id>, /jobs dislike <id>, /sources")
+    lines.append("Полный brief: /brief")
     return "\n".join(lines)
 
 

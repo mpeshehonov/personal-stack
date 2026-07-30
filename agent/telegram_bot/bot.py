@@ -80,6 +80,8 @@ BOT_COMMANDS = [
     ("start", "Меню и карточки вакансий"),
     ("menu", "Кнопки навигации"),
     ("help", "Справка"),
+    ("brief", "Opportunity Brief на сегодня"),
+    ("profile", "Профиль возможностей"),
     ("status", "Состояние сервера"),
     ("ask", "Вопрос агенту"),
     ("task", "Задача: правки + deploy"),
@@ -223,14 +225,18 @@ def _help_text() -> str:
     return (
         "Команды бота:\n\n"
         "/menu - кнопки внизу экрана\n"
+        "/brief - Opportunity Brief (что делать сегодня)\n"
         "/jobs - карточки вакансий (Ок / Мимо / Сопровод)\n"
         "/jobs scan - поиск новых\n"
+        "/jobs dislike <id> paywall - мимо без штрафа источника\n"
         "/sources - веса источников\n"
+        "/profile - профиль возможностей\n"
         "/cover <id> - сопровод (или кнопка на карточке)\n"
         "/status /ask /task /memory\n"
         "/pause /resume\n\n"
-        "На карточке вакансии жми Ок или Мимо - id вводить не нужно.\n"
-        "Income/bounty на паузе. Фокус: сильные вакансии."
+        "Hirify: «Мимо» по умолчанию = paywall (источник не режем).\n"
+        "Для плохого fit: /jobs dislike <id> bad_fit\n"
+        "Income/bounty на паузе. Фокус: сильные действия."
     )
 
 
@@ -677,8 +683,12 @@ async def cmd_jobs(update, context) -> None:
             f"{action} #{result['lead_id']}: {result['company']} - {result['title'][:60]}",
             f"Источник {result['source_key']}: {result['weight_before']} -> {result['weight_after']}",
         ]
+        if result.get("source_weight_skipped"):
+            lines.append("Вес источника не трогали (paywall/actionability).")
         if result.get("disabled"):
             lines.append("Источник отключён из-за низкого веса.")
+        if result.get("next_action"):
+            lines.append(f"Next: {result['next_action']}")
         await update.message.reply_text("\n".join(lines))
         return
 
@@ -726,6 +736,8 @@ async def on_menu_text(update, context) -> None:
         return
     if action == "jobs":
         await _send_job_cards(context.bot, update.effective_chat.id)
+    elif action == "brief":
+        await cmd_brief(update, context)
     elif action == "liked":
         await _send_job_cards(context.bot, update.effective_chat.id, liked=True)
     elif action == "scan":
@@ -771,6 +783,7 @@ async def on_job_callback(update, context) -> None:
             f"Ок #{result['lead_id']}: {result['company']}\n"
             f"{result['title'][:80]}\n"
             f"Источник {result['source_key']}: {result['weight_before']} -> {result['weight_after']}"
+            + (f"\nNext: {result['next_action']}" if result.get("next_action") else "")
         )
         return
 
@@ -783,7 +796,9 @@ async def on_job_callback(update, context) -> None:
             await query.edit_message_text(f"Лид #{lead_id} не найден.")
             return
         extra = ""
-        if result.get("disabled"):
+        if result.get("source_weight_skipped"):
+            extra = "\nВес источника сохранён (paywall/Hirify)."
+        elif result.get("disabled"):
             extra = "\nИсточник отключён."
         await query.edit_message_text(
             f"Мимо #{result['lead_id']}: {result['company']}\n"
@@ -808,6 +823,59 @@ async def on_job_callback(update, context) -> None:
             markdown=format_draft_markdown(draft, lead_id=lead_id),
         )
         return
+
+
+async def cmd_brief(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    from opportunity.brief import format_brief_digest_extra, format_opportunity_brief
+    from opportunity.migrate import ensure_migrated_on_startup
+
+    def _build() -> str:
+        ensure_migrated_on_startup()
+        text = format_opportunity_brief()
+        digest = format_brief_digest_extra()
+        if digest:
+            text = text + "\n\n" + digest
+        return text
+
+    text = await asyncio.to_thread(_build)
+    # Telegram hard limit 4096
+    if len(text) > 4000:
+        text = text[:3990] + "\n…"
+    await update.message.reply_text(text)
+
+
+async def cmd_profile(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    from opportunity.profile import format_profile_plain, update_profile_fields
+
+    if context.args and context.args[0].lower() == "set" and len(context.args) >= 2:
+        # /profile set remote_preference=remote_only
+        assignments = " ".join(context.args[1:])
+        fields: dict = {}
+        for part in assignments.split():
+            if "=" not in part:
+                continue
+            k, v = part.split("=", 1)
+            if v.startswith("[") or v.startswith("{"):
+                continue
+            if v.isdigit():
+                fields[k] = int(v)
+            else:
+                fields[k] = v
+        if not fields:
+            await update.message.reply_text(
+                "Пример: /profile set remote_preference=remote_only"
+            )
+            return
+        await asyncio.to_thread(update_profile_fields, **fields)
+        await update.message.reply_text("Обновлено:\n" + "\n".join(f"{k}={v}" for k, v in fields.items()))
+        return
+
+    text = await asyncio.to_thread(format_profile_plain)
+    await update.message.reply_text(text)
 
 
 async def cmd_cover(update, context) -> None:
@@ -1116,6 +1184,8 @@ def main() -> None:
     app.add_handler(CommandHandler("memory", cmd_memory, block=False))
     app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
+    app.add_handler(CommandHandler("brief", cmd_brief, block=False))
+    app.add_handler(CommandHandler("profile", cmd_profile, block=False))
     app.add_handler(CommandHandler("sources", cmd_sources, block=False))
     app.add_handler(CommandHandler("menu", cmd_menu, block=False))
     app.add_handler(CommandHandler("cover", cmd_cover, block=False))

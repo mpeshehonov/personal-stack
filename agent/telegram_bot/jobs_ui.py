@@ -13,15 +13,16 @@ from orchestrator.state import get_job_lead, list_job_leads
 
 MENU_KEYBOARD = ReplyKeyboardMarkup(
     [
-        ["Вакансии", "Скан"],
-        ["Источники", "Понравилось"],
-        ["Справка"],
+        ["Вакансии", "Brief"],
+        ["Скан", "Источники"],
+        ["Понравилось", "Справка"],
     ],
     resize_keyboard=True,
 )
 
 MENU_TEXTS = {
     "вакансии": "jobs",
+    "brief": "brief",
     "скан": "scan",
     "источники": "sources",
     "понравилось": "liked",
@@ -50,8 +51,20 @@ def lead_card_text(row: Any) -> str:
     if reasons:
         reason_line = "\n" + reasons[0]
 
+    overall_line = ""
+    try:
+        from opportunity.repository import get_opportunity_by_lead
+
+        opp = get_opportunity_by_lead(int(row["id"]))
+        if opp:
+            overall_line = f" · opp {opp.overall_score}"
+            if opp.analysis.get("paywall"):
+                overall_line += " · paywall"
+    except Exception:
+        pass
+
     lines = [
-        f"#{row['id']} · score {score}",
+        f"#{row['id']} · match {score}{overall_line}",
         f"{company}",
         title,
     ]

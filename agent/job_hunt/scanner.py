@@ -249,6 +249,18 @@ def scan_and_store_leads(
 
         fields = _vacancy_to_lead_fields(vacancy, match_score=score, match_reasons=reasons)
         lead_id = add_job_lead(**fields)
+        try:
+            from opportunity.services import upsert_from_job_lead
+
+            upsert_from_job_lead(
+                lead_id=lead_id,
+                vacancy=vacancy,
+                match_score=score,
+                match_reasons=reasons,
+                lead_status="new",
+            )
+        except Exception:
+            logger.exception("Opportunity upsert failed for lead %s", lead_id)
         new_lead_ids.append(lead_id)
         if fp and len(fp) >= 8:
             seen_fingerprints.add(fp)
@@ -320,6 +332,12 @@ def daily_job_scan() -> dict[str, Any]:
 
     try:
         summary = scan_and_store_leads()
+        try:
+            from opportunity.services import after_scan_hook
+
+            summary = after_scan_hook(summary)
+        except Exception:
+            logger.exception("Opportunity after_scan_hook failed")
         logger.info(
             "Job hunt scan: fetched=%s new=%s skipped=%s below=%s",
             summary["fetched"],

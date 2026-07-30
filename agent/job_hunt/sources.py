@@ -155,7 +155,11 @@ def apply_feedback(
     *,
     note: str = "",
 ) -> dict[str, Any]:
-    """Record feedback and adjust source weight. Returns summary for TG."""
+    """Record feedback via Opportunity OS; keep legacy return shape for Telegram."""
+    from opportunity.feedback import apply_opportunity_feedback, infer_paywall_reason_from_note
+    from opportunity.services import upsert_from_job_lead
+    from opportunity.scoring import lead_row_to_vacancy_shape
+
     action = action.lower().strip()
     if action not in DELTA and action != "reject_reason":
         raise ValueError(f"unknown action: {action}")
@@ -164,43 +168,66 @@ def apply_feedback(
     if lead is None:
         raise KeyError(f"lead {lead_id} not found")
 
+    # Ensure opportunity row exists (lazy backfill for one lead)
+    from opportunity.repository import get_opportunity_by_lead
+
+    if get_opportunity_by_lead(lead_id) is None:
+        vacancy = lead_row_to_vacancy_shape(lead)
+        try:
+            reasons = json.loads(lead["match_reasons_json"] or "[]")
+        except json.JSONDecodeError:
+            reasons = []
+        upsert_from_job_lead(
+            lead_id=lead_id,
+            vacancy=vacancy,
+            match_score=int(lead["match_score"] or 0),
+            match_reasons=reasons,
+            lead_status=lead["status"] or "new",
+        )
+
+    reason = infer_paywall_reason_from_note(note)
     source_key = source_key_for_lead(lead)
-    ensure_default_sources()
-    if get_job_source(source_key) is None:
-        kind = "telegram" if source_key.startswith("tg:") else "board"
-        set_job_source(source_key, kind=kind, weight=1.0, enabled=True, status="active")
+    # Hirify «Мимо» without explicit fit reason → treat as paywall/actionability
+    if (
+        action == "dislike"
+        and source_key == "hirify"
+        and not reason
+    ):
+        reason = "paywall"
+    if action == "dislike" and note.lower() in ("bad_fit", "mismatch", "не релевант"):
+        reason = note  # punish source
 
-    add_job_feedback(lead_id, action=action, note=note, source_key=source_key)
+    if action == "reject_reason":
+        add_job_feedback(lead_id, action=action, note=note, source_key=source_key)
+        return {
+            "lead_id": lead_id,
+            "action": action,
+            "source_key": source_key,
+            "weight_before": 0,
+            "weight_after": 0,
+            "disabled": False,
+            "title": lead["title"],
+            "company": lead["company"],
+        }
 
-    delta = DELTA.get(action, 0.0)
-    row = get_job_source(source_key)
-    old_w = float(row["weight"]) if row else 1.0
-    new_w = max(WEIGHT_MIN, min(WEIGHT_MAX, old_w + delta))
-    disabled = False
-    if action == "dislike" and new_w < WEIGHT_FLOOR_DISABLE:
-        update_source_weight(source_key, new_w, enabled=False)
-        disabled = True
-    elif delta:
-        update_source_weight(source_key, new_w)
-
-    if action == "like":
-        update_job_lead_status(lead_id, "liked")
-    elif action == "dislike":
-        update_job_lead_status(lead_id, "rejected")
-    elif action == "applied":
-        update_job_lead_status(lead_id, "applied")
-    elif action == "interview":
-        update_job_lead_status(lead_id, "interview")
-
+    result = apply_opportunity_feedback(
+        lead_id=lead_id,
+        action=action,
+        reason=reason,
+    )
+    src = result.get("source") or {}
     return {
         "lead_id": lead_id,
         "action": action,
-        "source_key": source_key,
-        "weight_before": round(old_w, 3),
-        "weight_after": round(new_w, 3),
-        "disabled": disabled,
-        "title": lead["title"],
-        "company": lead["company"],
+        "source_key": src.get("source_key") or source_key,
+        "weight_before": src.get("weight_before", 0),
+        "weight_after": src.get("weight_after", 0),
+        "disabled": bool(src.get("disabled")),
+        "source_weight_skipped": bool(src.get("source_weight_skipped")),
+        "title": result.get("title") or lead["title"],
+        "company": result.get("company") or lead["company"],
+        "opportunity_id": result.get("opportunity_id"),
+        "next_action": result.get("next_action"),
     }
 
 
