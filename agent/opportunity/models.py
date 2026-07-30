@@ -174,5 +174,8 @@ NON_SOURCE_PUNISH_REASONS = frozenset(
         "контакт",
         "not_actionable",
         "невозможно откликнуться",
+        "duplicate",
+        "дубл",
+        "cross-channel",
     }
 )

@@ -234,9 +234,10 @@ def _help_text() -> str:
         "/cover <id> - сопровод (или кнопка на карточке)\n"
         "/status /ask /task /memory\n"
         "/pause /resume\n\n"
+        "Можно просто написать: «сопровод 42» или «откликнулся 76».\n"
         "Hirify: «Мимо» по умолчанию = paywall (источник не режем).\n"
         "Для плохого fit: /jobs dislike <id> bad_fit\n"
-        "Уже откликнулся снаружи: на карточке жми «Откликнулся», иначе воронка пустая.\n"
+        "Уже откликнулся снаружи: жми «Откликнулся» или напиши «откликнулся 76».\n"
         "Тишина 3+ дня: /brief покажет follow-up.\n"
         "Income/bounty на паузе. Фокус: сильные действия."
     )
@@ -735,6 +736,7 @@ async def on_menu_text(update, context) -> None:
 
     action = parse_menu_text(update.message.text)
     if not action:
+        await _try_job_free_text(update, context)
         return
     if action == "jobs":
         await _send_job_cards(context.bot, update.effective_chat.id)
@@ -752,6 +754,44 @@ async def on_menu_text(update, context) -> None:
         await cmd_help(update, context)
     elif action == "menu":
         await cmd_menu(update, context)
+
+
+async def _try_job_free_text(update, context) -> bool:
+    """Route «сопровод #42» / «откликнулся 76» without forcing /ask Cursor."""
+    import re
+
+    text = (update.message.text or "").strip()
+    low = text.lower()
+    ids = [int(x) for x in re.findall(r"#?(\d{1,5})", text)]
+
+    if any(k in low for k in ("сопровод", "cover", "сопроводительн")):
+        if not ids:
+            await update.message.reply_text(
+                "Напиши id: «сопровод 42» или жми Сопровод на карточке /brief."
+            )
+            return True
+        context.args = [str(ids[0])]
+        await cmd_cover(update, context)
+        return True
+
+    if any(k in low for k in ("откликнул", "откликн", "applied")) and ids:
+        from job_hunt.sources import apply_feedback
+
+        lead_id = ids[0]
+        try:
+            result = await asyncio.to_thread(
+                apply_feedback, lead_id, "applied", note="free-text mark"
+            )
+        except KeyError:
+            await update.message.reply_text(f"Лид #{lead_id} не найден.")
+            return True
+        await update.message.reply_text(
+            f"Отклик зафиксирован #{result['lead_id']}: {result['company']}\n"
+            f"{result['title'][:80]}"
+        )
+        return True
+
+    return False
 
 
 async def on_job_callback(update, context) -> None:
@@ -829,10 +869,25 @@ async def on_job_callback(update, context) -> None:
         if not lead:
             await query.message.reply_text(f"Лид #{lead_id} не найден.")
             return
-        draft = await asyncio.to_thread(
-            draft_cover_letter, _lead_row_to_dict(lead), channel="hh"
-        )
-        add_job_application(lead_id, cover_letter=draft["body"], status="draft")
+        try:
+            draft = await asyncio.to_thread(
+                draft_cover_letter, _lead_row_to_dict(lead), channel="hh"
+            )
+            add_job_application(
+                lead_id,
+                cover_letter=draft["body"],
+                status="draft",
+                notes="telegram button Сопровод",
+            )
+            # Keep in shortlist until user marks applied
+            if (lead["status"] or "new") == "new":
+                from job_hunt.sources import apply_feedback
+
+                await asyncio.to_thread(apply_feedback, lead_id, "like", note="cover drafted")
+        except Exception as exc:
+            logger.exception("cover draft failed for %s", lead_id)
+            await query.message.reply_text(f"Не смог собрать сопровод #{lead_id}: {exc}")
+            return
         await send_rich_markdown(
             context.bot,
             chat_id=chat_id,

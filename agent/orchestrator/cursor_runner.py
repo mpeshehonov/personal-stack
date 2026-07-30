@@ -216,17 +216,74 @@ def run_ask(prompt: str) -> str:
 
 
 def _wrap_ask_prompt(user_text: str) -> str:
-    return f"""Режим: только ответ на вопрос (read-only).
+    job_ctx = _job_ask_context()
+    return f"""Режим: ответ на вопрос. По умолчанию read-only.
 
 Пользователь спрашивает:
 {user_text}
 
+Снимок карьеры/вакансий (факт из БД, не выдумывай поверх):
+{job_ctx}
+
 Правила:
-- НЕ изменяй файлы, НЕ запускай команды с побочными эффектами, НЕ коммить.
-- Отвечай по-русски, кратко и по делу.
-- Можно использовать Markdown (списки, `code`, **жирный**) — бот отрендерит форматирование.
-- Если нужен доступ к коду — читай workspace /opt/personal-stack.
+- Отвечай по-русски, коротко, по делу. Без воды и без мантр вроде «сделай /jobs like → /cover» если по БД это уже неактуально.
+- Если вопрос про вакансии/отклики/сопровод — опирайся на снимок выше и на код в /opt/personal-stack.
+- Если просит сопровод на конкретный #id — скажи команду `/cover <id>` или что черновик уже в job_applications; не пиши портянку резюме заново без нужды.
+- Если отклик был и тишина — дай follow-up (кого пингануть), не «подожди ещё».
+- НЕ изменяй файлы и НЕ делай side effects, пока пользователь явно не просит правки (тогда это /task).
+- Можно Markdown (списки, `code`, **жирный`).
 """
+
+
+def _job_ask_context() -> str:
+    """Compact DB snapshot so /ask stops hallucinating outreach state."""
+    try:
+        from orchestrator.state import get_conn, init_db
+
+        init_db()
+        with get_conn() as conn:
+            statuses = conn.execute(
+                "SELECT status, COUNT(*) AS c FROM job_leads GROUP BY status"
+            ).fetchall()
+            apps = conn.execute("SELECT COUNT(*) AS c FROM job_applications").fetchone()
+            applied = conn.execute(
+                """
+                SELECT id, company, title FROM job_leads
+                WHERE status IN ('applied', 'liked', 'interview')
+                ORDER BY id DESC LIMIT 8
+                """
+            ).fetchall()
+            recent_apps = conn.execute(
+                """
+                SELECT a.lead_id, l.company, substr(l.title,1,40) AS title
+                FROM job_applications a
+                JOIN job_leads l ON l.id = a.lead_id
+                ORDER BY a.id DESC LIMIT 8
+                """
+            ).fetchall()
+        lines = [
+            "Статусы лидов: "
+            + ", ".join(f"{r['status']}={r['c']}" for r in statuses),
+            f"Черновиков сопровода: {int(apps['c'] if apps else 0)}",
+        ]
+        if applied:
+            lines.append(
+                "Liked/applied/interview: "
+                + "; ".join(
+                    f"#{r['id']} {r['company'] or '—'} / {(r['title'] or '')[:40]}"
+                    for r in applied
+                )
+            )
+        if recent_apps:
+            lines.append(
+                "Есть cover drafts: "
+                + "; ".join(
+                    f"#{r['lead_id']} {r['company'] or '—'}" for r in recent_apps
+                )
+            )
+        return "\n".join(lines)
+    except Exception as exc:
+        return f"(контекст вакансий недоступен: {exc})"
 
 
 def _wrap_task_prompt(user_text: str) -> str:
