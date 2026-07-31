@@ -6,7 +6,6 @@ from datetime import datetime, timezone
 from typing import Any
 
 from opportunity.actions import action_how_ru, action_label_ru
-from opportunity.ideas import build_strategic_ideas
 from opportunity.metrics import compute_funnel_snapshot
 from opportunity.models import OpportunityStatus
 from opportunity.repository import list_opportunities
@@ -17,7 +16,11 @@ def build_opportunity_brief(
     top_n: int = 5,
     actions_n: int = 3,
 ) -> dict[str, Any]:
-    """Structured brief: header text + card payloads for inline keyboards."""
+    """Structured brief: header + JOB cards + CLIENT/NETWORK/PRODUCT cards."""
+    from opportunity.services import ensure_all_opportunities
+
+    ensure_all_opportunities()
+
     top = _select_top_jobs(limit=top_n)
     saved = list_opportunities(
         status=OpportunityStatus.SAVED.value,
@@ -33,16 +36,85 @@ def build_opportunity_brief(
     )
     followups = _select_followups(applied)
 
-    header = _format_header(top, saved, followups, actions_n=actions_n)
+    clients = _select_vertical("CLIENT", limit=2)
+    network = _select_vertical("NETWORK", limit=2)
+    products = _select_vertical("PRODUCT", limit=2)
+
+    header = _format_header(
+        top,
+        saved,
+        followups,
+        clients=clients,
+        network=network,
+        products=products,
+        actions_n=actions_n,
+    )
     cards = [_card_payload(opp) for opp in top]
-    digest = _format_digest(exclude_ids={c["opportunity_id"] for c in cards if c.get("opportunity_id")})
+    vertical_cards = (
+        [_vertical_card_payload(opp, "Клиент") for opp in clients]
+        + [_vertical_card_payload(opp, "Сеть") for opp in network]
+        + [_vertical_card_payload(opp, "Продукт") for opp in products]
+    )
+    digest = _format_digest(
+        exclude_ids={c["opportunity_id"] for c in cards if c.get("opportunity_id")}
+    )
     followup_text = _format_followups(followups)
 
     return {
         "header": header,
         "cards": cards,
+        "vertical_cards": vertical_cards,
         "followup_text": followup_text,
         "digest": digest,
+    }
+
+
+def _select_vertical(opp_type: str, *, limit: int) -> list[Any]:
+    rows = list_opportunities(
+        status=OpportunityStatus.NEW.value,
+        opp_type=opp_type,
+        limit=20,
+        min_overall=40,
+    )
+    if opp_type == "PRODUCT":
+        # Always surface ownership gate / owned package before speculative net-new
+        def _prod_key(o: Any) -> tuple:
+            kind = (o.analysis or {}).get("kind") or ""
+            rank = {
+                "ownership_gate": 0,
+                "owned_package": 1,
+                "net_new": 2,
+            }.get(kind, 3)
+            return (rank, -int(o.overall_score or 0))
+
+        rows = sorted(rows, key=_prod_key)
+    return rows[:limit]
+
+
+def _vertical_card_payload(opp: Any, label_ru: str) -> dict[str, Any]:
+    steps = list((opp.analysis or {}).get("steps") or [])[:3]
+    why = list((opp.scores or {}).get("strategic", {}).get("reasons") or [])[:2]
+    if not why:
+        why = list((opp.scores or {}).get("fit", {}).get("reasons") or [])[:2]
+    lines = [
+        f"[{label_ru}] opp #{opp.id} · {opp.overall_score} баллов",
+        opp.company_or_entity or "—",
+        opp.title or "—",
+        "",
+        f"Что сделать: {action_how_ru(opp.next_action)}",
+    ]
+    if why:
+        lines.append("Почему: " + "; ".join(why))
+    if steps:
+        lines.append("Шаги:")
+        for s in steps:
+            lines.append(f"• {s}")
+    return {
+        "opportunity_id": opp.id,
+        "lead_id": None,
+        "url": opp.source_url or "",
+        "text": "\n".join(lines),
+        "kind": "vertical",
     }
 
 
@@ -126,16 +198,21 @@ def _format_header(
     saved: list[Any],
     followups: list[Any],
     *,
+    clients: list[Any] | None = None,
+    network: list[Any] | None = None,
+    products: list[Any] | None = None,
     actions_n: int,
 ) -> str:
+    clients = clients or []
+    network = network or []
+    products = products or []
     lines = [
         "📡 Бриф возможностей",
         "",
-        "Как работать с брифом:",
-        "1) Под каждой вакансией кнопки — не копируй id руками",
-        "2) «Открыть» → отклик на сайте → «Откликнулся»",
-        "3) Не то → «Мимо». Сомнительно → «В избранное»",
-        "4) Уже откликался снаружи → всё равно жми «Откликнулся», иначе воронка врёт",
+        "Как работать:",
+        "• Вакансии: Открыть → отклик → «Откликнулся»",
+        "• Клиент/Сеть/Продукт: кнопки Ок / Сделано / Мимо под карточкой",
+        "• Чужие кейсы с сайта не упаковываем — только owned IP + новые идеи",
         "",
     ]
 
@@ -146,47 +223,49 @@ def _format_header(
             days_s = f"{days}д" if days is not None else "?"
             lead = opp.job_lead_id or opp.id
             lines.append(
-                f"{i}) Написать follow-up по #{lead} "
-                f"{opp.company_or_entity or '—'} (тишина {days_s})"
+                f"{i}) Follow-up #{lead} {opp.company_or_entity or '—'} (тишина {days_s})"
             )
-        lines.append("   Как: письмо/чат рекрутеру или повторный контакт в HH. Потом жди.")
         lines.append("")
 
-    lines.append("📌 На сегодня (новые):")
+    lines.append("📌 Вакансии (сегодня):")
     if not top:
-        lines.append("• Новых сильных нет — жми Скан или разбери избранное")
+        lines.append("• Сильных new нет — упор на клиент/сеть ниже")
     else:
         for i, opp in enumerate(top[:actions_n], 1):
             lead = opp.job_lead_id or opp.id
-            how = action_how_ru(opp.next_action)
             lines.append(
-                f"{i}) #{lead} {opp.company_or_entity or '—'} — {how}"
+                f"{i}) #{lead} {opp.company_or_entity or '—'} — {action_how_ru(opp.next_action)}"
             )
     lines.append("")
 
-    idea = (build_strategic_ideas() or [None])[0]
-    if idea:
-        lines.extend(
-            [
-                "💡 Кроме вакансий (простыми словами)",
-                f"• {idea['title']}",
-            ]
-        )
-        for step in idea.get("steps") or idea.get("why") or []:
-            lines.append(f"  — {step}")
+    if clients:
+        lines.append("💼 Клиенты:")
+        for opp in clients:
+            lines.append(f"• opp #{opp.id} {opp.title[:70]}")
+        lines.append("")
+    if network:
+        lines.append("🤝 Сеть:")
+        for opp in network:
+            lines.append(f"• opp #{opp.id} {opp.title[:70]}")
+        lines.append("")
+    if products:
+        lines.append("📦 Продукт (новые идеи / своё IP):")
+        for opp in products:
+            kind = (opp.analysis or {}).get("kind") or ""
+            tag = {"net_new": "новое", "owned_package": "своё", "ownership_gate": "уточнить IP"}.get(
+                kind, kind
+            )
+            lines.append(f"• opp #{opp.id} [{tag}] {opp.title[:60]}")
         lines.append("")
 
     funnel = compute_funnel_snapshot()
     lines.extend(
         [
-            "📊 Воронка",
-            f"Новые: {funnel.get('new', 0)}",
-            f"В избранном: {funnel.get('saved', 0)}",
-            f"Отклики: {funnel.get('applied', 0)}",
-            f"Собеседования: {funnel.get('interview', 0)}",
-            f"Офферы: {funnel.get('offer', 0)}",
+            "📊 Воронка (вакансии)",
+            f"Новые: {funnel.get('new', 0)} · Избранное: {funnel.get('saved', 0)} · "
+            f"Отклики: {funnel.get('applied', 0)} · Собесы: {funnel.get('interview', 0)}",
             "",
-            "Карточки top ↓",
+            "Карточки ↓",
         ]
     )
     return "\n".join(lines)

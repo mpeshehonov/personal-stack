@@ -129,6 +129,30 @@ def brief_nav_keyboard() -> InlineKeyboardMarkup:
     )
 
 
+def brief_vertical_keyboard(opp_id: int, url: str = "") -> InlineKeyboardMarkup:
+    rows: list[list[InlineKeyboardButton]] = []
+    if url:
+        rows.append([InlineKeyboardButton("Открыть", url=url)])
+    rows.append(
+        [
+            InlineKeyboardButton("Ок", callback_data=f"o:like:{opp_id}"),
+            InlineKeyboardButton("Сделано", callback_data=f"o:done:{opp_id}"),
+            InlineKeyboardButton("Мимо", callback_data=f"o:pass:{opp_id}"),
+        ]
+    )
+    return InlineKeyboardMarkup(rows)
+
+
+def parse_opp_callback(data: str) -> tuple[str, int | None]:
+    parts = (data or "").split(":")
+    if len(parts) < 2 or parts[0] != "o":
+        return "", None
+    action = parts[1]
+    if len(parts) >= 3 and parts[2].isdigit():
+        return action, int(parts[2])
+    return action, None
+
+
 def sources_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         [

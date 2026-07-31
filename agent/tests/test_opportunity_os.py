@@ -279,7 +279,39 @@ class OpportunityOSTest(unittest.TestCase):
         text = self.brief.format_opportunity_brief(top_n=5, actions_n=3)
         self.assertIn("Бриф возможностей", text)
 
-    def test_legacy_scan_compat_add_lead(self) -> None:
+    def test_verticals_no_employer_resell(self) -> None:
+        from opportunity.verticals import build_product_seeds, ensure_vertical_opportunities
+
+        p = self.profile.default_profile()
+        seeds = build_product_seeds(p)
+        self.assertTrue(any(s.get("kind") == "net_new" for s in seeds))
+        self.assertTrue(any(s.get("kind") == "ownership_gate" for s in seeds))
+        self.assertFalse(
+            any(
+                s.get("kind") == "owned_package" and "sendonate" in s["title"].lower()
+                for s in seeds
+            )
+        )
+        # Explicit owned asset appears
+        p["owned_product_assets"] = [
+            {
+                "key": "smartfish-kkm",
+                "title": "SmartFish KKM template",
+                "can_resell": True,
+                "notes": "user-confirmed",
+            }
+        ]
+        owned = build_product_seeds(p)
+        self.assertTrue(any(s.get("kind") == "owned_package" for s in owned))
+        stats = ensure_vertical_opportunities(p)
+        self.assertIn("CLIENT", stats["by_type"])
+        self.assertIn("NETWORK", stats["by_type"])
+        self.assertIn("PRODUCT", stats["by_type"])
+        data = self.brief.build_opportunity_brief(top_n=2, actions_n=2)
+        self.assertTrue(data.get("vertical_cards"))
+        self.assertIn("Клиент", data["header"])
+
+    def test_legacy_job_leads_still_work(self) -> None:
         """Old job_hunt storage path still works."""
         lid = self.state.add_job_lead(
             source="habr",

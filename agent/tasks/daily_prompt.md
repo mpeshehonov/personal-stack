@@ -55,8 +55,10 @@
 ## Приоритеты (по порядку)
 
 1. **Health** — сайт лежит → `scripts/redeploy-site.sh`
-2. **Career hunt** — разбор фактов из БД; Opportunity brief sanity; 0–3 предложения источников; уроки при FP
+2. **Career hunt** — факты из БД; Opportunity brief (JOB+CLIENT+NETWORK+PRODUCT); 0–3 источника; уроки при FP
 3. **Memory** — `agent/memory/lessons/` при повторяющихся сбоях
+
+PRODUCT: не предлагай упаковать кейсы работодателей с сайта. Только `owned_product_assets` или net-new идеи.
 
 ## Стиль ответов человеку (Человеку / Итог)
 

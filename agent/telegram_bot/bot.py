@@ -927,6 +927,22 @@ async def cmd_brief(update, context) -> None:
             disable_web_page_preview=True,
         )
 
+    from telegram_bot.jobs_ui import brief_vertical_keyboard
+
+    for card in data.get("vertical_cards") or []:
+        text = card.get("text") or ""
+        if len(text) > 3500:
+            text = text[:3490] + "\n…"
+        oid = card.get("opportunity_id")
+        if not oid:
+            await update.message.reply_text(text)
+            continue
+        await update.message.reply_text(
+            text,
+            reply_markup=brief_vertical_keyboard(int(oid), card.get("url") or ""),
+            disable_web_page_preview=True,
+        )
+
     if data.get("followup_text"):
         fu = data["followup_text"]
         if len(fu) > 4000:
@@ -938,6 +954,42 @@ async def cmd_brief(update, context) -> None:
         if len(digest) > 4000:
             digest = digest[:3990] + "\n…"
         await update.message.reply_text(digest)
+
+
+async def on_opp_callback(update, context) -> None:
+    query = update.callback_query
+    if not query or not _allowed_user(query.from_user):
+        return
+    await query.answer()
+    from telegram_bot.jobs_ui import parse_opp_callback
+    from opportunity.feedback import apply_opportunity_feedback
+
+    action, opp_id = parse_opp_callback(query.data or "")
+    if opp_id is None:
+        return
+    mapping = {
+        "like": "LIKE",
+        "pass": "DISLIKE",
+        "done": "APPLY",
+    }
+    fb = mapping.get(action)
+    if not fb:
+        return
+    try:
+        result = await asyncio.to_thread(
+            apply_opportunity_feedback,
+            opportunity_id=opp_id,
+            action=fb,
+            reason="" if action != "pass" else "skip vertical",
+        )
+    except KeyError:
+        await query.edit_message_text(f"Opportunity #{opp_id} не найден.")
+        return
+    label = {"like": "Ок", "pass": "Мимо", "done": "Сделано"}.get(action, action)
+    await query.edit_message_text(
+        f"{label} opp #{result.get('opportunity_id')}: {result.get('company') or '—'}\n"
+        f"{(result.get('title') or '')[:100]}"
+    )
 
 
 async def cmd_profile(update, context) -> None:
@@ -1288,6 +1340,7 @@ def main() -> None:
     app.add_handler(CommandHandler("help", cmd_help, block=False))
     app.add_handler(CommandHandler("start", cmd_menu, block=False))
     app.add_handler(CallbackQueryHandler(on_job_callback, pattern=r"^j:", block=False))
+    app.add_handler(CallbackQueryHandler(on_opp_callback, pattern=r"^o:", block=False))
     app.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, on_menu_text, block=False)
     )

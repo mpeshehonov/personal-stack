@@ -98,12 +98,35 @@ def default_profile() -> dict[str, Any]:
         "resume_skills": skills,
         "score_weights": dict(DEFAULT_WEIGHTS),
         "preference_adjustments": {},
+        "client_targets": [],
+        "network_contacts": [],
+        "owned_product_assets": [],
+        "product_ideas_blocked": [
+            "sendonate",
+            "preeglos",
+            "x5",
+            "citilink",
+            "potalonu",
+            "bi.zone",
+            "nlmk",
+            "rostelecom",
+            "sbertech",
+            "zenit",
+            "baucenter",
+            "maximaster",
+            "akvaprom",
+        ],
         "notes": {
             "hirify": (
                 "Hirify is high-relevance; many cards need Hirify Plus for contacts. "
                 "Treat paywall skips as actionability, not source quality."
             ),
             "comp": "Public resume omits salary; rails are private negotiation.",
+            "product_ip": (
+                "Never package employer/client case studies from the site. "
+                "Only owned_product_assets with can_resell=true. "
+                "Net-new PRODUCT ideas use analysis.kind=net_new."
+            ),
         },
     }
 

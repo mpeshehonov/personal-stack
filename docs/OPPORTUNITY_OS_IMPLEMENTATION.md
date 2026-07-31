@@ -89,22 +89,42 @@ Menu: added **Brief**.
 
 Until feedback accumulates: `precision_at_5`, `apply_rate`, `interview_rate` may be null → `insufficient_data=true`. See `docs/OPPORTUNITY_OS_METRICS.md`.
 
+## Multi-vertical (CLIENT → NETWORK → PRODUCT)
+
+Design: `docs/superpowers/specs/2026-07-31-opportunity-multi-vertical-design.md`.
+
+- Generator: `agent/opportunity/verticals.py` → idempotent upsert by `source` key
+- Hooked from `after_scan_hook` / `ensure_all_opportunities`
+- `/brief`: sections Клиенты / Сеть / Продукт + TG `o:like|done|pass:{id}`
+- **PRODUCT IP rule:** never auto-package site employer case studies. Only `owned_product_assets[]` with `can_resell: true`. Separate lane: `analysis.kind = net_new` (new theses from skills/gaps)
+- Until user confirms ownership, brief shows ownership_gate + net-new only
+
+### Profile keys
+
+```json
+"client_targets": [{ "name": "...", "channel": "...", "notes": "..." }],
+"network_contacts": [{ "name": "...", "channel": "...", "notes": "..." }],
+"owned_product_assets": [{ "key": "...", "title": "...", "can_resell": true, "notes": "..." }],
+"product_ideas_blocked": ["sendonate", "preeglos", "x5", "..."]
+```
+
 ## Remaining — Clients
 
-- Collectors for inbound/outbound client leads
+- Richer collectors for inbound/outbound client leads
 - Separate scoring weights (retainer vs FT)
 - CRM status machine beyond JOB
 
 ## Remaining — Products
 
-- Productize portfolio niches (seat-map, KKM, sendonate patterns) as PRODUCT opportunities with outreach drafts
-- Evidence links (no invented metrics)
+- Fill `owned_product_assets` after explicit user confirmation (not from site portfolio alone)
+- Evidence links for net-new theses (no invented metrics)
+- Weekly research pass for additional net-new ideas (`ideas.py`)
 
 ## Remaining — Network
 
 - Person/Company tables from `career-opportunities-schema.md`
 - Warm intro / LinkedIn outreach tracking
-- `/brief` section for network follow-ups
+- Grow `network_contacts` from real people (not placeholders)
 
 ## Improvement backlog (scoring / search)
 

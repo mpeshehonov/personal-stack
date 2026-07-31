@@ -96,15 +96,30 @@ def upsert_from_job_lead(
 
 
 def after_scan_hook(summary: dict[str, Any]) -> dict[str, Any]:
-    """Called after scan_and_store_leads — ensure migration + strategic ideas."""
+    """Called after scan_and_store_leads — migration + all verticals."""
     ensure_migrated_on_startup()
     ideas = ensure_strategic_ideas()
+    from opportunity.verticals import ensure_vertical_opportunities
+
+    verticals = ensure_vertical_opportunities()
     summary = dict(summary)
     summary["opportunity"] = {
         "ideas_upserted": ideas.get("upserted", 0),
         "ideas": ideas.get("titles", []),
+        "verticals": verticals.get("by_type", {}),
+        "vertical_titles": verticals.get("titles", []),
     }
     return summary
+
+
+def ensure_all_opportunities() -> dict[str, Any]:
+    """Manual/brief entry: migrate jobs + verticals + legacy OTHER ideas."""
+    ensure_migrated_on_startup()
+    ideas = ensure_strategic_ideas()
+    from opportunity.verticals import ensure_vertical_opportunities
+
+    verticals = ensure_vertical_opportunities()
+    return {"ideas": ideas, "verticals": verticals}
 
 
 def lead_fields_vacancy_from_stored(
