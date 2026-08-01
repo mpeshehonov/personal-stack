@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-07-30T20:29:58.349913+00:00",
+  "updated_at": "2026-07-31T23:57:09.821835+00:00",
   "target_income_usd_month": 3500,
   "min_income_usd_month": 3000,
   "min_income_rub_month": 200000,
@@ -110,16 +110,16 @@
   },
   "preference_adjustments": {
     "feature_boosts": {
-      "senior": 2.67,
-      "tg": 4.0,
-      "react": 4.8
+      "react": 5.33,
+      "senior": 3.43,
+      "tg": 4.0
     },
     "weight_deltas": {},
-    "last_rebuild_samples": 8,
+    "last_rebuild_samples": 9,
     "explanations": [
-      "senior: pos=4 neg=2 → boost +2.7",
-      "tg: pos=6 neg=2 → boost +4.0",
-      "react: pos=4 neg=1 → boost +4.8"
+      "react: pos=5 neg=1 → boost +5.3",
+      "senior: pos=5 neg=2 → boost +3.4",
+      "tg: pos=6 neg=2 → boost +4.0"
     ]
   },
   "client_targets": [],
