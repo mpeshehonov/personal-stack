@@ -8,23 +8,36 @@
 
 ---
 
-## Bad (AI symbols)
+## Bad (AI symbols + wrong preposition + fake HH limit)
 
-> Откликаюсь на вакансию — React/TS/Next.js — 7+ лет — X5 → Keycloak → Orval · Citilink → e-commerce · удалённо · ASAP
+> Senior Frontend, 7 лет — React/TS — На X5 → Keycloak · На Citilink → e-commerce · удалённо
 
-**Почему плохо:** тире, стрелки, точки-разделители, слэш-спам. Так пишут модели, не люди.
+**Почему плохо:** тире, стрелки, «На X5/Citilink» вместо «В», слишком коротко для нормального HH-поля.
 
 ---
 
-## Good — e-commerce (email)
+## Good — HH (~1100 chars, канал hh)
 
-**Тема:** Senior Frontend, React - Максим Пешехонов
+Пишу по Senior Frontend на платформе ЭДО. React, TypeScript и длинные формы согласования близки к тому, что делал в enterprise.
+
+В X5 Tech собирал модуль согласования закупок: React, TypeScript, Keycloak SSO, Orval по OpenAPI, статусы и роли, code splitting на длинных сценариях. В Citilink участвовал в переносе каталога на Next.js: фильтры, пагинация, состояние в URL.
+
+Senior Frontend, 7 лет. Удалённо из Сочи, могу выйти в ближайшее время.
+
+Резюме: https://mpeshekhonov.ru/ru/resume
+Telegram: @makusimu_san
+
+---
+
+## Good — Telegram DM
 
 Здравствуйте!
 
-Пишу по вакансии frontend для e-commerce. У вас каталог с фильтрами и REST, похожее делал на Citilink: переносили citilink.ru с PHP на Next.js и React, фильтры, пагинация, состояние в URL.
+Пишу по вакансии Frontend-разработчик (React / TypeScript). У вас продукт на React и TypeScript, совместное проектирование с командой и code review, это близко к текущей работе.
 
-Сейчас в POTALONU веду React-клиенты с Orval и CI/CD, до этого enterprise-модуль в X5 с Keycloak и длинными формами. Удалённо из Сочи, могу выйти в ближайшее время.
+В X5 Tech делал модуль согласования закупок: React, TypeScript, Keycloak, Orval, длинные формы. В Citilink переносил каталог на Next.js. Сейчас веду продуктовые React-клиенты с Orval и CI/CD.
+
+Senior, 7 лет. Удалённо из Сочи, могу выйти в ближайшее время.
 
 Резюме: https://mpeshekhonov.ru/ru/resume
 Telegram: @makusimu_san
@@ -35,9 +48,22 @@ Telegram: @makusimu_san
 
 ---
 
-## Good — HH short (~350 chars)
+## Good — e-commerce email
 
-Senior Frontend, 7 лет, React и TypeScript. На X5 делал RBAC и Keycloak, на Citilink каталог на Next.js. Сейчас продуктовые клиенты на React, WebSocket, Django REST. Удалённо, Сочи. https://mpeshekhonov.ru/ru/resume
+**Тема:** Senior Frontend, React - Максим Пешехонов
+
+Здравствуйте!
+
+Пишу по вакансии frontend для e-commerce. У вас каталог с фильтрами и REST, похожее делал в Citilink: переносили citilink.ru с PHP на Next.js и React, фильтры, пагинация, состояние в URL.
+
+Сейчас в POTALONU веду React-клиенты с Orval и CI/CD, до этого enterprise-модуль в X5 Tech с Keycloak и длинными формами. Удалённо из Сочи, могу выйти в ближайшее время.
+
+Резюме: https://mpeshekhonov.ru/ru/resume
+Telegram: @makusimu_san
+
+С уважением,
+Максим Пешехонов
++7 950 919-67-86
 
 ---
 
@@ -47,9 +73,9 @@ Senior Frontend, 7 лет, React и TypeScript. На X5 делал RBAC и Keycl
 
 Здравствуйте!
 
-Пишу по вакансии на интернет-магазин. Bitrix и кастомизация компонентов у меня в проектах на сайте, плюс последние годы основной фокус React и TypeScript в e-commerce.
+Пишу по вакансии на интернет-магазин. Bitrix и кастомизация компонентов есть в прошлых проектах, плюс последние годы основной фокус React и TypeScript в e-commerce.
 
-Последние роли Citilink и X5 Tech. Готов обсудить задачи и удалёнку.
+Последние роли в Citilink и в X5 Tech. Готов обсудить задачи и удалёнку.
 
 https://mpeshekhonov.ru/ru/resume
 Telegram: @makusimu_san

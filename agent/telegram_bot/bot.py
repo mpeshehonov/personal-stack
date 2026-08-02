@@ -51,7 +51,11 @@ from bounty.models import BountyFinding
 from bounty.scanner import manual_bounty_research, purge_bounty_queue
 from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
-from job_hunt.drafter import draft_cover_letter, format_draft_markdown
+from job_hunt.cover_service import (
+    format_cover_reply,
+    looks_like_cover_request,
+    produce_cover,
+)
 from job_hunt.resume_sync import apply_sync, format_auth_markdown, format_sync_plan_markdown
 from job_hunt.scanner import scan_and_store_leads
 from telegram_bot.background import job_running, list_running_jobs, start_background_job
@@ -231,10 +235,11 @@ def _help_text() -> str:
         "/jobs dislike <id> paywall - мимо без штрафа источника\n"
         "/sources - веса источников\n"
         "/profile - профиль возможностей\n"
-        "/cover <id> - сопровод (или кнопка на карточке)\n"
+        "/cover <id|url|текст> [hh|tg|email] - сопровод\n"
         "/status /ask /task /memory\n"
         "/pause /resume\n\n"
-        "Можно просто написать: «сопровод 42» или «откликнулся 76».\n"
+        "Сопровод: «сопровод 42», ссылка HH/Hirify или вставь текст вакансии.\n"
+        "Ещё: «откликнулся 76».\n"
         "Hirify: «Мимо» по умолчанию = paywall (источник не режем).\n"
         "Для плохого fit: /jobs dislike <id> bad_fit\n"
         "Уже откликнулся снаружи: жми «Откликнулся» или напиши «откликнулся 76».\n"
@@ -395,7 +400,44 @@ async def cmd_ask(update, context) -> None:
     if not text:
         await update.message.reply_text("Использование: /ask <вопрос>")
         return
+    # Cover requests used to go through dumb /ask prompts — route to /cover pipeline
+    if looks_like_cover_request(text):
+        await _run_cover_pipeline(update, context, text)
+        return
     await _run_streaming(update, context, text, mode="ask")
+
+
+async def _run_cover_pipeline(update, context, raw: str) -> None:
+    status = await update.message.reply_text("Пишу сопровод…")
+    try:
+        result = await asyncio.to_thread(produce_cover, raw, use_llm=True)
+    except KeyError as exc:
+        await status.edit_text(str(exc))
+        return
+    except ValueError as exc:
+        await status.edit_text(str(exc))
+        return
+    except Exception as exc:
+        logger.exception("cover pipeline failed")
+        await status.edit_text(f"Не смог собрать сопровод: {exc}")
+        return
+
+    payload = result["payload"]
+    draft = result["draft"]
+    if payload.lead_id is not None:
+        add_job_application(
+            payload.lead_id,
+            cover_letter=draft["body"],
+            status="draft",
+            notes=f"cover pipeline ({result.get('engine')})",
+        )
+
+    reply = format_cover_reply(result)
+    try:
+        await status.delete()
+    except Exception:
+        pass
+    await reply_rich(update, reply)
 
 
 async def cmd_pause(update, context) -> None:
@@ -567,7 +609,7 @@ def _format_jobs_rich() -> str:
             "/jobs scan — новый поиск",
             "/jobs like <id> — хороший лид",
             "/jobs dislike <id> — плохой лид",
-            "/cover <id> — сопровод",
+            "/cover <id|url|текст> — сопровод",
             "/sources — веса источников",
         ]
     )
@@ -757,21 +799,17 @@ async def on_menu_text(update, context) -> None:
 
 
 async def _try_job_free_text(update, context) -> bool:
-    """Route «сопровод #42» / «откликнулся 76» without forcing /ask Cursor."""
+    """Route «сопровод #42» / URL / pasted JD / «откликнулся 76»."""
     import re
 
     text = (update.message.text or "").strip()
     low = text.lower()
     ids = [int(x) for x in re.findall(r"#?(\d{1,5})", text)]
 
-    if any(k in low for k in ("сопровод", "cover", "сопроводительн")):
-        if not ids:
-            await update.message.reply_text(
-                "Напиши id: «сопровод 42» или жми Сопровод на карточке /brief."
-            )
-            return True
-        context.args = [str(ids[0])]
-        await cmd_cover(update, context)
+    if looks_like_cover_request(text) or (
+        any(k in low for k in ("сопровод", "cover", "сопроводительн")) and ids
+    ):
+        await _run_cover_pipeline(update, context, text)
         return True
 
     if any(k in low for k in ("откликнул", "откликн", "applied")) and ids:
@@ -869,15 +907,17 @@ async def on_job_callback(update, context) -> None:
         if not lead:
             await query.message.reply_text(f"Лид #{lead_id} не найден.")
             return
+        await query.message.reply_text(f"Пишу сопровод #{lead_id}…")
         try:
-            draft = await asyncio.to_thread(
-                draft_cover_letter, _lead_row_to_dict(lead), channel="hh"
+            result = await asyncio.to_thread(
+                produce_cover, f"/cover {lead_id} hh", use_llm=True
             )
+            draft = result["draft"]
             add_job_application(
                 lead_id,
                 cover_letter=draft["body"],
                 status="draft",
-                notes="telegram button Сопровод",
+                notes=f"telegram button ({result.get('engine')})",
             )
             # Keep in shortlist until user marks applied
             if (lead["status"] or "new") == "new":
@@ -891,7 +931,7 @@ async def on_job_callback(update, context) -> None:
         await send_rich_markdown(
             context.bot,
             chat_id=chat_id,
-            markdown=format_draft_markdown(draft, lead_id=lead_id),
+            markdown=format_cover_reply(result),
         )
         return
 
@@ -1030,31 +1070,16 @@ async def cmd_cover(update, context) -> None:
     if not context.args:
         await update.message.reply_text(
             "Использование:\n"
-            "/cover <id> — короткий текст для HH/Habr\n"
-            "/cover <id> email — письмо для email-отклика\n\n"
-            "ID из `/jobs`"
+            "/cover <id> [hh|tg|email]\n"
+            "/cover hh https://hh.ru/vacancy/…\n"
+            "/cover tg <текст вакансии или ссылка>\n"
+            "/cover email <текст или ссылка>\n\n"
+            "Каналы: hh (поле HH/Habr, ~900-1500 символов), tg (ЛС), email.\n"
+            "Можно без команды: «сопровод для хх» + ссылка/текст.\n"
+            "«без комментариев» — только текст для копипаста."
         )
         return
-    try:
-        lead_id = int(context.args[0])
-    except ValueError:
-        await update.message.reply_text("Неверный id. Пример: /cover 12")
-        return
-
-    channel = "hh"
-    if len(context.args) > 1 and context.args[1].lower() in ("email", "mail", "e"):
-        channel = "email"
-
-    row = get_job_lead(lead_id)
-    if not row:
-        await update.message.reply_text(f"Лид #{lead_id} не найден. См. /jobs")
-        return
-
-    lead = _lead_row_to_dict(row)
-    draft = await asyncio.to_thread(draft_cover_letter, lead, channel=channel)
-    add_job_application(lead_id, cover_letter=draft["body"], status="draft")
-
-    await reply_rich(update, format_draft_markdown(draft, lead_id=lead_id))
+    await _run_cover_pipeline(update, context, "/cover " + " ".join(context.args))
 
 
 async def cmd_approve(update, context) -> None:

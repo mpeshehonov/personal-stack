@@ -31,7 +31,7 @@ context pack → plan (career focus) → execute with tools → validate → dai
 | Job scan | orchestrator daily | read-only |
 | Job feedback | Telegram like/dislike | human |
 | Source seed | propose in daily | `/approve source` |
-| Cover draft | `/cover` | human send |
+| Cover draft | `/cover <id\|url\|текст> [hh\|tg\|email]` | human send; skill `cover-letter` |
 | Job apply | draft only | human (future `/approve apply`) |
 | Bounty / finance | **paused** | — |
 

@@ -12,7 +12,7 @@ import httpx
 from job_hunt.config import JOBHUNT_USER_AGENT
 from orchestrator.config import SITE_DIR
 
-Channel = Literal["hh", "email"]
+Channel = Literal["hh", "email", "tg"]
 
 RESUME_JSON = SITE_DIR / "content" / "resume" / "resume.json"
 RESUME_URL = "https://mpeshekhonov.ru/ru/resume"
@@ -21,6 +21,7 @@ PHONE = "+7 950 919-67-86"
 NAME = "Максим Пешехонов"
 
 # Named proofs — one per letter (skill: no resume dump)
+# Work experience uses «в компании», never «на компании».
 
 _AI_CHARS = str.maketrans({
     "—": ",",
@@ -40,6 +41,18 @@ _AI_PATTERNS = [
     (re.compile(r"\s{2,}"), " "),
 ]
 
+# Fix common LLM/template mistakes: «На X5» → «В X5»
+_PREPOSITION_FIXES = [
+    (
+        re.compile(
+            r"\b[Нн]а\s+(X5(?:\s+Tech)?|Citilink|НЛМК|NLMK|BI\.ZONE|POTALONU|"
+            r"PREEGLOS|sendonate(?:\.com)?|МТС|WB|Wildberries|Т[-\s]?Банк|"
+            r"Яндекс|Авито)\b"
+        ),
+        r"В \1",
+    ),
+]
+
 
 def _validate_cyrillic_name(text: str) -> None:
     for line in text.splitlines():
@@ -53,6 +66,8 @@ def humanize_cover_text(text: str) -> str:
     out = text.translate(_AI_CHARS)
     for pattern, repl in _AI_PATTERNS:
         out = pattern.sub(repl, out)
+    for pattern, repl in _PREPOSITION_FIXES:
+        out = pattern.sub(repl, out)
     out = re.sub(r"\n{3,}", "\n\n", out).strip()
     _validate_cyrillic_name(out)
     return out
@@ -60,15 +75,15 @@ def humanize_cover_text(text: str) -> str:
 
 PROOFS: dict[str, str] = {
     "ecommerce": (
-        "На Citilink переносил каталог citilink.ru на Next.js и React: "
-        "фильтры, URL state, SEO. Сейчас checkout PREEGLOS на Next.js с Orval."
+        "В Citilink переносил каталог citilink.ru на Next.js и React: "
+        "фильтры, URL state, SEO. Сейчас в POTALONU checkout PREEGLOS на Next.js с Orval."
     ),
     "enterprise": (
-        "На X5 Tech делал модуль согласования закупок: React, TypeScript, "
+        "В X5 Tech делал модуль согласования закупок: React, TypeScript, "
         "Keycloak SSO, Orval по OpenAPI, длинные формы, code splitting."
     ),
     "product": (
-        "На sendonate.com три React-клиента, WebSocket, Orval и CI/CD из одного репозитория."
+        "В sendonate.com вёл три React-клиента: WebSocket, Orval и CI/CD из одного репозитория."
     ),
     "bitrix": (
         "Есть опыт 1C-Bitrix и Symfony/MySQL (кейсы на сайте). "
@@ -76,13 +91,13 @@ PROOFS: dict[str, str] = {
     ),
     "python": (
         "Frontend-first: в POTALONU связал React с Django REST через Orval. "
-        "До этого React в X5 и Citilink."
+        "До этого React в X5 Tech и в Citilink."
     ),
     "data": (
         "В BI.ZONE Threat Intelligence: React, GraphQL, D3-граф, виртуализация списков."
     ),
     "general": (
-        "Последние роли X5 Tech и Citilink, сейчас продуктовые клиенты на React и Vite."
+        "Последние роли в X5 Tech и в Citilink, сейчас продуктовые клиенты на React и Vite."
     ),
 }
 
@@ -187,28 +202,49 @@ def _subject_line(title: str) -> str:
 
 
 def draft_cover_hh(lead: dict[str, Any]) -> str:
-    """HH / Habr short field, ≤500 chars."""
-    resume = _load_resume()
-    summary = resume.get("summary", "Senior Frontend, React/TS/Next.js, 7+ лет.")
+    """HH / Habr field: target ~900–1500 chars (technical limit is 10k, not 500)."""
+    title = lead.get("title") or "Frontend-разработчик"
+    company = lead.get("company") or ""
     text = vacancy_text_from_lead(lead)
     kind = classify_vacancy(text)
     proof = PROOFS[kind]
-    # First sentence from summary (trim)
-    line1 = summary.split(".")[0].strip()
-    if len(line1) > 120:
-        line1 = "Senior Frontend, 7 лет: React, TypeScript, Next.js."
-    line2 = proof.split(".")[0].strip() + "."
-    body = f"{line1} {line2} Удалённо, Сочи. {RESUME_URL}"
-    if len(body) > 500:
-        body = (
-            f"Senior Frontend, 7 лет, React и TypeScript. {line2} "
-            f"Удалённо, Сочи. {RESUME_URL}"
-        )
-    return humanize_cover_text(body[:500])
+    secondary = (
+        PROOFS["ecommerce"]
+        if kind == "enterprise"
+        else PROOFS["enterprise"]
+        if kind != "enterprise"
+        else PROOFS["product"]
+    )
+    company_bit = f" в {company}" if company else ""
+    paragraphs = [
+        (
+            f"Пишу по вакансии «{title}»{company_bit}. "
+            f"Ищу remote Senior Frontend на React и TypeScript, "
+            f"с модулем от API до релиза. Ниже кейсы под ваш профиль."
+        ),
+        "",
+        proof,
+        "",
+        secondary,
+        "",
+        (
+            "Коммерческий опыт 7 лет. Удалённо из Сочи, "
+            "могу выйти в ближайшее время и созвониться на этой неделе."
+        ),
+        "",
+        f"Резюме: {RESUME_URL}",
+        f"Telegram: {TELEGRAM}",
+    ]
+    body = "\n".join(p for p in paragraphs if p)
+    body = re.sub(r"\n{3,}", "\n\n", body).strip()
+    # Soft cap — keep readable, never force 500
+    if len(body) > 2000:
+        body = body[:1997].rsplit(" ", 1)[0] + "…"
+    return humanize_cover_text(body)
 
 
 def draft_cover_email(lead: dict[str, Any]) -> str:
-    """Email body ~120–180 words, skill structure."""
+    """Email / Telegram body ~120–180 words, skill structure."""
     title = lead.get("title") or "Frontend-разработчик"
     company = lead.get("company") or ""
     text = vacancy_text_from_lead(lead)
@@ -245,9 +281,9 @@ def draft_cover_letter(
     text = vacancy_text_from_lead(lead)
     kind = classify_vacancy(text)
 
-    if channel == "email":
+    if channel in ("email", "tg"):
         body = draft_cover_email(lead)
-        subject = _subject_line(title)
+        subject = _subject_line(title) if channel == "email" else ""
     else:
         body = draft_cover_hh(lead)
         subject = ""
@@ -263,12 +299,19 @@ def draft_cover_letter(
     }
 
 
-def format_draft_markdown(draft: dict[str, str], *, lead_id: int) -> str:
+def format_draft_markdown(draft: dict[str, str], *, lead_id: int | None = None) -> str:
+    channel = draft.get("channel") or "hh"
+    channel_label = {
+        "email": "email",
+        "tg": "Telegram",
+        "hh": "HH/Habr (~900-1500 символов)",
+    }.get(channel, channel)
+    head = f"## Сопровод — #{lead_id}" if lead_id is not None else "## Сопровод"
     lines = [
-        f"## Сопровод — #{lead_id}",
+        head,
         "",
         f"**{draft['company']}** · {draft['title']}",
-        f"**Канал:** {'email' if draft['channel'] == 'email' else 'HH/Habr (≤500 символов)'}",
+        f"**Канал:** {channel_label}",
     ]
     if draft.get("url"):
         lines.append(f"**Вакансия:** {draft['url']}")
