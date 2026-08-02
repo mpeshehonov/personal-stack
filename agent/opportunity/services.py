@@ -99,13 +99,17 @@ def after_scan_hook(summary: dict[str, Any]) -> dict[str, Any]:
     """Called after scan_and_store_leads — migration + all verticals."""
     ensure_migrated_on_startup()
     ideas = ensure_strategic_ideas()
+    from opportunity.client_scan import ensure_client_orders
     from opportunity.verticals import ensure_vertical_opportunities
 
+    clients = ensure_client_orders()
     verticals = ensure_vertical_opportunities()
     summary = dict(summary)
     summary["opportunity"] = {
         "ideas_upserted": ideas.get("upserted", 0),
         "ideas": ideas.get("titles", []),
+        "client_orders": clients.get("kept", 0),
+        "client_titles": clients.get("titles", []),
         "verticals": verticals.get("by_type", {}),
         "vertical_titles": verticals.get("titles", []),
     }
@@ -116,10 +120,12 @@ def ensure_all_opportunities() -> dict[str, Any]:
     """Manual/brief entry: migrate jobs + verticals + legacy OTHER ideas."""
     ensure_migrated_on_startup()
     ideas = ensure_strategic_ideas()
+    from opportunity.client_scan import ensure_client_orders
     from opportunity.verticals import ensure_vertical_opportunities
 
+    clients = ensure_client_orders()
     verticals = ensure_vertical_opportunities()
-    return {"ideas": ideas, "verticals": verticals}
+    return {"ideas": ideas, "clients": clients, "verticals": verticals}
 
 
 def lead_fields_vacancy_from_stored(

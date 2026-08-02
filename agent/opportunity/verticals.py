@@ -89,6 +89,7 @@ def build_client_seeds(profile: dict[str, Any]) -> list[dict[str, Any]]:
                 "strategic": 80,
                 "urgency": 90,
                 "next": "WRITE_TO_CONTACT",
+                "kind": "retainer",
             }
         )
 
@@ -120,6 +121,7 @@ def build_client_seeds(profile: dict[str, Any]) -> list[dict[str, Any]]:
                 "strategic": int(target.get("strategic") or 70),
                 "urgency": int(target.get("urgency") or 75),
                 "next": "WRITE_TO_CONTACT",
+                "kind": "target",
             }
         )
 
@@ -173,7 +175,12 @@ def build_network_seeds(profile: dict[str, Any]) -> list[dict[str, Any]]:
                 ],
                 "steps": [
                     f"Канал: {c.get('channel') or 'TG/LinkedIn'}",
-                    "Текст в 4 строки: ищу remote Senior FE / готов к короткому контракту",
+                    (profile.get("network_pitch") or "").strip()
+                    or (
+                        "Привет! Ищу remote Senior Frontend (React/TS) или короткий контракт "
+                        "на 2-4 недели. Если знаешь команду/заказ — буду рад интро. "
+                        "Резюме: https://mpeshekhonov.ru/ru/resume"
+                    ),
                 ],
                 "fit": 70,
                 "income": 65,
@@ -198,7 +205,12 @@ def build_network_seeds(profile: dict[str, Any]) -> list[dict[str, Any]]:
             ],
             "steps": [
                 "Выбери бывшего коллегу / однокурсника / чат",
-                "Если списка нет — добавь network_contacts в opportunity_profile.json",
+                (profile.get("network_pitch") or "").strip()
+                or (
+                    "Привет! Ищу remote Senior Frontend (React/TS) или короткий контракт "
+                    "на 2-4 недели. Если знаешь команду/заказ — буду рад интро. "
+                    "Резюме: https://mpeshekhonov.ru/ru/resume"
+                ),
             ],
             "fit": 65,
             "income": 60,
@@ -273,6 +285,7 @@ def build_product_seeds(profile: dict[str, Any]) -> list[dict[str, Any]]:
                 "kind": "owned_package",
             }
         )
+
 
     # Net-new product opportunities (not claiming past employer IP)
     net_new = [

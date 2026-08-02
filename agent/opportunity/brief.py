@@ -36,7 +36,7 @@ def build_opportunity_brief(
     )
     followups = _select_followups(applied)
 
-    clients = _select_vertical("CLIENT", limit=2)
+    clients = _select_vertical("CLIENT", limit=5)
     network = _select_vertical("NETWORK", limit=2)
     products = _select_vertical("PRODUCT", limit=2)
 
@@ -73,7 +73,7 @@ def _select_vertical(opp_type: str, *, limit: int) -> list[Any]:
     rows = list_opportunities(
         status=OpportunityStatus.NEW.value,
         opp_type=opp_type,
-        limit=20,
+        limit=40,
         min_overall=40,
     )
     if opp_type == "PRODUCT":
@@ -88,6 +88,17 @@ def _select_vertical(opp_type: str, *, limit: int) -> list[Any]:
             return (rank, -int(o.overall_score or 0))
 
         rows = sorted(rows, key=_prod_key)
+    elif opp_type == "CLIENT":
+        # Real freelance orders first; static retainer bridge last
+        def _client_key(o: Any) -> tuple:
+            kind = (o.analysis or {}).get("kind") or ""
+            rank = {
+                "freelance_order": 0,
+                "retainer": 1,
+            }.get(kind, 2)
+            return (rank, -int(o.overall_score or 0))
+
+        rows = sorted(rows, key=_client_key)
     return rows[:limit]
 
 
@@ -96,6 +107,7 @@ def _vertical_card_payload(opp: Any, label_ru: str) -> dict[str, Any]:
     why = list((opp.scores or {}).get("strategic", {}).get("reasons") or [])[:2]
     if not why:
         why = list((opp.scores or {}).get("fit", {}).get("reasons") or [])[:2]
+    kind = (opp.analysis or {}).get("kind") or ""
     lines = [
         f"[{label_ru}] opp #{opp.id} · {opp.overall_score} баллов",
         opp.company_or_entity or "—",
@@ -103,6 +115,8 @@ def _vertical_card_payload(opp: Any, label_ru: str) -> dict[str, Any]:
         "",
         f"Что сделать: {action_how_ru(opp.next_action)}",
     ]
+    if kind == "freelance_order" and opp.source_url:
+        lines.append(f"Ссылка: {opp.source_url}")
     if why:
         lines.append("Почему: " + "; ".join(why))
     if steps:

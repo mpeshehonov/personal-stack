@@ -92,6 +92,7 @@ BOT_COMMANDS = [
     ("jobs", "Карточки вакансий"),
     ("sources", "Источники"),
     ("cover", "Сопровод"),
+    ("clients", "Клиентские заказы"),
     ("memory", "Итог daily"),
     ("pause", "Пауза автономии"),
     ("resume", "Снять паузу"),
@@ -936,6 +937,48 @@ async def on_job_callback(update, context) -> None:
         return
 
 
+async def cmd_clients(update, context) -> None:
+    """Scan free freelance sources and show CLIENT order cards."""
+    if not _allowed_user(update.effective_user):
+        return
+    status = await update.message.reply_text("Сканирую Хабр Фриланс / TG-заказы…")
+    from opportunity.client_scan import ensure_client_orders
+    from opportunity.brief import build_opportunity_brief
+    from telegram_bot.jobs_ui import brief_vertical_keyboard
+
+    try:
+        scan = await asyncio.to_thread(ensure_client_orders)
+    except Exception as exc:
+        logger.exception("client scan failed")
+        await status.edit_text(f"Скан клиентов упал: {exc}")
+        return
+
+    data = await asyncio.to_thread(build_opportunity_brief, top_n=1, actions_n=1)
+    clients = [
+        c for c in (data.get("vertical_cards") or []) if c.get("text", "").startswith("[Клиент]")
+    ]
+    summary = (
+        f"Клиенты: найдено {scan.get('kept', 0)}, в brief до {len(clients)}.\n"
+        f"Каналы: {scan.get('channels') or {}}"
+    )
+    try:
+        await status.edit_text(summary)
+    except Exception:
+        await update.message.reply_text(summary)
+
+    for card in clients[:8]:
+        text = card.get("text") or ""
+        oid = card.get("opportunity_id")
+        if oid:
+            await update.message.reply_text(
+                text,
+                reply_markup=brief_vertical_keyboard(int(oid), card.get("url") or ""),
+                disable_web_page_preview=True,
+            )
+        else:
+            await update.message.reply_text(text)
+
+
 async def cmd_brief(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
@@ -1356,6 +1399,7 @@ def main() -> None:
     app.add_handler(CommandHandler("bounty", cmd_bounty, block=False))
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
     app.add_handler(CommandHandler("brief", cmd_brief, block=False))
+    app.add_handler(CommandHandler("clients", cmd_clients, block=False))
     app.add_handler(CommandHandler("profile", cmd_profile, block=False))
     app.add_handler(CommandHandler("sources", cmd_sources, block=False))
     app.add_handler(CommandHandler("menu", cmd_menu, block=False))

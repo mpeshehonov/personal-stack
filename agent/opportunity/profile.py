@@ -100,6 +100,12 @@ def default_profile() -> dict[str, Any]:
         "preference_adjustments": {},
         "client_targets": [],
         "network_contacts": [],
+        "network_pitch": (
+            "Привет! Ищу remote Senior Frontend (React/TypeScript/Next.js) "
+            "или короткий контракт на 2-4 недели (модуль от API до релиза). "
+            "Если у тебя/знакомых есть команда или заказ — буду рад интро или контакту. "
+            "Резюме: https://mpeshekhonov.ru/ru/resume · TG: @makusimu_san"
+        ),
         "owned_product_assets": [],
         "product_ideas_blocked": [
             "sendonate",
