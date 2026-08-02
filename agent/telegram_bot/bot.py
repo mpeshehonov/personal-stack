@@ -231,7 +231,7 @@ def _help_text() -> str:
         "Команды бота:\n\n"
         "/menu - кнопки внизу экрана\n"
         "/brief - Opportunity Brief (что делать сегодня)\n"
-        "/clients - скан клиентских заказов (Habr Freelance TG)\n"
+        "/clients - живые заказы FL.ru/Kwork/TG (без Хабр Фриланса)\n"
         "/jobs - карточки вакансий (Ок / Мимо / Сопровод)\n"
         "/jobs scan - поиск новых\n"
         "/jobs dislike <id> paywall - мимо без штрафа источника\n"
@@ -942,7 +942,9 @@ async def cmd_clients(update, context) -> None:
     """Scan free freelance sources and show CLIENT order cards."""
     if not _allowed_user(update.effective_user):
         return
-    status = await update.message.reply_text("Сканирую Хабр Фриланс / TG-заказы…")
+    status = await update.message.reply_text(
+        "Сканирую живые заказы (FL.ru / Kwork / свежие TG, без Хабр Фриланса)…"
+    )
     from opportunity.client_scan import ensure_client_orders
     from opportunity.brief import build_opportunity_brief
     from telegram_bot.jobs_ui import brief_vertical_keyboard
@@ -959,8 +961,9 @@ async def cmd_clients(update, context) -> None:
         c for c in (data.get("vertical_cards") or []) if c.get("text", "").startswith("[Клиент]")
     ]
     summary = (
-        f"Клиенты: найдено {scan.get('kept', 0)}, в brief до {len(clients)}.\n"
-        f"Каналы: {scan.get('channels') or {}}"
+        f"Клиенты: живых {scan.get('kept', 0)}, в brief {len(clients)}.\n"
+        f"Источники: {scan.get('sources') or scan.get('channels') or []}\n"
+        f"Снесено мёртвых (Habr и т.п.): {scan.get('purged_dead', 0)}"
     )
     try:
         await status.edit_text(summary)

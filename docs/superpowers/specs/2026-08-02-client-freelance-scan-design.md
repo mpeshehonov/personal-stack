@@ -4,32 +4,25 @@
 
 Бесплатный поиск клиентских заказов (не FT-вакансий) с результатом в `/brief` и `/clients` за 1 день.
 
-## Decision
+## Decision (updated after Habr Freelance shutdown)
 
-Не FL.ru/Kwork scrape (антибот, без подписки).  
-**Источник:** публичные TG-превью `t.me/s/…`, в первую очередь `@freelansim_ru` (дайджесты Хабр Фриланс) + `@job_webdev`.
+**Habr Freelance закрыт** — `freelance.habr.com` / `u.habr.com` / `@freelansim_ru` запрещены.
+
+Живые бесплатные источники:
+1. **FL.ru** `/projects/` — карточка валидируется (`Откликнуться` + дата публикации)
+2. **TG** `@job_webdev`, `@it_zakazy`, `@projects_fl` — только посты младше **72ч**, ссылка на Kwork/FL предпочтительнее голого t.me
+3. Kwork want pages — проверка `status:active` / страница want
+
+Hard gates: freshness ≤72h, не dead URL, FE-сигнал, бюджет не копеечный.
 
 ## Flow
 
-1. `opportunity/client_scan.py` тянет превью каналов  
-2. Парсит пункты дайджеста → отдельные заказы с URL `u.habr.com`  
-3. Скорит FE-fit (React/Next/TS/кабинет), режет дешёвые/backend/ботов  
-4. `upsert_seed` → `opportunities` type=`CLIENT`, `analysis.kind=freelance_order`  
-5. Хук в `after_scan_hook` / `ensure_all_opportunities`  
-6. `/clients` — ручной скан; `/brief` показывает до 5 CLIENT (orders first)
-
-## Network
-
-`network_pitch` в `opportunity_profile.json` — готовый текст для тёплых сообщений знакомым.
-
-## Non-goals (сейчас)
-
-- Платные агрегаторы / Hirify Plus  
-- Авто-отклик на Хабре  
-- Upwork  
+1. `purge_dead_client_opportunities()` архивирует CLIENT с habr-ссылками  
+2. Скан FL + TG → validate → `upsert_seed` (`kind=freelance_order`)  
+3. `/clients` и daily `after_scan_hook`
 
 ## Success
 
-- `/clients` возвращает десятки FE-заказов без оплаты  
-- В brief есть карточки со ссылкой «Открыть»  
-- Итерации: новые каналы, жёстче фильтр бюджета, шаблон отклика на заказ  
+- Ссылки открываются и принимают отклик  
+- Нет карточек на закрытый Хабр Фриланс  
+- В brief только свежие заказы  
