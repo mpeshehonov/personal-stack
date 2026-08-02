@@ -231,6 +231,7 @@ def _help_text() -> str:
         "Команды бота:\n\n"
         "/menu - кнопки внизу экрана\n"
         "/brief - Opportunity Brief (что делать сегодня)\n"
+        "/clients - скан клиентских заказов (Habr Freelance TG)\n"
         "/jobs - карточки вакансий (Ок / Мимо / Сопровод)\n"
         "/jobs scan - поиск новых\n"
         "/jobs dislike <id> paywall - мимо без штрафа источника\n"
