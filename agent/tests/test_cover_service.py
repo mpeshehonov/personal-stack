@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import unittest
 
-from job_hunt.cover_service import looks_like_cover_request, parse_cover_request
+from job_hunt.cover_service import (
+    _extract_jd_meta,
+    looks_like_cover_request,
+    parse_cover_request,
+)
 from job_hunt.drafter import draft_cover_hh, humanize_cover_text
 
 
@@ -22,25 +26,46 @@ class CoverServiceTest(unittest.TestCase):
 
     def test_parse_hh_url_channel(self) -> None:
         req = parse_cover_request(
-            "/cover и на эту нужен сопровод для отклика на хх ру "
-            "https://hh.ru/vacancy/134802022?from=share_ios"
+            "/cover hh https://hh.ru/vacancy/134802022?from=share_ios"
         )
         self.assertEqual(req.channel, "hh")
         self.assertTrue(any("hh.ru/vacancy/134802022" in u for u in req.urls))
 
     def test_parse_tg_hirify(self) -> None:
         req = parse_cover_request(
-            "/ask https://hirify.me/jobs/792652-frontend-developer-reacttypescript "
-            "нужен сопровод для отклика в тг без своих комментариев"
+            "/cover tg https://hirify.me/jobs/792652-frontend-developer-reacttypescript"
         )
         self.assertEqual(req.channel, "tg")
         self.assertTrue(req.raw_only)
         self.assertTrue(any("hirify.me" in u for u in req.urls))
 
+    def test_explicit_tg_wins_over_hh_url(self) -> None:
+        req = parse_cover_request("/cover tg https://hh.ru/vacancy/123456")
+        self.assertEqual(req.channel, "tg")
+        self.assertTrue(any("hh.ru/vacancy/123456" in u for u in req.urls))
+
     def test_parse_lead_id(self) -> None:
-        req = parse_cover_request("сопровод 42 tg")
+        req = parse_cover_request("/cover 42 tg")
         self.assertEqual(req.lead_id, 42)
         self.assertEqual(req.channel, "tg")
+
+    def test_parse_tg_multiline_paste(self) -> None:
+        raw = (
+            "/cover tg\n"
+            "Senior Frontend Developer (React)\n"
+            "Компания: Tango\n"
+            "Локация: Limassol, Cyprus\n"
+            "Ищем Senior Frontend Developer в продуктовую команду Tango.\n"
+            "Стек: React, TypeScript, Redux Toolkit.\n"
+        )
+        req = parse_cover_request(raw)
+        self.assertEqual(req.channel, "tg")
+        self.assertIn("\n", req.vacancy_text)
+        self.assertIn("Компания: Tango", req.vacancy_text)
+        title, company = _extract_jd_meta(req.vacancy_text)
+        self.assertEqual(company, "Tango")
+        self.assertIn("Senior Frontend", title)
+        self.assertLess(len(company), 40)
 
     def test_preposition_fix(self) -> None:
         fixed = humanize_cover_text(

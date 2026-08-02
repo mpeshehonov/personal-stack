@@ -81,65 +81,136 @@ def looks_like_cover_request(text: str) -> bool:
     return len((text or "").strip()) >= 180
 
 
+def _extract_jd_meta(vacancy_text: str) -> tuple[str, str]:
+    """Line-aware title/company from pasted JD. Never split the whole blob on ':'."""
+    title = ""
+    company = ""
+    for raw_line in (vacancy_text or "").splitlines()[:20]:
+        line = raw_line.strip()
+        if not line:
+            continue
+        low = line.lower()
+        m_co = re.match(r"(?i)^компани[яи]\s*:\s*(.+)$", line)
+        if m_co and not company:
+            company = m_co.group(1).strip()[:120]
+            continue
+        if not title and re.match(
+            r"(?i)^(senior|middle|junior|lead|staff|principal|frontend|front-end|"
+            r"фронтенд|разработчик|react)",
+            line,
+        ):
+            title = line[:160]
+            continue
+        if not title and any(
+            k in low for k in ("frontend", "фронт", "react", "разработ")
+        ):
+            title = line[:160]
+    if not title:
+        for raw_line in (vacancy_text or "").splitlines():
+            line = raw_line.strip()
+            if line and not re.match(r"(?i)^(компани|локаци|формат|зарплат|стек)", line):
+                title = line[:160]
+                break
+    return title or "Frontend", company
+
+
 def parse_cover_request(raw: str) -> CoverRequest:
     text = (raw or "").strip()
-    # Strip leading /cover or /ask
-    text = re.sub(r"^/(cover|ask)\s*", "", text, flags=re.I).strip()
+    # Strip leading /cover or /ask (keep the rest of the message intact, incl. newlines)
+    text = re.sub(r"^/(cover|ask)\b\s*", "", text, flags=re.I).strip()
 
-    raw_only = bool(
-        re.search(r"без\s+(своих\s+)?комментари", text, re.I)
-        or re.search(r"только\s+текст", text, re.I)
-        or re.search(r"готов(ый|ое)?\s+для\s+копир", text, re.I)
-    )
+    # Always copy-ready body by default; meta goes in a separate Telegram message.
+    raw_only = True
 
     urls = [u.rstrip(").,;") for u in _URL_RE.findall(text)]
     channel: ChannelName = "tg"
-    tokens = text.split()
-    consumed: set[int] = set()
+    channel_explicit = False
 
-    for i, tok in enumerate(tokens):
-        key = tok.lower().strip(",.;:")
-        if key in _CHANNEL_ALIASES:
-            channel = _CHANNEL_ALIASES[key]  # type: ignore[assignment]
-            consumed.add(i)
-            continue
-        # «для хх» / «для тг» / «отклика на хх»
-        if key in ("для", "на", "канал") and i + 1 < len(tokens):
-            nxt = tokens[i + 1].lower().strip(",.;:")
-            if nxt in _CHANNEL_ALIASES:
-                channel = _CHANNEL_ALIASES[nxt]  # type: ignore[assignment]
-                consumed.add(i)
-                consumed.add(i + 1)
+    # Channel as first token: `/cover tg …` or `/cover hh https://…`
+    first_line, *rest_lines = text.splitlines() or [""]
+    first_tokens = first_line.split()
+    consumed_prefix = ""
+    if first_tokens:
+        head = first_tokens[0].lower().strip(",.;:")
+        if head in _CHANNEL_ALIASES:
+            channel = _CHANNEL_ALIASES[head]  # type: ignore[assignment]
+            channel_explicit = True
+            consumed_prefix = first_tokens[0]
+            first_line = first_line[len(first_tokens[0]) :].lstrip()
+        elif (
+            len(first_tokens) >= 2
+            and first_tokens[0].lower() in ("для", "на", "канал")
+            and first_tokens[1].lower().strip(",.;:") in _CHANNEL_ALIASES
+        ):
+            channel = _CHANNEL_ALIASES[first_tokens[1].lower().strip(",.;:")]  # type: ignore[assignment]
+            channel_explicit = True
+            # drop «для tg» from first line
+            first_line = " ".join(first_tokens[2:]).lstrip()
 
-    # Explicit HH context from phrase
-    if re.search(r"\b(хх|hh\.?ru|habr|хабр)\b", text, re.I) and channel == "tg":
-        if not re.search(r"\b(тг|tg|telegram|телег)\b", text, re.I):
+    # Short commands: `/cover 42 hh` — channel may be a later token
+    if not channel_explicit and len(text) < 120:
+        for tok in text.split():
+            key = tok.lower().strip(",.;:")
+            if key in _CHANNEL_ALIASES:
+                channel = _CHANNEL_ALIASES[key]  # type: ignore[assignment]
+                channel_explicit = True
+                break
+
+    # Phrase / URL hints only when user did not name the channel
+    if not channel_explicit:
+        head_blob = " ".join((first_line, *(rest_lines[:2]))).lower()
+        if re.search(r"\b(хх|hh\.?ru|habr|хабр)\b", head_blob) and not re.search(
+            r"\b(тг|tg|telegram|телег)\b", head_blob
+        ):
             channel = "hh"
-    if re.search(r"\b(email|почт|письм)\b", text, re.I):
-        channel = "email"
+        if re.search(r"\b(email|почт|письм)\b", head_blob):
+            channel = "email"
+
+    # Rebuild text without the channel prefix token
+    body_lines = ([first_line] if first_line.strip() else []) + rest_lines
+    body = "\n".join(body_lines).strip()
 
     lead_id: int | None = None
-    id_match = re.search(r"(?:^|\s)#?(\d{1,5})(?:\s|$)", text)
-    if id_match and not urls:
-        # Prefer id only when no URL (URL may contain digits)
-        candidate = int(id_match.group(1))
-        # Avoid treating salary-like numbers in pasted JD as ids when text is long
-        if len(text) < 400 or re.search(r"(?:сопровод|cover)\s+#?\d{1,5}\b", text, re.I):
-            lead_id = candidate
+    # Lead id only from short command forms, not from salary numbers inside JD
+    if not urls and len(body) < 200:
+        id_match = re.search(
+            r"(?i)(?:^|\b(?:сопровод|cover|лид)\s+)#?(\d{1,5})\b",
+            body.strip(),
+        )
+        if not id_match:
+            id_match = re.match(r"^#?(\d{1,5})\b", body.strip())
+        if id_match:
+            lead_id = int(id_match.group(1))
+            # Drop id token from vacancy residue when command is short
+            residue_candidate = re.sub(
+                r"(?i)^(?:сопровод|cover|лид)?\s*#?\d{1,5}\b[\s,]*",
+                "",
+                body.strip(),
+            ).strip()
+            if len(residue_candidate) < 40:
+                body = residue_candidate
 
-    # Remove boilerplate phrases for vacancy_text residue
-    residue = text
+    # Vacancy text: keep newlines; strip only command boilerplate on first line
+    residue = body
     for u in urls:
-        residue = residue.replace(u, " ")
-    residue = re.sub(
-        r"(?i)\b(нужен|нужна|нужно|сделай|напиши|сопровод|сопроводительн\w*|cover|"
-        r"для\s+отклика|отклик\w*|готов\w*\s+для\s+копир\w*|без\s+(своих\s+)?комментари\w*|"
-        r"только\s+текст|ваканси\w*|в\s+тг|в\s+телег\w*|на\s+хх|на\s+hh|"
-        r"канал\s+\w+)\b",
-        " ",
-        residue,
-    )
-    residue = re.sub(r"\s+", " ", residue).strip(" .,;:-")
+        residue = residue.replace(u, " ").strip()
+    # Drop leftover command crumbs on the first line only
+    lines = residue.splitlines()
+    if lines:
+        lines[0] = re.sub(
+            r"(?i)^\s*(нужен|нужна|нужно|сделай|напиши|сопровод|сопроводительн\w*|"
+            r"cover|для\s+отклика|отклик\w*|готов\w*\s+для\s+копир\w*|"
+            r"без\s+(своих\s+)?комментари\w*|только\s+текст)\b[\s,.:;-]*",
+            "",
+            lines[0],
+        ).strip()
+        # If first line is only a channel alias leftover, drop it
+        if lines[0].lower().strip(",.;:") in _CHANNEL_ALIASES:
+            lines = lines[1:]
+    residue = "\n".join(lines).strip()
+    # Collapse insane spaces but KEEP newlines
+    residue = re.sub(r"[^\S\n]+", " ", residue)
+    residue = re.sub(r"\n{3,}", "\n\n", residue).strip(" .,;:-")
 
     return CoverRequest(
         channel=channel,
@@ -147,7 +218,7 @@ def parse_cover_request(raw: str) -> CoverRequest:
         urls=urls,
         vacancy_text=residue,
         raw_only=raw_only,
-        source_hint=text[:120],
+        source_hint=(consumed_prefix + " " + text[:100]).strip(),
     )
 
 
@@ -286,19 +357,9 @@ def resolve_vacancy(req: CoverRequest) -> VacancyPayload:
             return payload
 
     if req.vacancy_text and len(req.vacancy_text) >= 40:
-        # Try extract title/company heuristics
-        title = ""
-        company = ""
-        for line in req.vacancy_text.splitlines()[:12]:
-            low = line.lower()
-            if "компани" in low and ":" in line:
-                company = line.split(":", 1)[1].strip()
-            if not title and any(
-                k in low for k in ("frontend", "фронт", "react", "senior", "middle", "разработ")
-            ):
-                title = line.strip()[:120]
+        title, company = _extract_jd_meta(req.vacancy_text)
         return VacancyPayload(
-            title=title or "Frontend",
+            title=title,
             company=company,
             url=req.urls[0] if req.urls else "",
             text=req.vacancy_text[:12000],
@@ -378,11 +439,17 @@ def build_llm_cover_prompt(payload: VacancyPayload, channel: ChannelName) -> str
 1. Следуй skill ниже (предлоги «в X5 / в Citilink / в НЛМК», не «на»).
 2. Факты только из career-copy-notes / вакансии / резюме-контекста skill.
 3. Один главный кейс под JD + при необходимости второй короткий.
-4. Выдай ТОЛЬКО готовый текст для копирования (для email можно «Тема:» первой строкой).
-5. Без markdown-заголовков, без «match notes», без советов «отправь сам».
+4. Выдай ТОЛЬКО готовый текст сопровода для копирования. Ничего больше.
+5. ЗАПРЕЩЕНО в ответе: заголовки вроде «Сопровод», «Канал», «движок», «Отправь сам»,
+   markdown ```, match notes, пересказ вакансии, советы, комментарии агента.
 6. Без длинного тире, стрелок, emoji.
+7. Для email можно первой строкой «Тема: …», затем пустая строка и тело.
 
-Вакансия (title={payload.title!r}, company={payload.company!r}, url={payload.url!r}):
+Компания: {payload.company or '—'}
+Должность: {payload.title or '—'}
+URL: {payload.url or '—'}
+
+Текст вакансии:
 ---
 {payload.text[:9000]}
 ---
@@ -422,13 +489,21 @@ def draft_cover_llm(payload: VacancyPayload, channel: ChannelName) -> str | None
     out = text.strip()
     out = re.sub(r"^```\w*\n?", "", out)
     out = re.sub(r"\n?```$", "", out)
-    # Drop leading meta lines
-    lines = out.splitlines()
+    out = re.sub(r"```+", "", out)
+    # Drop leading/trailing agent meta — never ship this to the user in body
+    lines = [ln for ln in out.splitlines()]
     while lines and re.match(
-        r"(?i)^(вот|ниже|сопровод|готово|match|#+\s)", lines[0].strip()
+        r"(?i)^(вот|ниже|сопровод|готово|match|#+\s|канал:|движок:|meta:|отправь сам)",
+        lines[0].strip(),
     ):
         lines.pop(0)
+    while lines and (
+        re.match(r"(?i)^(отправь сам\.?|match notes|_тип)", lines[-1].strip())
+        or not lines[-1].strip()
+    ):
+        lines.pop()
     out = "\n".join(lines).strip()
+    out = re.sub(r"(?im)^\s*отправь сам\.?\s*$", "", out).strip()
     if len(out) < 80:
         return None
     return humanize_cover_text(out)
@@ -484,27 +559,43 @@ def produce_cover(
     }
 
 
-def format_cover_reply(result: dict[str, Any]) -> str:
+def format_cover_body(result: dict[str, Any]) -> str:
+    """Plain cover text only — ready to copy into TG/HH."""
+    return (result.get("draft") or {}).get("body") or ""
+
+
+def format_cover_meta(result: dict[str, Any]) -> str:
+    """Optional second message: channel / engine / fit notes. Never mixed into body."""
     draft = result["draft"]
     payload: VacancyPayload = result["payload"]
     req: CoverRequest = result["request"]
-    if result.get("raw_only"):
-        return draft["body"]
-
-    lead_bit = f" #{payload.lead_id}" if payload.lead_id else ""
     channel_label = {
-        "hh": "HH/Habr (~900-1500 символов, не 500)",
+        "hh": "HH/Habr",
         "tg": "Telegram",
         "email": "email",
     }.get(draft.get("channel") or req.channel, req.channel)
-
+    lead_bit = f"#{payload.lead_id} · " if payload.lead_id else ""
+    company = (draft.get("company") or "").strip()
+    title = (draft.get("title") or "").strip()
+    # Guard against accidental JD dump in meta fields
+    if len(company) > 80:
+        company = company[:77] + "…"
+    if len(title) > 100:
+        title = title[:97] + "…"
     lines = [
-        f"Сопровод{lead_bit} · {draft.get('company') or '—'} / {draft.get('title') or '—'}",
-        f"Канал: {channel_label} · движок: {result.get('engine')}",
+        f"meta: {lead_bit}{company or '—'} / {title or '—'}",
+        f"канал {channel_label} · {result.get('engine')}",
     ]
     if payload.url:
-        lines.append(f"Вакансия: {payload.url}")
+        lines.append(payload.url)
     if draft.get("subject"):
-        lines.append(f"Тема: {draft['subject']}")
-    lines.extend(["", "```", draft["body"], "```", "", "Отправь сам."])
+        lines.append(f"тема: {draft['subject']}")
     return "\n".join(lines)
+
+
+def format_cover_reply(result: dict[str, Any]) -> str:
+    """Backward-compatible single blob (tests / buttons). Prefer split send in bot."""
+    body = format_cover_body(result)
+    if result.get("raw_only", True):
+        return body
+    return body + "\n\n" + format_cover_meta(result)

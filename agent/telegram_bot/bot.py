@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import re
 import sys
 import threading
 from pathlib import Path
@@ -52,7 +53,8 @@ from bounty.scanner import manual_bounty_research, purge_bounty_queue
 from bounty.submit import hackerone_configured, submit_finding
 from job_hunt.config import JOBHUNT_ENABLED, JOBHUNT_MIN_MATCH
 from job_hunt.cover_service import (
-    format_cover_reply,
+    format_cover_body,
+    format_cover_meta,
     looks_like_cover_request,
     produce_cover,
 )
@@ -398,7 +400,9 @@ async def cmd_task(update, context) -> None:
 async def cmd_ask(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    text = " ".join(context.args) if context.args else ""
+    # Full message keeps newlines (needed for pasted JD + cover routing).
+    raw_msg = (update.message.text or "").strip()
+    text = re.sub(r"^/ask(@\w+)?\s*", "", raw_msg, count=1, flags=re.I).strip()
     if not text:
         await update.message.reply_text("Использование: /ask <вопрос>")
         return
@@ -434,12 +438,19 @@ async def _run_cover_pipeline(update, context, raw: str) -> None:
             notes=f"cover pipeline ({result.get('engine')})",
         )
 
-    reply = format_cover_reply(result)
+    body = format_cover_body(result).strip()
+    meta = format_cover_meta(result).strip()
     try:
         await status.delete()
     except Exception:
         pass
-    await reply_rich(update, reply)
+    # 1) ONLY the cover — plain text, easy copy. 2) meta separately if any.
+    if not body:
+        await update.message.reply_text("Пустой сопровод, попробуй ещё раз.")
+        return
+    await update.message.reply_text(body)
+    if meta:
+        await update.message.reply_text(meta)
 
 
 async def cmd_pause(update, context) -> None:
@@ -930,11 +941,12 @@ async def on_job_callback(update, context) -> None:
             logger.exception("cover draft failed for %s", lead_id)
             await query.message.reply_text(f"Не смог собрать сопровод #{lead_id}: {exc}")
             return
-        await send_rich_markdown(
-            context.bot,
-            chat_id=chat_id,
-            markdown=format_cover_reply(result),
-        )
+        body = format_cover_body(result).strip()
+        meta = format_cover_meta(result).strip()
+        if body:
+            await context.bot.send_message(chat_id=chat_id, text=body)
+        if meta:
+            await context.bot.send_message(chat_id=chat_id, text=meta)
         return
 
 
@@ -1114,19 +1126,20 @@ async def cmd_profile(update, context) -> None:
 async def cmd_cover(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
-    if not context.args:
+    # Full message text (keeps newlines). args-join used to smash JD into one line.
+    raw = (update.message.text or "").strip()
+    if not raw or raw.lower().strip() in ("/cover", "/cover@"):
         await update.message.reply_text(
             "Использование:\n"
-            "/cover <id> [hh|tg|email]\n"
+            "/cover tg\n"
+            "<вставь текст вакансии>\n\n"
             "/cover hh https://hh.ru/vacancy/…\n"
-            "/cover tg <текст вакансии или ссылка>\n"
+            "/cover 42 tg\n"
             "/cover email <текст или ссылка>\n\n"
-            "Каналы: hh (поле HH/Habr, ~900-1500 символов), tg (ЛС), email.\n"
-            "Можно без команды: «сопровод для хх» + ссылка/текст.\n"
-            "«без комментариев» — только текст для копипаста."
+            "Ответ: 1) только сопровод 2) meta отдельным сообщением."
         )
         return
-    await _run_cover_pipeline(update, context, "/cover " + " ".join(context.args))
+    await _run_cover_pipeline(update, context, raw)
 
 
 async def cmd_approve(update, context) -> None:
