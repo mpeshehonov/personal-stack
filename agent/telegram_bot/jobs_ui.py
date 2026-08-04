@@ -7,6 +7,7 @@ from typing import Any
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 
+from job_hunt.company_research import pick_open_url
 from job_hunt.config import JOBHUNT_MIN_MATCH
 from orchestrator.state import get_job_lead, list_job_leads
 
@@ -36,6 +37,18 @@ def parse_menu_text(text: str) -> str | None:
     return MENU_TEXTS.get(key)
 
 
+def _analysis_for_lead(lead_id: int) -> dict[str, Any]:
+    try:
+        from opportunity.repository import get_opportunity_by_lead
+
+        opp = get_opportunity_by_lead(int(lead_id))
+        if opp:
+            return dict(opp.analysis or {})
+    except Exception:
+        pass
+    return {}
+
+
 def lead_card_text(row: Any) -> str:
     title = row["title"] or "-"
     company = row["company"] or "-"
@@ -52,14 +65,20 @@ def lead_card_text(row: Any) -> str:
         reason_line = "\n" + reasons[0]
 
     overall_line = ""
+    analysis: dict[str, Any] = {}
     try:
         from opportunity.repository import get_opportunity_by_lead
 
         opp = get_opportunity_by_lead(int(row["id"]))
         if opp:
             overall_line = f" · opp {opp.overall_score}"
-            if opp.analysis.get("paywall"):
+            analysis = dict(opp.analysis or {})
+            if analysis.get("aggregator"):
+                overall_line += " · радар"
+            elif analysis.get("paywall"):
                 overall_line += " · paywall"
+            if not company or company == "-":
+                company = analysis.get("company") or company
     except Exception:
         pass
 
@@ -73,22 +92,90 @@ def lead_card_text(row: Any) -> str:
         lines.append(meta)
     if reason_line:
         lines.append(reason_line.strip())
+    hint = (analysis.get("apply_hint_ru") or "").strip()
+    if hint:
+        lines.append(f"Отклик: {hint}")
     return "\n".join(lines)
 
 
-def lead_keyboard(lead_id: int, url: str = "") -> InlineKeyboardMarkup:
-    rows = [
+def _apply_url_rows(
+    *,
+    open_url: str,
+    analysis: dict[str, Any] | None = None,
+    buttons: dict[str, Any] | None = None,
+) -> list[list[InlineKeyboardButton]]:
+    """Build URL button rows: direct apply first, never Runello-bot as primary."""
+    analysis = analysis or {}
+    buttons = buttons or {}
+    research = analysis.get("research") or {}
+    rows: list[list[InlineKeyboardButton]] = []
+
+    primary = open_url or pick_open_url(source_url="", analysis=analysis)
+    hh = (
+        buttons.get("hh_url")
+        or research.get("hh_vacancy_url")
+        or research.get("hh_employer_url")
+        or ""
+    )
+    career = buttons.get("career_url") or research.get("career_search_url") or ""
+    hr = (
+        buttons.get("hr_url")
+        or research.get("tg_hr_search_url")
+        or research.get("linkedin_search_url")
+        or ""
+    )
+    aggregator = bool(buttons.get("aggregator") or analysis.get("aggregator"))
+
+    if primary:
+        label = "Прямой отклик"
+        if "hh.ru/vacancy" in primary:
+            label = "Отклик на HH"
+        elif "hh.ru/employer" in primary or "hh.ru/search" in primary:
+            label = "Искать на HH"
+        elif "google.com/search" in primary:
+            label = "Найти карьеру/HR"
+        elif aggregator:
+            label = "Искать прямой контакт"
+        rows.append([InlineKeyboardButton(label, url=primary)])
+
+    secondary: list[InlineKeyboardButton] = []
+    if hh and hh != primary:
+        secondary.append(
+            InlineKeyboardButton(
+                "HH",
+                url=hh,
+            )
+        )
+    if career and career != primary and career != hh:
+        secondary.append(InlineKeyboardButton("Карьера", url=career))
+    if hr and hr not in (primary, hh, career):
+        secondary.append(InlineKeyboardButton("HR поиск", url=hr))
+    if secondary:
+        rows.append(secondary[:3])
+    return rows
+
+
+def lead_keyboard(
+    lead_id: int,
+    url: str = "",
+    *,
+    analysis: dict[str, Any] | None = None,
+) -> InlineKeyboardMarkup:
+    analysis = analysis if analysis is not None else _analysis_for_lead(lead_id)
+    open_url = pick_open_url(source_url=url, analysis=analysis)
+    rows = _apply_url_rows(open_url=open_url, analysis=analysis)
+    rows.append(
         [
             InlineKeyboardButton("Ок", callback_data=f"j:like:{lead_id}"),
             InlineKeyboardButton("Мимо", callback_data=f"j:pass:{lead_id}"),
             InlineKeyboardButton("Сопровод", callback_data=f"j:cover:{lead_id}"),
-        ],
+        ]
+    )
+    rows.append(
         [
             InlineKeyboardButton("Откликнулся", callback_data=f"j:applied:{lead_id}"),
-        ],
-    ]
-    if url:
-        rows.insert(0, [InlineKeyboardButton("Открыть вакансию", url=url)])
+        ]
+    )
     rows.append(
         [
             InlineKeyboardButton("Ещё вакансии", callback_data="j:more"),
@@ -98,11 +185,17 @@ def lead_keyboard(lead_id: int, url: str = "") -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(rows)
 
 
-def brief_lead_keyboard(lead_id: int, url: str = "") -> InlineKeyboardMarkup:
+def brief_lead_keyboard(
+    lead_id: int,
+    url: str = "",
+    *,
+    analysis: dict[str, Any] | None = None,
+    buttons: dict[str, Any] | None = None,
+) -> InlineKeyboardMarkup:
     """Compact keyboard under each brief card."""
-    rows: list[list[InlineKeyboardButton]] = []
-    if url:
-        rows.append([InlineKeyboardButton("Открыть", url=url)])
+    analysis = analysis if analysis is not None else _analysis_for_lead(lead_id)
+    open_url = url or pick_open_url(source_url="", analysis=analysis)
+    rows = _apply_url_rows(open_url=open_url, analysis=analysis, buttons=buttons)
     rows.append(
         [
             InlineKeyboardButton("Откликнулся", callback_data=f"j:applied:{lead_id}"),
@@ -131,7 +224,7 @@ def brief_nav_keyboard() -> InlineKeyboardMarkup:
 
 def brief_vertical_keyboard(opp_id: int, url: str = "") -> InlineKeyboardMarkup:
     rows: list[list[InlineKeyboardButton]] = []
-    if url:
+    if url and "t.me/runello" not in url.lower() and "gmatch" not in url.lower():
         rows.append([InlineKeyboardButton("Открыть", url=url)])
     rows.append(
         [
@@ -197,5 +290,5 @@ def jobs_intro(count: int) -> str:
         )
     return (
         f"Новых вакансий: {count} (показываю до 5).\n"
-        "Кнопки под карточкой: Ок / Мимо / Сопровод."
+        "Кнопки: прямой отклик/HH (не бот агрегатора) · Ок / Мимо / Сопровод."
     )

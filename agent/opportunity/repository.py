@@ -230,6 +230,36 @@ def list_opportunities(
         return [_row_to_opportunity(r) for r in rows]
 
 
+def update_opportunity_analysis(
+    opp_id: int,
+    analysis: dict[str, Any],
+    *,
+    next_action: str | None = None,
+    next_action_priority: str | None = None,
+    company_or_entity: str | None = None,
+) -> None:
+    """Patch analysis_json (and optional next_action / company) after contact research."""
+    ensure_opportunity_schema()
+    now = _utcnow()
+    with get_conn() as conn:
+        fields = ["analysis_json=?", "updated_at=?"]
+        params: list[Any] = [json.dumps(analysis, ensure_ascii=False), now]
+        if next_action is not None:
+            fields.append("next_action=?")
+            params.append(next_action)
+        if next_action_priority is not None:
+            fields.append("next_action_priority=?")
+            params.append(next_action_priority)
+        if company_or_entity is not None:
+            fields.append("company_or_entity=?")
+            params.append(company_or_entity)
+        params.append(opp_id)
+        conn.execute(
+            f"UPDATE opportunities SET {', '.join(fields)} WHERE id=?",
+            params,
+        )
+
+
 def update_opportunity_status(
     opp_id: int,
     status: str,

@@ -20,6 +20,12 @@ def build_opportunity_brief(
     from opportunity.services import ensure_all_opportunities
 
     ensure_all_opportunities()
+    try:
+        from opportunity.services import refresh_research_for_opportunities
+
+        refresh_research_for_opportunities(limit=max(top_n + 3, 8))
+    except Exception:
+        pass
 
     top = _select_top_jobs(limit=top_n)
     saved = list_opportunities(
@@ -315,10 +321,24 @@ def _card_payload(opp: Any) -> dict[str, Any]:
             "Риски: агрегатор/нет прямого контакта — не жми «отклик» в боте, ищи компанию"
         )
 
+    from job_hunt.company_research import pick_open_url
+
+    open_url = pick_open_url(source_url=opp.source_url or "", analysis=opp.analysis or {})
+    research = (opp.analysis or {}).get("research") or {}
+    extra_btns = {
+        "hh_url": research.get("hh_vacancy_url") or research.get("hh_employer_url") or "",
+        "career_url": research.get("career_search_url") or "",
+        "hr_url": research.get("tg_hr_search_url")
+        or research.get("linkedin_search_url")
+        or "",
+        "aggregator": bool((opp.analysis or {}).get("aggregator")),
+    }
+
     return {
         "opportunity_id": opp.id,
         "lead_id": lead_id,
-        "url": opp.source_url or "",
+        "url": open_url,
+        "buttons": extra_btns,
         "text": "\n".join(lines),
     }
 

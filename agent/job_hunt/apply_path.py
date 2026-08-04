@@ -91,6 +91,13 @@ def extract_company_name(text: str) -> str:
         name = m.group(1).strip(" .,;:-")
         if name.lower() not in ("удалёнке", "удаленке", "офисе", "команде", "продукте"):
             return name[:120]
+    # Quoted brand near company wording: Компания «ЮниВеб» …
+    m = re.search(
+        r"(?i)(?:компани[яи]|employer|бренд|продукт)\s+[«\"]([^»\"]{2,60})[»\"]",
+        text or "",
+    )
+    if m:
+        return m.group(1).strip()[:120]
     return ""
 
 

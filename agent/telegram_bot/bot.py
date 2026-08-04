@@ -1024,7 +1024,11 @@ async def cmd_brief(update, context) -> None:
             continue
         await update.message.reply_text(
             text,
-            reply_markup=brief_lead_keyboard(int(lead_id), card.get("url") or ""),
+            reply_markup=brief_lead_keyboard(
+                int(lead_id),
+                card.get("url") or "",
+                buttons=card.get("buttons") or {},
+            ),
             disable_web_page_preview=True,
         )
 
