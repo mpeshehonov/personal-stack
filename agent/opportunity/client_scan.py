@@ -539,41 +539,12 @@ def _seed(
 
 
 def purge_dead_client_opportunities() -> int:
-    """Archive CLIENT rows pointing at closed Habr Freelance / dead digests."""
-    now = _utcnow().isoformat()
+    """Archive closed/dead CLIENT rows (Habr + revalidate FL/Kwork)."""
     try:
-        with get_conn() as conn:
-            rows = conn.execute(
-                """
-                SELECT id, source, source_url, title FROM opportunities
-                WHERE type = 'CLIENT'
-                  AND status IN ('new', 'saved', 'reviewing')
-                """
-            ).fetchall()
-            n = 0
-            for row in rows:
-                src = (row["source"] or "").lower()
-                url = (row["source_url"] or "").lower()
-                title = (row["title"] or "").lower()
-                dead = (
-                    src.startswith("client:habr:")
-                    or is_dead_url(url)
-                    or "habr freelance" in title
-                    or "хабр фриланс" in title
-                )
-                if not dead:
-                    continue
-                conn.execute(
-                    """
-                    UPDATE opportunities
-                    SET status='archived', updated_at=?, next_action='SKIP'
-                    WHERE id=?
-                    """,
-                    (now, int(row["id"])),
-                )
-                n += 1
-            logger.info("Purged %s dead CLIENT opportunities", n)
-            return n
+        from opportunity.refresh_open import revalidate_client_opportunities
+
+        stats = revalidate_client_opportunities(limit=60)
+        return int(stats.get("archived") or 0)
     except Exception as exc:
         logger.warning("purge_dead_client_opportunities skipped: %s", exc)
         return 0

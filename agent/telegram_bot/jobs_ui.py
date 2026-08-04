@@ -14,8 +14,9 @@ from orchestrator.state import get_job_lead, list_job_leads
 
 MENU_KEYBOARD = ReplyKeyboardMarkup(
     [
-        ["Вакансии", "Brief"],
-        ["Скан", "Источники"],
+        ["Вакансии", "Заказы"],
+        ["Brief", "Обновить"],
+        ["Скан вакансий", "Скан заказов"],
         ["Понравилось", "Справка"],
     ],
     resize_keyboard=True,
@@ -23,8 +24,13 @@ MENU_KEYBOARD = ReplyKeyboardMarkup(
 
 MENU_TEXTS = {
     "вакансии": "jobs",
+    "заказы": "clients",
     "brief": "brief",
+    "обновить": "refresh",
+    "актуализировать": "refresh",
     "скан": "scan",
+    "скан вакансий": "scan",
+    "скан заказов": "client_scan",
     "источники": "sources",
     "понравилось": "liked",
     "справка": "help",
@@ -216,24 +222,109 @@ def brief_nav_keyboard() -> InlineKeyboardMarkup:
         [
             [
                 InlineKeyboardButton("Вакансии", callback_data="j:more"),
-                InlineKeyboardButton("Скан", callback_data="j:scan"),
-            ]
+                InlineKeyboardButton("Заказы", callback_data="o:more"),
+            ],
+            [
+                InlineKeyboardButton("Скан вакансий", callback_data="j:scan"),
+                InlineKeyboardButton("Скан заказов", callback_data="o:scan"),
+            ],
+            [
+                InlineKeyboardButton("Обновить статусы", callback_data="o:refresh"),
+            ],
         ]
     )
 
 
 def brief_vertical_keyboard(opp_id: int, url: str = "") -> InlineKeyboardMarkup:
+    """Backward-compatible alias — same as client order keyboard."""
+    return client_keyboard(opp_id, url)
+
+
+def client_card_text(opp: Any) -> str:
+    analysis = dict(getattr(opp, "analysis", None) or {})
+    kind = analysis.get("kind") or ""
+    price = analysis.get("price") or ""
+    why = list((getattr(opp, "scores", None) or {}).get("fit", {}).get("reasons") or [])[:2]
+    if not why:
+        why = list(analysis.get("why") or [])[:2]
+    lines = [
+        f"заказ #{opp.id} · {opp.overall_score} баллов"
+        + (f" · {kind}" if kind else ""),
+        opp.company_or_entity or "—",
+        opp.title or "—",
+    ]
+    if price:
+        lines.append(str(price)[:80])
+    hint = ""
+    try:
+        from opportunity.actions import action_how_ru
+
+        hint = action_how_ru(opp.next_action, analysis)
+    except Exception:
+        hint = ""
+    if hint:
+        lines.append(f"Что сделать: {hint}")
+    if why:
+        lines.append("Почему: " + "; ".join(str(x) for x in why))
+    return "\n".join(lines)
+
+
+def client_keyboard(opp_id: int, url: str = "") -> InlineKeyboardMarkup:
     rows: list[list[InlineKeyboardButton]] = []
     if url and "t.me/runello" not in url.lower() and "gmatch" not in url.lower():
-        rows.append([InlineKeyboardButton("Открыть", url=url)])
+        rows.append([InlineKeyboardButton("Открыть заказ", url=url)])
     rows.append(
         [
             InlineKeyboardButton("Ок", callback_data=f"o:like:{opp_id}"),
-            InlineKeyboardButton("Сделано", callback_data=f"o:done:{opp_id}"),
             InlineKeyboardButton("Мимо", callback_data=f"o:pass:{opp_id}"),
+            InlineKeyboardButton("Откликнулся", callback_data=f"o:done:{opp_id}"),
+        ]
+    )
+    rows.append(
+        [
+            InlineKeyboardButton("Ещё заказы", callback_data="o:more"),
+            InlineKeyboardButton("Скан заказов", callback_data="o:scan"),
+        ]
+    )
+    rows.append(
+        [
+            InlineKeyboardButton("Обновить статусы", callback_data="o:refresh"),
         ]
     )
     return InlineKeyboardMarkup(rows)
+
+
+def clients_intro(count: int) -> str:
+    if count <= 0:
+        return (
+            "Живых заказов в статусе new нет.\n"
+            "Жми «Скан заказов» или «Обновить» (закроет протухшие Kwork/FL)."
+        )
+    return (
+        f"Заказов: {count} (показываю до 5).\n"
+        "Кнопки: Открыть · Ок / Мимо / Откликнулся · Скан / Обновить."
+    )
+
+
+def list_client_orders(*, liked: bool = False, limit: int = 5) -> list[Any]:
+    from opportunity.models import OpportunityStatus
+    from opportunity.repository import list_opportunities
+
+    status = OpportunityStatus.SAVED.value if liked else OpportunityStatus.NEW.value
+    rows = list_opportunities(
+        status=status,
+        opp_type="CLIENT",
+        limit=40,
+        min_overall=40 if not liked else 0,
+    )
+
+    def _key(o: Any) -> tuple:
+        kind = (o.analysis or {}).get("kind") or ""
+        rank = {"freelance_order": 0, "retainer": 1}.get(kind, 2)
+        return (rank, -int(o.overall_score or 0))
+
+    rows = sorted(rows, key=_key)
+    return rows[:limit]
 
 
 def parse_opp_callback(data: str) -> tuple[str, int | None]:
@@ -241,6 +332,8 @@ def parse_opp_callback(data: str) -> tuple[str, int | None]:
     if len(parts) < 2 or parts[0] != "o":
         return "", None
     action = parts[1]
+    if action in ("more", "scan", "refresh", "liked"):
+        return action, None
     if len(parts) >= 3 and parts[2].isdigit():
         return action, int(parts[2])
     return action, None

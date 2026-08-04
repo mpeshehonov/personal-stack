@@ -94,7 +94,8 @@ BOT_COMMANDS = [
     ("jobs", "Карточки вакансий"),
     ("sources", "Источники"),
     ("cover", "Сопровод"),
-    ("clients", "Клиентские заказы"),
+    ("clients", "Карточки заказов FL/Kwork"),
+    ("refresh", "Актуализация вакансий и заказов"),
     ("memory", "Итог daily"),
     ("pause", "Пауза автономии"),
     ("resume", "Снять паузу"),
@@ -233,9 +234,11 @@ def _help_text() -> str:
         "Команды бота:\n\n"
         "/menu - кнопки внизу экрана\n"
         "/brief - Opportunity Brief (что делать сегодня)\n"
-        "/clients - живые заказы FL.ru/Kwork/TG (без Хабр Фриланса)\n"
+        "/clients - карточки заказов (как вакансии)\n"
+        "/clients scan - поиск новых заказов\n"
+        "/refresh - закрыть протухшие HH/FL/Kwork + обновить пути отклика\n"
         "/jobs - карточки вакансий (Ок / Мимо / Сопровод)\n"
-        "/jobs scan - поиск новых\n"
+        "/jobs scan - поиск новых вакансий\n"
         "/jobs dislike <id> paywall - мимо без штрафа источника\n"
         "/sources - веса источников\n"
         "/profile - профиль возможностей\n"
@@ -692,6 +695,95 @@ async def _start_job_scan(bot, chat_id: int, reply_func) -> None:
     await reply_func(f"{msg}\nПорог score ≥ {JOBHUNT_MIN_MATCH}. Карточки придут сюда.")
 
 
+async def _send_client_cards(bot, chat_id: int, *, liked: bool = False) -> None:
+    from telegram_bot.jobs_ui import (
+        client_card_text,
+        client_keyboard,
+        clients_intro,
+        list_client_orders,
+    )
+
+    orders = list_client_orders(liked=liked, limit=5 if not liked else 10)
+    if not liked:
+        await bot.send_message(chat_id=chat_id, text=clients_intro(len(orders)))
+    if not orders:
+        if liked:
+            await bot.send_message(chat_id=chat_id, text="Нет заказов в избранном.")
+        return
+    if liked:
+        await bot.send_message(chat_id=chat_id, text=f"Заказы в избранном: {len(orders)}")
+    for opp in orders:
+        await bot.send_message(
+            chat_id=chat_id,
+            text=client_card_text(opp),
+            reply_markup=client_keyboard(int(opp.id), opp.source_url or ""),
+            disable_web_page_preview=True,
+        )
+
+
+async def _start_client_scan(bot, chat_id: int, reply_func) -> None:
+    if job_running("client_scan"):
+        await reply_func("Скан заказов уже идёт. Подожди.")
+        return
+
+    async def _run() -> None:
+        from opportunity.client_scan import ensure_client_orders
+
+        scan = await asyncio.to_thread(ensure_client_orders)
+        parts = [
+            f"Живых нашли: {scan.get('kept', 0)}",
+            f"В базу: {scan.get('upserted', 0)}",
+            f"Снесено закрытых/мёртвых: {scan.get('purged_dead', 0)}",
+            f"Источники: {', '.join(scan.get('sources') or []) or '—'}",
+        ]
+        await send_rich_markdown(
+            bot,
+            chat_id=chat_id,
+            markdown="## Скан заказов\n\n" + "\n".join(parts),
+        )
+        await _send_client_cards(bot, chat_id)
+
+    ok, msg = start_background_job("client_scan", chat_id, _run)
+    await reply_func(f"{msg}\nИщу свежие FL.ru / Kwork / TG (без Хабр Фриланса).")
+
+
+async def _start_refresh_open(bot, chat_id: int, reply_func) -> None:
+    if job_running("refresh_open"):
+        await reply_func("Актуализация уже идёт.")
+        return
+
+    async def _run() -> None:
+        from opportunity.refresh_open import refresh_open_pipeline
+
+        result = await asyncio.to_thread(refresh_open_pipeline)
+        clients = result.get("clients") or {}
+        jobs = result.get("jobs") or {}
+        parts = [
+            f"Всего закрыто/архив: {result.get('archived_total', 0)}",
+            f"Заказы: проверено {clients.get('checked', 0)}, "
+            f"снято {clients.get('archived', 0)}",
+            f"Вакансии: проверено {jobs.get('checked', 0)}, "
+            f"снято {jobs.get('archived', 0)}",
+            f"Research-ссылки обновлены: {result.get('research_updated', 0)}",
+        ]
+        c_reasons = clients.get("reasons") or {}
+        j_reasons = jobs.get("reasons") or {}
+        if c_reasons or j_reasons:
+            parts.append(f"Причины: clients={c_reasons} jobs={j_reasons}")
+        await send_rich_markdown(
+            bot,
+            chat_id=chat_id,
+            markdown="## Актуализация\n\n" + "\n".join(parts),
+        )
+        await _send_job_cards(bot, chat_id)
+        await _send_client_cards(bot, chat_id)
+
+    ok, msg = start_background_job("refresh_open", chat_id, _run)
+    await reply_func(
+        f"{msg}\nПерепроверяю HH/FL/Kwork: закрытые выкину, потом пришлю живые карточки."
+    )
+
+
 async def cmd_jobs(update, context) -> None:
     if not _allowed_user(update.effective_user):
         return
@@ -777,7 +869,7 @@ async def cmd_menu(update, context) -> None:
     from telegram_bot.jobs_ui import MENU_KEYBOARD
 
     await update.message.reply_text(
-        "Меню внизу. «Вакансии» - карточки с кнопками Ок / Мимо / Сопровод.",
+        "Меню внизу: Вакансии / Заказы · Скан · Обновить (актуализация ссылок).",
         reply_markup=MENU_KEYBOARD,
     )
 
@@ -795,12 +887,23 @@ async def on_menu_text(update, context) -> None:
         return
     if action == "jobs":
         await _send_job_cards(context.bot, update.effective_chat.id)
+    elif action == "clients":
+        await _send_client_cards(context.bot, update.effective_chat.id)
     elif action == "brief":
         await cmd_brief(update, context)
     elif action == "liked":
         await _send_job_cards(context.bot, update.effective_chat.id, liked=True)
+        await _send_client_cards(context.bot, update.effective_chat.id, liked=True)
     elif action == "scan":
         await _start_job_scan(
+            context.bot, update.effective_chat.id, update.message.reply_text
+        )
+    elif action == "client_scan":
+        await _start_client_scan(
+            context.bot, update.effective_chat.id, update.message.reply_text
+        )
+    elif action == "refresh":
+        await _start_refresh_open(
             context.bot, update.effective_chat.id, update.message.reply_text
         )
     elif action == "sources":
@@ -953,48 +1056,32 @@ async def on_job_callback(update, context) -> None:
 
 
 async def cmd_clients(update, context) -> None:
-    """Scan free freelance sources and show CLIENT order cards."""
+    """CLIENT order cards — same navigation pattern as /jobs."""
     if not _allowed_user(update.effective_user):
         return
-    status = await update.message.reply_text(
-        "Сканирую живые заказы (FL.ru / Kwork / свежие TG, без Хабр Фриланса)…"
-    )
-    from opportunity.client_scan import ensure_client_orders
-    from opportunity.brief import build_opportunity_brief
-    from telegram_bot.jobs_ui import brief_vertical_keyboard
-
-    try:
-        scan = await asyncio.to_thread(ensure_client_orders)
-    except Exception as exc:
-        logger.exception("client scan failed")
-        await status.edit_text(f"Скан клиентов упал: {exc}")
+    args = [a.lower() for a in (context.args or [])]
+    if args and args[0] in ("scan", "hunt", "search"):
+        await _start_client_scan(
+            context.bot, update.effective_chat.id, update.message.reply_text
+        )
         return
+    if args and args[0] in ("liked", "ok", "saved"):
+        await _send_client_cards(context.bot, update.effective_chat.id, liked=True)
+        return
+    if args and args[0] in ("refresh", "actualize", "purge"):
+        await _start_refresh_open(
+            context.bot, update.effective_chat.id, update.message.reply_text
+        )
+        return
+    await _send_client_cards(context.bot, update.effective_chat.id)
 
-    data = await asyncio.to_thread(build_opportunity_brief, top_n=1, actions_n=1)
-    clients = [
-        c for c in (data.get("vertical_cards") or []) if c.get("text", "").startswith("[Клиент]")
-    ]
-    summary = (
-        f"Клиенты: живых {scan.get('kept', 0)}, в brief {len(clients)}.\n"
-        f"Источники: {scan.get('sources') or scan.get('channels') or []}\n"
-        f"Снесено мёртвых (Habr и т.п.): {scan.get('purged_dead', 0)}"
+
+async def cmd_refresh(update, context) -> None:
+    if not _allowed_user(update.effective_user):
+        return
+    await _start_refresh_open(
+        context.bot, update.effective_chat.id, update.message.reply_text
     )
-    try:
-        await status.edit_text(summary)
-    except Exception:
-        await update.message.reply_text(summary)
-
-    for card in clients[:8]:
-        text = card.get("text") or ""
-        oid = card.get("opportunity_id")
-        if oid:
-            await update.message.reply_text(
-                text,
-                reply_markup=brief_vertical_keyboard(int(oid), card.get("url") or ""),
-                disable_web_page_preview=True,
-            )
-        else:
-            await update.message.reply_text(text)
 
 
 async def cmd_brief(update, context) -> None:
@@ -1070,6 +1157,21 @@ async def on_opp_callback(update, context) -> None:
     from opportunity.feedback import apply_opportunity_feedback
 
     action, opp_id = parse_opp_callback(query.data or "")
+    chat_id = query.message.chat_id if query.message else query.from_user.id
+    reply = query.message.reply_text if query.message else context.bot.send_message
+
+    if action == "more":
+        await _send_client_cards(context.bot, chat_id)
+        return
+    if action == "scan":
+        await _start_client_scan(context.bot, chat_id, reply)
+        return
+    if action == "refresh":
+        await _start_refresh_open(context.bot, chat_id, reply)
+        return
+    if action == "liked":
+        await _send_client_cards(context.bot, chat_id, liked=True)
+        return
     if opp_id is None:
         return
     mapping = {
@@ -1090,9 +1192,9 @@ async def on_opp_callback(update, context) -> None:
     except KeyError:
         await query.edit_message_text(f"Opportunity #{opp_id} не найден.")
         return
-    label = {"like": "Ок", "pass": "Мимо", "done": "Сделано"}.get(action, action)
+    label = {"like": "Ок", "pass": "Мимо", "done": "Откликнулся"}.get(action, action)
     await query.edit_message_text(
-        f"{label} opp #{result.get('opportunity_id')}: {result.get('company') or '—'}\n"
+        f"{label} заказ #{result.get('opportunity_id')}: {result.get('company') or '—'}\n"
         f"{(result.get('title') or '')[:100]}"
     )
 
@@ -1423,6 +1525,7 @@ def main() -> None:
     app.add_handler(CommandHandler("jobs", cmd_jobs, block=False))
     app.add_handler(CommandHandler("brief", cmd_brief, block=False))
     app.add_handler(CommandHandler("clients", cmd_clients, block=False))
+    app.add_handler(CommandHandler("refresh", cmd_refresh, block=False))
     app.add_handler(CommandHandler("profile", cmd_profile, block=False))
     app.add_handler(CommandHandler("sources", cmd_sources, block=False))
     app.add_handler(CommandHandler("menu", cmd_menu, block=False))

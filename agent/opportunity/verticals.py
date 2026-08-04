@@ -467,6 +467,8 @@ def upsert_seed(seed: dict[str, Any]) -> int:
         "paywall": False,
         "steps": seed.get("steps") or [],
         "vertical": seed.get("type"),
+        "price": seed.get("price") or "",
+        "why": why[:4],
     }
     next_action = seed.get("next") or "REVIEW"
     priority = "HIGH" if scores["overall_score"] >= 80 else "MEDIUM"
