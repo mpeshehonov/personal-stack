@@ -26,7 +26,8 @@
 | Fullstack `.Net+React` / backend-primary (Альфа #70) | `React` в title (+15) + remote (+10) при основном .Net/backend | mismatch vs Senior FE target; не like автоматически |
 | «Ведущий» / Senior + `#офис` банк (АТБ #71 Цифровой рубль) | ведущ/senior (+20) + React держит ≥80 при office Москва | skip, если remote-only — тот же паттерн, что X5/ВкусВилл office |
 | Title Frontend + Vue/Nuxt (AGIMA #73 proglib) | `frontend` (+15) + TS/Vite/Git overlap (+15) + remote (+10) → 88 без React | mismatch — смотреть стек в snippet; Vue ≠ React shortlist |
-| Репост без #senior (Облако.ру #72 = #56/#62) | тот же employer+роль, «от 2 лет», score 82 | skip как дубль; не поднимать в like |
+| Репост без #senior (Облако.ру #56/#62/#72/#80/#93) | тот же employer+роль, «от 2 лет», score 82; уже 5 id | skip как дубль; не поднимать в like |
+| Habr + Hirehi один employer (РГС #91/#92, рядом #53) | два lead id / два score (74 vs 79 remote) без нового сигнала | один сигнал на компанию+роль; prefer remote card |
 | Батч-зеркало каналов (#74–78 = #64–68) | Оркестратор подтянул те же посты из второго TG-канала одним сканом | shortlist не менять; считать одним сигналом на employer+роль |
 | Senior FE + Vue 3 в snip (МТС NBA.Банк #74/#64) | Title Senior (+20) + TS overlap при стеке Vue + `#офис` | mismatch — Vue ≠ React; office skip |
 
