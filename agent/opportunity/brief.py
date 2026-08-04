@@ -113,7 +113,7 @@ def _vertical_card_payload(opp: Any, label_ru: str) -> dict[str, Any]:
         opp.company_or_entity or "—",
         opp.title or "—",
         "",
-        f"Что сделать: {action_how_ru(opp.next_action)}",
+        f"Что сделать: {action_how_ru(opp.next_action, opp.analysis or {})}",
     ]
     if kind == "freelance_order" and opp.source_url:
         lines.append(f"Ссылка: {opp.source_url}")
@@ -180,6 +180,8 @@ def _brief_rank_key(opp: Any) -> tuple:
         penalty += 2
     if (opp.analysis or {}).get("paywall"):
         penalty += 1
+    if (opp.analysis or {}).get("aggregator"):
+        penalty += 2  # radar only — prefer HH/direct TG sources in brief
     return (penalty,)
 
 
@@ -248,7 +250,8 @@ def _format_header(
         for i, opp in enumerate(top[:actions_n], 1):
             lead = opp.job_lead_id or opp.id
             lines.append(
-                f"{i}) #{lead} {opp.company_or_entity or '—'} — {action_how_ru(opp.next_action)}"
+                f"{i}) #{lead} {opp.company_or_entity or '—'} — "
+                f"{action_how_ru(opp.next_action, opp.analysis or {})}"
             )
     lines.append("")
 
@@ -298,14 +301,19 @@ def _card_payload(opp: Any) -> dict[str, Any]:
         f"{company}",
         opp.title or "—",
         "",
-        f"Что сделать: {action_how_ru(opp.next_action)}",
+        f"Что сделать: {action_how_ru(opp.next_action, opp.analysis or {})}",
     ]
     if why:
         lines.append("Почему в топе: " + "; ".join(why))
+    hint = (opp.analysis or {}).get("apply_hint_ru") or ""
+    if hint and hint not in "\n".join(lines):
+        lines.append(f"Отклик: {hint}")
     if risks:
         lines.append("Риски: " + "; ".join(risks))
-    elif (opp.analysis or {}).get("paywall"):
-        lines.append("Риски: контакты могут быть за paywall — ищи компанию в LinkedIn/HH")
+    elif (opp.analysis or {}).get("paywall") or (opp.analysis or {}).get("aggregator"):
+        lines.append(
+            "Риски: агрегатор/нет прямого контакта — не жми «отклик» в боте, ищи компанию"
+        )
 
     return {
         "opportunity_id": opp.id,

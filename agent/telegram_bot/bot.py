@@ -921,9 +921,11 @@ async def on_job_callback(update, context) -> None:
             await query.message.reply_text(f"Лид #{lead_id} не найден.")
             return
         await query.message.reply_text(f"Пишу сопровод #{lead_id}…")
+        src = str(lead["source"] or "")
+        cover_channel = "tg" if src.startswith("tg:") or src == "telegram" else "hh"
         try:
             result = await asyncio.to_thread(
-                produce_cover, f"/cover {lead_id} hh", use_llm=True
+                produce_cover, f"/cover {lead_id} {cover_channel}", use_llm=True
             )
             draft = result["draft"]
             add_job_application(

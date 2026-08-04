@@ -172,9 +172,11 @@ def _probability_score(
     company = str(company).strip()
 
     actionable = vacancy.get("_actionable")
-    if actionable is False or vacancy.get("_paywall"):
+    if actionable is False or vacancy.get("_paywall") or vacancy.get("_aggregator"):
         score -= 35
-        reasons.append("низкая actionability (paywall / нет контактов)")
+        reasons.append("низкая actionability (агрегатор / нет прямого контакта)")
+        if vacancy.get("_aggregator"):
+            reasons.append("Runello/gmatch: отклик через бота почти не смотрят (−)")
     elif source == "hirify":
         # Hirify cards often need Plus for contacts
         score -= 18
@@ -185,6 +187,14 @@ def _probability_score(
     elif company:
         score += 8
         reasons.append("компания указана (+8)")
+
+    apply_path = vacancy.get("_apply_path") or {}
+    if apply_path.get("telegrams") or apply_path.get("emails"):
+        score += 14
+        reasons.append("есть прямой TG/email (+14)")
+    elif apply_path.get("direct_urls"):
+        score += 10
+        reasons.append("есть прямая career/HH ссылка (+10)")
 
     if vacancy.get("alternate_url") and "hh.ru" in str(vacancy.get("alternate_url")):
         score += 10

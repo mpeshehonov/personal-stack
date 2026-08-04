@@ -53,7 +53,7 @@ JOBHUNT_HIREHI_LIMIT = int(os.environ.get("JOBHUNT_HIREHI_LIMIT", "50"))
 JOBHUNT_TG_ENABLED = os.environ.get("JOBHUNT_TG_ENABLED", "true").lower() in ("true", "1", "yes")
 JOBHUNT_TG_CHANNELS = os.environ.get(
     "JOBHUNT_TG_CHANNELS",
-    "frontend_rabota,job_react,proglib_jobs",
+    "frontend_rabota,job_react,proglib_jobs,runello_rus_frontend",
 )
 JOBHUNT_TG_KEYWORDS = os.environ.get(
     "JOBHUNT_TG_KEYWORDS",

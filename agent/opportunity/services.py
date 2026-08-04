@@ -44,6 +44,11 @@ def upsert_from_job_lead(
     if str(source) == "hirify" and vacancy.get("_actionable") is None:
         paywall = True
 
+    # Aggregator TG boards (Runello/gmatch): never treat bot-apply as actionable
+    if vacancy.get("_aggregator") and vacancy.get("_actionable") is not True:
+        paywall = True
+
+    apply_path = vacancy.get("_apply_path") or {}
     analysis = {
         "match_score": match_score,
         "match_reasons": match_reasons,
@@ -51,6 +56,22 @@ def upsert_from_job_lead(
         "paywall": paywall,
         "published_at": vacancy.get("_published_at") or vacancy.get("published_at"),
         "age_days": None,
+        "aggregator": bool(vacancy.get("_aggregator") or apply_path.get("aggregator")),
+        "apply_strategy": apply_path.get("strategy")
+        or (
+            "research_company"
+            if paywall
+            else ("direct_url" if vacancy.get("_actionable") else "weak")
+        ),
+        "apply_hint_ru": vacancy.get("_apply_hint_ru")
+        or apply_path.get("apply_hint_ru")
+        or "",
+        "apply_contacts": {
+            "telegrams": list(apply_path.get("telegrams") or []),
+            "emails": list(apply_path.get("emails") or []),
+            "direct_urls": list(apply_path.get("direct_urls") or []),
+        },
+        "company": str(company),
     }
     try:
         from opportunity.scoring import _vacancy_age_days

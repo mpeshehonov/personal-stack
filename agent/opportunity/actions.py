@@ -21,6 +21,7 @@ def decide_next_action(
     probability = int((scores.get("probability") or {}).get("score") or 50)
     actionable = analysis.get("actionable", True)
     paywall = bool(analysis.get("paywall"))
+    strategy = str(analysis.get("apply_strategy") or "")
 
     if status_val in (
         OpportunityStatus.ARCHIVED.value,
@@ -41,8 +42,20 @@ def decide_next_action(
     if status_val == OpportunityStatus.APPLIED.value:
         return NextAction.FOLLOW_UP.value, ActionPriority.MEDIUM.value
 
-    # new / review / saved
-    if paywall or actionable is False:
+    # Prefer writing to a real contact over clicking aggregator "apply"
+    if strategy in ("direct_tg", "direct_email") and status_val in (
+        OpportunityStatus.NEW.value,
+        OpportunityStatus.REVIEW.value,
+        OpportunityStatus.SAVED.value,
+        "new",
+        "review",
+        "saved",
+    ):
+        prio = ActionPriority.HIGH.value if overall >= 70 else ActionPriority.MEDIUM.value
+        return NextAction.WRITE_TO_CONTACT.value, prio
+
+    # Aggregator / paywall / no contacts → find company + direct path
+    if paywall or actionable is False or strategy in ("research_company", "weak"):
         if overall >= 80:
             return NextAction.RESEARCH_COMPANY.value, ActionPriority.HIGH.value
         return NextAction.RESEARCH_COMPANY.value, ActionPriority.MEDIUM.value
@@ -65,7 +78,7 @@ def action_label_ru(action: str) -> str:
         NextAction.REVIEW.value: "Открыть и решить",
         NextAction.WRITE_TO_CONTACT.value: "Написать контакту",
         NextAction.FOLLOW_UP.value: "Написать follow-up",
-        NextAction.RESEARCH_COMPANY.value: "Найти контакты мимо доски",
+        NextAction.RESEARCH_COMPANY.value: "Найти прямой контакт",
         NextAction.PREPARE_INTERVIEW.value: "Подготовиться к интервью",
         NextAction.EVALUATE_OFFER.value: "Оценить оффер",
         NextAction.WAIT.value: "Ждать ответа",
@@ -74,21 +87,53 @@ def action_label_ru(action: str) -> str:
     }.get(action, action)
 
 
-def action_how_ru(action: str) -> str:
-    """One-line instruction for humans."""
+def action_how_ru(action: str, analysis: dict[str, Any] | None = None) -> str:
+    """One-line instruction for humans. Prefer concrete contacts when known."""
+    analysis = analysis or {}
+    hint = (analysis.get("apply_hint_ru") or "").strip()
+    contacts = analysis.get("apply_contacts") or {}
+    tgs = contacts.get("telegrams") or analysis.get("telegrams") or []
+    emails = contacts.get("emails") or analysis.get("emails") or []
+    urls = contacts.get("direct_urls") or analysis.get("direct_urls") or []
+
+    if action == NextAction.WRITE_TO_CONTACT.value:
+        if tgs:
+            return (
+                f"ЛС {', '.join(tgs[:3])} + короткий сопровод (/cover tg). "
+                "Не через бота канала"
+            )
+        if emails:
+            return f"Письмо на {', '.join(emails[:2])} + /cover email"
+        if hint:
+            return hint
+        return "Найди рекрутера/EM и напиши коротко в ЛС/на почту"
+
+    if action == NextAction.APPLY.value:
+        if urls:
+            return f"Отклик по прямой ссылке: {urls[0]} → «Откликнулся»"
+        if hint and "Прямой отклик" in hint:
+            return hint
+        return (
+            "Открой прямую ссылку (HH/карьера) → откликнись → «Откликнулся». "
+            "Не через Runello/gmatch"
+        )
+
+    if action == NextAction.RESEARCH_COMPANY.value:
+        if hint:
+            return hint
+        company = (analysis.get("company") or "").strip()
+        co = f"«{company}»" if company else "компанию из вакансии"
+        return (
+            f"Не через Runello/gmatch/Hirify-бота. Найди {co}: сайт/карьера/HH/LinkedIn → "
+            "мыло или TG HR в личку → /cover tg"
+        )
+
     return {
-        NextAction.APPLY.value: (
-            "Открой ссылку → откликнись на сайте → нажми «Откликнулся»"
-        ),
         NextAction.REVIEW.value: (
-            "Открой ссылку → 30 сек глянь стек/формат → «Откликнулся» или «Мимо»"
+            "Открой пост → глянь стек → ищи прямой контакт (не кнопку агрегатора)"
         ),
-        NextAction.WRITE_TO_CONTACT.value: "Найди рекрутера/EM и напиши коротко",
         NextAction.FOLLOW_UP.value: (
             "Тишина после отклика: пинг рекрутеру (HH/почта/TG). Не жди вечно"
-        ),
-        NextAction.RESEARCH_COMPANY.value: (
-            "На доске контактов нет: название компании → LinkedIn/HH → отклик там"
         ),
         NextAction.PREPARE_INTERVIEW.value: "Собери вопросы и кейсы под компанию",
         NextAction.EVALUATE_OFFER.value: "Сравни вилку с минимумом из /profile",
