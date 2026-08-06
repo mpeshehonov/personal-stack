@@ -26,6 +26,39 @@ _TG_POST_RE = re.compile(r"(?:t\.me|telegram\.me)/([A-Za-z0-9_]+)/(\d+)", re.I)
 RATE_LIMIT_SEC = 0.4
 
 
+def _title_tokens(value: str) -> set[str]:
+    cleaned = re.sub(r"[^a-zA-Zа-яА-Я0-9]+", " ", (value or "").lower())
+    stop = {
+        "заказ",
+        "для",
+        "по",
+        "на",
+        "и",
+        "с",
+        "в",
+        "the",
+        "and",
+        "нужно",
+        "сделать",
+        "проект",
+    }
+    return {t for t in cleaned.split() if len(t) >= 4 and t not in stop}
+
+
+def titles_compatible(expected: str, actual: str) -> bool:
+    """Guard against wrong marketplace URL upgrades from TG channel chrome."""
+    exp = (expected or "").removeprefix("Заказ:").strip().lower()
+    act = (actual or "").strip().lower()
+    if not exp or not act:
+        return True
+    if exp in act or act in exp:
+        return True
+    ta, tb = _title_tokens(exp), _title_tokens(act)
+    if not ta or not tb:
+        return False
+    return bool(ta & tb)
+
+
 def _archive_opportunity(conn, opp_id: int, *, reason: str) -> None:
     from datetime import datetime, timezone
 
@@ -140,13 +173,23 @@ def validate_tg_order_url(url: str) -> dict[str, Any]:
         if "fl.ru" in mu:
             v = validate_fl_project(mu)
             if v.get("ok"):
-                return {"ok": True, "reason": "open_via_fl", "marketplace_url": mu}
+                return {
+                    "ok": True,
+                    "reason": "open_via_fl",
+                    "marketplace_url": mu,
+                    "title": v.get("title"),
+                }
             # Closed / no apply / stale — treat as dead order
             return {"ok": False, "reason": f"fl_{v.get('reason')}"}
         if "kwork.ru" in mu:
             v = validate_kwork_project(mu)
             if v.get("ok"):
-                return {"ok": True, "reason": "open_via_kwork", "marketplace_url": mu}
+                return {
+                    "ok": True,
+                    "reason": "open_via_kwork",
+                    "marketplace_url": mu,
+                    "title": v.get("title"),
+                }
             return {"ok": False, "reason": f"kwork_{v.get('reason')}"}
     return {"ok": False, "reason": "marketplace_closed"}
 
@@ -212,6 +255,12 @@ def revalidate_client_opportunities(*, limit: int = 80) -> dict[str, Any]:
                     reasons["habr_dead"] = reasons.get("habr_dead", 0) + 1
                     continue
                 result = validate_open_url(url)
+                if result.get("ok") and result.get("title"):
+                    if not titles_compatible(row["title"] or "", str(result.get("title"))):
+                        result = {
+                            "ok": False,
+                            "reason": "title_mismatch",
+                        }
                 if not result.get("ok"):
                     why = str(result.get("reason") or "closed")
                     _archive_opportunity(conn, int(row["id"]), reason=why)
@@ -220,10 +269,21 @@ def revalidate_client_opportunities(*, limit: int = 80) -> dict[str, Any]:
                 # Soft upgrade: if TG resolved to marketplace, rewrite source_url
                 elif result.get("marketplace_url") and "t.me" in (url or "").lower():
                     mu = result["marketplace_url"]
-                    conn.execute(
-                        "UPDATE opportunities SET source_url=?, updated_at=datetime('now') WHERE id=?",
-                        (mu, int(row["id"])),
-                    )
+                    # Only upgrade when titles still look like the same order
+                    market_title = str(result.get("title") or "")
+                    if market_title and not titles_compatible(
+                        row["title"] or "", market_title
+                    ):
+                        _archive_opportunity(
+                            conn, int(row["id"]), reason="title_mismatch"
+                        )
+                        archived += 1
+                        reasons["title_mismatch"] = reasons.get("title_mismatch", 0) + 1
+                    else:
+                        conn.execute(
+                            "UPDATE opportunities SET source_url=?, updated_at=datetime('now') WHERE id=?",
+                            (mu, int(row["id"])),
+                        )
                 if any(x in (url or "").lower() for x in ("fl.ru", "kwork.ru", "hh.ru", "t.me")):
                     time.sleep(RATE_LIMIT_SEC)
     except Exception as exc:

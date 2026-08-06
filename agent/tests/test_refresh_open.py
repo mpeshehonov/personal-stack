@@ -41,7 +41,22 @@ class RefreshOpenTest(unittest.TestCase):
         self.assertFalse(out["ok"])
         self.assertEqual(out.get("reason"), "not_marketplace")
 
-    def test_tg_post_blob_ignores_sibling_links(self) -> None:
+    def test_titles_compatible(self) -> None:
+        from opportunity.refresh_open import titles_compatible
+
+        self.assertTrue(
+            titles_compatible(
+                "Заказ: Верстка лендинга по макету",
+                "Верстка лендинга по макету (PSD)",
+            )
+        )
+        self.assertFalse(
+            titles_compatible(
+                "Заказ: Веб-приложение, аналог интранета",
+                "Доработать лендинг",
+            )
+        )
+
         from opportunity.client_scan import extract_marketplace_urls
         from opportunity.refresh_open import _extract_tg_post_blob
 
