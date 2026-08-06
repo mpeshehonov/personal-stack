@@ -273,22 +273,17 @@ def _hint_ru(
     aggregator: bool,
 ) -> str:
     if strategy == "direct_tg":
-        return f"Пиши в ЛС: {', '.join(telegrams[:3])} (не через агрегатор)"
+        return f"ЛС {', '.join(telegrams[:3])}"
     if strategy == "direct_email":
-        return f"Пиши на почту: {', '.join(emails[:2])}"
+        return f"почта {', '.join(emails[:2])}"
     if strategy == "direct_url":
-        return f"Прямой отклик: {direct_urls[0]}"
+        return f"прямая ссылка ({direct_urls[0]})"
     if aggregator:
-        co = company or "название компании из текста"
-        return (
-            f"Не через Runello/gmatch/бот. Возьми «{co}» → сайт/карьера/HH/LinkedIn → "
-            "мыло или TG HR в личку"
-        )
+        co = company or "компанию из текста"
+        return f"радар — найди «{co}» на HH/сайте и пиши HR"
     if company:
-        return (
-            f"Контакта в посте нет. «{company}» → сайт/HH/LinkedIn → мыло или TG в ЛС"
-        )
-    return "Контакта нет — вытащи компанию из текста и ищи прямой отклик мимо канала"
+        return f"контакта нет — ищи «{company}» на HH/сайте"
+    return "контакта нет — вытащи компанию из текста и ищи прямой отклик"
 
 
 def apply_contacts_blob(path: dict[str, Any]) -> str:

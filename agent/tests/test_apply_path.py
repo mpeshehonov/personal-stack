@@ -30,7 +30,8 @@ class ApplyPathTest(unittest.TestCase):
         self.assertFalse(path["actionable"])
         self.assertEqual(path["strategy"], "research_company")
         self.assertEqual(path["company"], "ЮниВеб")
-        self.assertIn("Не через Runello", path["apply_hint_ru"])
+        self.assertIn("радар", path["apply_hint_ru"])
+        self.assertIn("ЮниВеб", path["apply_hint_ru"])
 
     def test_direct_ashby_url(self) -> None:
         path = analyze_apply_path(

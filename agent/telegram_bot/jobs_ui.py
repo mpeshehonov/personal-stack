@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import json
+import re
 from typing import Any
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
@@ -55,52 +55,93 @@ def _analysis_for_lead(lead_id: int) -> dict[str, Any]:
     return {}
 
 
+def _compact_apply_hint(hint: str) -> str:
+    """Shorten long URLs in card text; keep the instruction readable."""
+    hint = (hint or "").strip()
+    if not hint:
+        return ""
+
+    def _short_url(m: re.Match[str]) -> str:
+        from urllib.parse import urlparse
+
+        host = (urlparse(m.group(0)).netloc or "").lower()
+        if not host:
+            return "ссылка"
+        host = host.removeprefix("www.")
+        return host
+
+    return re.sub(r"https?://[^\s<>\"']+", _short_url, hint)
+
+
+def _human_source(source: str) -> str:
+    s = (source or "").strip()
+    if s.startswith("tg:"):
+        return "Telegram · " + s[3:]
+    mapping = {
+        "hh": "HH",
+        "habr": "Habr",
+        "hirehi": "HireHi",
+        "hirify": "Hirify",
+        "telegram": "Telegram",
+    }
+    return mapping.get(s.lower(), s)
+
+
+def _entity_label(entity: str) -> str:
+    e = (entity or "").strip()
+    if not e or e == "-":
+        return "—"
+    low = e.lower()
+    if low in ("kwork", "kwork.ru"):
+        return "Kwork"
+    if low in ("fl.ru", "fl"):
+        return "FL.ru"
+    if low.startswith("tg/") or low.startswith("tg:"):
+        ch = e.split("/", 1)[-1].split(":", 1)[-1]
+        return f"Telegram · {ch}"
+    return e
+
+
 def lead_card_text(row: Any) -> str:
-    title = row["title"] or "-"
-    company = row["company"] or "-"
+    title = row["title"] or "—"
+    company = row["company"] or ""
     score = row["match_score"]
     source = row["source"] or ""
     loc = row["location"] or ""
-    reasons = []
-    try:
-        reasons = json.loads(row["match_reasons_json"] or "[]")
-    except json.JSONDecodeError:
-        pass
-    reason_line = ""
-    if reasons:
-        reason_line = "\n" + reasons[0]
 
-    overall_line = ""
     analysis: dict[str, Any] = {}
+    overall = ""
     try:
         from opportunity.repository import get_opportunity_by_lead
 
         opp = get_opportunity_by_lead(int(row["id"]))
         if opp:
-            overall_line = f" · opp {opp.overall_score}"
+            overall = f" · {opp.overall_score}"
             analysis = dict(opp.analysis or {})
-            if analysis.get("aggregator"):
-                overall_line += " · радар"
-            elif analysis.get("paywall"):
-                overall_line += " · paywall"
-            if not company or company == "-":
-                company = analysis.get("company") or company
+            if not company:
+                company = analysis.get("company") or ""
     except Exception:
         pass
 
+    company = company or "—"
+    aggregator = bool(analysis.get("aggregator"))
+    badge = " · радар" if aggregator else ""
+
     lines = [
-        f"#{row['id']} · match {score}{overall_line}",
-        f"{company}",
+        f"#{row['id']} · {company}{overall}{badge}",
         title,
     ]
-    meta = " · ".join(p for p in (source, loc) if p)
-    if meta:
-        lines.append(meta)
-    if reason_line:
-        lines.append(reason_line.strip())
-    hint = (analysis.get("apply_hint_ru") or "").strip()
+    meta_bits = [_human_source(source)]
+    if loc:
+        meta_bits.append(loc)
+    meta_bits.append(f"match {score}")
+    lines.append(" · ".join(meta_bits))
+
+    hint = _compact_apply_hint((analysis.get("apply_hint_ru") or "").strip())
     if hint:
-        lines.append(f"Отклик: {hint}")
+        lines.append(f"Как откликнуться: {hint}")
+    elif aggregator:
+        lines.append("Как откликнуться: радар — ищи компанию на HH/сайте, пиши HR напрямую")
     return "\n".join(lines)
 
 
@@ -247,11 +288,16 @@ def client_card_text(opp: Any) -> str:
     why = list((getattr(opp, "scores", None) or {}).get("fit", {}).get("reasons") or [])[:2]
     if not why:
         why = list(analysis.get("why") or [])[:2]
+    kind_ru = {
+        "freelance_order": "заказ",
+        "retainer": "ретейнер",
+        "target": "цель",
+    }.get(str(kind), str(kind) or "заказ")
+    title = (opp.title or "—").removeprefix("Заказ: ").strip() or "—"
     lines = [
-        f"заказ #{opp.id} · {opp.overall_score} баллов"
-        + (f" · {kind}" if kind else ""),
-        opp.company_or_entity or "—",
-        opp.title or "—",
+        f"#{opp.id} · {_entity_label(opp.company_or_entity)} · {opp.overall_score}",
+        title,
+        kind_ru,
     ]
     if price:
         lines.append(str(price)[:80])
@@ -264,8 +310,16 @@ def client_card_text(opp: Any) -> str:
         hint = ""
     if hint:
         lines.append(f"Что сделать: {hint}")
-    if why:
-        lines.append("Почему: " + "; ".join(str(x) for x in why))
+    # Keep only human-useful why bits (freshness / stack), skip noise
+    useful = []
+    for item in why:
+        s = str(item).strip()
+        if not s:
+            continue
+        if s.startswith("стек:") or "опубликовано" in s or "смежно" in s:
+            useful.append(s)
+    if useful:
+        lines.append(" · ".join(useful[:2]))
     return "\n".join(lines)
 
 
@@ -297,12 +351,12 @@ def client_keyboard(opp_id: int, url: str = "") -> InlineKeyboardMarkup:
 def clients_intro(count: int) -> str:
     if count <= 0:
         return (
-            "Живых заказов в статусе new нет.\n"
-            "Жми «Скан заказов» или «Обновить» (закроет протухшие Kwork/FL)."
+            "Живых заказов сейчас нет.\n"
+            "Жми «Скан заказов» или «Обновить»."
         )
     return (
         f"Заказов: {count} (показываю до 5).\n"
-        "Кнопки: Открыть · Ок / Мимо / Откликнулся · Скан / Обновить."
+        "Открыть → Ок / Мимо / Откликнулся."
     )
 
 
@@ -378,10 +432,10 @@ def get_lead(lead_id: int) -> Any | None:
 def jobs_intro(count: int) -> str:
     if count <= 0:
         return (
-            f"Новых вакансий с score ≥ {JOBHUNT_MIN_MATCH} нет.\n"
-            "Нажми «Скан» или кнопку ниже."
+            f"Новых вакансий с match ≥ {JOBHUNT_MIN_MATCH} нет.\n"
+            "Жми «Скан»."
         )
     return (
         f"Новых вакансий: {count} (показываю до 5).\n"
-        "Кнопки: прямой отклик/HH (не бот агрегатора) · Ок / Мимо / Сопровод."
+        "Ссылка отклика · Ок / Мимо / Сопровод."
     )

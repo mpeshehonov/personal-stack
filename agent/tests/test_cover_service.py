@@ -93,5 +93,37 @@ class CoverServiceTest(unittest.TestCase):
         self.assertNotIn("На X5", body)
 
 
+    def test_parse_jobposting_blocks(self) -> None:
+        from job_hunt.hh_client import _parse_jobposting_blocks
+
+        html = """
+        <script type="application/ld+json">
+        {"@context":"https://schema.org/","@type":"JobPosting",
+         "title":"Фронтенд-разработчик",
+         "description":"<p>React Native</p>",
+         "hiringOrganization":{"@type":"Organization","name":"Acme"}}
+        </script>
+        """
+        job = _parse_jobposting_blocks(html)
+        self.assertIsNotNone(job)
+        assert job is not None
+        self.assertEqual(job["title"], "Фронтенд-разработчик")
+        self.assertEqual(job["hiringOrganization"]["name"], "Acme")
+
+    def test_hh_blocked_error_mentions_paste(self) -> None:
+        from unittest import mock
+
+        from job_hunt.cover_service import resolve_vacancy, parse_cover_request
+
+        req = parse_cover_request(
+            "/cover hh https://hh.ru/vacancy/135875219?from=share_ios"
+        )
+        with mock.patch("job_hunt.cover_service.fetch_hh_vacancy", return_value=None):
+            with mock.patch("job_hunt.cover_service.fetch_generic_url", return_value=None):
+                with self.assertRaises(ValueError) as ctx:
+                    resolve_vacancy(req)
+        self.assertIn("вставь текст", str(ctx.exception).lower())
+
+
 if __name__ == "__main__":
     unittest.main()

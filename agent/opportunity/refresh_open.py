@@ -9,9 +9,6 @@ import time
 from typing import Any
 from urllib.parse import urlparse
 
-import httpx
-
-from job_hunt.config import JOBHUNT_USER_AGENT
 from opportunity.client_scan import (
     is_dead_url,
     validate_fl_project,
@@ -23,10 +20,6 @@ logger = logging.getLogger(__name__)
 
 _HH_ID_RE = re.compile(r"hh\.ru/vacancy/(\d+)", re.I)
 RATE_LIMIT_SEC = 0.4
-
-
-def _headers() -> dict[str, str]:
-    return {"User-Agent": JOBHUNT_USER_AGENT, "Accept-Language": "ru-RU,ru;q=0.9"}
 
 
 def _archive_opportunity(conn, opp_id: int, *, reason: str) -> None:
@@ -68,18 +61,14 @@ def validate_hh_vacancy_url(url: str) -> dict[str, Any]:
         return {"ok": True, "reason": "not_hh"}  # not our concern
     vid = m.group(1)
     try:
-        resp = httpx.get(
-            f"https://api.hh.ru/vacancies/{vid}",
-            headers=_headers(),
-            timeout=20,
-        )
-    except httpx.HTTPError as exc:
-        return {"ok": True, "reason": f"hh_fetch_error:{exc}"}  # don't kill on network blip
-    if resp.status_code == 404:
-        return {"ok": False, "reason": "hh_not_found"}
-    if resp.status_code != 200:
-        return {"ok": True, "reason": f"hh_http_{resp.status_code}"}
-    data = resp.json()
+        from job_hunt.hh_client import fetch_hh_vacancy_api
+
+        data = fetch_hh_vacancy_api(vid)
+        if data is None:
+            # API often 403 from NL — don't archive on fetch failure
+            return {"ok": True, "reason": "hh_fetch_blocked"}
+    except Exception as exc:
+        return {"ok": True, "reason": f"hh_fetch_error:{exc}"}
     if data.get("archived") is True:
         return {"ok": False, "reason": "hh_archived"}
     return {"ok": True, "reason": "open", "title": data.get("name")}

@@ -128,18 +128,12 @@ def _strip_html(html: str) -> str:
 
 
 def fetch_hh_vacancy_description(external_id: str) -> str:
-    try:
-        resp = httpx.get(
-            f"https://api.hh.ru/vacancies/{external_id}",
-            headers={"User-Agent": JOBHUNT_USER_AGENT},
-            timeout=25,
-        )
-        if resp.status_code != 200:
-            return ""
-        desc = resp.json().get("description") or ""
-        return _strip_html(desc)[:5000]
-    except httpx.HTTPError:
+    from job_hunt.hh_client import fetch_hh_vacancy_data, vacancy_blob_from_data
+
+    data = fetch_hh_vacancy_data(str(external_id))
+    if not data:
         return ""
+    return vacancy_blob_from_data(data, vacancy_id=str(external_id))["description"]
 
 
 def vacancy_text_from_lead(lead: dict[str, Any]) -> str:

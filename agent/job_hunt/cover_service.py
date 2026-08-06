@@ -19,6 +19,11 @@ from job_hunt.drafter import (
     humanize_cover_text,
     vacancy_text_from_lead,
 )
+from job_hunt.hh_client import (
+    extract_hh_vacancy_id,
+    fetch_hh_vacancy_data,
+    vacancy_blob_from_data,
+)
 from orchestrator.config import AGENT_DIR
 from orchestrator.state import get_job_lead
 
@@ -30,7 +35,6 @@ SKILL_PATH = AGENT_DIR / "skills" / "cover-letter" / "SKILL.md"
 NOTES_PATH = AGENT_DIR / "memory" / "career-copy-notes.md"
 
 _URL_RE = re.compile(r"https?://[^\s<>\"']+", re.I)
-_HH_ID_RE = re.compile(r"hh\.ru/vacancy/(\d+)", re.I)
 _HIRIFY_RE = re.compile(r"hirify\.me/jobs/([a-zA-Z0-9\-]+)", re.I)
 
 _CHANNEL_ALIASES = {
@@ -229,36 +233,15 @@ def _strip_html(html: str) -> str:
 
 
 def fetch_hh_vacancy(vacancy_id: str) -> VacancyPayload | None:
-    try:
-        resp = httpx.get(
-            f"https://api.hh.ru/vacancies/{vacancy_id}",
-            headers={"User-Agent": JOBHUNT_USER_AGENT},
-            timeout=25,
-        )
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-    except httpx.HTTPError:
+    data = fetch_hh_vacancy_data(vacancy_id)
+    if not data:
         return None
-    desc = _strip_html(data.get("description") or "")
-    skills = [s.get("name", "") for s in (data.get("key_skills") or []) if s.get("name")]
-    company = ((data.get("employer") or {}).get("name")) or ""
-    title = data.get("name") or ""
-    url = data.get("alternate_url") or f"https://hh.ru/vacancy/{vacancy_id}"
-    blob = "\n".join(
-        [
-            f"Вакансия: {title}",
-            f"Компания: {company}",
-            f"URL: {url}",
-            "Стек/навыки: " + ", ".join(skills),
-            desc,
-        ]
-    )
+    norm = vacancy_blob_from_data(data, vacancy_id=vacancy_id)
     return VacancyPayload(
-        title=title,
-        company=company,
-        url=url,
-        text=blob[:12000],
+        title=norm["title"],
+        company=norm["company"],
+        url=norm["url"],
+        text=norm["text"],
         source="hh",
     )
 
@@ -341,12 +324,15 @@ def resolve_vacancy(req: CoverRequest) -> VacancyPayload:
             lead_id=req.lead_id,
         )
 
+    hh_urls_failed: list[str] = []
     for url in req.urls:
-        hh = _HH_ID_RE.search(url)
-        if hh:
-            payload = fetch_hh_vacancy(hh.group(1))
+        hh_id = extract_hh_vacancy_id(url)
+        if hh_id:
+            payload = fetch_hh_vacancy(hh_id)
             if payload:
                 return payload
+            hh_urls_failed.append(hh_id)
+            continue
         hir = _HIRIFY_RE.search(url)
         if hir:
             payload = fetch_hirify_vacancy(hir.group(1))
@@ -364,6 +350,16 @@ def resolve_vacancy(req: CoverRequest) -> VacancyPayload:
             url=req.urls[0] if req.urls else "",
             text=req.vacancy_text[:12000],
             source="paste",
+        )
+
+    if hh_urls_failed:
+        vids = ", ".join(hh_urls_failed[:3])
+        raise ValueError(
+            f"HH вакансию {vids} не удалось открыть (API/страница с сервера часто закрыты).\n"
+            "Скопируй текст вакансии с HH и пришли так:\n"
+            "/cover tg\n"
+            "<вставь текст>\n\n"
+            "Или: /cover 42 tg — если вакансия уже есть в /jobs"
         )
 
     raise ValueError(

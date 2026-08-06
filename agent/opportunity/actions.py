@@ -90,42 +90,47 @@ def action_label_ru(action: str) -> str:
 def action_how_ru(action: str, analysis: dict[str, Any] | None = None) -> str:
     """One-line instruction for humans. Prefer concrete contacts when known."""
     analysis = analysis or {}
+    kind = str(analysis.get("kind") or "")
     hint = (analysis.get("apply_hint_ru") or "").strip()
     contacts = analysis.get("apply_contacts") or {}
     tgs = contacts.get("telegrams") or analysis.get("telegrams") or []
     emails = contacts.get("emails") or analysis.get("emails") or []
     urls = contacts.get("direct_urls") or analysis.get("direct_urls") or []
 
+    # Freelance orders (FL/Kwork/TG) — never talk about HH/career apply path
+    if kind == "freelance_order":
+        if action in (
+            NextAction.APPLY.value,
+            NextAction.REVIEW.value,
+            NextAction.WRITE_TO_CONTACT.value,
+        ):
+            return "Кнопка «Открыть заказ» → отклик на площадке → «Откликнулся»"
+        if action == NextAction.RESEARCH_COMPANY.value:
+            return "Открой заказ на FL/Kwork и откликнись там напрямую"
+
     if action == NextAction.WRITE_TO_CONTACT.value:
         if tgs:
-            return (
-                f"ЛС {', '.join(tgs[:3])} + короткий сопровод (/cover tg). "
-                "Не через бота канала"
-            )
+            return f"Напиши в ЛС {', '.join(tgs[:3])} + /cover tg"
         if emails:
             return f"Письмо на {', '.join(emails[:2])} + /cover email"
         if hint:
             return hint
-        return "Найди рекрутера/EM и напиши коротко в ЛС/на почту"
+        return "Найди HR/EM и напиши коротко в ЛС или на почту"
 
     if action == NextAction.APPLY.value:
         if urls:
-            return f"Отклик по прямой ссылке: {urls[0]} → «Откликнулся»"
+            return "Жми «Прямой отклик» / ссылку ниже → потом «Откликнулся»"
         if hint and "Прямой отклик" in hint:
-            return hint
-        return (
-            "Открой прямую ссылку (HH/карьера) → откликнись → «Откликнулся». "
-            "Не через Runello/gmatch"
-        )
+            return "Жми «Прямой отклик» ниже → потом «Откликнулся»"
+        return "Жми ссылку отклика ниже (не бот агрегатора) → «Откликнулся»"
 
     if action == NextAction.RESEARCH_COMPANY.value:
         if hint:
             return hint
         company = (analysis.get("company") or "").strip()
-        co = f"«{company}»" if company else "компанию из вакансии"
+        co = f"«{company}»" if company else "компанию из текста"
         return (
-            f"Не через Runello/gmatch/Hirify-бота. Найди {co}: сайт/карьера/HH/LinkedIn → "
-            "мыло или TG HR в личку → /cover tg"
+            f"Это радар/агрегатор. Найди {co} на HH или сайте → HR в ЛС → /cover tg"
         )
 
     return {
