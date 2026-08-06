@@ -78,6 +78,33 @@ def validate_hh_vacancy_url(url: str) -> dict[str, Any]:
     return {"ok": True, "reason": "open", "title": data.get("name")}
 
 
+def _extract_tg_post_blob(html: str, *, channel: str, post_id: str) -> str:
+    """Return only the target post's message HTML (not the whole channel preview)."""
+    channel = channel.lstrip("@")
+    marker = f'data-post="{channel}/{post_id}"'
+    idx = html.find(marker)
+    if idx < 0:
+        # fallback: case-insensitive channel
+        low = html.lower()
+        marker_l = marker.lower()
+        idx = low.find(marker_l)
+        if idx < 0:
+            return ""
+    # Walk forward to this message's text block; stop before next wrap if possible
+    window = html[idx : idx + 12000]
+    next_wrap = window.find('tgme_widget_message_wrap', 50)
+    if next_wrap > 0:
+        window = window[:next_wrap]
+    text_m = re.search(
+        r'class="tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>',
+        window,
+        re.I | re.S,
+    )
+    if text_m:
+        return text_m.group(1)
+    return window
+
+
 def validate_tg_order_url(url: str) -> dict[str, Any]:
     """TG client cards: resolve FL/Kwork from the post, else archive."""
     m = _TG_POST_RE.search(url or "")
@@ -100,7 +127,11 @@ def validate_tg_order_url(url: str) -> dict[str, Any]:
     if resp.status_code != 200:
         return {"ok": True, "reason": f"tg_http_{resp.status_code}"}
 
-    markets = extract_marketplace_urls(resp.text)
+    blob = _extract_tg_post_blob(resp.text, channel=channel, post_id=post_id)
+    if not blob:
+        return {"ok": False, "reason": "tg_post_not_found"}
+
+    markets = extract_marketplace_urls(blob)
     if not markets:
         # Mirror feeds without bidable link are not actionable
         return {"ok": False, "reason": "tg_no_marketplace"}
@@ -110,14 +141,13 @@ def validate_tg_order_url(url: str) -> dict[str, Any]:
             v = validate_fl_project(mu)
             if v.get("ok"):
                 return {"ok": True, "reason": "open_via_fl", "marketplace_url": mu}
-            if v.get("reason") == "closed" or "no apply" in str(v.get("reason")):
-                return {"ok": False, "reason": f"fl_{v.get('reason')}"}
+            # Closed / no apply / stale — treat as dead order
+            return {"ok": False, "reason": f"fl_{v.get('reason')}"}
         if "kwork.ru" in mu:
             v = validate_kwork_project(mu)
             if v.get("ok"):
                 return {"ok": True, "reason": "open_via_kwork", "marketplace_url": mu}
-            if v.get("reason") == "closed":
-                return {"ok": False, "reason": "kwork_closed"}
+            return {"ok": False, "reason": f"kwork_{v.get('reason')}"}
     return {"ok": False, "reason": "marketplace_closed"}
 
 

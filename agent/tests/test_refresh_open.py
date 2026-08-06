@@ -41,6 +41,25 @@ class RefreshOpenTest(unittest.TestCase):
         self.assertFalse(out["ok"])
         self.assertEqual(out.get("reason"), "not_marketplace")
 
+    def test_tg_post_blob_ignores_sibling_links(self) -> None:
+        from opportunity.client_scan import extract_marketplace_urls
+        from opportunity.refresh_open import _extract_tg_post_blob
+
+        html = """
+        <div class="tgme_widget_message_wrap" data-post="projects_fl/1">
+          <div class="tgme_widget_message_text">Заказ A <a href="https://kwork.ru/projects/111">x</a></div>
+        </div>
+        <div class="tgme_widget_message_wrap" data-post="projects_fl/304372">
+          <div class="tgme_widget_message_text">Интранет бюджет 30к <a href="https://t.me/projects_fl">ch</a></div>
+        </div>
+        <div class="tgme_widget_message_wrap" data-post="projects_fl/9">
+          <div class="tgme_widget_message_text">Заказ B <a href="https://kwork.ru/projects/999">y</a></div>
+        </div>
+        """
+        blob = _extract_tg_post_blob(html, channel="projects_fl", post_id="304372")
+        self.assertIn("Интранет", blob)
+        self.assertEqual(extract_marketplace_urls(blob), [])
+
     def test_opp_nav_callbacks(self) -> None:
         self.assertEqual(parse_opp_callback("o:more"), ("more", None))
         self.assertEqual(parse_opp_callback("o:scan"), ("scan", None))
