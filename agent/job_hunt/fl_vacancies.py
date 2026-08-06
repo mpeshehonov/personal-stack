@@ -18,11 +18,39 @@ FL_VACANCIES_URL = "https://www.fl.ru/projects/?kind=5"
 RATE_LIMIT_SEC = 0.35
 
 _FE_HINT = re.compile(
-    r"react|frontend|front-end|фронт|верст|typescript|next\.?js|javascript|"
-    r"html|css|админк|vue|web|сайт|лендинг|разработчик|developer|"
-    r"full.?stack|fullstack|node",
+    r"(?:react|frontend|front[- ]?end|фронт(?:енд)?|верстк\w*|typescript|"
+    r"next\.?js|javascript|\bjs\b|админк\w*|vue(?:\.js)?|\bnuxt\b|"
+    r"лендинг\w*|сайт\w*|web[- ]?design|веб[- ]?дизайн|разработчик|"
+    r"developer|full[- ]?stack|fullstack|\bnode(?:\.?js)?\b|\bcss\b|"
+    r"(?<!\.)\bhtml\b(?!\.))",
     re.I,
 )
+
+_FE_STRONG = re.compile(
+    r"react|frontend|front[- ]?end|фронт(?:енд)?|верстк|typescript|next\.?js|"
+    r"javascript|vue|nuxt|лендинг|fullstack|full[- ]?stack|web[- ]?design|"
+    r"веб[- ]?дизайн|разработчик сайт|сайт на",
+    re.I,
+)
+
+_NON_FE_CATEGORY = re.compile(
+    r"аудио|звук|монтаж|видеооператор|копирайт|перевод|юрист|бухгалтер|"
+    r"менеджер|продажи|smm|таргет|seo(?!\s*site)|1[cс]|битрикс24|"
+    r"мобильн|android|ios|swift|kotlin|unity|unreal",
+    re.I,
+)
+
+
+def _looks_fe(text: str) -> bool:
+    return bool(_FE_HINT.search(text or ""))
+
+
+def _looks_strong_fe(text: str) -> bool:
+    return bool(_FE_STRONG.search(text or ""))
+
+
+def _slug_text(slug: str) -> str:
+    return slug.replace(".html", "").replace("-", " ").replace("_", " ")
 
 
 def _headers() -> dict[str, str]:
@@ -82,18 +110,15 @@ def fetch_fl_vacancies(*, limit: int = 40) -> list[dict[str, Any]]:
 
     ids = list(dict.fromkeys(re.findall(r"/projects/(\d+)/[^\"']+\.html", page)))
     results: list[dict[str, Any]] = []
-    for pid in ids[: max(limit * 2, 50)]:
+    for pid in ids[: max(limit * 3, 60)]:
         i = page.find(f"/projects/{pid}/")
         if i < 0:
             continue
         chunk = page[max(0, i - 900) : i + 1400]
-        chunk_text = _strip_html(chunk)
-        if not _FE_HINT.search(chunk_text):
-            continue
         slug_m = re.search(rf"/projects/{pid}/([^\"']+\.html)", chunk)
         if not slug_m:
             continue
-        url = f"https://www.fl.ru/projects/{pid}/{slug_m.group(1)}"
+        slug = slug_m.group(1)
         title_m = re.search(
             rf"/projects/{pid}/[^\"']+\.html\"[^>]*>([^<]{{6,160}})</a>",
             chunk,
@@ -105,8 +130,15 @@ def fetch_fl_vacancies(*, limit: int = 40) -> list[dict[str, Any]]:
         ):
             title = html.unescape(title_m.group(1).strip())
         if not title:
-            title = slug_m.group(1).replace(".html", "").replace("-", " ")[:120]
+            title = _slug_text(slug)[:120]
 
+        listing_blob = f"{title} {_slug_text(slug)}"
+        if _NON_FE_CATEGORY.search(listing_blob) and not _looks_strong_fe(listing_blob):
+            continue
+        if not _looks_fe(listing_blob):
+            continue
+
+        url = f"https://www.fl.ru/projects/{pid}/{slug}"
         time.sleep(RATE_LIMIT_SEC)
         try:
             det = httpx.get(url, headers=_headers(), timeout=25, follow_redirects=True)
@@ -127,23 +159,33 @@ def fetch_fl_vacancies(*, limit: int = 40) -> list[dict[str, Any]]:
             continue
         if "откликнуться" not in low:
             continue
-        # Prefer vacancy-tagged pages; still allow if FE title is strong
-        is_vac = "ваканси" in low
-        if not is_vac and not _FE_HINT.search(title):
-            continue
+
         title_m2 = re.search(r"<title>([^<]+)</title>", det.text, re.I)
         if title_m2:
             t = html.unescape(title_m2.group(1))
             t = re.sub(r":\s*проект в категории.*$", "", t, flags=re.I).strip()
             if t:
                 title = t[:160]
-        snippet = _strip_html(det.text)[:500]
+
+        category_m = re.search(
+            r"категори[яи]\s+([^,<]{3,80})",
+            det.text,
+            re.I,
+        )
+        category = html.unescape(category_m.group(1)).strip() if category_m else ""
+        snippet = _strip_html(det.text)[:800]
+        blob = f"{title} {category} {snippet[:400]}"
+        if _NON_FE_CATEGORY.search(f"{title} {category}") and not _looks_strong_fe(blob):
+            continue
+        if not (_looks_strong_fe(blob) or _looks_fe(f"{title} {category}")):
+            continue
+
         results.append(
             fl_to_vacancy_shape(
                 external_id=pid,
                 title=title,
                 url=url,
-                snippet=snippet,
+                snippet=snippet[:500],
             )
         )
         if len(results) >= limit:
