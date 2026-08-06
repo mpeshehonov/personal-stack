@@ -138,10 +138,15 @@ def lead_card_text(row: Any) -> str:
     lines.append(" · ".join(meta_bits))
 
     hint = _compact_apply_hint((analysis.get("apply_hint_ru") or "").strip())
+    open_url = pick_open_url(source_url=row["url"] or "", analysis=analysis)
     if hint:
         lines.append(f"Как откликнуться: {hint}")
+    elif open_url:
+        lines.append("Как откликнуться: кнопка ниже")
     elif aggregator:
-        lines.append("Как откликнуться: радар — ищи компанию на HH/сайте, пиши HR напрямую")
+        lines.append("Как откликнуться: прямого контакта нет — только текст поста")
+    else:
+        lines.append("Как откликнуться: прямого контакта нет")
     return "\n".join(lines)
 
 
@@ -150,53 +155,53 @@ def _apply_url_rows(
     open_url: str,
     analysis: dict[str, Any] | None = None,
     buttons: dict[str, Any] | None = None,
+    source_url: str = "",
 ) -> list[list[InlineKeyboardButton]]:
-    """Build URL button rows: direct apply first, never Runello-bot as primary."""
+    """Build URL button rows: direct apply / source post only — never Google stubs."""
+    from job_hunt.company_research import is_google_search_url
+
     analysis = analysis or {}
     buttons = buttons or {}
     research = analysis.get("research") or {}
     rows: list[list[InlineKeyboardButton]] = []
 
-    primary = open_url or pick_open_url(source_url="", analysis=analysis)
-    hh = (
-        buttons.get("hh_url")
-        or research.get("hh_vacancy_url")
-        or research.get("hh_employer_url")
-        or ""
-    )
-    career = buttons.get("career_url") or research.get("career_search_url") or ""
-    hr = (
-        buttons.get("hr_url")
-        or research.get("tg_hr_search_url")
-        or research.get("linkedin_search_url")
-        or ""
-    )
+    primary = open_url or pick_open_url(source_url=source_url, analysis=analysis)
+    if primary and is_google_search_url(primary):
+        primary = ""
+
+    hh = buttons.get("hh_url") or research.get("hh_vacancy_url") or research.get(
+        "hh_employer_url"
+    ) or ""
+    if hh and is_google_search_url(hh):
+        hh = ""
+
     aggregator = bool(buttons.get("aggregator") or analysis.get("aggregator"))
 
     if primary:
-        label = "Прямой отклик"
-        if "hh.ru/vacancy" in primary:
+        label = "Открыть"
+        low = primary.lower()
+        if "hh.ru/vacancy" in low:
             label = "Отклик на HH"
-        elif "hh.ru/employer" in primary or "hh.ru/search" in primary:
-            label = "Искать на HH"
-        elif "google.com/search" in primary:
-            label = "Найти карьеру/HR"
+        elif "hh.ru/employer" in low:
+            label = "Компания на HH"
+        elif "hh.ru/search" in low:
+            label = "Поиск на HH"
+        elif "fl.ru" in low:
+            label = "Открыть на FL"
+        elif "kwork.ru" in low:
+            label = "Открыть на Kwork"
+        elif "t.me/" in low:
+            label = "Открыть пост"
         elif aggregator:
-            label = "Искать прямой контакт"
+            label = "Исходный пост"
         rows.append([InlineKeyboardButton(label, url=primary)])
+    elif source_url and not is_google_search_url(source_url) and "t.me/" in source_url.lower():
+        rows.append([InlineKeyboardButton("Открыть пост", url=source_url)])
 
     secondary: list[InlineKeyboardButton] = []
     if hh and hh != primary:
-        secondary.append(
-            InlineKeyboardButton(
-                "HH",
-                url=hh,
-            )
-        )
-    if career and career != primary and career != hh:
-        secondary.append(InlineKeyboardButton("Карьера", url=career))
-    if hr and hr not in (primary, hh, career):
-        secondary.append(InlineKeyboardButton("HR поиск", url=hr))
+        secondary.append(InlineKeyboardButton("HH", url=hh))
+    # No Google «Карьера/HR поиск» stubs — either we have a real link or we don't
     if secondary:
         rows.append(secondary[:3])
     return rows
@@ -210,7 +215,9 @@ def lead_keyboard(
 ) -> InlineKeyboardMarkup:
     analysis = analysis if analysis is not None else _analysis_for_lead(lead_id)
     open_url = pick_open_url(source_url=url, analysis=analysis)
-    rows = _apply_url_rows(open_url=open_url, analysis=analysis)
+    rows = _apply_url_rows(
+        open_url=open_url, analysis=analysis, source_url=url
+    )
     rows.append(
         [
             InlineKeyboardButton("Ок", callback_data=f"j:like:{lead_id}"),
@@ -241,8 +248,18 @@ def brief_lead_keyboard(
 ) -> InlineKeyboardMarkup:
     """Compact keyboard under each brief card."""
     analysis = analysis if analysis is not None else _analysis_for_lead(lead_id)
-    open_url = url or pick_open_url(source_url="", analysis=analysis)
-    rows = _apply_url_rows(open_url=open_url, analysis=analysis, buttons=buttons)
+    # `url` here is already pick_open_url result from brief (may be empty)
+    source = ""
+    if lead_id:
+        lead = get_job_lead(int(lead_id))
+        source = (lead or {}).get("url") or ""
+    open_url = url or pick_open_url(source_url=source, analysis=analysis)
+    rows = _apply_url_rows(
+        open_url=open_url,
+        analysis=analysis,
+        buttons=buttons,
+        source_url=source,
+    )
     rows.append(
         [
             InlineKeyboardButton("Откликнулся", callback_data=f"j:applied:{lead_id}"),

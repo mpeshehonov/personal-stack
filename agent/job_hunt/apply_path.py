@@ -42,6 +42,8 @@ AGGREGATOR_HOST_MARKERS = (
 # Prefer these as real apply destinations.
 DIRECT_HOST_MARKERS = (
     "hh.ru",
+    "fl.ru",
+    "kwork.ru",
     "career.habr.com",
     "habr.com/ru/companies",
     "habr.com/companies",

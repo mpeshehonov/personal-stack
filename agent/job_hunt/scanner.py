@@ -20,6 +20,7 @@ from job_hunt.config import (
     hh_search_queries,
 )
 from job_hunt.dedup import dedupe_vacancies, vacancy_fingerprint
+from job_hunt.fl_vacancies import fetch_fl_vacancies
 from job_hunt.habr import fetch_habr_vacancies
 from job_hunt.hirehi import fetch_all_hirehi_vacancies
 from job_hunt.hirify import fetch_all_hirify_vacancies
@@ -104,6 +105,7 @@ def _empty_source_counts() -> dict[str, int]:
         "habr": 0,
         "hirify": 0,
         "hirehi": 0,
+        "fl": 0,
         "telegram": 0,
     }
 
@@ -144,6 +146,12 @@ def fetch_all_vacancies() -> tuple[list[dict[str, Any]], dict[str, int]]:
         counts["hirehi"] = len(hirehi)
         vacancies.extend(hirehi)
         mark_fetch_success("hirehi", len(hirehi))
+
+    if board_enabled("fl"):
+        fl = fetch_fl_vacancies()
+        counts["fl"] = len(fl)
+        vacancies.extend(fl)
+        mark_fetch_success("fl", len(fl))
 
     channels = enabled_tg_channels()
     if channels:

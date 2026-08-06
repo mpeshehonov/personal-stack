@@ -49,15 +49,15 @@ def enrich_apply_research(
         analysis["paywall"] = False
         analysis["apply_strategy"] = "direct_url"
         analysis["apply_hint_ru"] = research_hint_ru(research)
+    elif research.get("hh_employer_url"):
+        analysis["apply_hint_ru"] = research_hint_ru(research)
     else:
-        hint = research_hint_ru(research)
-        if hint:
-            analysis["apply_hint_ru"] = hint
-        elif company:
-            analysis["apply_hint_ru"] = (
-                f"Не через агрегатор. «{company}»: HH / карьерный сайт / LinkedIn HR → "
-                "мыло или TG в личку"
-            )
+        # Honest: no direct contact found — don't pretend Google is a path
+        analysis["apply_hint_ru"] = (
+            "Прямого контакта нет — открой исходный пост и ищи TG/мыло в тексте"
+            if analysis.get("aggregator")
+            else (research_hint_ru(research) or "Прямого контакта нет")
+        )
     return analysis
 
 
@@ -191,16 +191,11 @@ def refresh_research_for_opportunities(*, limit: int = 12) -> int:
         analysis = dict(opp.analysis or {})
         if analysis.get("research") and (
             analysis["research"].get("hh_vacancy_url")
-            or analysis["research"].get("hh_search_url")
-            or analysis["research"].get("career_search_url")
+            or analysis["research"].get("hh_employer_url")
         ):
-            # Already researched enough; skip heavy HH unless still aggregator w/o HH hit
-            if not (
-                analysis.get("aggregator")
-                and not analysis["research"].get("hh_vacancy_url")
-                and not analysis.get("_research_attempted")
-            ):
-                continue
+            continue
+        if analysis.get("_research_attempted") and not analysis.get("aggregator"):
+            continue
 
         company = (opp.company_or_entity or analysis.get("company") or "").strip()
         if (not company or company in ("—", "-")) and opp.job_lead_id:

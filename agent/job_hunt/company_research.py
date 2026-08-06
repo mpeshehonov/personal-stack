@@ -213,19 +213,27 @@ def research_direct_apply(
                 result["hh_vacancy_title"] = vac.get("name")
                 result["found_direct"] = True
 
-    # Primary: real vacancy > employer page > HH search > career google
+    # Primary: real vacancy > employer page only (never Google stubs)
     result["primary_url"] = (
         result.get("hh_vacancy_url")
         or result.get("hh_employer_url")
-        or result.get("hh_search_url")
-        or result.get("career_search_url")
+        or None
     )
+    if result.get("hh_vacancy_url") or result.get("hh_employer_url"):
+        result["found_direct"] = True
     return result
 
 
+def is_google_search_url(url: str) -> bool:
+    low = (url or "").lower()
+    return "google.com/search" in low or "google.ru/search" in low
+
+
 def is_useless_open_url(url: str) -> bool:
-    """TG aggregator posts / bot mini-apps are not useful 'open vacancy' targets."""
+    """TG aggregator posts / bot mini-apps / google stubs are not useful open targets."""
     if not url:
+        return True
+    if is_google_search_url(url):
         return True
     if is_aggregator_url(url):
         return True
@@ -245,13 +253,13 @@ def pick_open_url(
     source_url: str = "",
     analysis: dict[str, Any] | None = None,
 ) -> str:
-    """Best URL for the Telegram 'Open' button — never aggregator bot/post if avoidable."""
+    """Best URL for Telegram Open — real apply / post only, never Google stubs."""
     analysis = analysis or {}
     contacts = analysis.get("apply_contacts") or {}
     for u in contacts.get("direct_urls") or []:
         if not u or is_useless_open_url(u):
             continue
-        if is_direct_career_url(u) or "hh.ru" in u.lower():
+        if is_direct_career_url(u) or "hh.ru" in u.lower() or "fl.ru" in u.lower():
             return u
     for u in contacts.get("direct_urls") or []:
         if u and not is_useless_open_url(u):
@@ -261,35 +269,35 @@ def pick_open_url(
     for key in (
         "hh_vacancy_url",
         "hh_employer_url",
-        "hh_search_url",
-        "career_search_url",
         "primary_url",
     ):
         u = research.get(key) or ""
         if u and not is_useless_open_url(u):
             return u
 
-    if analysis.get("aggregator") or is_useless_open_url(source_url):
-        company = (analysis.get("company") or "").strip()
-        if company and company not in ("—", "-"):
-            return hh_search_url(company)
-        title_url = (analysis.get("research") or {}).get("career_search_url") or ""
-        if title_url:
-            return title_url
-        return ""
-
+    # Prefer original post/board link over fake «search yourself» URLs
     if source_url and not is_useless_open_url(source_url):
         return source_url
+
+    # HH search is a real board, not Google — last resort when company known
+    hh_search = research.get("hh_search_url") or ""
+    if hh_search and not is_useless_open_url(hh_search):
+        return hh_search
+
+    company = (analysis.get("company") or "").strip()
+    if company and company not in ("—", "-", "название компании из текста"):
+        return hh_search_url(company)
+
     return ""
 
 
 def research_hint_ru(research: dict[str, Any]) -> str:
     if research.get("hh_vacancy_url"):
         title = research.get("hh_vacancy_title") or "вакансия"
-        return f"На HH нашлось: {title} — откликайся там, не через Runello"
+        return f"На HH: {title}"
     if research.get("hh_employer_url"):
         name = research.get("hh_employer_name") or research.get("company") or "компания"
-        return f"Карточка работодателя на HH: {name} → вакансии/отклик там"
-    if research.get("hh_search_url"):
-        return "Открой поиск HH / карьерный сайт компании → найди HR или форму отклика"
+        return f"Работодатель на HH: {name}"
+    if research.get("found_direct"):
+        return "Есть прямая ссылка отклика"
     return ""

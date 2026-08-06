@@ -325,12 +325,11 @@ def _card_payload(opp: Any) -> dict[str, Any]:
 
     open_url = pick_open_url(source_url=opp.source_url or "", analysis=opp.analysis or {})
     research = (opp.analysis or {}).get("research") or {}
+    # Only real board/career URLs in buttons — never Google stubs
     extra_btns = {
         "hh_url": research.get("hh_vacancy_url") or research.get("hh_employer_url") or "",
-        "career_url": research.get("career_search_url") or "",
-        "hr_url": research.get("tg_hr_search_url")
-        or research.get("linkedin_search_url")
-        or "",
+        "career_url": "",
+        "hr_url": "",
         "aggregator": bool((opp.analysis or {}).get("aggregator")),
     }
 

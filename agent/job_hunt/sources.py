@@ -32,6 +32,7 @@ DEFAULT_BOARD_SOURCES = (
     ("habr", "board"),
     ("hirify", "board"),
     ("hirehi", "board"),
+    ("fl", "board"),
 )
 
 WEIGHT_FLOOR_DISABLE = 0.35
