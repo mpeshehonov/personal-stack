@@ -57,6 +57,7 @@ class RefreshOpenTest(unittest.TestCase):
             )
         )
 
+    def test_tg_post_blob_ignores_sibling_links(self) -> None:
         from opportunity.client_scan import extract_marketplace_urls
         from opportunity.refresh_open import _extract_tg_post_blob
 
