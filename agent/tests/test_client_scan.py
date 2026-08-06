@@ -37,6 +37,21 @@ class ClientScanTest(unittest.TestCase):
         )
         self.assertEqual(url, "https://kwork.ru/projects/3227860")
 
+    def test_pick_apply_extracts_plain_text_marketplace(self) -> None:
+        url = pick_apply_url(
+            ["https://t.me/projects_fl"],
+            tg_fallback="https://t.me/projects_fl/1",
+            text="Бюджет 20к https://www.fl.ru/projects/5516806/dizayn.html смотри",
+        )
+        self.assertIn("fl.ru/projects/5516806", url)
+
+    def test_pick_apply_skips_figma(self) -> None:
+        url = pick_apply_url(
+            ["https://www.figma.com/design/abc/Foo"],
+            tg_fallback="https://t.me/projects_fl/1",
+        )
+        self.assertEqual(url, "https://t.me/projects_fl/1")
+
     def test_score_keeps_react(self) -> None:
         s = score_order("Доработка фронта на React", "админка", "15 000 руб")
         self.assertTrue(s["keep"])
@@ -44,6 +59,12 @@ class ClientScanTest(unittest.TestCase):
     def test_score_drops_video(self) -> None:
         s = score_order("Ролик на 43-45 сек", "монтаж", "3500 руб")
         self.assertFalse(s["keep"])
+
+    def test_fl_closed_markers_cover_birzha_copy(self) -> None:
+        from opportunity.client_scan import _FL_CLOSED_MARKERS
+
+        blob = "к сожалению, проект уже закрыт. смотрите похожие проекты на бирже"
+        self.assertTrue(any(m in blob for m in _FL_CLOSED_MARKERS))
 
 
 if __name__ == "__main__":

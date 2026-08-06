@@ -57,8 +57,21 @@ def _format_job_hunt_section(job_summary: dict[str, Any] | None) -> str:
         for title in ideas[:2]:
             lines.append(f"- {title}")
 
+    clients_n = (job_summary.get("opportunity") or {}).get("client_orders")
+    client_titles = (job_summary.get("opportunity") or {}).get("client_titles") or []
+    if clients_n is not None:
+        lines.append("")
+        lines.append(f"Заказы (CLIENT): {clients_n}")
+        for t in client_titles[:4]:
+            lines.append(f"- {t}")
+
+    morning = job_summary.get("morning_digest")
+    if morning:
+        lines.append("")
+        lines.append("Утренний дайджест отправлен отдельным сообщением.")
+
     lines.append("")
-    lines.append("Полный brief: /brief")
+    lines.append("Карточки: /jobs · /clients · /brief")
     return "\n".join(lines)
 
 

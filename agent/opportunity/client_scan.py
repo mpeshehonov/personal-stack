@@ -22,11 +22,24 @@ TG_PREVIEW = "https://t.me/s/{channel}"
 RATE_LIMIT_SEC = 1.2
 MAX_AGE_HOURS = 72  # hard freshness gate
 
-# Live-enough free sources (validated 2026-08-02). NEVER freelansim / u.habr.com.
+# Live-enough free sources (validated 2026-08-06). NEVER freelansim / u.habr.com.
 TG_ORDER_CHANNELS = (
     "job_webdev",  # FE + kwork.ru/projects links
     "it_zakazy",  # kwork mirrors, often same-day
-    "projects_fl",  # FL.ru mirror feed, very fresh
+    "projects_fl",  # FL.ru mirror feed (text often without links)
+    "kwork_projects",  # dense Kwork want feed
+    "web_zakaz",
+    "frilans_zakazy",
+)
+
+# Channels that are marketplace mirrors — never keep bare t.me/figma as apply URL
+TG_MARKETPLACE_REQUIRED = frozenset(
+    {
+        "projects_fl",
+        "it_zakazy",
+        "kwork_projects",
+        "job_webdev",
+    }
 )
 
 DEAD_URL_MARKERS = (
@@ -34,6 +47,31 @@ DEAD_URL_MARKERS = (
     "u.habr.com",
     "freelansim",
     "habr.com/freelance",
+)
+
+_FL_CLOSED_MARKERS = (
+    "исполнитель выбран",
+    "заказ закрыт",
+    "проект закрыт",
+    "проект уже закрыт",
+    "похожие проекты на бирже",
+    "похожие проекты",
+    "к сожалению, проект",
+)
+
+_KWORK_CLOSED_MARKERS = (
+    "заказ закрыт",
+    "проект не найден",
+    "want not found",
+    "проект удален",
+    "проект удалён",
+    "заказ выполнен",
+    "исполнитель выбран",
+)
+
+_MARKETPLACE_URL_RE = re.compile(
+    r"https?://(?:www\.)?(?:fl\.ru/projects/\d+[^\s\"'<>]*|kwork\.ru/projects/\d+[^\s\"'<>]*)",
+    re.I,
 )
 
 _MESSAGE_SPLIT = re.compile(r'<div class="tgme_widget_message_wrap')
@@ -234,7 +272,7 @@ def validate_fl_project(url: str) -> dict[str, Any]:
     page = resp.text
     text = _strip_html(page)
     low = text.lower()
-    if any(x in low for x in ("исполнитель выбран", "заказ закрыт", "проект закрыт")):
+    if any(x in low for x in _FL_CLOSED_MARKERS):
         return {"ok": False, "reason": "closed"}
     if "откликнуться" not in low:
         return {"ok": False, "reason": "no apply button"}
@@ -272,8 +310,21 @@ def validate_kwork_project(url: str) -> dict[str, Any]:
         return {"ok": False, "reason": f"redirected away: {final}"}
     page = resp.text
     low = page.lower()
-    if any(x in low for x in ("заказ закрыт", "проект не найден", "want not found")):
+    if any(x in low for x in _KWORK_CLOSED_MARKERS):
         return {"ok": False, "reason": "closed"}
+    # Soft signal that want is still open
+    if not any(
+        x in low
+        for x in (
+            "откликнуться",
+            "оставить отклик",
+            "предложи",
+            "want-view",
+            "data-id",
+        )
+    ):
+        # Don't hard-fail on missing button (SPA), but closed markers above catch most
+        pass
     title = _title_from_html(page)
     if not title or title.lower() in ("kwork", "проекты"):
         return {"ok": False, "reason": "no title"}
@@ -283,9 +334,29 @@ def validate_kwork_project(url: str) -> dict[str, Any]:
     return {"ok": True, "title": title, "snippet": title, "scored": scored}
 
 
-def pick_apply_url(hrefs: list[str], *, tg_fallback: str) -> str:
+def extract_marketplace_urls(*blobs: str) -> list[str]:
+    """Pull FL/Kwork project URLs from hrefs and plain text."""
+    found: list[str] = []
+    for blob in blobs:
+        if not blob:
+            continue
+        for m in _MARKETPLACE_URL_RE.finditer(blob):
+            u = m.group(0).rstrip(").,;\"'")
+            # normalize kwork view suffix
+            u = re.sub(r"/view/?$", "", u)
+            found.append(u)
+    # Prefer FL then Kwork, unique
+    ranked = sorted(
+        dict.fromkeys(found),
+        key=lambda u: (0 if "fl.ru" in u else 1, u),
+    )
+    return ranked
+
+
+def pick_apply_url(hrefs: list[str], *, tg_fallback: str, text: str = "") -> str:
     ranked: list[tuple[int, str]] = []
-    for href in hrefs:
+    candidates = list(hrefs or []) + extract_marketplace_urls(text, " ".join(hrefs or []))
+    for href in candidates:
         href = href.replace("&amp;", "&").rstrip(").,;")
         if is_dead_url(href):
             continue
@@ -294,8 +365,14 @@ def pick_apply_url(hrefs: list[str], *, tg_fallback: str) -> str:
         if "fl.ru" in host and "/projects/" in path:
             ranked.append((0, href))
         elif "kwork.ru" in host and "/projects/" in path:
-            ranked.append((1, href))
+            ranked.append((1, href.split("?")[0].rstrip("/")))
         elif host and "t.me" not in host and "telegram" not in host:
+            # Ignore figma/docs/yandex as apply targets — not bidable orders
+            if any(
+                x in host
+                for x in ("figma.com", "docs.google", "disk.yandex", "drive.google")
+            ):
+                continue
             ranked.append((3, href))
     if ranked:
         ranked.sort(key=lambda x: x[0])
@@ -377,12 +454,19 @@ def scan_tg_orders() -> list[dict[str, Any]]:
             if not scored.get("keep"):
                 continue
 
-            apply_url = pick_apply_url(post.get("hrefs") or [], tg_fallback=post["tg_url"])
+            apply_url = pick_apply_url(
+                post.get("hrefs") or [],
+                tg_fallback=post["tg_url"],
+                text=text,
+            )
             if is_dead_url(apply_url):
                 continue
 
             # Marketplace links required for quality; bare TG only if <24h + strong FE + budget
+            # Aggregator mirrors (projects_fl / kwork_projects / …) NEVER keep bare t.me
             source_name = "Telegram"
+            channel_l = (post.get("channel") or channel or "").lstrip("@").lower()
+            requires_market = channel_l in TG_MARKETPLACE_REQUIRED
             if "fl.ru" in apply_url:
                 v = validate_fl_project(apply_url)
                 if not v.get("ok"):
@@ -398,6 +482,8 @@ def scan_tg_orders() -> list[dict[str, Any]]:
                 title = (v.get("title") or title)[:160]
                 scored = v.get("scored") or scored
             else:
+                if requires_market:
+                    continue
                 age_ok = is_fresh(post.get("published"), max_age_hours=24)
                 strong = any(
                     s in low

@@ -141,6 +141,23 @@ async def run_daily_cycle() -> None:
             }
 
         job_summary = await asyncio.to_thread(daily_job_scan)
+        try:
+            from opportunity.morning_digest import run_morning_pipeline
+
+            # Job+client scan already ran in daily_job_scan; here only close dead + digest.
+            morning = await asyncio.to_thread(run_morning_pipeline, rescan=False)
+            if job_summary is not None:
+                job_summary = dict(job_summary)
+                job_summary["morning_digest"] = {
+                    "jobs": (morning.get("digest") or {}).get("jobs_count"),
+                    "clients": (morning.get("digest") or {}).get("clients_count"),
+                    "archived": (morning.get("stats") or {}).get("archived_total"),
+                }
+            md = (morning or {}).get("markdown") or ""
+            if md:
+                await notify_allowed_users(md)
+        except Exception:
+            logger.exception("Morning digest failed")
 
         log_run("daily", "finished", summary[:12000])
     except Exception as e:

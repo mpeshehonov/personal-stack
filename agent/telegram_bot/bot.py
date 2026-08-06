@@ -755,21 +755,26 @@ async def _start_refresh_open(bot, chat_id: int, reply_func) -> None:
     async def _run() -> None:
         from opportunity.refresh_open import refresh_open_pipeline
 
-        result = await asyncio.to_thread(refresh_open_pipeline)
+        result = await asyncio.to_thread(refresh_open_pipeline, rescan=True)
         clients = result.get("clients") or {}
         jobs = result.get("jobs") or {}
+        cscan = result.get("client_scan") or {}
+        jscan = result.get("job_scan") or {}
         parts = [
-            f"Всего закрыто/архив: {result.get('archived_total', 0)}",
-            f"Заказы: проверено {clients.get('checked', 0)}, "
-            f"снято {clients.get('archived', 0)}",
-            f"Вакансии: проверено {jobs.get('checked', 0)}, "
-            f"снято {jobs.get('archived', 0)}",
-            f"Research-ссылки обновлены: {result.get('research_updated', 0)}",
+            f"Снято закрытых: {result.get('archived_total', 0)}",
+            f"Перепроверка заказов: {clients.get('checked', 0)} "
+            f"(архив {clients.get('archived', 0)})",
+            f"Перепроверка вакансий: {jobs.get('checked', 0)} "
+            f"(архив {jobs.get('archived', 0)})",
+            f"Новый скан заказов: в базу {cscan.get('upserted', 0)} "
+            f"(живых {cscan.get('kept', 0)})",
+            f"Новый скан вакансий: новых {jscan.get('new_count', 0)} "
+            f"(просмотрено {jscan.get('fetched', 0)})",
+            f"Research-ссылки: {result.get('research_updated', 0)}",
         ]
         c_reasons = clients.get("reasons") or {}
-        j_reasons = jobs.get("reasons") or {}
-        if c_reasons or j_reasons:
-            parts.append(f"Причины: clients={c_reasons} jobs={j_reasons}")
+        if c_reasons:
+            parts.append(f"Почему сняли: {c_reasons}")
         await send_rich_markdown(
             bot,
             chat_id=chat_id,
@@ -780,7 +785,7 @@ async def _start_refresh_open(bot, chat_id: int, reply_func) -> None:
 
     ok, msg = start_background_job("refresh_open", chat_id, _run)
     await reply_func(
-        f"{msg}\nПерепроверяю HH/FL/Kwork: закрытые выкину, потом пришлю живые карточки."
+        f"{msg}\nЗакрытые выкидываю + новый скан вакансий/заказов, потом пришлю карточки."
     )
 
 

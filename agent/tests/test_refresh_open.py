@@ -36,6 +36,11 @@ class RefreshOpenTest(unittest.TestCase):
         self.assertTrue(out["ok"])
         self.assertEqual(out.get("reason"), "hh_fetch_blocked")
 
+    def test_figma_not_marketplace(self) -> None:
+        out = validate_open_url("https://www.figma.com/design/abc/Foo")
+        self.assertFalse(out["ok"])
+        self.assertEqual(out.get("reason"), "not_marketplace")
+
     def test_opp_nav_callbacks(self) -> None:
         self.assertEqual(parse_opp_callback("o:more"), ("more", None))
         self.assertEqual(parse_opp_callback("o:scan"), ("scan", None))
