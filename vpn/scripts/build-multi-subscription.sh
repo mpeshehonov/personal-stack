@@ -99,9 +99,13 @@ plain = [
 
 sub_file.parent.mkdir(parents=True, exist_ok=True)
 sub_file.write_text("\n".join(with_routing) + "\n", encoding="utf-8")
-sub_plain.write_text("\n".join(plain) + "\n", encoding="utf-8")
+try:
+    sub_plain.write_text("\n".join(plain) + "\n", encoding="utf-8")
+except PermissionError:
+    print(f"WARN: cannot write {sub_plain} (permissions) — main sub.txt is OK")
 print(f"Wrote {sub_file} ({len(nodes)} nodes + routing onadd, {len(routing_deeplink)} chars deeplink)")
-print(f"Wrote {sub_plain} (no routing)")
+if sub_plain.exists() and os.access(sub_plain, os.W_OK):
+    print(f"Wrote {sub_plain} (no routing)")
 PY
 
 echo "==> Reload subscription nginx"
