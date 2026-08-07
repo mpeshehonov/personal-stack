@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-08-04T22:43:10.010607+00:00",
+  "updated_at": "2026-08-06T17:40:51.610970+00:00",
   "target_income_usd_month": 3500,
   "min_income_usd_month": 3000,
   "min_income_rub_month": 200000,
@@ -110,20 +110,20 @@
   },
   "preference_adjustments": {
     "feature_boosts": {
-      "tg": 3.08,
-      "senior": 3.64,
+      "telegram": 5.33,
       "react": 2.67,
-      "telegram": 4.8
+      "senior": 3.64,
+      "tg": 3.08
     },
     "weight_deltas": {
       "fit": 0.05
     },
-    "last_rebuild_samples": 18,
+    "last_rebuild_samples": 19,
     "explanations": [
-      "tg: pos=9 neg=4 → boost +3.1",
-      "senior: pos=8 neg=3 → boost +3.6",
+      "telegram: pos=5 neg=1 → boost +5.3",
       "react: pos=6 neg=3 → boost +2.7",
-      "telegram: pos=4 neg=1 → boost +4.8",
+      "senior: pos=8 neg=3 → boost +3.6",
+      "tg: pos=9 neg=4 → boost +3.1",
       "много негатива → чуть усиливаем fit filter"
     ]
   },

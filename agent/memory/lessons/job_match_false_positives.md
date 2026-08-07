@@ -30,6 +30,10 @@
 | Habr + Hirehi один employer (РГС #91/#92, рядом #53) | два lead id / два score (74 vs 79 remote) без нового сигнала | один сигнал на компанию+роль; prefer remote card |
 | Батч-зеркало каналов (#74–78 = #64–68) | Оркестратор подтянул те же посты из второго TG-канала одним сканом | shortlist не менять; считать одним сигналом на employer+роль |
 | Senior FE + Vue 3 в snip (МТС NBA.Банк #74/#64) | Title Senior (+20) + TS overlap при стеке Vue + `#офис` | mismatch — Vue ≠ React; office skip |
+| Title «Senior Frontend» + Vue-стек (Runello #123, score 99) | senior (+20) + frontend (+15) + remote (+10) без React в snip | skip — смотреть стек, не score |
+| Senior Node.js на FE-канале (#122, score 87) | senior (+20) + TS/JS overlap + remote | skip — backend ≠ Senior FE |
+| Грейд Middle в теле при Frontend title (#119 Альфа-Селлер) | React/TS overlap держит 80+ | skip — `#middle` / «Грейд: Middle» |
+| Vue + pay-to-apply / логический тест (#121 Runello) | frontend title + TS overlap → 70+ | skip — шум канала, не вакансия |
 
 ## Правило для агента
 
