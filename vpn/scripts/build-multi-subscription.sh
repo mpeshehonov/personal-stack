@@ -77,8 +77,8 @@ for cfg, label in (
 if not nodes:
     raise SystemExit("No Hy2 nodes found")
 
-# Body meta uses # prefix (Happ app-management docs).
-# Routing deeplink MUST be first parseable line — before node URIs.
+# Official Happ body example: happ:// first, then node URIs.
+# Meta lines use # prefix (app-management docs).
 meta = [
     "#profile-title: base64:WWFuZGV4LUhZMg==",
     "#routing-enable: 1",
@@ -89,7 +89,6 @@ meta = [
 ]
 
 with_routing = [
-    "# Happ: routing via body + HTTP header `routing:`",
     *meta,
     routing_deeplink,
     "",
@@ -126,6 +125,13 @@ server {{
     root /usr/share/nginx/html;
     charset utf-8;
 
+    types {{
+        text/html html;
+        text/plain txt link;
+        application/json json;
+    }}
+    default_type text/plain;
+
     location = /sub.txt {{
         default_type text/plain;
         add_header routing "{escaped}" always;
@@ -137,6 +143,11 @@ server {{
     location = /sub-plain.txt {{
         default_type text/plain;
         try_files /sub-plain.txt =404;
+    }}
+
+    location = /routing/happ-ru-direct.link {{
+        default_type text/plain;
+        try_files /routing/happ-ru-direct.link =404;
     }}
 
     location / {{

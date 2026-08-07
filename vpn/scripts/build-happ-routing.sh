@@ -61,15 +61,42 @@ sub_dir.mkdir(parents=True, exist_ok=True)
 (sub_dir / "happ-ru-direct.json").write_text(out_json.read_text(encoding="utf-8"), encoding="utf-8")
 (sub_dir / "happ-ru-direct.link").write_text(out_link.read_text(encoding="utf-8"), encoding="utf-8")
 
+# One-tap import page (open on phone → Happ)
+html = f"""<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Import RU-direct → Happ</title>
+<meta http-equiv="refresh" content="0;url={link}"/>
+</head>
+<body style="font-family:system-ui;padding:1.5rem;max-width:40rem">
+<h1>RU-direct</h1>
+<p>Если Happ не открылся сам — нажми кнопку:</p>
+<p><a href="{link}" style="font-size:1.2rem">Открыть в Happ</a></p>
+<p style="color:#666;font-size:.9rem">Или скопируй содержимое
+<a href="happ-ru-direct.link">happ-ru-direct.link</a>
+(строка <code>happ://routing/onadd/…</code>) и вставь через Import profile.</p>
+</body>
+</html>
+"""
+(sub_dir / "import.html").write_text(html, encoding="utf-8")
+(routing / "import.html").write_text(html, encoding="utf-8")
+
 # Round-trip check
 decoded = json.loads(base64.b64decode(b64))
 assert decoded["Name"] == profile["Name"]
 assert decoded["LastUpdated"] == profile["LastUpdated"]
+# Keep payload small — huge headers get dropped by some clients
+if len(link) > 3500:
+    raise SystemExit(f"Routing deeplink too long ({len(link)} chars) — trim DirectSites")
 
 print(f"DirectSites: {len(direct)} rules ({len(extra)} extra domains)")
 print(f"LastUpdated: {profile['LastUpdated']}")
+print(f"Deeplink: {len(link)} chars")
 print(f"Wrote {out_json}")
-print(f"Wrote {out_link} ({len(b64)} b64 chars)")
+print(f"Wrote {out_link}")
+print(f"Wrote {sub_dir / 'import.html'}")
 PY
 
 if [[ "$SKIP_RELOAD" == "1" ]]; then
