@@ -4,13 +4,12 @@
 
 ## Happ (iPhone / Android) — рекомендуется
 
-1. Импортируйте подписку: `http://89.124.70.216:8888/sub.txt`
-2. Откройте ссылку маршрутизации (авто-активация профиля):
+1. Импортируйте / обновите подписку: `http://89.124.70.216:8888/sub.txt`  
+   Роутинг **RU-direct** подтягивается сам (`happ://routing/onadd/…` в теле подписки).
+2. В Happ: **Routing → RU-direct** должен стать активным после update (reconnect, если уже был коннект).
+3. iPhone: Include all networks **ON**, Exclude local + APNS **ON**
 
-   См. `happ-ru-direct.link` или `vpn/hysteria2/WORKING.txt`
-
-3. В Happ: **Routing → RU-direct** должен быть активен
-4. iPhone: Include all networks **ON**, Exclude local + APNS **ON**
+Ручной импорт (если нужно): `http://89.124.70.216:8888/routing/happ-ru-direct.link`
 
 ### Что в белом списке
 

@@ -9,13 +9,21 @@ BASE_JSON="$ROUTING_DIR/happ-ru-direct.base.json"
 OUT_JSON="$ROUTING_DIR/happ-ru-direct.json"
 OUT_LINK="$ROUTING_DIR/happ-ru-direct.link"
 SUB_DIR="$STACK_DIR/vpn/hysteria2/subscription/routing"
+SKIP_RELOAD=0
+for arg in "$@"; do
+  case "$arg" in
+    --skip-reload) SKIP_RELOAD=1 ;;
+  esac
+done
 
+export STACK_DIR
 python3 <<'PY'
 import base64
 import json
+import os
 from pathlib import Path
 
-stack = Path(__import__("os").environ.get("STACK_DIR", "/opt/personal-stack"))
+stack = Path(os.environ.get("STACK_DIR", "/opt/personal-stack"))
 routing = stack / "vpn/routing"
 sites_file = routing / "ru-direct-sites.txt"
 base_json = routing / "happ-ru-direct.base.json"
@@ -28,7 +36,11 @@ for line in sites_file.read_text(encoding="utf-8").splitlines():
     line = line.strip()
     if not line or line.startswith("#"):
         continue
-    extra.append(f"domain:{line}" if not line.startswith(("domain:", "geosite:", "full:", "regexp:")) else line)
+    extra.append(
+        f"domain:{line}"
+        if not line.startswith(("domain:", "geosite:", "full:", "regexp:"))
+        else line
+    )
 
 profile = json.loads(base_json.read_text(encoding="utf-8"))
 direct = list(profile.get("DirectSites", []))
@@ -53,8 +65,12 @@ sub_dir.mkdir(parents=True, exist_ok=True)
 print(f"DirectSites: {len(direct)} rules ({len(extra)} extra domains)")
 print(f"Wrote {out_json}")
 print(f"Wrote {out_link}")
-print(link)
 PY
+
+if [[ "$SKIP_RELOAD" == "1" ]]; then
+  echo "==> Skip nginx reload (--skip-reload)"
+  exit 0
+fi
 
 echo "==> Reload subscription nginx (pick up new routing files)"
 cd "$STACK_DIR/vpn/hysteria2"

@@ -24,25 +24,35 @@ TCP 443 is Caddy (site). Hy2 uses UDP only.
 ## Happ setup
 
 1. Import subscription: `http://89.124.70.216:8888/sub.txt`
-2. Routing RU-direct: `http://89.124.70.216:8888/routing/happ-ru-direct.link`
-3. Nodes: **Yandex-HY2-8443** (mobile), **Yandex-HY2-36712** (backup)
-4. Happ settings (via subscription headers):
+2. Update subscription in Happ → **RU-direct routing applies automatically** (`happ://routing/onadd/…` in `sub.txt` body).
+3. Nodes: **Yandex-HY2-36712** (Wi‑Fi), **Yandex-HY2-8443** (mobile / whitelist)
+4. Happ settings (via subscription):
    - Include all networks **ON**
    - Exclude local + APNS **ON**
-   - Subscription ping on open **ON**
+
+Manual routing link (optional): `http://89.124.70.216:8888/routing/happ-ru-direct.link`
+
+Debug without routing: `http://89.124.70.216:8888/sub-plain.txt`
 
 Happ does **not** support Amnezia protocol — use the Amnezia app for Amnezia configs.
 
 ## Server tuning (mobile)
 
-- `maxIdleTimeout` / `udpIdleTimeout`: **120s**
-- Salamander obfs + yandex.ru masquerade
-- `disablePathMTUDiscovery: true` on both nodes
+- `maxIdleTimeout` / `udpIdleTimeout`: **120s** (Hysteria max; do not go below)
+- Server `ping: 5s` — keepalive for mobile NAT
 
 ## Rebuild subscription
 
 ```bash
 bash /opt/personal-stack/vpn/scripts/build-multi-subscription.sh
+```
+
+Rebuilds RU-direct profile + `sub.txt` (routing embedded) and reloads nginx on `:8888`.
+
+Routing-only rebuild:
+
+```bash
+bash /opt/personal-stack/vpn/scripts/build-happ-routing.sh
 ```
 
 ## VPN deploy (manual)

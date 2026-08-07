@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
-# Build Happ subscription: Hy2 only (36712 Wi-Fi first, 8443 mobile backup).
+# Build Happ subscription: Hy2 nodes + RU-direct routing in the body.
+# Happ applies `happ://routing/onadd/...` on subscription update (no separate import).
 set -euo pipefail
 STACK_DIR="${STACK_DIR:-/opt/personal-stack}"
 HY2_DIR="$STACK_DIR/vpn/hysteria2"
-SUB_FILE="$HY2_DIR/subscription/sub.txt"
-SUB_PLAIN="$HY2_DIR/subscription/sub-plain.txt"
-ROUTING_LINK="${ROUTING_LINK:-http://89.124.70.216:8888/routing/happ-ru-direct.link}"
+SUB_DIR="$HY2_DIR/subscription"
+SUB_FILE="$SUB_DIR/sub.txt"
+SUB_PLAIN="$SUB_DIR/sub-plain.txt"
+ROUTING_LINK_FILE="${ROUTING_LINK_FILE:-$STACK_DIR/vpn/routing/happ-ru-direct.link}"
 
-export STACK_DIR ROUTING_LINK
+# Refresh routing profile + happ:// deeplink first (no nginx bounce yet)
+bash "$STACK_DIR/vpn/scripts/build-happ-routing.sh" --skip-reload
+
+export STACK_DIR ROUTING_LINK_FILE SUB_FILE SUB_PLAIN
 python3 << 'PY'
 import os
 import re
@@ -16,11 +21,17 @@ from urllib.parse import quote
 
 stack = Path(os.environ["STACK_DIR"])
 hy2_dir = stack / "vpn/hysteria2"
-sub_file = hy2_dir / "subscription" / "sub.txt"
-sub_plain = hy2_dir / "subscription" / "sub-plain.txt"
-routing_link = os.environ.get("ROUTING_LINK", "http://89.124.70.216:8888/routing/happ-ru-direct.link")
+sub_file = Path(os.environ["SUB_FILE"])
+sub_plain = Path(os.environ["SUB_PLAIN"])
+link_file = Path(os.environ["ROUTING_LINK_FILE"])
 host = "89.124.70.216"
 sni = "yandex.ru"
+
+if not link_file.exists():
+    raise SystemExit(f"Missing routing link: {link_file} (run build-happ-routing.sh)")
+routing_deeplink = link_file.read_text(encoding="utf-8").strip()
+if not routing_deeplink.startswith("happ://routing/"):
+    raise SystemExit(f"Bad routing deeplink in {link_file}")
 
 
 def hy2_uri(config_name: str, label: str) -> str:
@@ -44,6 +55,10 @@ def hy2_uri(config_name: str, label: str) -> str:
             pin = m.group(1)
     pin_q = f"&pinSHA256={pin}" if pin else ""
     obfs_q = f"&obfs=salamander&obfs-password={quote(obfs, safe='')}" if obfs else ""
+    if not pin:
+        raise SystemExit(
+            f"Missing pinSHA256 in {hy2_dir / 'WORKING.txt'} — Happ 4.8+ requires pinnedPeerCertSha256"
+        )
     return f"hysteria2://{pwd}@{host}:{port}/?sni={sni}{pin_q}{obfs_q}#{quote(label)}"
 
 
@@ -60,30 +75,42 @@ if not nodes:
     raise SystemExit("No Hy2 nodes found in config-36712.yaml / config-8443.yaml")
 
 common_headers = [
-    "# Happ: delete old sub, import fresh. Wi-Fi: 36712. Mobile: 8443.",
+    "# Happ: update sub → RU-direct routing auto-applies (onadd).",
     "include-all-networks-enable: true",
     "exclude-local-networks-enable: true",
     "exclude-apns-enable: true",
     "subscription-ping-onopen-enabled: false",
 ]
 
+# Official Happ: put happ://routing/onadd/... in the subscription body.
 with_routing = common_headers + [
-    f"routing-ru-direct: {routing_link}",
-    "routing-ru-direct-json: http://89.124.70.216:8888/routing/happ-ru-direct.json",
+    routing_deeplink,
     "",
 ] + nodes
 
-plain = common_headers + [
-    "# No routing — use if internet dead after connect (debug)",
+plain = [
+    "# Happ debug: nodes only, no routing",
+    "include-all-networks-enable: true",
+    "exclude-local-networks-enable: true",
+    "exclude-apns-enable: true",
+    "subscription-ping-onopen-enabled: false",
     "",
 ] + nodes
 
 sub_file.parent.mkdir(parents=True, exist_ok=True)
 sub_file.write_text("\n".join(with_routing) + "\n", encoding="utf-8")
 sub_plain.write_text("\n".join(plain) + "\n", encoding="utf-8")
-print(f"Wrote {sub_file} and {sub_plain} ({len(nodes)} nodes)")
+print(f"Wrote {sub_file} ({len(nodes)} nodes + routing onadd, {len(routing_deeplink)} chars deeplink)")
+print(f"Wrote {sub_plain} (no routing)")
 PY
 
 echo "==> Reload subscription nginx"
 cd "$HY2_DIR"
-docker compose up -d hy2-subscription
+docker compose up -d hy2-subscription --force-recreate
+sleep 1
+
+echo "==> Verify"
+curl -fsS "http://127.0.0.1:8888/sub.txt" | head -8
+echo "..."
+curl -fsS "http://127.0.0.1:8888/sub.txt" | grep -c '^happ://routing/onadd/' || true
+curl -fsSI "http://127.0.0.1:8888/routing/happ-ru-direct.link" | head -1
