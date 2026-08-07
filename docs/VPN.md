@@ -24,15 +24,14 @@ TCP 443 is Caddy (site). Hy2 uses UDP only.
 ## Happ setup
 
 1. Import subscription: `http://89.124.70.216:8888/sub.txt`
-2. Update subscription in Happ → **RU-direct routing applies automatically** (`happ://routing/onadd/…` in `sub.txt` body).
+2. Update subscription in Happ with **Update routing** ON → reconnect.
+   Delivery: HTTP header `routing:` + `happ://routing/onadd/…` in body (profile name `RU-direct`, `LastUpdated` bumps each rebuild).
 3. Nodes: **Yandex-HY2-36712** (Wi‑Fi), **Yandex-HY2-8443** (mobile / whitelist)
 4. Happ settings (via subscription):
    - Include all networks **ON**
    - Exclude local + APNS **ON**
 
-Manual routing link (optional): `http://89.124.70.216:8888/routing/happ-ru-direct.link`
-
-Debug without routing: `http://89.124.70.216:8888/sub-plain.txt`
+If routing still empty: delete the subscription → re-import `sub.txt` fresh (old sub can ignore body routing). Manual link: `http://89.124.70.216:8888/routing/happ-ru-direct.link`
 
 Happ does **not** support Amnezia protocol — use the Amnezia app for Amnezia configs.
 

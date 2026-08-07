@@ -1,5 +1,5 @@
 {
-  "Name": "RU-direct (без VPN для .ru)",
+  "Name": "RU-direct",
   "GlobalProxy": "true",
   "RouteOrder": "block-proxy-direct",
   "RemoteDNSType": "UDP",
@@ -8,6 +8,9 @@
   "DomesticDNSType": "UDP",
   "DomesticDNSDomain": "",
   "DomesticDNSIP": "77.88.8.8",
+  "Geoipurl": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+  "Geositeurl": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
+  "LastUpdated": "",
   "DnsHosts": {},
   "DirectSites": [
     "domain:ru",
@@ -18,6 +21,8 @@
     "domain:kz"
   ],
   "DirectIp": [
+    "geoip:private",
+    "geoip:ru",
     "10.0.0.0/8",
     "172.16.0.0/12",
     "192.168.0.0/16",
@@ -29,7 +34,7 @@
   "ProxyIp": [],
   "BlockSites": [],
   "BlockIp": [],
-  "DomainStrategy": "AsIs",
+  "DomainStrategy": "IPIfNonMatch",
   "FakeDNS": "false",
-  "UseChunkFiles": "false"
+  "UseChunkFiles": "true"
 }
