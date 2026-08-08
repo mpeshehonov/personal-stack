@@ -34,6 +34,9 @@
 | Senior Node.js на FE-канале (#122, score 87) | senior (+20) + TS/JS overlap + remote | skip — backend ≠ Senior FE |
 | Грейд Middle в теле при Frontend title (#119 Альфа-Селлер) | React/TS overlap держит 80+ | skip — `#middle` / «Грейд: Middle» |
 | Vue + pay-to-apply / логический тест (#121 Runello) | frontend title + TS overlap → 70+ | skip — шум канала, не вакансия |
+| Кросс-канал репост уже applied (Т-Банк #128 = #45) | новый id + score 90+ на втором TG-канале | skip — не второй отклик; вести канон |
+| Hirehi staffing «middle» + вилка (#126 Quik Hire) | remote (+10) + вилка (+12) → ~77 при middle в snip | skip — читать грейд в snip |
+| Агентство React/Next без грейда (Runello #127, score 96) | стек overlap (+16) + remote (+10) без senior bar | skip/watch — agency ≠ Senior FE target |
 
 ## Правило для агента
 
